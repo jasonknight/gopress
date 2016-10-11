@@ -43,7 +43,7 @@ while($row = mysql_fetch_object($res)) {
 
 // Second, we iterate over tables and describe each
 function mysqlToGoType($t) {
-    if (preg_match("/varchar/", $t) ) {
+    if (preg_match("/varchar|text/", $t) ) {
         return "string";
     }
     if (preg_match("/bigint/", $t) ) {
@@ -52,12 +52,30 @@ function mysqlToGoType($t) {
     if (preg_match("/int/", $t) ) {
         return "int";
     }
-    if ( $t == "longtext" ) {
+    if ( $t == "longtext" || $t == "tinytext" || $t == "mediumtext") {
         return "string";
     }
 
     if ( $t == "datetime" ) {
         return "DateTime";
+    }
+}
+function mysqlToFmtType($t) {
+    if (preg_match("/varchar|text/", $t) ) {
+        return "%s";
+    }
+    if (preg_match("/bigint/", $t) ) {
+        return "%d";
+    }
+    if (preg_match("/int/", $t) ) {
+        return "%d";
+    }
+    if ( $t == "longtext" || $t == "tinytext" || $t == "mediumtext") {
+        return "string";
+    }
+
+    if ( $t == "datetime" ) {
+        return "%s";
     }
 }
 foreach ($tables as &$t) {
@@ -84,14 +102,22 @@ puts('import (
     "fmt"
     _ "github.com/go-sql-driver/mysql"
     "strconv"
+    "gopkg.in/yaml.v2"
+    "regexp"
+    "errors"
 )');
-
+$_ii = 0;
+$seen = array();
 foreach ($tables as $t) {
+    if (in_array($t->model_name, $seen) ) {
+        continue;
+    }
+    $seen[] = $t->model_name;
 puts("
 type {$t->model_name} struct {
     _table_ string
     _adapter_ Adapter
-    _pkey_ string // The name of the primary key in this table
+    _pkey_ string // $_ii The name of the primary key in this table
     _conds_ []string");
     
     foreach($t->fields as $f) {
@@ -109,7 +135,10 @@ func New{$t->model_name}(a Adapter) *{$t->model_name} {
 }
 ";
 puts($newfunc);
+include "finders.php";
+//include "crud.php";
 }
+
 puts("
 type Adapter interface {
     Open(string,string,string,string) error
@@ -117,14 +146,14 @@ type Adapter interface {
     Query(string) ([]map[string]DBValue,error)
     Execute(string) error
     LastInsertedId() int64
-    AffectedRows() int
+    AffectedRows() int64
 }
 
 type DBValue interface {
     AsInt() (int,error)
     AsInt64() (int64,error)
     AsFloat32() (float32,error)
-    AsString() string
+    AsString() (string,error)
     AsDateTime() (DateTime,error)
     SetInternalValue(string,string)
 }
@@ -143,32 +172,32 @@ func (v *MysqlValue) AsString() (string,error) {
 }
 func (v *MysqlValue) AsInt() (int,error) {
     i,err := strconv.ParseInt(v._v,10,32)
-    return i,err
+    return int(i),err
 }
 func (v *MysqlValue) AsInt64() (int64,error) {
-    i,err := strconv.ParseInt64(v._v,10,64)
+    i,err := strconv.ParseInt(v._v,10,64)
     return i,err
 }
 func (v *MysqlValue) AsFloat32() (float32,error) {
     i,err := strconv.ParseFloat(v._v,32)
     if err != nil {
-        return nil,err
+        return 0.0,err
     }
     return float32(i),err
 }
 func (v *MysqlValue) AsFloat64() (float64,error) {
     i,err := strconv.ParseFloat(v._v,64)
     if err != nil {
-        return nil,err
+        return 0.0,err
     }
-    return 1,err
+    return i,err
 }
 
 func (v *MysqlValue) AsDateTime() (DateTime,error) {
     var dt DateTime
     err := dt.FromString(v._v)
     if err != nil {
-        return nil, err
+        return DateTime{}, err
     }
     return dt,nil
 }
@@ -178,9 +207,9 @@ type MysqlAdapter struct {
     User string `yaml:\"user\"`
     Pass string `yaml: \"pass\"`
     Database string `yaml:\"database\"`
-    conn driver.Conn
+    _conn_ *sql.DB
     _lid int64
-    _cnt int
+    _cnt int64
 }
 
 func (a *MysqlAdapter) FromYAML(b []byte) error {
@@ -189,26 +218,33 @@ func (a *MysqlAdapter) FromYAML(b []byte) error {
 
 func (a *MysqlAdapter) Open(h,u,p,d string) error {
     if ( h != \"localhost\") {
-        a.conn, err := sql.Open(\"mysql\",fmt.Sprintf(\"%s:%s@tcp(%s)/%s\",u,p,h,d))
+        tc, err := sql.Open(\"mysql\",fmt.Sprintf(\"%s:%s@tcp(%s)/%s\",u,p,h,d))
+        if err != nil {
+            return err
+        }
+        a._conn_ = tc
     } else {
-        a.conn, err := sql.Open(\"mysql\",fmt.Sprintf(\"%s:%s@/%s\",u,p,d))
+        tc, err := sql.Open(\"mysql\",fmt.Sprintf(\"%s:%s@/%s\",u,p,d))
+        if err != nil {
+            return err
+        }
+        a._conn_ = tc
     }
-    if err != nil {
-        return err
-    }
+    return nil
+
 }
 func (a *MysqlAdapter) Close() {
-    a.conn.Close()
+    a._conn_.Close()
 }
 
 func (a *MysqlAdapter) Query(q string) ([]map[string]DBValue,error) {
     results := new([]map[string]DBValue)
-    rows, err := a.conn.Query(q)
+    rows, err := a._conn_.Query(q)
     if err != nil {
         return nil,err
     }
     defer rows.Close()
-    cols, err := rows.Columns()
+    columns, err := rows.Columns()
     if err != nil {
         return nil, err
     }
@@ -225,14 +261,14 @@ func (a *MysqlAdapter) Query(q string) ([]map[string]DBValue,error) {
         res := make(map[string]DBValue)
         for i,col := range values {
             k := columns[i]
-            res[k].SetInternalValue(k,col)
+            res[k].SetInternalValue(k,string(col))
         }
-        results = append(results,res)
+        *results = append(*results,res)
     }
-    return results,nil
+    return *results,nil
 }
 func (a *MysqlAdapter) Execute(q string) error {
-    tx, err := a.conn.Begin()
+    tx, err := a._conn_.Begin()
     if err != nil {
         return err
     }
@@ -242,7 +278,7 @@ func (a *MysqlAdapter) Execute(q string) error {
         return err
     }
     defer stmt.Close()
-    res,err = stmt.Exec(q)
+    res,err := stmt.Exec(q)
     if err != nil {
         return err
     }
@@ -260,7 +296,7 @@ func (a *MysqlAdapter) Execute(q string) error {
 func (a *MysqlAdapter) LastInsertedId() int64 {
     return a._lid
 }
-func (a *MysqlAdapter) AffectedRows() int {
+func (a *MysqlAdapter) AffectedRows() int64 {
     return a._cnt
 }
 type DateTime struct {
@@ -284,52 +320,56 @@ func (d *DateTime) FromString(s string) error {
     r2 := ir2[0]
     for i, n := range r2 {
         if n1[i] == \"year\" {
-            d.Year,err = strconv.ParseInt(n,10,32)
+            _Year,err := strconv.ParseInt(n,10,32)
+            d.Year = int(_Year)
             if err != nil {
                 return errors.New(fmt.Sprintf(\"failed to convert %s in %s received %s\",n[i],es,err))
             }
         }
         if n1[i] == \"month\" {
-            d.Month,err = strconv.ParseInt(n,10,32)
+            _Month,err := strconv.ParseInt(n,10,32)
+            d.Month = int(_Month)
             if err != nil {
                 return errors.New(fmt.Sprintf(\"failed to convert %s in %s received %s\",n[i],es,err))
             }
         }
         if n1[i] == \"day\" {
-            d.Day,err = strconv.ParseInt(n,10,32)
+            _Day,err := strconv.ParseInt(n,10,32)
+            d.Day = int(_Day)
             if err != nil {
                 return errors.New(fmt.Sprintf(\"failed to convert %s in %s received %s\",n[i],es,err))
             }
         }
         if n1[i] == \"hours\" {
-            d.Hours,err = strconv.ParseInt(n,10,32)
+            _Hours,err := strconv.ParseInt(n,10,32)
+            d.Hours = int(_Hours)
             if err != nil {
                 return errors.New(fmt.Sprintf(\"failed to convert %s in %s received %s\",n[i],es,err))
             }
         }
         if n1[i] == \"minutes\" {
-            d.Minutes,err = strconv.ParseInt(n,10,32)
+            _Minutes,err := strconv.ParseInt(n,10,32)
+            d.Minutes = int(_Minutes)
             if err != nil {
                 return errors.New(fmt.Sprintf(\"failed to convert %s in %s received %s\",n[i],es,err))
             }
         }
         if n1[i] == \"seconds\" {
-            d.Seconds,err = strconv.ParseInt(n,10,32)
+            _Seconds,err := strconv.ParseInt(n,10,32)
+            d.Seconds = int(_Seconds)
             if err != nil {
                 return errors.New(fmt.Sprintf(\"failed to convert %s in %s received %s\",n[i],es,err))
             }
         }
         if n1[i] == \"offset\" {
-            d.Offset,err = strconv.ParseInt(n,10,32)
+            _Offset,err := strconv.ParseInt(n,10,32)
+            d.Offset = int(_Offset)
             if err != nil {
                 return errors.New(fmt.Sprintf(\"failed to convert %s in %s received %s\",n[i],es,err))
             }
         }
         if n1[i] == \"zone\" {
             d.Zone = n
-            if err != nil {
-                return errors.New(fmt.Sprintf(\"failed to convert %s in %s received %s\",n[i],es,err))
-            }
         }
     }
     return nil
