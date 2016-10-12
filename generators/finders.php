@@ -27,8 +27,8 @@ foreach($t->fields as $f) {
     $sig = "func (o *{$t->model_name}) $fname($arg $argtype) ($rtype,error) {";
 $body = "
     var model_slice []{$t->model_name}
-    q := fmt.Sprintf(\"SELECT * FROM %s WHERE `%s` = '$fmt_type'\",o._table_, \"{$f->Field}\", $arg)
-    results, err := o._adapter_.Query(q)
+    q := fmt.Sprintf(\"SELECT * FROM %s WHERE `%s` = '$fmt_type'\",o._table, \"{$f->Field}\", $arg)
+    results, err := o._adapter.Query(q)
     if err != nil {
         $failure_return
     }
