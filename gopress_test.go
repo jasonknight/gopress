@@ -1244,3 +1244,67 @@ func TestMysqlAdapterFromYAML(t *testing.T) {
 		t.Errorf(`did not fully apply yaml file %+v`, a)
 	}
 }
+func TestDBValue(t *testing.T) {
+	a := NewMysqlAdapter(`wp_`)
+
+	v0 := a.NewDBValue()
+	v0.SetInternalValue(`x`, `999`)
+	c0, err := v0.AsInt32()
+	if err != nil {
+		t.Errorf(`failed to convert with AsInt32() %+v`, v0)
+		return
+	}
+	if c0 != 999 {
+		t.Errorf(`values don't match `)
+		return
+	}
+
+	v1 := a.NewDBValue()
+	v1.SetInternalValue(`x`, `666`)
+	c1, err := v1.AsInt()
+	if err != nil {
+		t.Errorf(`failed to convert with AsInt() %+v`, v1)
+		return
+	}
+	if c1 != 666 {
+		t.Errorf(`values don't match `)
+		return
+	}
+
+	v2 := a.NewDBValue()
+	v2.SetInternalValue(`x`, `hello world`)
+	c2, err := v2.AsString()
+	if err != nil {
+		t.Errorf(`failed to convert with AsString() %+v`, v2)
+		return
+	}
+	if c2 != "hello world" {
+		t.Errorf(`values don't match `)
+		return
+	}
+
+	v3 := a.NewDBValue()
+	v3.SetInternalValue(`x`, `3.14`)
+	c3, err := v3.AsFloat32()
+	if err != nil {
+		t.Errorf(`failed to convert with AsFloat32() %+v`, v3)
+		return
+	}
+	if c3 != 3.14 {
+		t.Errorf(`values don't match `)
+		return
+	}
+
+	v4 := a.NewDBValue()
+	v4.SetInternalValue(`x`, `67859.58686`)
+	c4, err := v4.AsFloat32()
+	if err != nil {
+		t.Errorf(`failed to convert with AsFloat32() %+v`, v4)
+		return
+	}
+	if c4 != 67859.58686 {
+		t.Errorf(`values don't match `)
+		return
+	}
+
+}

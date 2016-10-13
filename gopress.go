@@ -5859,6 +5859,7 @@ type Adapter interface {
 
 type DBValue interface {
 	AsInt() (int, error)
+	AsInt32() (int32, error)
 	AsInt64() (int64, error)
 	AsFloat32() (float32, error)
 	AsString() (string, error)
@@ -5882,6 +5883,10 @@ func (v *MysqlValue) AsString() (string, error) {
 func (v *MysqlValue) AsInt() (int, error) {
 	i, err := strconv.ParseInt(v._v, 10, 32)
 	return int(i), err
+}
+func (v *MysqlValue) AsInt32() (int32, error) {
+	i, err := strconv.ParseInt(v._v, 10, 32)
+	return int32(i), err
 }
 func (v *MysqlValue) AsInt64() (int64, error) {
 	i, err := strconv.ParseInt(v._v, 10, 64)
