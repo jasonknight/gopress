@@ -72,7 +72,18 @@ func TestCommentMetaCreate(t *testing.T) {
 			t.Errorf(`zero affected rows`)
 			return
 		}
-	}
+		model2 := NewCommentMeta(a)
+		found, err := model2.Find(model.GetPrimaryKeyValue())
+		if err != nil {
+			t.Errorf(`did not find record for %s = %d because of %s`, model.GetPrimaryKeyName(), model.GetPrimaryKeyValue(), err)
+			return
+		}
+		if found == false {
+			t.Errorf(`did not find record for %s = %d`, model.GetPrimaryKeyName(), model.GetPrimaryKeyValue())
+			return
+		}
+
+	} // end of if fileExists
 }
 
 func TestNewComment(t *testing.T) {
@@ -273,7 +284,18 @@ func TestCommentCreate(t *testing.T) {
 			t.Errorf(`zero affected rows`)
 			return
 		}
-	}
+		model2 := NewComment(a)
+		found, err := model2.Find(model.GetPrimaryKeyValue())
+		if err != nil {
+			t.Errorf(`did not find record for %s = %d because of %s`, model.GetPrimaryKeyName(), model.GetPrimaryKeyValue(), err)
+			return
+		}
+		if found == false {
+			t.Errorf(`did not find record for %s = %d`, model.GetPrimaryKeyName(), model.GetPrimaryKeyValue())
+			return
+		}
+
+	} // end of if fileExists
 }
 
 func TestNewLink(t *testing.T) {
@@ -440,7 +462,18 @@ func TestLinkCreate(t *testing.T) {
 			t.Errorf(`zero affected rows`)
 			return
 		}
-	}
+		model2 := NewLink(a)
+		found, err := model2.Find(model.GetPrimaryKeyValue())
+		if err != nil {
+			t.Errorf(`did not find record for %s = %d because of %s`, model.GetPrimaryKeyName(), model.GetPrimaryKeyValue(), err)
+			return
+		}
+		if found == false {
+			t.Errorf(`did not find record for %s = %d`, model.GetPrimaryKeyName(), model.GetPrimaryKeyValue())
+			return
+		}
+
+	} // end of if fileExists
 }
 
 func TestNewOption(t *testing.T) {
@@ -510,7 +543,18 @@ func TestOptionCreate(t *testing.T) {
 			t.Errorf(`zero affected rows`)
 			return
 		}
-	}
+		model2 := NewOption(a)
+		found, err := model2.Find(model.GetPrimaryKeyValue())
+		if err != nil {
+			t.Errorf(`did not find record for %s = %d because of %s`, model.GetPrimaryKeyName(), model.GetPrimaryKeyValue(), err)
+			return
+		}
+		if found == false {
+			t.Errorf(`did not find record for %s = %d`, model.GetPrimaryKeyName(), model.GetPrimaryKeyValue())
+			return
+		}
+
+	} // end of if fileExists
 }
 
 func TestNewPostMeta(t *testing.T) {
@@ -580,7 +624,18 @@ func TestPostMetaCreate(t *testing.T) {
 			t.Errorf(`zero affected rows`)
 			return
 		}
-	}
+		model2 := NewPostMeta(a)
+		found, err := model2.Find(model.GetPrimaryKeyValue())
+		if err != nil {
+			t.Errorf(`did not find record for %s = %d because of %s`, model.GetPrimaryKeyName(), model.GetPrimaryKeyValue(), err)
+			return
+		}
+		if found == false {
+			t.Errorf(`did not find record for %s = %d`, model.GetPrimaryKeyName(), model.GetPrimaryKeyValue())
+			return
+		}
+
+	} // end of if fileExists
 }
 
 func TestNewPost(t *testing.T) {
@@ -885,7 +940,18 @@ func TestPostCreate(t *testing.T) {
 			t.Errorf(`zero affected rows`)
 			return
 		}
-	}
+		model2 := NewPost(a)
+		found, err := model2.Find(model.GetPrimaryKeyValue())
+		if err != nil {
+			t.Errorf(`did not find record for %s = %d because of %s`, model.GetPrimaryKeyName(), model.GetPrimaryKeyValue(), err)
+			return
+		}
+		if found == false {
+			t.Errorf(`did not find record for %s = %d`, model.GetPrimaryKeyName(), model.GetPrimaryKeyValue())
+			return
+		}
+
+	} // end of if fileExists
 }
 
 func TestNewTermRelationship(t *testing.T) {
@@ -944,7 +1010,18 @@ func TestTermRelationshipCreate(t *testing.T) {
 			t.Errorf(`zero affected rows`)
 			return
 		}
-	}
+		model2 := NewTermRelationship(a)
+		found, err := model2.Find(model.GetPrimaryKeyValue())
+		if err != nil {
+			t.Errorf(`did not find record for %s = %d because of %s`, model.GetPrimaryKeyName(), model.GetPrimaryKeyValue(), err)
+			return
+		}
+		if found == false {
+			t.Errorf(`did not find record for %s = %d`, model.GetPrimaryKeyName(), model.GetPrimaryKeyValue())
+			return
+		}
+
+	} // end of if fileExists
 }
 
 func TestNewTermTaxonomy(t *testing.T) {
@@ -1032,7 +1109,18 @@ func TestTermTaxonomyCreate(t *testing.T) {
 			t.Errorf(`zero affected rows`)
 			return
 		}
-	}
+		model2 := NewTermTaxonomy(a)
+		found, err := model2.Find(model.GetPrimaryKeyValue())
+		if err != nil {
+			t.Errorf(`did not find record for %s = %d because of %s`, model.GetPrimaryKeyName(), model.GetPrimaryKeyValue(), err)
+			return
+		}
+		if found == false {
+			t.Errorf(`did not find record for %s = %d`, model.GetPrimaryKeyName(), model.GetPrimaryKeyValue())
+			return
+		}
+
+	} // end of if fileExists
 }
 
 func TestNewTerm(t *testing.T) {
@@ -1102,7 +1190,18 @@ func TestTermCreate(t *testing.T) {
 			t.Errorf(`zero affected rows`)
 			return
 		}
-	}
+		model2 := NewTerm(a)
+		found, err := model2.Find(model.GetPrimaryKeyValue())
+		if err != nil {
+			t.Errorf(`did not find record for %s = %d because of %s`, model.GetPrimaryKeyName(), model.GetPrimaryKeyValue(), err)
+			return
+		}
+		if found == false {
+			t.Errorf(`did not find record for %s = %d`, model.GetPrimaryKeyName(), model.GetPrimaryKeyValue())
+			return
+		}
+
+	} // end of if fileExists
 }
 
 func TestNewUserMeta(t *testing.T) {
@@ -1172,7 +1271,18 @@ func TestUserMetaCreate(t *testing.T) {
 			t.Errorf(`zero affected rows`)
 			return
 		}
-	}
+		model2 := NewUserMeta(a)
+		found, err := model2.Find(model.GetPrimaryKeyValue())
+		if err != nil {
+			t.Errorf(`did not find record for %s = %d because of %s`, model.GetPrimaryKeyName(), model.GetPrimaryKeyValue(), err)
+			return
+		}
+		if found == false {
+			t.Errorf(`did not find record for %s = %d`, model.GetPrimaryKeyName(), model.GetPrimaryKeyValue())
+			return
+		}
+
+	} // end of if fileExists
 }
 
 func TestNewUser(t *testing.T) {
@@ -1312,7 +1422,18 @@ func TestUserCreate(t *testing.T) {
 			t.Errorf(`zero affected rows`)
 			return
 		}
-	}
+		model2 := NewUser(a)
+		found, err := model2.Find(model.GetPrimaryKeyValue())
+		if err != nil {
+			t.Errorf(`did not find record for %s = %d because of %s`, model.GetPrimaryKeyName(), model.GetPrimaryKeyValue(), err)
+			return
+		}
+		if found == false {
+			t.Errorf(`did not find record for %s = %d`, model.GetPrimaryKeyName(), model.GetPrimaryKeyValue())
+			return
+		}
+
+	} // end of if fileExists
 }
 
 func TestNewWooAttrTaxonomie(t *testing.T) {
@@ -1391,7 +1512,18 @@ func TestWooAttrTaxonomieCreate(t *testing.T) {
 			t.Errorf(`zero affected rows`)
 			return
 		}
-	}
+		model2 := NewWooAttrTaxonomie(a)
+		found, err := model2.Find(model.GetPrimaryKeyValue())
+		if err != nil {
+			t.Errorf(`did not find record for %s = %d because of %s`, model.GetPrimaryKeyName(), model.GetPrimaryKeyValue(), err)
+			return
+		}
+		if found == false {
+			t.Errorf(`did not find record for %s = %d`, model.GetPrimaryKeyName(), model.GetPrimaryKeyValue())
+			return
+		}
+
+	} // end of if fileExists
 }
 
 func TestNewWooDownloadableProductPerm(t *testing.T) {
@@ -1556,7 +1688,18 @@ func TestWooDownloadableProductPermCreate(t *testing.T) {
 			t.Errorf(`zero affected rows`)
 			return
 		}
-	}
+		model2 := NewWooDownloadableProductPerm(a)
+		found, err := model2.Find(model.GetPrimaryKeyValue())
+		if err != nil {
+			t.Errorf(`did not find record for %s = %d because of %s`, model.GetPrimaryKeyName(), model.GetPrimaryKeyValue(), err)
+			return
+		}
+		if found == false {
+			t.Errorf(`did not find record for %s = %d`, model.GetPrimaryKeyName(), model.GetPrimaryKeyValue())
+			return
+		}
+
+	} // end of if fileExists
 }
 
 func TestNewWooOrderItemMeta(t *testing.T) {
@@ -1626,7 +1769,18 @@ func TestWooOrderItemMetaCreate(t *testing.T) {
 			t.Errorf(`zero affected rows`)
 			return
 		}
-	}
+		model2 := NewWooOrderItemMeta(a)
+		found, err := model2.Find(model.GetPrimaryKeyValue())
+		if err != nil {
+			t.Errorf(`did not find record for %s = %d because of %s`, model.GetPrimaryKeyName(), model.GetPrimaryKeyValue(), err)
+			return
+		}
+		if found == false {
+			t.Errorf(`did not find record for %s = %d`, model.GetPrimaryKeyName(), model.GetPrimaryKeyValue())
+			return
+		}
+
+	} // end of if fileExists
 }
 
 func TestNewWooOrderItem(t *testing.T) {
@@ -1696,7 +1850,18 @@ func TestWooOrderItemCreate(t *testing.T) {
 			t.Errorf(`zero affected rows`)
 			return
 		}
-	}
+		model2 := NewWooOrderItem(a)
+		found, err := model2.Find(model.GetPrimaryKeyValue())
+		if err != nil {
+			t.Errorf(`did not find record for %s = %d because of %s`, model.GetPrimaryKeyName(), model.GetPrimaryKeyValue(), err)
+			return
+		}
+		if found == false {
+			t.Errorf(`did not find record for %s = %d`, model.GetPrimaryKeyName(), model.GetPrimaryKeyValue())
+			return
+		}
+
+	} // end of if fileExists
 }
 
 func TestNewWooTaxRateLocation(t *testing.T) {
@@ -1766,7 +1931,18 @@ func TestWooTaxRateLocationCreate(t *testing.T) {
 			t.Errorf(`zero affected rows`)
 			return
 		}
-	}
+		model2 := NewWooTaxRateLocation(a)
+		found, err := model2.Find(model.GetPrimaryKeyValue())
+		if err != nil {
+			t.Errorf(`did not find record for %s = %d because of %s`, model.GetPrimaryKeyName(), model.GetPrimaryKeyValue(), err)
+			return
+		}
+		if found == false {
+			t.Errorf(`did not find record for %s = %d`, model.GetPrimaryKeyName(), model.GetPrimaryKeyValue())
+			return
+		}
+
+	} // end of if fileExists
 }
 
 func TestNewWooTaxRate(t *testing.T) {
@@ -1890,7 +2066,18 @@ func TestWooTaxRateCreate(t *testing.T) {
 			t.Errorf(`zero affected rows`)
 			return
 		}
-	}
+		model2 := NewWooTaxRate(a)
+		found, err := model2.Find(model.GetPrimaryKeyValue())
+		if err != nil {
+			t.Errorf(`did not find record for %s = %d because of %s`, model.GetPrimaryKeyName(), model.GetPrimaryKeyValue(), err)
+			return
+		}
+		if found == false {
+			t.Errorf(`did not find record for %s = %d`, model.GetPrimaryKeyName(), model.GetPrimaryKeyValue())
+			return
+		}
+
+	} // end of if fileExists
 }
 
 func TestMysqlAdapterFromYAML(t *testing.T) {

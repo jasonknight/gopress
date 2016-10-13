@@ -23,6 +23,11 @@ type CommentMeta struct {
 	CommentId int64
 	MetaKey   string
 	MetaValue string
+	// Dirty markers for smart updates
+	IsMetaIdDirty    bool
+	IsCommentIdDirty bool
+	IsMetaKeyDirty   bool
+	IsMetaValueDirty bool
 }
 
 func NewCommentMeta(a Adapter) *CommentMeta {
@@ -34,29 +39,69 @@ func NewCommentMeta(a Adapter) *CommentMeta {
 	return &o
 }
 
-func (o *CommentMeta) Find(_find_by_MetaId int64) (CommentMeta, error) {
+func (m *CommentMeta) GetPrimaryKeyValue() int64 {
+	return m.MetaId
+}
+func (m *CommentMeta) GetPrimaryKeyName() string {
+	return `meta_id`
+}
+
+func (m *CommentMeta) GetMetaId() int64 {
+	return m.MetaId
+}
+func (m *CommentMeta) SetMetaId(arg int64) {
+	m.MetaId = arg
+	m.IsMetaIdDirty = true
+}
+
+func (m *CommentMeta) GetCommentId() int64 {
+	return m.CommentId
+}
+func (m *CommentMeta) SetCommentId(arg int64) {
+	m.CommentId = arg
+	m.IsCommentIdDirty = true
+}
+
+func (m *CommentMeta) GetMetaKey() string {
+	return m.MetaKey
+}
+func (m *CommentMeta) SetMetaKey(arg string) {
+	m.MetaKey = arg
+	m.IsMetaKeyDirty = true
+}
+
+func (m *CommentMeta) GetMetaValue() string {
+	return m.MetaValue
+}
+func (m *CommentMeta) SetMetaValue(arg string) {
+	m.MetaValue = arg
+	m.IsMetaValueDirty = true
+}
+
+func (o *CommentMeta) Find(_find_by_MetaId int64) (bool, error) {
 
 	var model_slice []CommentMeta
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "meta_id", _find_by_MetaId)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return CommentMeta{}, err
+		return false, err
 	}
 
 	for _, result := range results {
 		ro := CommentMeta{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return CommentMeta{}, err
+			return false, err
 		}
 		model_slice = append(model_slice, ro)
 	}
 
 	if len(model_slice) == 0 {
 		// there was an error!
-		return CommentMeta{}, errors.New("not found")
+		return false, errors.New("not found")
 	}
-	return model_slice[0], nil
+	o.FromCommentMeta(&model_slice[0])
+	return true, nil
 
 }
 func (o *CommentMeta) FindByCommentId(_find_by_CommentId int64) ([]CommentMeta, error) {
@@ -159,6 +204,13 @@ func (o *CommentMeta) FromDBValueMap(m map[string]DBValue) error {
 
 	return nil
 }
+func (o *CommentMeta) FromCommentMeta(m *CommentMeta) {
+	o.MetaId = m.MetaId
+	o.CommentId = m.CommentId
+	o.MetaKey = m.MetaKey
+	o.MetaValue = m.MetaValue
+
+}
 
 func (o *CommentMeta) Save() (int64, error) {
 	if o._new == true {
@@ -233,6 +285,22 @@ type Comment struct {
 	CommentType        string
 	CommentParent      int64
 	UserId             int64
+	// Dirty markers for smart updates
+	IsCommentIDDirty          bool
+	IsCommentPostIDDirty      bool
+	IsCommentAuthorDirty      bool
+	IsCommentAuthorEmailDirty bool
+	IsCommentAuthorUrlDirty   bool
+	IsCommentAuthorIPDirty    bool
+	IsCommentDateDirty        bool
+	IsCommentDateGmtDirty     bool
+	IsCommentContentDirty     bool
+	IsCommentKarmaDirty       bool
+	IsCommentApprovedDirty    bool
+	IsCommentAgentDirty       bool
+	IsCommentTypeDirty        bool
+	IsCommentParentDirty      bool
+	IsUserIdDirty             bool
 }
 
 func NewComment(a Adapter) *Comment {
@@ -244,29 +312,157 @@ func NewComment(a Adapter) *Comment {
 	return &o
 }
 
-func (o *Comment) Find(_find_by_CommentID int64) (Comment, error) {
+func (m *Comment) GetPrimaryKeyValue() int64 {
+	return m.CommentID
+}
+func (m *Comment) GetPrimaryKeyName() string {
+	return `comment_ID`
+}
+
+func (m *Comment) GetCommentID() int64 {
+	return m.CommentID
+}
+func (m *Comment) SetCommentID(arg int64) {
+	m.CommentID = arg
+	m.IsCommentIDDirty = true
+}
+
+func (m *Comment) GetCommentPostID() int64 {
+	return m.CommentPostID
+}
+func (m *Comment) SetCommentPostID(arg int64) {
+	m.CommentPostID = arg
+	m.IsCommentPostIDDirty = true
+}
+
+func (m *Comment) GetCommentAuthor() string {
+	return m.CommentAuthor
+}
+func (m *Comment) SetCommentAuthor(arg string) {
+	m.CommentAuthor = arg
+	m.IsCommentAuthorDirty = true
+}
+
+func (m *Comment) GetCommentAuthorEmail() string {
+	return m.CommentAuthorEmail
+}
+func (m *Comment) SetCommentAuthorEmail(arg string) {
+	m.CommentAuthorEmail = arg
+	m.IsCommentAuthorEmailDirty = true
+}
+
+func (m *Comment) GetCommentAuthorUrl() string {
+	return m.CommentAuthorUrl
+}
+func (m *Comment) SetCommentAuthorUrl(arg string) {
+	m.CommentAuthorUrl = arg
+	m.IsCommentAuthorUrlDirty = true
+}
+
+func (m *Comment) GetCommentAuthorIP() string {
+	return m.CommentAuthorIP
+}
+func (m *Comment) SetCommentAuthorIP(arg string) {
+	m.CommentAuthorIP = arg
+	m.IsCommentAuthorIPDirty = true
+}
+
+func (m *Comment) GetCommentDate() *DateTime {
+	return m.CommentDate
+}
+func (m *Comment) SetCommentDate(arg *DateTime) {
+	m.CommentDate = arg
+	m.IsCommentDateDirty = true
+}
+
+func (m *Comment) GetCommentDateGmt() *DateTime {
+	return m.CommentDateGmt
+}
+func (m *Comment) SetCommentDateGmt(arg *DateTime) {
+	m.CommentDateGmt = arg
+	m.IsCommentDateGmtDirty = true
+}
+
+func (m *Comment) GetCommentContent() string {
+	return m.CommentContent
+}
+func (m *Comment) SetCommentContent(arg string) {
+	m.CommentContent = arg
+	m.IsCommentContentDirty = true
+}
+
+func (m *Comment) GetCommentKarma() int {
+	return m.CommentKarma
+}
+func (m *Comment) SetCommentKarma(arg int) {
+	m.CommentKarma = arg
+	m.IsCommentKarmaDirty = true
+}
+
+func (m *Comment) GetCommentApproved() string {
+	return m.CommentApproved
+}
+func (m *Comment) SetCommentApproved(arg string) {
+	m.CommentApproved = arg
+	m.IsCommentApprovedDirty = true
+}
+
+func (m *Comment) GetCommentAgent() string {
+	return m.CommentAgent
+}
+func (m *Comment) SetCommentAgent(arg string) {
+	m.CommentAgent = arg
+	m.IsCommentAgentDirty = true
+}
+
+func (m *Comment) GetCommentType() string {
+	return m.CommentType
+}
+func (m *Comment) SetCommentType(arg string) {
+	m.CommentType = arg
+	m.IsCommentTypeDirty = true
+}
+
+func (m *Comment) GetCommentParent() int64 {
+	return m.CommentParent
+}
+func (m *Comment) SetCommentParent(arg int64) {
+	m.CommentParent = arg
+	m.IsCommentParentDirty = true
+}
+
+func (m *Comment) GetUserId() int64 {
+	return m.UserId
+}
+func (m *Comment) SetUserId(arg int64) {
+	m.UserId = arg
+	m.IsUserIdDirty = true
+}
+
+func (o *Comment) Find(_find_by_CommentID int64) (bool, error) {
 
 	var model_slice []Comment
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "comment_ID", _find_by_CommentID)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return Comment{}, err
+		return false, err
 	}
 
 	for _, result := range results {
 		ro := Comment{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return Comment{}, err
+			return false, err
 		}
 		model_slice = append(model_slice, ro)
 	}
 
 	if len(model_slice) == 0 {
 		// there was an error!
-		return Comment{}, errors.New("not found")
+		return false, errors.New("not found")
 	}
-	return model_slice[0], nil
+	o.FromComment(&model_slice[0])
+	return true, nil
 
 }
 func (o *Comment) FindByCommentPostID(_find_by_CommentPostID int64) ([]Comment, error) {
@@ -699,6 +895,24 @@ func (o *Comment) FromDBValueMap(m map[string]DBValue) error {
 
 	return nil
 }
+func (o *Comment) FromComment(m *Comment) {
+	o.CommentID = m.CommentID
+	o.CommentPostID = m.CommentPostID
+	o.CommentAuthor = m.CommentAuthor
+	o.CommentAuthorEmail = m.CommentAuthorEmail
+	o.CommentAuthorUrl = m.CommentAuthorUrl
+	o.CommentAuthorIP = m.CommentAuthorIP
+	o.CommentDate = m.CommentDate
+	o.CommentDateGmt = m.CommentDateGmt
+	o.CommentContent = m.CommentContent
+	o.CommentKarma = m.CommentKarma
+	o.CommentApproved = m.CommentApproved
+	o.CommentAgent = m.CommentAgent
+	o.CommentType = m.CommentType
+	o.CommentParent = m.CommentParent
+	o.UserId = m.UserId
+
+}
 
 func (o *Comment) Save() (int64, error) {
 	if o._new == true {
@@ -881,6 +1095,20 @@ type Link struct {
 	LinkRel         string
 	LinkNotes       string
 	LinkRss         string
+	// Dirty markers for smart updates
+	IsLinkIdDirty          bool
+	IsLinkUrlDirty         bool
+	IsLinkNameDirty        bool
+	IsLinkImageDirty       bool
+	IsLinkTargetDirty      bool
+	IsLinkDescriptionDirty bool
+	IsLinkVisibleDirty     bool
+	IsLinkOwnerDirty       bool
+	IsLinkRatingDirty      bool
+	IsLinkUpdatedDirty     bool
+	IsLinkRelDirty         bool
+	IsLinkNotesDirty       bool
+	IsLinkRssDirty         bool
 }
 
 func NewLink(a Adapter) *Link {
@@ -892,29 +1120,141 @@ func NewLink(a Adapter) *Link {
 	return &o
 }
 
-func (o *Link) Find(_find_by_LinkId int64) (Link, error) {
+func (m *Link) GetPrimaryKeyValue() int64 {
+	return m.LinkId
+}
+func (m *Link) GetPrimaryKeyName() string {
+	return `link_id`
+}
+
+func (m *Link) GetLinkId() int64 {
+	return m.LinkId
+}
+func (m *Link) SetLinkId(arg int64) {
+	m.LinkId = arg
+	m.IsLinkIdDirty = true
+}
+
+func (m *Link) GetLinkUrl() string {
+	return m.LinkUrl
+}
+func (m *Link) SetLinkUrl(arg string) {
+	m.LinkUrl = arg
+	m.IsLinkUrlDirty = true
+}
+
+func (m *Link) GetLinkName() string {
+	return m.LinkName
+}
+func (m *Link) SetLinkName(arg string) {
+	m.LinkName = arg
+	m.IsLinkNameDirty = true
+}
+
+func (m *Link) GetLinkImage() string {
+	return m.LinkImage
+}
+func (m *Link) SetLinkImage(arg string) {
+	m.LinkImage = arg
+	m.IsLinkImageDirty = true
+}
+
+func (m *Link) GetLinkTarget() string {
+	return m.LinkTarget
+}
+func (m *Link) SetLinkTarget(arg string) {
+	m.LinkTarget = arg
+	m.IsLinkTargetDirty = true
+}
+
+func (m *Link) GetLinkDescription() string {
+	return m.LinkDescription
+}
+func (m *Link) SetLinkDescription(arg string) {
+	m.LinkDescription = arg
+	m.IsLinkDescriptionDirty = true
+}
+
+func (m *Link) GetLinkVisible() string {
+	return m.LinkVisible
+}
+func (m *Link) SetLinkVisible(arg string) {
+	m.LinkVisible = arg
+	m.IsLinkVisibleDirty = true
+}
+
+func (m *Link) GetLinkOwner() int64 {
+	return m.LinkOwner
+}
+func (m *Link) SetLinkOwner(arg int64) {
+	m.LinkOwner = arg
+	m.IsLinkOwnerDirty = true
+}
+
+func (m *Link) GetLinkRating() int {
+	return m.LinkRating
+}
+func (m *Link) SetLinkRating(arg int) {
+	m.LinkRating = arg
+	m.IsLinkRatingDirty = true
+}
+
+func (m *Link) GetLinkUpdated() *DateTime {
+	return m.LinkUpdated
+}
+func (m *Link) SetLinkUpdated(arg *DateTime) {
+	m.LinkUpdated = arg
+	m.IsLinkUpdatedDirty = true
+}
+
+func (m *Link) GetLinkRel() string {
+	return m.LinkRel
+}
+func (m *Link) SetLinkRel(arg string) {
+	m.LinkRel = arg
+	m.IsLinkRelDirty = true
+}
+
+func (m *Link) GetLinkNotes() string {
+	return m.LinkNotes
+}
+func (m *Link) SetLinkNotes(arg string) {
+	m.LinkNotes = arg
+	m.IsLinkNotesDirty = true
+}
+
+func (m *Link) GetLinkRss() string {
+	return m.LinkRss
+}
+func (m *Link) SetLinkRss(arg string) {
+	m.LinkRss = arg
+	m.IsLinkRssDirty = true
+}
+
+func (o *Link) Find(_find_by_LinkId int64) (bool, error) {
 
 	var model_slice []Link
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "link_id", _find_by_LinkId)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return Link{}, err
+		return false, err
 	}
 
 	for _, result := range results {
 		ro := Link{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return Link{}, err
+			return false, err
 		}
 		model_slice = append(model_slice, ro)
 	}
 
 	if len(model_slice) == 0 {
 		// there was an error!
-		return Link{}, errors.New("not found")
+		return false, errors.New("not found")
 	}
-	return model_slice[0], nil
+	o.FromLink(&model_slice[0])
+	return true, nil
 
 }
 func (o *Link) FindByLinkUrl(_find_by_LinkUrl string) ([]Link, error) {
@@ -1287,6 +1627,22 @@ func (o *Link) FromDBValueMap(m map[string]DBValue) error {
 
 	return nil
 }
+func (o *Link) FromLink(m *Link) {
+	o.LinkId = m.LinkId
+	o.LinkUrl = m.LinkUrl
+	o.LinkName = m.LinkName
+	o.LinkImage = m.LinkImage
+	o.LinkTarget = m.LinkTarget
+	o.LinkDescription = m.LinkDescription
+	o.LinkVisible = m.LinkVisible
+	o.LinkOwner = m.LinkOwner
+	o.LinkRating = m.LinkRating
+	o.LinkUpdated = m.LinkUpdated
+	o.LinkRel = m.LinkRel
+	o.LinkNotes = m.LinkNotes
+	o.LinkRss = m.LinkRss
+
+}
 
 func (o *Link) Save() (int64, error) {
 	if o._new == true {
@@ -1440,6 +1796,11 @@ type Option struct {
 	OptionName  string
 	OptionValue string
 	Autoload    string
+	// Dirty markers for smart updates
+	IsOptionIdDirty    bool
+	IsOptionNameDirty  bool
+	IsOptionValueDirty bool
+	IsAutoloadDirty    bool
 }
 
 func NewOption(a Adapter) *Option {
@@ -1451,29 +1812,69 @@ func NewOption(a Adapter) *Option {
 	return &o
 }
 
-func (o *Option) Find(_find_by_OptionId int64) (Option, error) {
+func (m *Option) GetPrimaryKeyValue() int64 {
+	return m.OptionId
+}
+func (m *Option) GetPrimaryKeyName() string {
+	return `option_id`
+}
+
+func (m *Option) GetOptionId() int64 {
+	return m.OptionId
+}
+func (m *Option) SetOptionId(arg int64) {
+	m.OptionId = arg
+	m.IsOptionIdDirty = true
+}
+
+func (m *Option) GetOptionName() string {
+	return m.OptionName
+}
+func (m *Option) SetOptionName(arg string) {
+	m.OptionName = arg
+	m.IsOptionNameDirty = true
+}
+
+func (m *Option) GetOptionValue() string {
+	return m.OptionValue
+}
+func (m *Option) SetOptionValue(arg string) {
+	m.OptionValue = arg
+	m.IsOptionValueDirty = true
+}
+
+func (m *Option) GetAutoload() string {
+	return m.Autoload
+}
+func (m *Option) SetAutoload(arg string) {
+	m.Autoload = arg
+	m.IsAutoloadDirty = true
+}
+
+func (o *Option) Find(_find_by_OptionId int64) (bool, error) {
 
 	var model_slice []Option
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "option_id", _find_by_OptionId)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return Option{}, err
+		return false, err
 	}
 
 	for _, result := range results {
 		ro := Option{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return Option{}, err
+			return false, err
 		}
 		model_slice = append(model_slice, ro)
 	}
 
 	if len(model_slice) == 0 {
 		// there was an error!
-		return Option{}, errors.New("not found")
+		return false, errors.New("not found")
 	}
-	return model_slice[0], nil
+	o.FromOption(&model_slice[0])
+	return true, nil
 
 }
 func (o *Option) FindByOptionName(_find_by_OptionName string) ([]Option, error) {
@@ -1576,6 +1977,13 @@ func (o *Option) FromDBValueMap(m map[string]DBValue) error {
 
 	return nil
 }
+func (o *Option) FromOption(m *Option) {
+	o.OptionId = m.OptionId
+	o.OptionName = m.OptionName
+	o.OptionValue = m.OptionValue
+	o.Autoload = m.Autoload
+
+}
 
 func (o *Option) Save() (int64, error) {
 	if o._new == true {
@@ -1639,6 +2047,11 @@ type PostMeta struct {
 	Id        int64
 	MetaKey   string
 	MetaValue string
+	// Dirty markers for smart updates
+	IsMetaIdDirty    bool
+	IsIdDirty        bool
+	IsMetaKeyDirty   bool
+	IsMetaValueDirty bool
 }
 
 func NewPostMeta(a Adapter) *PostMeta {
@@ -1650,29 +2063,69 @@ func NewPostMeta(a Adapter) *PostMeta {
 	return &o
 }
 
-func (o *PostMeta) Find(_find_by_MetaId int64) (PostMeta, error) {
+func (m *PostMeta) GetPrimaryKeyValue() int64 {
+	return m.MetaId
+}
+func (m *PostMeta) GetPrimaryKeyName() string {
+	return `meta_id`
+}
+
+func (m *PostMeta) GetMetaId() int64 {
+	return m.MetaId
+}
+func (m *PostMeta) SetMetaId(arg int64) {
+	m.MetaId = arg
+	m.IsMetaIdDirty = true
+}
+
+func (m *PostMeta) GetId() int64 {
+	return m.Id
+}
+func (m *PostMeta) SetId(arg int64) {
+	m.Id = arg
+	m.IsIdDirty = true
+}
+
+func (m *PostMeta) GetMetaKey() string {
+	return m.MetaKey
+}
+func (m *PostMeta) SetMetaKey(arg string) {
+	m.MetaKey = arg
+	m.IsMetaKeyDirty = true
+}
+
+func (m *PostMeta) GetMetaValue() string {
+	return m.MetaValue
+}
+func (m *PostMeta) SetMetaValue(arg string) {
+	m.MetaValue = arg
+	m.IsMetaValueDirty = true
+}
+
+func (o *PostMeta) Find(_find_by_MetaId int64) (bool, error) {
 
 	var model_slice []PostMeta
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "meta_id", _find_by_MetaId)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return PostMeta{}, err
+		return false, err
 	}
 
 	for _, result := range results {
 		ro := PostMeta{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return PostMeta{}, err
+			return false, err
 		}
 		model_slice = append(model_slice, ro)
 	}
 
 	if len(model_slice) == 0 {
 		// there was an error!
-		return PostMeta{}, errors.New("not found")
+		return false, errors.New("not found")
 	}
-	return model_slice[0], nil
+	o.FromPostMeta(&model_slice[0])
+	return true, nil
 
 }
 func (o *PostMeta) FindById(_find_by_Id int64) ([]PostMeta, error) {
@@ -1775,6 +2228,13 @@ func (o *PostMeta) FromDBValueMap(m map[string]DBValue) error {
 
 	return nil
 }
+func (o *PostMeta) FromPostMeta(m *PostMeta) {
+	o.MetaId = m.MetaId
+	o.Id = m.Id
+	o.MetaKey = m.MetaKey
+	o.MetaValue = m.MetaValue
+
+}
 
 func (o *PostMeta) Save() (int64, error) {
 	if o._new == true {
@@ -1857,6 +2317,30 @@ type Post struct {
 	Type            string
 	MimeType        string
 	CommentCount    int64
+	// Dirty markers for smart updates
+	IsIDDirty              bool
+	IsAuthorDirty          bool
+	IsDateDirty            bool
+	IsDateGmtDirty         bool
+	IsContentDirty         bool
+	IsTitleDirty           bool
+	IsExcerptDirty         bool
+	IsStatusDirty          bool
+	IsCommentStatusDirty   bool
+	IsPingStatusDirty      bool
+	IsPasswordDirty        bool
+	IsNameDirty            bool
+	IsToPingDirty          bool
+	IsPingedDirty          bool
+	IsModifiedDirty        bool
+	IsModifiedGmtDirty     bool
+	IsContentFilteredDirty bool
+	IsParentDirty          bool
+	IsGuidDirty            bool
+	IsMenuOrderDirty       bool
+	IsTypeDirty            bool
+	IsMimeTypeDirty        bool
+	IsCommentCountDirty    bool
 }
 
 func NewPost(a Adapter) *Post {
@@ -1868,29 +2352,221 @@ func NewPost(a Adapter) *Post {
 	return &o
 }
 
-func (o *Post) Find(_find_by_ID int64) (Post, error) {
+func (m *Post) GetPrimaryKeyValue() int64 {
+	return m.ID
+}
+func (m *Post) GetPrimaryKeyName() string {
+	return `ID`
+}
+
+func (m *Post) GetID() int64 {
+	return m.ID
+}
+func (m *Post) SetID(arg int64) {
+	m.ID = arg
+	m.IsIDDirty = true
+}
+
+func (m *Post) GetAuthor() int64 {
+	return m.Author
+}
+func (m *Post) SetAuthor(arg int64) {
+	m.Author = arg
+	m.IsAuthorDirty = true
+}
+
+func (m *Post) GetDate() *DateTime {
+	return m.Date
+}
+func (m *Post) SetDate(arg *DateTime) {
+	m.Date = arg
+	m.IsDateDirty = true
+}
+
+func (m *Post) GetDateGmt() *DateTime {
+	return m.DateGmt
+}
+func (m *Post) SetDateGmt(arg *DateTime) {
+	m.DateGmt = arg
+	m.IsDateGmtDirty = true
+}
+
+func (m *Post) GetContent() string {
+	return m.Content
+}
+func (m *Post) SetContent(arg string) {
+	m.Content = arg
+	m.IsContentDirty = true
+}
+
+func (m *Post) GetTitle() string {
+	return m.Title
+}
+func (m *Post) SetTitle(arg string) {
+	m.Title = arg
+	m.IsTitleDirty = true
+}
+
+func (m *Post) GetExcerpt() string {
+	return m.Excerpt
+}
+func (m *Post) SetExcerpt(arg string) {
+	m.Excerpt = arg
+	m.IsExcerptDirty = true
+}
+
+func (m *Post) GetStatus() string {
+	return m.Status
+}
+func (m *Post) SetStatus(arg string) {
+	m.Status = arg
+	m.IsStatusDirty = true
+}
+
+func (m *Post) GetCommentStatus() string {
+	return m.CommentStatus
+}
+func (m *Post) SetCommentStatus(arg string) {
+	m.CommentStatus = arg
+	m.IsCommentStatusDirty = true
+}
+
+func (m *Post) GetPingStatus() string {
+	return m.PingStatus
+}
+func (m *Post) SetPingStatus(arg string) {
+	m.PingStatus = arg
+	m.IsPingStatusDirty = true
+}
+
+func (m *Post) GetPassword() string {
+	return m.Password
+}
+func (m *Post) SetPassword(arg string) {
+	m.Password = arg
+	m.IsPasswordDirty = true
+}
+
+func (m *Post) GetName() string {
+	return m.Name
+}
+func (m *Post) SetName(arg string) {
+	m.Name = arg
+	m.IsNameDirty = true
+}
+
+func (m *Post) GetToPing() string {
+	return m.ToPing
+}
+func (m *Post) SetToPing(arg string) {
+	m.ToPing = arg
+	m.IsToPingDirty = true
+}
+
+func (m *Post) GetPinged() string {
+	return m.Pinged
+}
+func (m *Post) SetPinged(arg string) {
+	m.Pinged = arg
+	m.IsPingedDirty = true
+}
+
+func (m *Post) GetModified() *DateTime {
+	return m.Modified
+}
+func (m *Post) SetModified(arg *DateTime) {
+	m.Modified = arg
+	m.IsModifiedDirty = true
+}
+
+func (m *Post) GetModifiedGmt() *DateTime {
+	return m.ModifiedGmt
+}
+func (m *Post) SetModifiedGmt(arg *DateTime) {
+	m.ModifiedGmt = arg
+	m.IsModifiedGmtDirty = true
+}
+
+func (m *Post) GetContentFiltered() string {
+	return m.ContentFiltered
+}
+func (m *Post) SetContentFiltered(arg string) {
+	m.ContentFiltered = arg
+	m.IsContentFilteredDirty = true
+}
+
+func (m *Post) GetParent() int64 {
+	return m.Parent
+}
+func (m *Post) SetParent(arg int64) {
+	m.Parent = arg
+	m.IsParentDirty = true
+}
+
+func (m *Post) GetGuid() string {
+	return m.Guid
+}
+func (m *Post) SetGuid(arg string) {
+	m.Guid = arg
+	m.IsGuidDirty = true
+}
+
+func (m *Post) GetMenuOrder() int {
+	return m.MenuOrder
+}
+func (m *Post) SetMenuOrder(arg int) {
+	m.MenuOrder = arg
+	m.IsMenuOrderDirty = true
+}
+
+func (m *Post) GetType() string {
+	return m.Type
+}
+func (m *Post) SetType(arg string) {
+	m.Type = arg
+	m.IsTypeDirty = true
+}
+
+func (m *Post) GetMimeType() string {
+	return m.MimeType
+}
+func (m *Post) SetMimeType(arg string) {
+	m.MimeType = arg
+	m.IsMimeTypeDirty = true
+}
+
+func (m *Post) GetCommentCount() int64 {
+	return m.CommentCount
+}
+func (m *Post) SetCommentCount(arg int64) {
+	m.CommentCount = arg
+	m.IsCommentCountDirty = true
+}
+
+func (o *Post) Find(_find_by_ID int64) (bool, error) {
 
 	var model_slice []Post
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "ID", _find_by_ID)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return Post{}, err
+		return false, err
 	}
 
 	for _, result := range results {
 		ro := Post{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return Post{}, err
+			return false, err
 		}
 		model_slice = append(model_slice, ro)
 	}
 
 	if len(model_slice) == 0 {
 		// there was an error!
-		return Post{}, errors.New("not found")
+		return false, errors.New("not found")
 	}
-	return model_slice[0], nil
+	o.FromPost(&model_slice[0])
+	return true, nil
 
 }
 func (o *Post) FindByAuthor(_find_by_Author int64) ([]Post, error) {
@@ -2563,6 +3239,32 @@ func (o *Post) FromDBValueMap(m map[string]DBValue) error {
 
 	return nil
 }
+func (o *Post) FromPost(m *Post) {
+	o.ID = m.ID
+	o.Author = m.Author
+	o.Date = m.Date
+	o.DateGmt = m.DateGmt
+	o.Content = m.Content
+	o.Title = m.Title
+	o.Excerpt = m.Excerpt
+	o.Status = m.Status
+	o.CommentStatus = m.CommentStatus
+	o.PingStatus = m.PingStatus
+	o.Password = m.Password
+	o.Name = m.Name
+	o.ToPing = m.ToPing
+	o.Pinged = m.Pinged
+	o.Modified = m.Modified
+	o.ModifiedGmt = m.ModifiedGmt
+	o.ContentFiltered = m.ContentFiltered
+	o.Parent = m.Parent
+	o.Guid = m.Guid
+	o.MenuOrder = m.MenuOrder
+	o.Type = m.Type
+	o.MimeType = m.MimeType
+	o.CommentCount = m.CommentCount
+
+}
 
 func (o *Post) Save() (int64, error) {
 	if o._new == true {
@@ -2815,6 +3517,10 @@ type TermRelationship struct {
 	ObjectId       int64
 	TermTaxonomyId int64
 	TermOrder      int
+	// Dirty markers for smart updates
+	IsObjectIdDirty       bool
+	IsTermTaxonomyIdDirty bool
+	IsTermOrderDirty      bool
 }
 
 func NewTermRelationship(a Adapter) *TermRelationship {
@@ -2824,6 +3530,37 @@ func NewTermRelationship(a Adapter) *TermRelationship {
 	o._pkey = "term_taxonomy_id"
 	o._new = false
 	return &o
+}
+
+func (m *TermRelationship) GetPrimaryKeyValue() int64 {
+	return m.TermTaxonomyId
+}
+func (m *TermRelationship) GetPrimaryKeyName() string {
+	return `term_taxonomy_id`
+}
+
+func (m *TermRelationship) GetObjectId() int64 {
+	return m.ObjectId
+}
+func (m *TermRelationship) SetObjectId(arg int64) {
+	m.ObjectId = arg
+	m.IsObjectIdDirty = true
+}
+
+func (m *TermRelationship) GetTermTaxonomyId() int64 {
+	return m.TermTaxonomyId
+}
+func (m *TermRelationship) SetTermTaxonomyId(arg int64) {
+	m.TermTaxonomyId = arg
+	m.IsTermTaxonomyIdDirty = true
+}
+
+func (m *TermRelationship) GetTermOrder() int {
+	return m.TermOrder
+}
+func (m *TermRelationship) SetTermOrder(arg int) {
+	m.TermOrder = arg
+	m.IsTermOrderDirty = true
 }
 
 func (o *TermRelationship) FindByObjectId(_find_by_ObjectId int64) ([]TermRelationship, error) {
@@ -2851,29 +3588,30 @@ func (o *TermRelationship) FindByObjectId(_find_by_ObjectId int64) ([]TermRelati
 	return model_slice, nil
 
 }
-func (o *TermRelationship) Find(_find_by_TermTaxonomyId int64) (TermRelationship, error) {
+func (o *TermRelationship) Find(_find_by_TermTaxonomyId int64) (bool, error) {
 
 	var model_slice []TermRelationship
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "term_taxonomy_id", _find_by_TermTaxonomyId)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return TermRelationship{}, err
+		return false, err
 	}
 
 	for _, result := range results {
 		ro := TermRelationship{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return TermRelationship{}, err
+			return false, err
 		}
 		model_slice = append(model_slice, ro)
 	}
 
 	if len(model_slice) == 0 {
 		// there was an error!
-		return TermRelationship{}, errors.New("not found")
+		return false, errors.New("not found")
 	}
-	return model_slice[0], nil
+	o.FromTermRelationship(&model_slice[0])
+	return true, nil
 
 }
 func (o *TermRelationship) FindByTermOrder(_find_by_TermOrder int) ([]TermRelationship, error) {
@@ -2921,6 +3659,12 @@ func (o *TermRelationship) FromDBValueMap(m map[string]DBValue) error {
 
 	return nil
 }
+func (o *TermRelationship) FromTermRelationship(m *TermRelationship) {
+	o.ObjectId = m.ObjectId
+	o.TermTaxonomyId = m.TermTaxonomyId
+	o.TermOrder = m.TermOrder
+
+}
 
 func (o *TermRelationship) Save() (int64, error) {
 	if o._new == true {
@@ -2966,6 +3710,13 @@ type TermTaxonomy struct {
 	Description    string
 	Parent         int64
 	Count          int64
+	// Dirty markers for smart updates
+	IsTermTaxonomyIdDirty bool
+	IsTermIdDirty         bool
+	IsTaxonomyDirty       bool
+	IsDescriptionDirty    bool
+	IsParentDirty         bool
+	IsCountDirty          bool
 }
 
 func NewTermTaxonomy(a Adapter) *TermTaxonomy {
@@ -2977,29 +3728,85 @@ func NewTermTaxonomy(a Adapter) *TermTaxonomy {
 	return &o
 }
 
-func (o *TermTaxonomy) Find(_find_by_TermTaxonomyId int64) (TermTaxonomy, error) {
+func (m *TermTaxonomy) GetPrimaryKeyValue() int64 {
+	return m.TermTaxonomyId
+}
+func (m *TermTaxonomy) GetPrimaryKeyName() string {
+	return `term_taxonomy_id`
+}
+
+func (m *TermTaxonomy) GetTermTaxonomyId() int64 {
+	return m.TermTaxonomyId
+}
+func (m *TermTaxonomy) SetTermTaxonomyId(arg int64) {
+	m.TermTaxonomyId = arg
+	m.IsTermTaxonomyIdDirty = true
+}
+
+func (m *TermTaxonomy) GetTermId() int64 {
+	return m.TermId
+}
+func (m *TermTaxonomy) SetTermId(arg int64) {
+	m.TermId = arg
+	m.IsTermIdDirty = true
+}
+
+func (m *TermTaxonomy) GetTaxonomy() string {
+	return m.Taxonomy
+}
+func (m *TermTaxonomy) SetTaxonomy(arg string) {
+	m.Taxonomy = arg
+	m.IsTaxonomyDirty = true
+}
+
+func (m *TermTaxonomy) GetDescription() string {
+	return m.Description
+}
+func (m *TermTaxonomy) SetDescription(arg string) {
+	m.Description = arg
+	m.IsDescriptionDirty = true
+}
+
+func (m *TermTaxonomy) GetParent() int64 {
+	return m.Parent
+}
+func (m *TermTaxonomy) SetParent(arg int64) {
+	m.Parent = arg
+	m.IsParentDirty = true
+}
+
+func (m *TermTaxonomy) GetCount() int64 {
+	return m.Count
+}
+func (m *TermTaxonomy) SetCount(arg int64) {
+	m.Count = arg
+	m.IsCountDirty = true
+}
+
+func (o *TermTaxonomy) Find(_find_by_TermTaxonomyId int64) (bool, error) {
 
 	var model_slice []TermTaxonomy
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "term_taxonomy_id", _find_by_TermTaxonomyId)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return TermTaxonomy{}, err
+		return false, err
 	}
 
 	for _, result := range results {
 		ro := TermTaxonomy{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return TermTaxonomy{}, err
+			return false, err
 		}
 		model_slice = append(model_slice, ro)
 	}
 
 	if len(model_slice) == 0 {
 		// there was an error!
-		return TermTaxonomy{}, errors.New("not found")
+		return false, errors.New("not found")
 	}
-	return model_slice[0], nil
+	o.FromTermTaxonomy(&model_slice[0])
+	return true, nil
 
 }
 func (o *TermTaxonomy) FindByTermId(_find_by_TermId int64) ([]TermTaxonomy, error) {
@@ -3162,6 +3969,15 @@ func (o *TermTaxonomy) FromDBValueMap(m map[string]DBValue) error {
 
 	return nil
 }
+func (o *TermTaxonomy) FromTermTaxonomy(m *TermTaxonomy) {
+	o.TermTaxonomyId = m.TermTaxonomyId
+	o.TermId = m.TermId
+	o.Taxonomy = m.Taxonomy
+	o.Description = m.Description
+	o.Parent = m.Parent
+	o.Count = m.Count
+
+}
 
 func (o *TermTaxonomy) Save() (int64, error) {
 	if o._new == true {
@@ -3245,6 +4061,11 @@ type Term struct {
 	Name      string
 	Slug      string
 	TermGroup int64
+	// Dirty markers for smart updates
+	IsTermIdDirty    bool
+	IsNameDirty      bool
+	IsSlugDirty      bool
+	IsTermGroupDirty bool
 }
 
 func NewTerm(a Adapter) *Term {
@@ -3256,29 +4077,69 @@ func NewTerm(a Adapter) *Term {
 	return &o
 }
 
-func (o *Term) Find(_find_by_TermId int64) (Term, error) {
+func (m *Term) GetPrimaryKeyValue() int64 {
+	return m.TermId
+}
+func (m *Term) GetPrimaryKeyName() string {
+	return `term_id`
+}
+
+func (m *Term) GetTermId() int64 {
+	return m.TermId
+}
+func (m *Term) SetTermId(arg int64) {
+	m.TermId = arg
+	m.IsTermIdDirty = true
+}
+
+func (m *Term) GetName() string {
+	return m.Name
+}
+func (m *Term) SetName(arg string) {
+	m.Name = arg
+	m.IsNameDirty = true
+}
+
+func (m *Term) GetSlug() string {
+	return m.Slug
+}
+func (m *Term) SetSlug(arg string) {
+	m.Slug = arg
+	m.IsSlugDirty = true
+}
+
+func (m *Term) GetTermGroup() int64 {
+	return m.TermGroup
+}
+func (m *Term) SetTermGroup(arg int64) {
+	m.TermGroup = arg
+	m.IsTermGroupDirty = true
+}
+
+func (o *Term) Find(_find_by_TermId int64) (bool, error) {
 
 	var model_slice []Term
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "term_id", _find_by_TermId)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return Term{}, err
+		return false, err
 	}
 
 	for _, result := range results {
 		ro := Term{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return Term{}, err
+			return false, err
 		}
 		model_slice = append(model_slice, ro)
 	}
 
 	if len(model_slice) == 0 {
 		// there was an error!
-		return Term{}, errors.New("not found")
+		return false, errors.New("not found")
 	}
-	return model_slice[0], nil
+	o.FromTerm(&model_slice[0])
+	return true, nil
 
 }
 func (o *Term) FindByName(_find_by_Name string) ([]Term, error) {
@@ -3381,6 +4242,13 @@ func (o *Term) FromDBValueMap(m map[string]DBValue) error {
 
 	return nil
 }
+func (o *Term) FromTerm(m *Term) {
+	o.TermId = m.TermId
+	o.Name = m.Name
+	o.Slug = m.Slug
+	o.TermGroup = m.TermGroup
+
+}
 
 func (o *Term) Save() (int64, error) {
 	if o._new == true {
@@ -3444,6 +4312,11 @@ type UserMeta struct {
 	UserId    int64
 	MetaKey   string
 	MetaValue string
+	// Dirty markers for smart updates
+	IsUMetaIdDirty   bool
+	IsUserIdDirty    bool
+	IsMetaKeyDirty   bool
+	IsMetaValueDirty bool
 }
 
 func NewUserMeta(a Adapter) *UserMeta {
@@ -3455,29 +4328,69 @@ func NewUserMeta(a Adapter) *UserMeta {
 	return &o
 }
 
-func (o *UserMeta) Find(_find_by_UMetaId int64) (UserMeta, error) {
+func (m *UserMeta) GetPrimaryKeyValue() int64 {
+	return m.UMetaId
+}
+func (m *UserMeta) GetPrimaryKeyName() string {
+	return `umeta_id`
+}
+
+func (m *UserMeta) GetUMetaId() int64 {
+	return m.UMetaId
+}
+func (m *UserMeta) SetUMetaId(arg int64) {
+	m.UMetaId = arg
+	m.IsUMetaIdDirty = true
+}
+
+func (m *UserMeta) GetUserId() int64 {
+	return m.UserId
+}
+func (m *UserMeta) SetUserId(arg int64) {
+	m.UserId = arg
+	m.IsUserIdDirty = true
+}
+
+func (m *UserMeta) GetMetaKey() string {
+	return m.MetaKey
+}
+func (m *UserMeta) SetMetaKey(arg string) {
+	m.MetaKey = arg
+	m.IsMetaKeyDirty = true
+}
+
+func (m *UserMeta) GetMetaValue() string {
+	return m.MetaValue
+}
+func (m *UserMeta) SetMetaValue(arg string) {
+	m.MetaValue = arg
+	m.IsMetaValueDirty = true
+}
+
+func (o *UserMeta) Find(_find_by_UMetaId int64) (bool, error) {
 
 	var model_slice []UserMeta
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "umeta_id", _find_by_UMetaId)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return UserMeta{}, err
+		return false, err
 	}
 
 	for _, result := range results {
 		ro := UserMeta{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return UserMeta{}, err
+			return false, err
 		}
 		model_slice = append(model_slice, ro)
 	}
 
 	if len(model_slice) == 0 {
 		// there was an error!
-		return UserMeta{}, errors.New("not found")
+		return false, errors.New("not found")
 	}
-	return model_slice[0], nil
+	o.FromUserMeta(&model_slice[0])
+	return true, nil
 
 }
 func (o *UserMeta) FindByUserId(_find_by_UserId int64) ([]UserMeta, error) {
@@ -3580,6 +4493,13 @@ func (o *UserMeta) FromDBValueMap(m map[string]DBValue) error {
 
 	return nil
 }
+func (o *UserMeta) FromUserMeta(m *UserMeta) {
+	o.UMetaId = m.UMetaId
+	o.UserId = m.UserId
+	o.MetaKey = m.MetaKey
+	o.MetaValue = m.MetaValue
+
+}
 
 func (o *UserMeta) Save() (int64, error) {
 	if o._new == true {
@@ -3649,6 +4569,17 @@ type User struct {
 	UserActivationKey string
 	UserStatus        int
 	DisplayName       string
+	// Dirty markers for smart updates
+	IsIDDirty                bool
+	IsUserLoginDirty         bool
+	IsUserPassDirty          bool
+	IsUserNicenameDirty      bool
+	IsUserEmailDirty         bool
+	IsUserUrlDirty           bool
+	IsUserRegisteredDirty    bool
+	IsUserActivationKeyDirty bool
+	IsUserStatusDirty        bool
+	IsDisplayNameDirty       bool
 }
 
 func NewUser(a Adapter) *User {
@@ -3660,29 +4591,117 @@ func NewUser(a Adapter) *User {
 	return &o
 }
 
-func (o *User) Find(_find_by_ID int64) (User, error) {
+func (m *User) GetPrimaryKeyValue() int64 {
+	return m.ID
+}
+func (m *User) GetPrimaryKeyName() string {
+	return `ID`
+}
+
+func (m *User) GetID() int64 {
+	return m.ID
+}
+func (m *User) SetID(arg int64) {
+	m.ID = arg
+	m.IsIDDirty = true
+}
+
+func (m *User) GetUserLogin() string {
+	return m.UserLogin
+}
+func (m *User) SetUserLogin(arg string) {
+	m.UserLogin = arg
+	m.IsUserLoginDirty = true
+}
+
+func (m *User) GetUserPass() string {
+	return m.UserPass
+}
+func (m *User) SetUserPass(arg string) {
+	m.UserPass = arg
+	m.IsUserPassDirty = true
+}
+
+func (m *User) GetUserNicename() string {
+	return m.UserNicename
+}
+func (m *User) SetUserNicename(arg string) {
+	m.UserNicename = arg
+	m.IsUserNicenameDirty = true
+}
+
+func (m *User) GetUserEmail() string {
+	return m.UserEmail
+}
+func (m *User) SetUserEmail(arg string) {
+	m.UserEmail = arg
+	m.IsUserEmailDirty = true
+}
+
+func (m *User) GetUserUrl() string {
+	return m.UserUrl
+}
+func (m *User) SetUserUrl(arg string) {
+	m.UserUrl = arg
+	m.IsUserUrlDirty = true
+}
+
+func (m *User) GetUserRegistered() *DateTime {
+	return m.UserRegistered
+}
+func (m *User) SetUserRegistered(arg *DateTime) {
+	m.UserRegistered = arg
+	m.IsUserRegisteredDirty = true
+}
+
+func (m *User) GetUserActivationKey() string {
+	return m.UserActivationKey
+}
+func (m *User) SetUserActivationKey(arg string) {
+	m.UserActivationKey = arg
+	m.IsUserActivationKeyDirty = true
+}
+
+func (m *User) GetUserStatus() int {
+	return m.UserStatus
+}
+func (m *User) SetUserStatus(arg int) {
+	m.UserStatus = arg
+	m.IsUserStatusDirty = true
+}
+
+func (m *User) GetDisplayName() string {
+	return m.DisplayName
+}
+func (m *User) SetDisplayName(arg string) {
+	m.DisplayName = arg
+	m.IsDisplayNameDirty = true
+}
+
+func (o *User) Find(_find_by_ID int64) (bool, error) {
 
 	var model_slice []User
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "ID", _find_by_ID)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return User{}, err
+		return false, err
 	}
 
 	for _, result := range results {
 		ro := User{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return User{}, err
+			return false, err
 		}
 		model_slice = append(model_slice, ro)
 	}
 
 	if len(model_slice) == 0 {
 		// there was an error!
-		return User{}, errors.New("not found")
+		return false, errors.New("not found")
 	}
-	return model_slice[0], nil
+	o.FromUser(&model_slice[0])
+	return true, nil
 
 }
 func (o *User) FindByUserLogin(_find_by_UserLogin string) ([]User, error) {
@@ -3965,6 +4984,19 @@ func (o *User) FromDBValueMap(m map[string]DBValue) error {
 
 	return nil
 }
+func (o *User) FromUser(m *User) {
+	o.ID = m.ID
+	o.UserLogin = m.UserLogin
+	o.UserPass = m.UserPass
+	o.UserNicename = m.UserNicename
+	o.UserEmail = m.UserEmail
+	o.UserUrl = m.UserUrl
+	o.UserRegistered = m.UserRegistered
+	o.UserActivationKey = m.UserActivationKey
+	o.UserStatus = m.UserStatus
+	o.DisplayName = m.DisplayName
+
+}
 
 func (o *User) Save() (int64, error) {
 	if o._new == true {
@@ -4089,6 +5121,12 @@ type WooAttrTaxonomie struct {
 	AttrLabel   string
 	AttrType    string
 	AttrOrderby string
+	// Dirty markers for smart updates
+	IsAttrIdDirty      bool
+	IsAttrNameDirty    bool
+	IsAttrLabelDirty   bool
+	IsAttrTypeDirty    bool
+	IsAttrOrderbyDirty bool
 }
 
 func NewWooAttrTaxonomie(a Adapter) *WooAttrTaxonomie {
@@ -4100,29 +5138,77 @@ func NewWooAttrTaxonomie(a Adapter) *WooAttrTaxonomie {
 	return &o
 }
 
-func (o *WooAttrTaxonomie) Find(_find_by_AttrId int64) (WooAttrTaxonomie, error) {
+func (m *WooAttrTaxonomie) GetPrimaryKeyValue() int64 {
+	return m.AttrId
+}
+func (m *WooAttrTaxonomie) GetPrimaryKeyName() string {
+	return `attribute_id`
+}
+
+func (m *WooAttrTaxonomie) GetAttrId() int64 {
+	return m.AttrId
+}
+func (m *WooAttrTaxonomie) SetAttrId(arg int64) {
+	m.AttrId = arg
+	m.IsAttrIdDirty = true
+}
+
+func (m *WooAttrTaxonomie) GetAttrName() string {
+	return m.AttrName
+}
+func (m *WooAttrTaxonomie) SetAttrName(arg string) {
+	m.AttrName = arg
+	m.IsAttrNameDirty = true
+}
+
+func (m *WooAttrTaxonomie) GetAttrLabel() string {
+	return m.AttrLabel
+}
+func (m *WooAttrTaxonomie) SetAttrLabel(arg string) {
+	m.AttrLabel = arg
+	m.IsAttrLabelDirty = true
+}
+
+func (m *WooAttrTaxonomie) GetAttrType() string {
+	return m.AttrType
+}
+func (m *WooAttrTaxonomie) SetAttrType(arg string) {
+	m.AttrType = arg
+	m.IsAttrTypeDirty = true
+}
+
+func (m *WooAttrTaxonomie) GetAttrOrderby() string {
+	return m.AttrOrderby
+}
+func (m *WooAttrTaxonomie) SetAttrOrderby(arg string) {
+	m.AttrOrderby = arg
+	m.IsAttrOrderbyDirty = true
+}
+
+func (o *WooAttrTaxonomie) Find(_find_by_AttrId int64) (bool, error) {
 
 	var model_slice []WooAttrTaxonomie
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "attribute_id", _find_by_AttrId)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return WooAttrTaxonomie{}, err
+		return false, err
 	}
 
 	for _, result := range results {
 		ro := WooAttrTaxonomie{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return WooAttrTaxonomie{}, err
+			return false, err
 		}
 		model_slice = append(model_slice, ro)
 	}
 
 	if len(model_slice) == 0 {
 		// there was an error!
-		return WooAttrTaxonomie{}, errors.New("not found")
+		return false, errors.New("not found")
 	}
-	return model_slice[0], nil
+	o.FromWooAttrTaxonomie(&model_slice[0])
+	return true, nil
 
 }
 func (o *WooAttrTaxonomie) FindByAttrName(_find_by_AttrName string) ([]WooAttrTaxonomie, error) {
@@ -4255,6 +5341,14 @@ func (o *WooAttrTaxonomie) FromDBValueMap(m map[string]DBValue) error {
 
 	return nil
 }
+func (o *WooAttrTaxonomie) FromWooAttrTaxonomie(m *WooAttrTaxonomie) {
+	o.AttrId = m.AttrId
+	o.AttrName = m.AttrName
+	o.AttrLabel = m.AttrLabel
+	o.AttrType = m.AttrType
+	o.AttrOrderby = m.AttrOrderby
+
+}
 
 func (o *WooAttrTaxonomie) Save() (int64, error) {
 	if o._new == true {
@@ -4335,6 +5429,18 @@ type WooDownloadableProductPerm struct {
 	AccessGranted      *DateTime
 	AccessExpires      *DateTime
 	DownloadCount      int64
+	// Dirty markers for smart updates
+	IsPermissionIdDirty       bool
+	IsDownloadIdDirty         bool
+	IsProductIdDirty          bool
+	IsOrderIdDirty            bool
+	IsOrderKeyDirty           bool
+	IsUserEmailDirty          bool
+	IsUserIdDirty             bool
+	IsDownloadsRemainingDirty bool
+	IsAccessGrantedDirty      bool
+	IsAccessExpiresDirty      bool
+	IsDownloadCountDirty      bool
 }
 
 func NewWooDownloadableProductPerm(a Adapter) *WooDownloadableProductPerm {
@@ -4346,29 +5452,125 @@ func NewWooDownloadableProductPerm(a Adapter) *WooDownloadableProductPerm {
 	return &o
 }
 
-func (o *WooDownloadableProductPerm) Find(_find_by_PermissionId int64) (WooDownloadableProductPerm, error) {
+func (m *WooDownloadableProductPerm) GetPrimaryKeyValue() int64 {
+	return m.PermissionId
+}
+func (m *WooDownloadableProductPerm) GetPrimaryKeyName() string {
+	return `permission_id`
+}
+
+func (m *WooDownloadableProductPerm) GetPermissionId() int64 {
+	return m.PermissionId
+}
+func (m *WooDownloadableProductPerm) SetPermissionId(arg int64) {
+	m.PermissionId = arg
+	m.IsPermissionIdDirty = true
+}
+
+func (m *WooDownloadableProductPerm) GetDownloadId() string {
+	return m.DownloadId
+}
+func (m *WooDownloadableProductPerm) SetDownloadId(arg string) {
+	m.DownloadId = arg
+	m.IsDownloadIdDirty = true
+}
+
+func (m *WooDownloadableProductPerm) GetProductId() int64 {
+	return m.ProductId
+}
+func (m *WooDownloadableProductPerm) SetProductId(arg int64) {
+	m.ProductId = arg
+	m.IsProductIdDirty = true
+}
+
+func (m *WooDownloadableProductPerm) GetOrderId() int64 {
+	return m.OrderId
+}
+func (m *WooDownloadableProductPerm) SetOrderId(arg int64) {
+	m.OrderId = arg
+	m.IsOrderIdDirty = true
+}
+
+func (m *WooDownloadableProductPerm) GetOrderKey() string {
+	return m.OrderKey
+}
+func (m *WooDownloadableProductPerm) SetOrderKey(arg string) {
+	m.OrderKey = arg
+	m.IsOrderKeyDirty = true
+}
+
+func (m *WooDownloadableProductPerm) GetUserEmail() string {
+	return m.UserEmail
+}
+func (m *WooDownloadableProductPerm) SetUserEmail(arg string) {
+	m.UserEmail = arg
+	m.IsUserEmailDirty = true
+}
+
+func (m *WooDownloadableProductPerm) GetUserId() int64 {
+	return m.UserId
+}
+func (m *WooDownloadableProductPerm) SetUserId(arg int64) {
+	m.UserId = arg
+	m.IsUserIdDirty = true
+}
+
+func (m *WooDownloadableProductPerm) GetDownloadsRemaining() string {
+	return m.DownloadsRemaining
+}
+func (m *WooDownloadableProductPerm) SetDownloadsRemaining(arg string) {
+	m.DownloadsRemaining = arg
+	m.IsDownloadsRemainingDirty = true
+}
+
+func (m *WooDownloadableProductPerm) GetAccessGranted() *DateTime {
+	return m.AccessGranted
+}
+func (m *WooDownloadableProductPerm) SetAccessGranted(arg *DateTime) {
+	m.AccessGranted = arg
+	m.IsAccessGrantedDirty = true
+}
+
+func (m *WooDownloadableProductPerm) GetAccessExpires() *DateTime {
+	return m.AccessExpires
+}
+func (m *WooDownloadableProductPerm) SetAccessExpires(arg *DateTime) {
+	m.AccessExpires = arg
+	m.IsAccessExpiresDirty = true
+}
+
+func (m *WooDownloadableProductPerm) GetDownloadCount() int64 {
+	return m.DownloadCount
+}
+func (m *WooDownloadableProductPerm) SetDownloadCount(arg int64) {
+	m.DownloadCount = arg
+	m.IsDownloadCountDirty = true
+}
+
+func (o *WooDownloadableProductPerm) Find(_find_by_PermissionId int64) (bool, error) {
 
 	var model_slice []WooDownloadableProductPerm
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "permission_id", _find_by_PermissionId)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return WooDownloadableProductPerm{}, err
+		return false, err
 	}
 
 	for _, result := range results {
 		ro := WooDownloadableProductPerm{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return WooDownloadableProductPerm{}, err
+			return false, err
 		}
 		model_slice = append(model_slice, ro)
 	}
 
 	if len(model_slice) == 0 {
 		// there was an error!
-		return WooDownloadableProductPerm{}, errors.New("not found")
+		return false, errors.New("not found")
 	}
-	return model_slice[0], nil
+	o.FromWooDownloadableProductPerm(&model_slice[0])
+	return true, nil
 
 }
 func (o *WooDownloadableProductPerm) FindByDownloadId(_find_by_DownloadId string) ([]WooDownloadableProductPerm, error) {
@@ -4681,6 +5883,20 @@ func (o *WooDownloadableProductPerm) FromDBValueMap(m map[string]DBValue) error 
 
 	return nil
 }
+func (o *WooDownloadableProductPerm) FromWooDownloadableProductPerm(m *WooDownloadableProductPerm) {
+	o.PermissionId = m.PermissionId
+	o.DownloadId = m.DownloadId
+	o.ProductId = m.ProductId
+	o.OrderId = m.OrderId
+	o.OrderKey = m.OrderKey
+	o.UserEmail = m.UserEmail
+	o.UserId = m.UserId
+	o.DownloadsRemaining = m.DownloadsRemaining
+	o.AccessGranted = m.AccessGranted
+	o.AccessExpires = m.AccessExpires
+	o.DownloadCount = m.DownloadCount
+
+}
 
 func (o *WooDownloadableProductPerm) Save() (int64, error) {
 	if o._new == true {
@@ -4814,6 +6030,11 @@ type WooOrderItemMeta struct {
 	OrderItemId int64
 	MetaKey     string
 	MetaValue   string
+	// Dirty markers for smart updates
+	IsMetaIdDirty      bool
+	IsOrderItemIdDirty bool
+	IsMetaKeyDirty     bool
+	IsMetaValueDirty   bool
 }
 
 func NewWooOrderItemMeta(a Adapter) *WooOrderItemMeta {
@@ -4825,29 +6046,69 @@ func NewWooOrderItemMeta(a Adapter) *WooOrderItemMeta {
 	return &o
 }
 
-func (o *WooOrderItemMeta) Find(_find_by_MetaId int64) (WooOrderItemMeta, error) {
+func (m *WooOrderItemMeta) GetPrimaryKeyValue() int64 {
+	return m.MetaId
+}
+func (m *WooOrderItemMeta) GetPrimaryKeyName() string {
+	return `meta_id`
+}
+
+func (m *WooOrderItemMeta) GetMetaId() int64 {
+	return m.MetaId
+}
+func (m *WooOrderItemMeta) SetMetaId(arg int64) {
+	m.MetaId = arg
+	m.IsMetaIdDirty = true
+}
+
+func (m *WooOrderItemMeta) GetOrderItemId() int64 {
+	return m.OrderItemId
+}
+func (m *WooOrderItemMeta) SetOrderItemId(arg int64) {
+	m.OrderItemId = arg
+	m.IsOrderItemIdDirty = true
+}
+
+func (m *WooOrderItemMeta) GetMetaKey() string {
+	return m.MetaKey
+}
+func (m *WooOrderItemMeta) SetMetaKey(arg string) {
+	m.MetaKey = arg
+	m.IsMetaKeyDirty = true
+}
+
+func (m *WooOrderItemMeta) GetMetaValue() string {
+	return m.MetaValue
+}
+func (m *WooOrderItemMeta) SetMetaValue(arg string) {
+	m.MetaValue = arg
+	m.IsMetaValueDirty = true
+}
+
+func (o *WooOrderItemMeta) Find(_find_by_MetaId int64) (bool, error) {
 
 	var model_slice []WooOrderItemMeta
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "meta_id", _find_by_MetaId)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return WooOrderItemMeta{}, err
+		return false, err
 	}
 
 	for _, result := range results {
 		ro := WooOrderItemMeta{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return WooOrderItemMeta{}, err
+			return false, err
 		}
 		model_slice = append(model_slice, ro)
 	}
 
 	if len(model_slice) == 0 {
 		// there was an error!
-		return WooOrderItemMeta{}, errors.New("not found")
+		return false, errors.New("not found")
 	}
-	return model_slice[0], nil
+	o.FromWooOrderItemMeta(&model_slice[0])
+	return true, nil
 
 }
 func (o *WooOrderItemMeta) FindByOrderItemId(_find_by_OrderItemId int64) ([]WooOrderItemMeta, error) {
@@ -4950,6 +6211,13 @@ func (o *WooOrderItemMeta) FromDBValueMap(m map[string]DBValue) error {
 
 	return nil
 }
+func (o *WooOrderItemMeta) FromWooOrderItemMeta(m *WooOrderItemMeta) {
+	o.MetaId = m.MetaId
+	o.OrderItemId = m.OrderItemId
+	o.MetaKey = m.MetaKey
+	o.MetaValue = m.MetaValue
+
+}
 
 func (o *WooOrderItemMeta) Save() (int64, error) {
 	if o._new == true {
@@ -5013,6 +6281,11 @@ type WooOrderItem struct {
 	OrderItemName string
 	OrderItemType string
 	OrderId       int64
+	// Dirty markers for smart updates
+	IsOrderItemIdDirty   bool
+	IsOrderItemNameDirty bool
+	IsOrderItemTypeDirty bool
+	IsOrderIdDirty       bool
 }
 
 func NewWooOrderItem(a Adapter) *WooOrderItem {
@@ -5024,29 +6297,69 @@ func NewWooOrderItem(a Adapter) *WooOrderItem {
 	return &o
 }
 
-func (o *WooOrderItem) Find(_find_by_OrderItemId int64) (WooOrderItem, error) {
+func (m *WooOrderItem) GetPrimaryKeyValue() int64 {
+	return m.OrderItemId
+}
+func (m *WooOrderItem) GetPrimaryKeyName() string {
+	return `order_item_id`
+}
+
+func (m *WooOrderItem) GetOrderItemId() int64 {
+	return m.OrderItemId
+}
+func (m *WooOrderItem) SetOrderItemId(arg int64) {
+	m.OrderItemId = arg
+	m.IsOrderItemIdDirty = true
+}
+
+func (m *WooOrderItem) GetOrderItemName() string {
+	return m.OrderItemName
+}
+func (m *WooOrderItem) SetOrderItemName(arg string) {
+	m.OrderItemName = arg
+	m.IsOrderItemNameDirty = true
+}
+
+func (m *WooOrderItem) GetOrderItemType() string {
+	return m.OrderItemType
+}
+func (m *WooOrderItem) SetOrderItemType(arg string) {
+	m.OrderItemType = arg
+	m.IsOrderItemTypeDirty = true
+}
+
+func (m *WooOrderItem) GetOrderId() int64 {
+	return m.OrderId
+}
+func (m *WooOrderItem) SetOrderId(arg int64) {
+	m.OrderId = arg
+	m.IsOrderIdDirty = true
+}
+
+func (o *WooOrderItem) Find(_find_by_OrderItemId int64) (bool, error) {
 
 	var model_slice []WooOrderItem
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "order_item_id", _find_by_OrderItemId)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return WooOrderItem{}, err
+		return false, err
 	}
 
 	for _, result := range results {
 		ro := WooOrderItem{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return WooOrderItem{}, err
+			return false, err
 		}
 		model_slice = append(model_slice, ro)
 	}
 
 	if len(model_slice) == 0 {
 		// there was an error!
-		return WooOrderItem{}, errors.New("not found")
+		return false, errors.New("not found")
 	}
-	return model_slice[0], nil
+	o.FromWooOrderItem(&model_slice[0])
+	return true, nil
 
 }
 func (o *WooOrderItem) FindByOrderItemName(_find_by_OrderItemName string) ([]WooOrderItem, error) {
@@ -5149,6 +6462,13 @@ func (o *WooOrderItem) FromDBValueMap(m map[string]DBValue) error {
 
 	return nil
 }
+func (o *WooOrderItem) FromWooOrderItem(m *WooOrderItem) {
+	o.OrderItemId = m.OrderItemId
+	o.OrderItemName = m.OrderItemName
+	o.OrderItemType = m.OrderItemType
+	o.OrderId = m.OrderId
+
+}
 
 func (o *WooOrderItem) Save() (int64, error) {
 	if o._new == true {
@@ -5212,6 +6532,11 @@ type WooTaxRateLocation struct {
 	LocationCode string
 	TaxRateId    int64
 	LocationType string
+	// Dirty markers for smart updates
+	IsLocationIdDirty   bool
+	IsLocationCodeDirty bool
+	IsTaxRateIdDirty    bool
+	IsLocationTypeDirty bool
 }
 
 func NewWooTaxRateLocation(a Adapter) *WooTaxRateLocation {
@@ -5223,29 +6548,69 @@ func NewWooTaxRateLocation(a Adapter) *WooTaxRateLocation {
 	return &o
 }
 
-func (o *WooTaxRateLocation) Find(_find_by_LocationId int64) (WooTaxRateLocation, error) {
+func (m *WooTaxRateLocation) GetPrimaryKeyValue() int64 {
+	return m.LocationId
+}
+func (m *WooTaxRateLocation) GetPrimaryKeyName() string {
+	return `location_id`
+}
+
+func (m *WooTaxRateLocation) GetLocationId() int64 {
+	return m.LocationId
+}
+func (m *WooTaxRateLocation) SetLocationId(arg int64) {
+	m.LocationId = arg
+	m.IsLocationIdDirty = true
+}
+
+func (m *WooTaxRateLocation) GetLocationCode() string {
+	return m.LocationCode
+}
+func (m *WooTaxRateLocation) SetLocationCode(arg string) {
+	m.LocationCode = arg
+	m.IsLocationCodeDirty = true
+}
+
+func (m *WooTaxRateLocation) GetTaxRateId() int64 {
+	return m.TaxRateId
+}
+func (m *WooTaxRateLocation) SetTaxRateId(arg int64) {
+	m.TaxRateId = arg
+	m.IsTaxRateIdDirty = true
+}
+
+func (m *WooTaxRateLocation) GetLocationType() string {
+	return m.LocationType
+}
+func (m *WooTaxRateLocation) SetLocationType(arg string) {
+	m.LocationType = arg
+	m.IsLocationTypeDirty = true
+}
+
+func (o *WooTaxRateLocation) Find(_find_by_LocationId int64) (bool, error) {
 
 	var model_slice []WooTaxRateLocation
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "location_id", _find_by_LocationId)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return WooTaxRateLocation{}, err
+		return false, err
 	}
 
 	for _, result := range results {
 		ro := WooTaxRateLocation{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return WooTaxRateLocation{}, err
+			return false, err
 		}
 		model_slice = append(model_slice, ro)
 	}
 
 	if len(model_slice) == 0 {
 		// there was an error!
-		return WooTaxRateLocation{}, errors.New("not found")
+		return false, errors.New("not found")
 	}
-	return model_slice[0], nil
+	o.FromWooTaxRateLocation(&model_slice[0])
+	return true, nil
 
 }
 func (o *WooTaxRateLocation) FindByLocationCode(_find_by_LocationCode string) ([]WooTaxRateLocation, error) {
@@ -5348,6 +6713,13 @@ func (o *WooTaxRateLocation) FromDBValueMap(m map[string]DBValue) error {
 
 	return nil
 }
+func (o *WooTaxRateLocation) FromWooTaxRateLocation(m *WooTaxRateLocation) {
+	o.LocationId = m.LocationId
+	o.LocationCode = m.LocationCode
+	o.TaxRateId = m.TaxRateId
+	o.LocationType = m.LocationType
+
+}
 
 func (o *WooTaxRateLocation) Save() (int64, error) {
 	if o._new == true {
@@ -5417,6 +6789,17 @@ type WooTaxRate struct {
 	TaxRateShipping int
 	TaxRateOrder    int64
 	TaxRateClass    string
+	// Dirty markers for smart updates
+	IsTaxRateIdDirty       bool
+	IsTaxRateCountryDirty  bool
+	IsTaxRateStateDirty    bool
+	IsTaxRateDirty         bool
+	IsTaxRateNameDirty     bool
+	IsTaxRatePriorityDirty bool
+	IsTaxRateCompoundDirty bool
+	IsTaxRateShippingDirty bool
+	IsTaxRateOrderDirty    bool
+	IsTaxRateClassDirty    bool
 }
 
 func NewWooTaxRate(a Adapter) *WooTaxRate {
@@ -5428,29 +6811,117 @@ func NewWooTaxRate(a Adapter) *WooTaxRate {
 	return &o
 }
 
-func (o *WooTaxRate) Find(_find_by_TaxRateId int64) (WooTaxRate, error) {
+func (m *WooTaxRate) GetPrimaryKeyValue() int64 {
+	return m.TaxRateId
+}
+func (m *WooTaxRate) GetPrimaryKeyName() string {
+	return `tax_rate_id`
+}
+
+func (m *WooTaxRate) GetTaxRateId() int64 {
+	return m.TaxRateId
+}
+func (m *WooTaxRate) SetTaxRateId(arg int64) {
+	m.TaxRateId = arg
+	m.IsTaxRateIdDirty = true
+}
+
+func (m *WooTaxRate) GetTaxRateCountry() string {
+	return m.TaxRateCountry
+}
+func (m *WooTaxRate) SetTaxRateCountry(arg string) {
+	m.TaxRateCountry = arg
+	m.IsTaxRateCountryDirty = true
+}
+
+func (m *WooTaxRate) GetTaxRateState() string {
+	return m.TaxRateState
+}
+func (m *WooTaxRate) SetTaxRateState(arg string) {
+	m.TaxRateState = arg
+	m.IsTaxRateStateDirty = true
+}
+
+func (m *WooTaxRate) GetTaxRate() string {
+	return m.TaxRate
+}
+func (m *WooTaxRate) SetTaxRate(arg string) {
+	m.TaxRate = arg
+	m.IsTaxRateDirty = true
+}
+
+func (m *WooTaxRate) GetTaxRateName() string {
+	return m.TaxRateName
+}
+func (m *WooTaxRate) SetTaxRateName(arg string) {
+	m.TaxRateName = arg
+	m.IsTaxRateNameDirty = true
+}
+
+func (m *WooTaxRate) GetTaxRatePriority() int64 {
+	return m.TaxRatePriority
+}
+func (m *WooTaxRate) SetTaxRatePriority(arg int64) {
+	m.TaxRatePriority = arg
+	m.IsTaxRatePriorityDirty = true
+}
+
+func (m *WooTaxRate) GetTaxRateCompound() int {
+	return m.TaxRateCompound
+}
+func (m *WooTaxRate) SetTaxRateCompound(arg int) {
+	m.TaxRateCompound = arg
+	m.IsTaxRateCompoundDirty = true
+}
+
+func (m *WooTaxRate) GetTaxRateShipping() int {
+	return m.TaxRateShipping
+}
+func (m *WooTaxRate) SetTaxRateShipping(arg int) {
+	m.TaxRateShipping = arg
+	m.IsTaxRateShippingDirty = true
+}
+
+func (m *WooTaxRate) GetTaxRateOrder() int64 {
+	return m.TaxRateOrder
+}
+func (m *WooTaxRate) SetTaxRateOrder(arg int64) {
+	m.TaxRateOrder = arg
+	m.IsTaxRateOrderDirty = true
+}
+
+func (m *WooTaxRate) GetTaxRateClass() string {
+	return m.TaxRateClass
+}
+func (m *WooTaxRate) SetTaxRateClass(arg string) {
+	m.TaxRateClass = arg
+	m.IsTaxRateClassDirty = true
+}
+
+func (o *WooTaxRate) Find(_find_by_TaxRateId int64) (bool, error) {
 
 	var model_slice []WooTaxRate
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "tax_rate_id", _find_by_TaxRateId)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return WooTaxRate{}, err
+		return false, err
 	}
 
 	for _, result := range results {
 		ro := WooTaxRate{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return WooTaxRate{}, err
+			return false, err
 		}
 		model_slice = append(model_slice, ro)
 	}
 
 	if len(model_slice) == 0 {
 		// there was an error!
-		return WooTaxRate{}, errors.New("not found")
+		return false, errors.New("not found")
 	}
-	return model_slice[0], nil
+	o.FromWooTaxRate(&model_slice[0])
+	return true, nil
 
 }
 func (o *WooTaxRate) FindByTaxRateCountry(_find_by_TaxRateCountry string) ([]WooTaxRate, error) {
@@ -5732,6 +7203,19 @@ func (o *WooTaxRate) FromDBValueMap(m map[string]DBValue) error {
 	o.TaxRateClass = _TaxRateClass
 
 	return nil
+}
+func (o *WooTaxRate) FromWooTaxRate(m *WooTaxRate) {
+	o.TaxRateId = m.TaxRateId
+	o.TaxRateCountry = m.TaxRateCountry
+	o.TaxRateState = m.TaxRateState
+	o.TaxRate = m.TaxRate
+	o.TaxRateName = m.TaxRateName
+	o.TaxRatePriority = m.TaxRatePriority
+	o.TaxRateCompound = m.TaxRateCompound
+	o.TaxRateShipping = m.TaxRateShipping
+	o.TaxRateOrder = m.TaxRateOrder
+	o.TaxRateClass = m.TaxRateClass
+
 }
 
 func (o *WooTaxRate) Save() (int64, error) {

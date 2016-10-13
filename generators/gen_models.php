@@ -75,7 +75,7 @@ function mysqlToFmtType($t) {
         return "%d";
     }
     if ( $t == "longtext" || $t == "tinytext" || $t == "mediumtext") {
-        return "string";
+        return "%s";
     }
 
     if ( $t == "datetime" ) {
@@ -90,6 +90,9 @@ foreach ($tables as &$t) {
         if ( $row->Key == "PRI" ) {
             $t->pfield = $row;
         }
+        $row->model_field_name = convertFieldName($row->Field);
+        $row->mysql_fmt_type = mysqlToFmtType($row->Type);
+        $row->dirty_marker = "Is" . convertFieldName($row->Field) . "Dirty"; 
         $t->fields[] = $row;
     }
 }
@@ -130,8 +133,12 @@ type {$t->model_name} struct {
     _new bool");
     
     foreach($t->fields as $f) {
-        $fname = maybeLC(convertFieldName($f->Field));
+        $fname = $f->model_field_name;
         puts("    {$fname} {$f->go_type}");
+    }
+    puts("\t// Dirty markers for smart updates");
+    foreach($t->fields as $f) {
+        puts("    {$f->dirty_marker} bool");
     }
     puts("}");
 $newfunc = "
@@ -145,6 +152,7 @@ func New{$t->model_name}(a Adapter) *{$t->model_name} {
 }
 ";
 puts($newfunc);
+include "getset.php";
 include "finders.php";
 include "crud.php";
 

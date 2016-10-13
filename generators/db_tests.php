@@ -63,9 +63,20 @@ $txt .= "
         $fail(`zero affected rows`)
         return
     }
+    model2 := New{$t->model_name}(a)
+    found,err := model2.Find(model.GetPrimaryKeyValue())
+    if err != nil {
+        $fail(`did not find record for %s = {$t->pfield->mysql_fmt_type} because of %s`,model.GetPrimaryKeyName(),model.GetPrimaryKeyValue(),err)
+        return
+    }
+    if found == false {
+        $fail(`did not find record for %s = {$t->pfield->mysql_fmt_type}`,model.GetPrimaryKeyName(),model.GetPrimaryKeyValue())
+        return
+    }
+
 ";
 
-$txt .= "}
+$txt .= "} // end of if fileExists
 };\n";
 
 puts($txt);
