@@ -116,7 +116,11 @@ puts('import (
     "os"
     "io/ioutil"
     "bufio"
-)');
+)
+');
+
+include "generic_bits.php";
+
 $_ii = 0;
 $seen = array();
 foreach ($tables as $t) {
@@ -158,7 +162,7 @@ include "crud.php";
 
 }
 
-include "generic_bits.php";
+
 
 file_put_contents($_SERVER['argv'][1] . ".go",$_contents);
 $_contents = "";
