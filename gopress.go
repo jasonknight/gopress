@@ -5862,6 +5862,7 @@ type DBValue interface {
 	AsInt32() (int32, error)
 	AsInt64() (int64, error)
 	AsFloat32() (float32, error)
+	AsFloat64() (float64, error)
 	AsString() (string, error)
 	AsDateTime() (DateTime, error)
 	SetInternalValue(string, string)
@@ -6106,7 +6107,7 @@ func (d *DateTime) FromString(s string) error {
 	return nil
 }
 func (d *DateTime) ToString() string {
-	return fmt.Sprintf("%d-%d-%d %d:%d:%d.%d.%s", d.Year, d.Month, d.Day, d.Hours, d.Minutes, d.Seconds, d.Offset, d.Zone)
+	return fmt.Sprintf("%d-%02d-%02d %02d:%02d:%02d.%d%s", d.Year, d.Month, d.Day, d.Hours, d.Minutes, d.Seconds, d.Offset, d.Zone)
 }
 func fileExists(p string) bool {
 	if _, err := os.Stat(p); os.IsNotExist(err) {

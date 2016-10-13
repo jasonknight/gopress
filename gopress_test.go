@@ -1297,14 +1297,36 @@ func TestDBValue(t *testing.T) {
 
 	v4 := a.NewDBValue()
 	v4.SetInternalValue(`x`, `67859.58686`)
-	c4, err := v4.AsFloat32()
+	c4, err := v4.AsFloat64()
 	if err != nil {
-		t.Errorf(`failed to convert with AsFloat32() %+v`, v4)
+		t.Errorf(`failed to convert with AsFloat64() %+v`, v4)
 		return
 	}
 	if c4 != 67859.58686 {
 		t.Errorf(`values don't match `)
 		return
+	}
+
+	dvar := a.NewDBValue()
+	dvar.SetInternalValue(`x`, `2016-01-09 23:24:50.7Z`)
+	dc, err := dvar.AsDateTime()
+	if err != nil {
+		t.Errorf(`failed to convert datetime %+v`, dc)
+	}
+
+	if dc.Year != 2016 ||
+		dc.Month != 1 ||
+		dc.Day != 9 ||
+		dc.Hours != 23 ||
+		dc.Minutes != 24 ||
+		dc.Seconds != 50 ||
+		dc.Offset != 7 ||
+		dc.Zone != `Z` {
+		t.Errorf(`fields don't match up for %+v`, dc)
+	}
+	r, _ := dvar.AsString()
+	if dc.ToString() != r {
+		t.Errorf(`restring of dvar failed %s`, dc.ToString())
 	}
 
 }
