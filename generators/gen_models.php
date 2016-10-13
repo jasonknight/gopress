@@ -21,9 +21,6 @@ function convertTableName($n) {
     return $camel;
 }
 function convertFieldName($n) {
-    if ( preg_match("/^post_/",$n) ) {
-        $n = substr($n,5);
-    }
     $camel = str_replace(' ', '', ucwords(str_replace('_', ' ', $n)));
     $camel = str_replace("meta","Meta",$camel);
     $camel = str_replace("Woocommerce","Woo",$camel);
@@ -82,8 +79,10 @@ function mysqlToFmtType($t) {
         return "%s";
     }
 }
+
 foreach ($tables as &$t) {
     $t->fields = array();
+    $t->belongs_to = array();
     $res = mysql_query("DESCRIBE {$t->database_name};");
     while ( $row = mysql_fetch_object($res)) {
         $row->go_type = mysqlToGoType($row->Type);
@@ -93,8 +92,29 @@ foreach ($tables as &$t) {
         $row->model_field_name = convertFieldName($row->Field);
         $row->mysql_fmt_type = mysqlToFmtType($row->Type);
         $row->dirty_marker = "Is" . convertFieldName($row->Field) . "Dirty"; 
+        if (preg_match("/\w+_id/",$row->Field) &&  $row->Key != "PRI") {
+            $bt = belongsTo($row);
+            $bt->model_name = $t->model_name;
+            foreach ($tables as $tt) {
+                if ( $bt->model == $tt->model_name) {
+                    // i.e. only add it if there
+                    // is a corresponding definition
+                    $t->belongs_to[] = $bt;
+                    break;
+                }
+            }
+        }
         $t->fields[] = $row;
     }
+}
+
+function belongsTo($f) {
+    preg_match("/([\w_]+)_id/",$f->Field,$m);
+    $nf = new stdClass();
+    $nf->model = convertTableName($m[1]);
+    $nf->go_type = "*{$nf->model}";
+    $nf->model_field_name = convertFieldName($f->Field);
+    return $nf;
 }
 
 // Now we loop over and create all the models
@@ -144,6 +164,10 @@ type {$t->model_name} struct {
     foreach($t->fields as $f) {
         puts("    {$f->dirty_marker} bool");
     }
+    puts("\t// Relationships");
+    foreach ($t->belongs_to as $bt) {
+        puts("\t{$bt->model} {$bt->go_type}");
+    }
     puts("}");
 $newfunc = "
 func New{$t->model_name}(a Adapter) *{$t->model_name} {
@@ -156,6 +180,7 @@ func New{$t->model_name}(a Adapter) *{$t->model_name} {
 }
 ";
 puts($newfunc);
+include "habtm.php";
 include "getset.php";
 include "finders.php";
 include "crud.php";

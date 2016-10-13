@@ -12,10 +12,10 @@ func (m *{$t->model_name}) GetPrimaryKeyName() string {
 ";
 foreach ($t->fields as $f) {
 $txt .= "
-func (m *{$t->model_name}) Get{$f->model_field_name} () {$f->go_type} {
+func (m *{$t->model_name}) Get{$f->model_field_name}() {$f->go_type} {
     return m.{$f->model_field_name}
 }
-func (m *{$t->model_name}) Set{$f->model_field_name} (arg {$f->go_type}) {
+func (m *{$t->model_name}) Set{$f->model_field_name}(arg {$f->go_type}) {
     m.{$f->model_field_name} = arg
     m.{$f->dirty_marker} = true
 }

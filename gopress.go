@@ -328,6 +328,8 @@ type CommentMeta struct {
 	IsCommentIdDirty bool
 	IsMetaKeyDirty   bool
 	IsMetaValueDirty bool
+	// Relationships
+	Comment *Comment
 }
 
 func NewCommentMeta(a Adapter) *CommentMeta {
@@ -337,6 +339,18 @@ func NewCommentMeta(a Adapter) *CommentMeta {
 	o._pkey = "meta_id"
 	o._new = false
 	return &o
+}
+
+func (o CommentMeta) LoadComment() (*Comment, error) {
+	m := NewComment(o._adapter)
+	found, err := m.Find(o.GetCommentId())
+	if err != nil {
+		return nil, err
+	}
+	if found == false {
+		return nil, errors.New(fmt.Sprintf(`could not find Comment with comment_ID of %d`, o.GetCommentId()))
+	}
+	return m, nil
 }
 
 func (m *CommentMeta) GetPrimaryKeyValue() int64 {
@@ -601,6 +615,8 @@ type Comment struct {
 	IsCommentTypeDirty        bool
 	IsCommentParentDirty      bool
 	IsUserIdDirty             bool
+	// Relationships
+	User *User
 }
 
 func NewComment(a Adapter) *Comment {
@@ -610,6 +626,18 @@ func NewComment(a Adapter) *Comment {
 	o._pkey = "comment_ID"
 	o._new = false
 	return &o
+}
+
+func (o Comment) LoadUser() (*User, error) {
+	m := NewUser(o._adapter)
+	found, err := m.Find(o.GetUserId())
+	if err != nil {
+		return nil, err
+	}
+	if found == false {
+		return nil, errors.New(fmt.Sprintf(`could not find User with ID of %d`, o.GetUserId()))
+	}
+	return m, nil
 }
 
 func (m *Comment) GetPrimaryKeyValue() int64 {
@@ -1409,6 +1437,7 @@ type Link struct {
 	IsLinkRelDirty         bool
 	IsLinkNotesDirty       bool
 	IsLinkRssDirty         bool
+	// Relationships
 }
 
 func NewLink(a Adapter) *Link {
@@ -2101,6 +2130,7 @@ type Option struct {
 	IsOptionNameDirty  bool
 	IsOptionValueDirty bool
 	IsAutoloadDirty    bool
+	// Relationships
 }
 
 func NewOption(a Adapter) *Option {
@@ -2344,14 +2374,16 @@ type PostMeta struct {
 	_conds    []string
 	_new      bool
 	MetaId    int64
-	Id        int64
+	PostId    int64
 	MetaKey   string
 	MetaValue string
 	// Dirty markers for smart updates
 	IsMetaIdDirty    bool
-	IsIdDirty        bool
+	IsPostIdDirty    bool
 	IsMetaKeyDirty   bool
 	IsMetaValueDirty bool
+	// Relationships
+	Post *Post
 }
 
 func NewPostMeta(a Adapter) *PostMeta {
@@ -2361,6 +2393,18 @@ func NewPostMeta(a Adapter) *PostMeta {
 	o._pkey = "meta_id"
 	o._new = false
 	return &o
+}
+
+func (o PostMeta) LoadPost() (*Post, error) {
+	m := NewPost(o._adapter)
+	found, err := m.Find(o.GetPostId())
+	if err != nil {
+		return nil, err
+	}
+	if found == false {
+		return nil, errors.New(fmt.Sprintf(`could not find Post with ID of %d`, o.GetPostId()))
+	}
+	return m, nil
 }
 
 func (m *PostMeta) GetPrimaryKeyValue() int64 {
@@ -2378,12 +2422,12 @@ func (m *PostMeta) SetMetaId(arg int64) {
 	m.IsMetaIdDirty = true
 }
 
-func (m *PostMeta) GetId() int64 {
-	return m.Id
+func (m *PostMeta) GetPostId() int64 {
+	return m.PostId
 }
-func (m *PostMeta) SetId(arg int64) {
-	m.Id = arg
-	m.IsIdDirty = true
+func (m *PostMeta) SetPostId(arg int64) {
+	m.PostId = arg
+	m.IsPostIdDirty = true
 }
 
 func (m *PostMeta) GetMetaKey() string {
@@ -2428,10 +2472,10 @@ func (o *PostMeta) Find(_find_by_MetaId int64) (bool, error) {
 	return true, nil
 
 }
-func (o *PostMeta) FindById(_find_by_Id int64) ([]PostMeta, error) {
+func (o *PostMeta) FindByPostId(_find_by_PostId int64) ([]PostMeta, error) {
 
 	var model_slice []PostMeta
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "post_id", _find_by_Id)
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "post_id", _find_by_PostId)
 	results, err := o._adapter.Query(q)
 	if err != nil {
 		return model_slice, err
@@ -2510,11 +2554,11 @@ func (o *PostMeta) FromDBValueMap(m map[string]DBValue) error {
 		return err
 	}
 	o.MetaId = _MetaId
-	_Id, err := m["post_id"].AsInt64()
+	_PostId, err := m["post_id"].AsInt64()
 	if err != nil {
 		return err
 	}
-	o.Id = _Id
+	o.PostId = _PostId
 	_MetaKey, err := m["meta_key"].AsString()
 	if err != nil {
 		return err
@@ -2530,7 +2574,7 @@ func (o *PostMeta) FromDBValueMap(m map[string]DBValue) error {
 }
 func (o *PostMeta) FromPostMeta(m *PostMeta) {
 	o.MetaId = m.MetaId
-	o.Id = m.Id
+	o.PostId = m.PostId
 	o.MetaKey = m.MetaKey
 	o.MetaValue = m.MetaValue
 
@@ -2540,7 +2584,7 @@ func (o *PostMeta) Save() (int64, error) {
 	if o._new == true {
 		return o.Create()
 	}
-	frmt := fmt.Sprintf("UPDATE %s SET `post_id` = '%d', `meta_key` = '%s', `meta_value` = '%s' WHERE %s = '%d' LIMIT 1", o._table, o.Id, o.MetaKey, o.MetaValue, o._pkey, o.MetaId)
+	frmt := fmt.Sprintf("UPDATE %s SET `post_id` = '%d', `meta_key` = '%s', `meta_value` = '%s' WHERE %s = '%d' LIMIT 1", o._table, o.PostId, o.MetaKey, o.MetaValue, o._pkey, o.MetaId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
@@ -2549,7 +2593,7 @@ func (o *PostMeta) Save() (int64, error) {
 	return o._adapter.AffectedRows(), nil
 }
 func (o *PostMeta) Create() (int64, error) {
-	frmt := fmt.Sprintf("INSERT INTO %s (`post_id`, `meta_key`, `meta_value`) VALUES ('%d', '%s', '%s')", o._table, o.Id, o.MetaKey, o.MetaValue)
+	frmt := fmt.Sprintf("INSERT INTO %s (`post_id`, `meta_key`, `meta_value`) VALUES ('%d', '%s', '%s')", o._table, o.PostId, o.MetaKey, o.MetaValue)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
@@ -2558,13 +2602,13 @@ func (o *PostMeta) Create() (int64, error) {
 	return o._adapter.AffectedRows(), nil
 }
 
-func (o *PostMeta) UpdateId(_upd_Id int64) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `post_id` = '%d' WHERE `meta_id` = '%d'", o._table, _upd_Id, o.Id)
+func (o *PostMeta) UpdatePostId(_upd_PostId int64) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `post_id` = '%d' WHERE `meta_id` = '%d'", o._table, _upd_PostId, o.PostId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.Id = _upd_Id
+	o.PostId = _upd_PostId
 	return o._adapter.AffectedRows(), nil
 }
 
@@ -2589,58 +2633,59 @@ func (o *PostMeta) UpdateMetaValue(_upd_MetaValue string) (int64, error) {
 }
 
 type Post struct {
-	_table          string
-	_adapter        Adapter
-	_pkey           string // 0 The name of the primary key in this table
-	_conds          []string
-	_new            bool
-	ID              int64
-	Author          int64
-	Date            *DateTime
-	DateGmt         *DateTime
-	Content         string
-	Title           string
-	Excerpt         string
-	Status          string
-	CommentStatus   string
-	PingStatus      string
-	Password        string
-	Name            string
-	ToPing          string
-	Pinged          string
-	Modified        *DateTime
-	ModifiedGmt     *DateTime
-	ContentFiltered string
-	Parent          int64
-	Guid            string
-	MenuOrder       int
-	Type            string
-	MimeType        string
-	CommentCount    int64
+	_table              string
+	_adapter            Adapter
+	_pkey               string // 0 The name of the primary key in this table
+	_conds              []string
+	_new                bool
+	ID                  int64
+	PostAuthor          int64
+	PostDate            *DateTime
+	PostDateGmt         *DateTime
+	PostContent         string
+	PostTitle           string
+	PostExcerpt         string
+	PostStatus          string
+	CommentStatus       string
+	PingStatus          string
+	PostPassword        string
+	PostName            string
+	ToPing              string
+	Pinged              string
+	PostModified        *DateTime
+	PostModifiedGmt     *DateTime
+	PostContentFiltered string
+	PostParent          int64
+	Guid                string
+	MenuOrder           int
+	PostType            string
+	PostMimeType        string
+	CommentCount        int64
 	// Dirty markers for smart updates
-	IsIDDirty              bool
-	IsAuthorDirty          bool
-	IsDateDirty            bool
-	IsDateGmtDirty         bool
-	IsContentDirty         bool
-	IsTitleDirty           bool
-	IsExcerptDirty         bool
-	IsStatusDirty          bool
-	IsCommentStatusDirty   bool
-	IsPingStatusDirty      bool
-	IsPasswordDirty        bool
-	IsNameDirty            bool
-	IsToPingDirty          bool
-	IsPingedDirty          bool
-	IsModifiedDirty        bool
-	IsModifiedGmtDirty     bool
-	IsContentFilteredDirty bool
-	IsParentDirty          bool
-	IsGuidDirty            bool
-	IsMenuOrderDirty       bool
-	IsTypeDirty            bool
-	IsMimeTypeDirty        bool
-	IsCommentCountDirty    bool
+	IsIDDirty                  bool
+	IsPostAuthorDirty          bool
+	IsPostDateDirty            bool
+	IsPostDateGmtDirty         bool
+	IsPostContentDirty         bool
+	IsPostTitleDirty           bool
+	IsPostExcerptDirty         bool
+	IsPostStatusDirty          bool
+	IsCommentStatusDirty       bool
+	IsPingStatusDirty          bool
+	IsPostPasswordDirty        bool
+	IsPostNameDirty            bool
+	IsToPingDirty              bool
+	IsPingedDirty              bool
+	IsPostModifiedDirty        bool
+	IsPostModifiedGmtDirty     bool
+	IsPostContentFilteredDirty bool
+	IsPostParentDirty          bool
+	IsGuidDirty                bool
+	IsMenuOrderDirty           bool
+	IsPostTypeDirty            bool
+	IsPostMimeTypeDirty        bool
+	IsCommentCountDirty        bool
+	// Relationships
 }
 
 func NewPost(a Adapter) *Post {
@@ -2667,60 +2712,60 @@ func (m *Post) SetID(arg int64) {
 	m.IsIDDirty = true
 }
 
-func (m *Post) GetAuthor() int64 {
-	return m.Author
+func (m *Post) GetPostAuthor() int64 {
+	return m.PostAuthor
 }
-func (m *Post) SetAuthor(arg int64) {
-	m.Author = arg
-	m.IsAuthorDirty = true
-}
-
-func (m *Post) GetDate() *DateTime {
-	return m.Date
-}
-func (m *Post) SetDate(arg *DateTime) {
-	m.Date = arg
-	m.IsDateDirty = true
+func (m *Post) SetPostAuthor(arg int64) {
+	m.PostAuthor = arg
+	m.IsPostAuthorDirty = true
 }
 
-func (m *Post) GetDateGmt() *DateTime {
-	return m.DateGmt
+func (m *Post) GetPostDate() *DateTime {
+	return m.PostDate
 }
-func (m *Post) SetDateGmt(arg *DateTime) {
-	m.DateGmt = arg
-	m.IsDateGmtDirty = true
-}
-
-func (m *Post) GetContent() string {
-	return m.Content
-}
-func (m *Post) SetContent(arg string) {
-	m.Content = arg
-	m.IsContentDirty = true
+func (m *Post) SetPostDate(arg *DateTime) {
+	m.PostDate = arg
+	m.IsPostDateDirty = true
 }
 
-func (m *Post) GetTitle() string {
-	return m.Title
+func (m *Post) GetPostDateGmt() *DateTime {
+	return m.PostDateGmt
 }
-func (m *Post) SetTitle(arg string) {
-	m.Title = arg
-	m.IsTitleDirty = true
-}
-
-func (m *Post) GetExcerpt() string {
-	return m.Excerpt
-}
-func (m *Post) SetExcerpt(arg string) {
-	m.Excerpt = arg
-	m.IsExcerptDirty = true
+func (m *Post) SetPostDateGmt(arg *DateTime) {
+	m.PostDateGmt = arg
+	m.IsPostDateGmtDirty = true
 }
 
-func (m *Post) GetStatus() string {
-	return m.Status
+func (m *Post) GetPostContent() string {
+	return m.PostContent
 }
-func (m *Post) SetStatus(arg string) {
-	m.Status = arg
-	m.IsStatusDirty = true
+func (m *Post) SetPostContent(arg string) {
+	m.PostContent = arg
+	m.IsPostContentDirty = true
+}
+
+func (m *Post) GetPostTitle() string {
+	return m.PostTitle
+}
+func (m *Post) SetPostTitle(arg string) {
+	m.PostTitle = arg
+	m.IsPostTitleDirty = true
+}
+
+func (m *Post) GetPostExcerpt() string {
+	return m.PostExcerpt
+}
+func (m *Post) SetPostExcerpt(arg string) {
+	m.PostExcerpt = arg
+	m.IsPostExcerptDirty = true
+}
+
+func (m *Post) GetPostStatus() string {
+	return m.PostStatus
+}
+func (m *Post) SetPostStatus(arg string) {
+	m.PostStatus = arg
+	m.IsPostStatusDirty = true
 }
 
 func (m *Post) GetCommentStatus() string {
@@ -2739,20 +2784,20 @@ func (m *Post) SetPingStatus(arg string) {
 	m.IsPingStatusDirty = true
 }
 
-func (m *Post) GetPassword() string {
-	return m.Password
+func (m *Post) GetPostPassword() string {
+	return m.PostPassword
 }
-func (m *Post) SetPassword(arg string) {
-	m.Password = arg
-	m.IsPasswordDirty = true
+func (m *Post) SetPostPassword(arg string) {
+	m.PostPassword = arg
+	m.IsPostPasswordDirty = true
 }
 
-func (m *Post) GetName() string {
-	return m.Name
+func (m *Post) GetPostName() string {
+	return m.PostName
 }
-func (m *Post) SetName(arg string) {
-	m.Name = arg
-	m.IsNameDirty = true
+func (m *Post) SetPostName(arg string) {
+	m.PostName = arg
+	m.IsPostNameDirty = true
 }
 
 func (m *Post) GetToPing() string {
@@ -2771,36 +2816,36 @@ func (m *Post) SetPinged(arg string) {
 	m.IsPingedDirty = true
 }
 
-func (m *Post) GetModified() *DateTime {
-	return m.Modified
+func (m *Post) GetPostModified() *DateTime {
+	return m.PostModified
 }
-func (m *Post) SetModified(arg *DateTime) {
-	m.Modified = arg
-	m.IsModifiedDirty = true
-}
-
-func (m *Post) GetModifiedGmt() *DateTime {
-	return m.ModifiedGmt
-}
-func (m *Post) SetModifiedGmt(arg *DateTime) {
-	m.ModifiedGmt = arg
-	m.IsModifiedGmtDirty = true
+func (m *Post) SetPostModified(arg *DateTime) {
+	m.PostModified = arg
+	m.IsPostModifiedDirty = true
 }
 
-func (m *Post) GetContentFiltered() string {
-	return m.ContentFiltered
+func (m *Post) GetPostModifiedGmt() *DateTime {
+	return m.PostModifiedGmt
 }
-func (m *Post) SetContentFiltered(arg string) {
-	m.ContentFiltered = arg
-	m.IsContentFilteredDirty = true
+func (m *Post) SetPostModifiedGmt(arg *DateTime) {
+	m.PostModifiedGmt = arg
+	m.IsPostModifiedGmtDirty = true
 }
 
-func (m *Post) GetParent() int64 {
-	return m.Parent
+func (m *Post) GetPostContentFiltered() string {
+	return m.PostContentFiltered
 }
-func (m *Post) SetParent(arg int64) {
-	m.Parent = arg
-	m.IsParentDirty = true
+func (m *Post) SetPostContentFiltered(arg string) {
+	m.PostContentFiltered = arg
+	m.IsPostContentFilteredDirty = true
+}
+
+func (m *Post) GetPostParent() int64 {
+	return m.PostParent
+}
+func (m *Post) SetPostParent(arg int64) {
+	m.PostParent = arg
+	m.IsPostParentDirty = true
 }
 
 func (m *Post) GetGuid() string {
@@ -2819,20 +2864,20 @@ func (m *Post) SetMenuOrder(arg int) {
 	m.IsMenuOrderDirty = true
 }
 
-func (m *Post) GetType() string {
-	return m.Type
+func (m *Post) GetPostType() string {
+	return m.PostType
 }
-func (m *Post) SetType(arg string) {
-	m.Type = arg
-	m.IsTypeDirty = true
+func (m *Post) SetPostType(arg string) {
+	m.PostType = arg
+	m.IsPostTypeDirty = true
 }
 
-func (m *Post) GetMimeType() string {
-	return m.MimeType
+func (m *Post) GetPostMimeType() string {
+	return m.PostMimeType
 }
-func (m *Post) SetMimeType(arg string) {
-	m.MimeType = arg
-	m.IsMimeTypeDirty = true
+func (m *Post) SetPostMimeType(arg string) {
+	m.PostMimeType = arg
+	m.IsPostMimeTypeDirty = true
 }
 
 func (m *Post) GetCommentCount() int64 {
@@ -2869,10 +2914,10 @@ func (o *Post) Find(_find_by_ID int64) (bool, error) {
 	return true, nil
 
 }
-func (o *Post) FindByAuthor(_find_by_Author int64) ([]Post, error) {
+func (o *Post) FindByPostAuthor(_find_by_PostAuthor int64) ([]Post, error) {
 
 	var model_slice []Post
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "post_author", _find_by_Author)
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "post_author", _find_by_PostAuthor)
 	results, err := o._adapter.Query(q)
 	if err != nil {
 		return model_slice, err
@@ -2894,10 +2939,10 @@ func (o *Post) FindByAuthor(_find_by_Author int64) ([]Post, error) {
 	return model_slice, nil
 
 }
-func (o *Post) FindByDate(_find_by_Date *DateTime) ([]Post, error) {
+func (o *Post) FindByPostDate(_find_by_PostDate *DateTime) ([]Post, error) {
 
 	var model_slice []Post
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_date", _find_by_Date)
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_date", _find_by_PostDate)
 	results, err := o._adapter.Query(q)
 	if err != nil {
 		return model_slice, err
@@ -2919,10 +2964,10 @@ func (o *Post) FindByDate(_find_by_Date *DateTime) ([]Post, error) {
 	return model_slice, nil
 
 }
-func (o *Post) FindByDateGmt(_find_by_DateGmt *DateTime) ([]Post, error) {
+func (o *Post) FindByPostDateGmt(_find_by_PostDateGmt *DateTime) ([]Post, error) {
 
 	var model_slice []Post
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_date_gmt", _find_by_DateGmt)
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_date_gmt", _find_by_PostDateGmt)
 	results, err := o._adapter.Query(q)
 	if err != nil {
 		return model_slice, err
@@ -2944,10 +2989,10 @@ func (o *Post) FindByDateGmt(_find_by_DateGmt *DateTime) ([]Post, error) {
 	return model_slice, nil
 
 }
-func (o *Post) FindByContent(_find_by_Content string) ([]Post, error) {
+func (o *Post) FindByPostContent(_find_by_PostContent string) ([]Post, error) {
 
 	var model_slice []Post
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_content", _find_by_Content)
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_content", _find_by_PostContent)
 	results, err := o._adapter.Query(q)
 	if err != nil {
 		return model_slice, err
@@ -2969,10 +3014,10 @@ func (o *Post) FindByContent(_find_by_Content string) ([]Post, error) {
 	return model_slice, nil
 
 }
-func (o *Post) FindByTitle(_find_by_Title string) ([]Post, error) {
+func (o *Post) FindByPostTitle(_find_by_PostTitle string) ([]Post, error) {
 
 	var model_slice []Post
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_title", _find_by_Title)
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_title", _find_by_PostTitle)
 	results, err := o._adapter.Query(q)
 	if err != nil {
 		return model_slice, err
@@ -2994,10 +3039,10 @@ func (o *Post) FindByTitle(_find_by_Title string) ([]Post, error) {
 	return model_slice, nil
 
 }
-func (o *Post) FindByExcerpt(_find_by_Excerpt string) ([]Post, error) {
+func (o *Post) FindByPostExcerpt(_find_by_PostExcerpt string) ([]Post, error) {
 
 	var model_slice []Post
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_excerpt", _find_by_Excerpt)
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_excerpt", _find_by_PostExcerpt)
 	results, err := o._adapter.Query(q)
 	if err != nil {
 		return model_slice, err
@@ -3019,10 +3064,10 @@ func (o *Post) FindByExcerpt(_find_by_Excerpt string) ([]Post, error) {
 	return model_slice, nil
 
 }
-func (o *Post) FindByStatus(_find_by_Status string) ([]Post, error) {
+func (o *Post) FindByPostStatus(_find_by_PostStatus string) ([]Post, error) {
 
 	var model_slice []Post
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_status", _find_by_Status)
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_status", _find_by_PostStatus)
 	results, err := o._adapter.Query(q)
 	if err != nil {
 		return model_slice, err
@@ -3094,10 +3139,10 @@ func (o *Post) FindByPingStatus(_find_by_PingStatus string) ([]Post, error) {
 	return model_slice, nil
 
 }
-func (o *Post) FindByPassword(_find_by_Password string) ([]Post, error) {
+func (o *Post) FindByPostPassword(_find_by_PostPassword string) ([]Post, error) {
 
 	var model_slice []Post
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_password", _find_by_Password)
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_password", _find_by_PostPassword)
 	results, err := o._adapter.Query(q)
 	if err != nil {
 		return model_slice, err
@@ -3119,10 +3164,10 @@ func (o *Post) FindByPassword(_find_by_Password string) ([]Post, error) {
 	return model_slice, nil
 
 }
-func (o *Post) FindByName(_find_by_Name string) ([]Post, error) {
+func (o *Post) FindByPostName(_find_by_PostName string) ([]Post, error) {
 
 	var model_slice []Post
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_name", _find_by_Name)
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_name", _find_by_PostName)
 	results, err := o._adapter.Query(q)
 	if err != nil {
 		return model_slice, err
@@ -3194,10 +3239,10 @@ func (o *Post) FindByPinged(_find_by_Pinged string) ([]Post, error) {
 	return model_slice, nil
 
 }
-func (o *Post) FindByModified(_find_by_Modified *DateTime) ([]Post, error) {
+func (o *Post) FindByPostModified(_find_by_PostModified *DateTime) ([]Post, error) {
 
 	var model_slice []Post
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_modified", _find_by_Modified)
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_modified", _find_by_PostModified)
 	results, err := o._adapter.Query(q)
 	if err != nil {
 		return model_slice, err
@@ -3219,10 +3264,10 @@ func (o *Post) FindByModified(_find_by_Modified *DateTime) ([]Post, error) {
 	return model_slice, nil
 
 }
-func (o *Post) FindByModifiedGmt(_find_by_ModifiedGmt *DateTime) ([]Post, error) {
+func (o *Post) FindByPostModifiedGmt(_find_by_PostModifiedGmt *DateTime) ([]Post, error) {
 
 	var model_slice []Post
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_modified_gmt", _find_by_ModifiedGmt)
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_modified_gmt", _find_by_PostModifiedGmt)
 	results, err := o._adapter.Query(q)
 	if err != nil {
 		return model_slice, err
@@ -3244,10 +3289,10 @@ func (o *Post) FindByModifiedGmt(_find_by_ModifiedGmt *DateTime) ([]Post, error)
 	return model_slice, nil
 
 }
-func (o *Post) FindByContentFiltered(_find_by_ContentFiltered string) ([]Post, error) {
+func (o *Post) FindByPostContentFiltered(_find_by_PostContentFiltered string) ([]Post, error) {
 
 	var model_slice []Post
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_content_filtered", _find_by_ContentFiltered)
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_content_filtered", _find_by_PostContentFiltered)
 	results, err := o._adapter.Query(q)
 	if err != nil {
 		return model_slice, err
@@ -3269,10 +3314,10 @@ func (o *Post) FindByContentFiltered(_find_by_ContentFiltered string) ([]Post, e
 	return model_slice, nil
 
 }
-func (o *Post) FindByParent(_find_by_Parent int64) ([]Post, error) {
+func (o *Post) FindByPostParent(_find_by_PostParent int64) ([]Post, error) {
 
 	var model_slice []Post
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "post_parent", _find_by_Parent)
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "post_parent", _find_by_PostParent)
 	results, err := o._adapter.Query(q)
 	if err != nil {
 		return model_slice, err
@@ -3344,10 +3389,10 @@ func (o *Post) FindByMenuOrder(_find_by_MenuOrder int) ([]Post, error) {
 	return model_slice, nil
 
 }
-func (o *Post) FindByType(_find_by_Type string) ([]Post, error) {
+func (o *Post) FindByPostType(_find_by_PostType string) ([]Post, error) {
 
 	var model_slice []Post
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_type", _find_by_Type)
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_type", _find_by_PostType)
 	results, err := o._adapter.Query(q)
 	if err != nil {
 		return model_slice, err
@@ -3369,10 +3414,10 @@ func (o *Post) FindByType(_find_by_Type string) ([]Post, error) {
 	return model_slice, nil
 
 }
-func (o *Post) FindByMimeType(_find_by_MimeType string) ([]Post, error) {
+func (o *Post) FindByPostMimeType(_find_by_PostMimeType string) ([]Post, error) {
 
 	var model_slice []Post
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_mime_type", _find_by_MimeType)
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_mime_type", _find_by_PostMimeType)
 	results, err := o._adapter.Query(q)
 	if err != nil {
 		return model_slice, err
@@ -3426,41 +3471,41 @@ func (o *Post) FromDBValueMap(m map[string]DBValue) error {
 		return err
 	}
 	o.ID = _ID
-	_Author, err := m["post_author"].AsInt64()
+	_PostAuthor, err := m["post_author"].AsInt64()
 	if err != nil {
 		return err
 	}
-	o.Author = _Author
-	_Date, err := m["post_date"].AsDateTime()
+	o.PostAuthor = _PostAuthor
+	_PostDate, err := m["post_date"].AsDateTime()
 	if err != nil {
 		return err
 	}
-	o.Date = _Date
-	_DateGmt, err := m["post_date_gmt"].AsDateTime()
+	o.PostDate = _PostDate
+	_PostDateGmt, err := m["post_date_gmt"].AsDateTime()
 	if err != nil {
 		return err
 	}
-	o.DateGmt = _DateGmt
-	_Content, err := m["post_content"].AsString()
+	o.PostDateGmt = _PostDateGmt
+	_PostContent, err := m["post_content"].AsString()
 	if err != nil {
 		return err
 	}
-	o.Content = _Content
-	_Title, err := m["post_title"].AsString()
+	o.PostContent = _PostContent
+	_PostTitle, err := m["post_title"].AsString()
 	if err != nil {
 		return err
 	}
-	o.Title = _Title
-	_Excerpt, err := m["post_excerpt"].AsString()
+	o.PostTitle = _PostTitle
+	_PostExcerpt, err := m["post_excerpt"].AsString()
 	if err != nil {
 		return err
 	}
-	o.Excerpt = _Excerpt
-	_Status, err := m["post_status"].AsString()
+	o.PostExcerpt = _PostExcerpt
+	_PostStatus, err := m["post_status"].AsString()
 	if err != nil {
 		return err
 	}
-	o.Status = _Status
+	o.PostStatus = _PostStatus
 	_CommentStatus, err := m["comment_status"].AsString()
 	if err != nil {
 		return err
@@ -3471,16 +3516,16 @@ func (o *Post) FromDBValueMap(m map[string]DBValue) error {
 		return err
 	}
 	o.PingStatus = _PingStatus
-	_Password, err := m["post_password"].AsString()
+	_PostPassword, err := m["post_password"].AsString()
 	if err != nil {
 		return err
 	}
-	o.Password = _Password
-	_Name, err := m["post_name"].AsString()
+	o.PostPassword = _PostPassword
+	_PostName, err := m["post_name"].AsString()
 	if err != nil {
 		return err
 	}
-	o.Name = _Name
+	o.PostName = _PostName
 	_ToPing, err := m["to_ping"].AsString()
 	if err != nil {
 		return err
@@ -3491,26 +3536,26 @@ func (o *Post) FromDBValueMap(m map[string]DBValue) error {
 		return err
 	}
 	o.Pinged = _Pinged
-	_Modified, err := m["post_modified"].AsDateTime()
+	_PostModified, err := m["post_modified"].AsDateTime()
 	if err != nil {
 		return err
 	}
-	o.Modified = _Modified
-	_ModifiedGmt, err := m["post_modified_gmt"].AsDateTime()
+	o.PostModified = _PostModified
+	_PostModifiedGmt, err := m["post_modified_gmt"].AsDateTime()
 	if err != nil {
 		return err
 	}
-	o.ModifiedGmt = _ModifiedGmt
-	_ContentFiltered, err := m["post_content_filtered"].AsString()
+	o.PostModifiedGmt = _PostModifiedGmt
+	_PostContentFiltered, err := m["post_content_filtered"].AsString()
 	if err != nil {
 		return err
 	}
-	o.ContentFiltered = _ContentFiltered
-	_Parent, err := m["post_parent"].AsInt64()
+	o.PostContentFiltered = _PostContentFiltered
+	_PostParent, err := m["post_parent"].AsInt64()
 	if err != nil {
 		return err
 	}
-	o.Parent = _Parent
+	o.PostParent = _PostParent
 	_Guid, err := m["guid"].AsString()
 	if err != nil {
 		return err
@@ -3521,16 +3566,16 @@ func (o *Post) FromDBValueMap(m map[string]DBValue) error {
 		return err
 	}
 	o.MenuOrder = _MenuOrder
-	_Type, err := m["post_type"].AsString()
+	_PostType, err := m["post_type"].AsString()
 	if err != nil {
 		return err
 	}
-	o.Type = _Type
-	_MimeType, err := m["post_mime_type"].AsString()
+	o.PostType = _PostType
+	_PostMimeType, err := m["post_mime_type"].AsString()
 	if err != nil {
 		return err
 	}
-	o.MimeType = _MimeType
+	o.PostMimeType = _PostMimeType
 	_CommentCount, err := m["comment_count"].AsInt64()
 	if err != nil {
 		return err
@@ -3541,27 +3586,27 @@ func (o *Post) FromDBValueMap(m map[string]DBValue) error {
 }
 func (o *Post) FromPost(m *Post) {
 	o.ID = m.ID
-	o.Author = m.Author
-	o.Date = m.Date
-	o.DateGmt = m.DateGmt
-	o.Content = m.Content
-	o.Title = m.Title
-	o.Excerpt = m.Excerpt
-	o.Status = m.Status
+	o.PostAuthor = m.PostAuthor
+	o.PostDate = m.PostDate
+	o.PostDateGmt = m.PostDateGmt
+	o.PostContent = m.PostContent
+	o.PostTitle = m.PostTitle
+	o.PostExcerpt = m.PostExcerpt
+	o.PostStatus = m.PostStatus
 	o.CommentStatus = m.CommentStatus
 	o.PingStatus = m.PingStatus
-	o.Password = m.Password
-	o.Name = m.Name
+	o.PostPassword = m.PostPassword
+	o.PostName = m.PostName
 	o.ToPing = m.ToPing
 	o.Pinged = m.Pinged
-	o.Modified = m.Modified
-	o.ModifiedGmt = m.ModifiedGmt
-	o.ContentFiltered = m.ContentFiltered
-	o.Parent = m.Parent
+	o.PostModified = m.PostModified
+	o.PostModifiedGmt = m.PostModifiedGmt
+	o.PostContentFiltered = m.PostContentFiltered
+	o.PostParent = m.PostParent
 	o.Guid = m.Guid
 	o.MenuOrder = m.MenuOrder
-	o.Type = m.Type
-	o.MimeType = m.MimeType
+	o.PostType = m.PostType
+	o.PostMimeType = m.PostMimeType
 	o.CommentCount = m.CommentCount
 
 }
@@ -3570,7 +3615,7 @@ func (o *Post) Save() (int64, error) {
 	if o._new == true {
 		return o.Create()
 	}
-	frmt := fmt.Sprintf("UPDATE %s SET `post_author` = '%d', `post_date` = '%s', `post_date_gmt` = '%s', `post_content` = '%s', `post_title` = '%s', `post_excerpt` = '%s', `post_status` = '%s', `comment_status` = '%s', `ping_status` = '%s', `post_password` = '%s', `post_name` = '%s', `to_ping` = '%s', `pinged` = '%s', `post_modified` = '%s', `post_modified_gmt` = '%s', `post_content_filtered` = '%s', `post_parent` = '%d', `guid` = '%s', `menu_order` = '%d', `post_type` = '%s', `post_mime_type` = '%s', `comment_count` = '%d' WHERE %s = '%d' LIMIT 1", o._table, o.Author, o.Date, o.DateGmt, o.Content, o.Title, o.Excerpt, o.Status, o.CommentStatus, o.PingStatus, o.Password, o.Name, o.ToPing, o.Pinged, o.Modified, o.ModifiedGmt, o.ContentFiltered, o.Parent, o.Guid, o.MenuOrder, o.Type, o.MimeType, o.CommentCount, o._pkey, o.ID)
+	frmt := fmt.Sprintf("UPDATE %s SET `post_author` = '%d', `post_date` = '%s', `post_date_gmt` = '%s', `post_content` = '%s', `post_title` = '%s', `post_excerpt` = '%s', `post_status` = '%s', `comment_status` = '%s', `ping_status` = '%s', `post_password` = '%s', `post_name` = '%s', `to_ping` = '%s', `pinged` = '%s', `post_modified` = '%s', `post_modified_gmt` = '%s', `post_content_filtered` = '%s', `post_parent` = '%d', `guid` = '%s', `menu_order` = '%d', `post_type` = '%s', `post_mime_type` = '%s', `comment_count` = '%d' WHERE %s = '%d' LIMIT 1", o._table, o.PostAuthor, o.PostDate, o.PostDateGmt, o.PostContent, o.PostTitle, o.PostExcerpt, o.PostStatus, o.CommentStatus, o.PingStatus, o.PostPassword, o.PostName, o.ToPing, o.Pinged, o.PostModified, o.PostModifiedGmt, o.PostContentFiltered, o.PostParent, o.Guid, o.MenuOrder, o.PostType, o.PostMimeType, o.CommentCount, o._pkey, o.ID)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
@@ -3579,7 +3624,7 @@ func (o *Post) Save() (int64, error) {
 	return o._adapter.AffectedRows(), nil
 }
 func (o *Post) Create() (int64, error) {
-	frmt := fmt.Sprintf("INSERT INTO %s (`post_author`, `post_date`, `post_date_gmt`, `post_content`, `post_title`, `post_excerpt`, `post_status`, `comment_status`, `ping_status`, `post_password`, `post_name`, `to_ping`, `pinged`, `post_modified`, `post_modified_gmt`, `post_content_filtered`, `post_parent`, `guid`, `menu_order`, `post_type`, `post_mime_type`, `comment_count`) VALUES ('%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%d', '%s', '%d', '%s', '%s', '%d')", o._table, o.Author, o.Date, o.DateGmt, o.Content, o.Title, o.Excerpt, o.Status, o.CommentStatus, o.PingStatus, o.Password, o.Name, o.ToPing, o.Pinged, o.Modified, o.ModifiedGmt, o.ContentFiltered, o.Parent, o.Guid, o.MenuOrder, o.Type, o.MimeType, o.CommentCount)
+	frmt := fmt.Sprintf("INSERT INTO %s (`post_author`, `post_date`, `post_date_gmt`, `post_content`, `post_title`, `post_excerpt`, `post_status`, `comment_status`, `ping_status`, `post_password`, `post_name`, `to_ping`, `pinged`, `post_modified`, `post_modified_gmt`, `post_content_filtered`, `post_parent`, `guid`, `menu_order`, `post_type`, `post_mime_type`, `comment_count`) VALUES ('%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%d', '%s', '%d', '%s', '%s', '%d')", o._table, o.PostAuthor, o.PostDate, o.PostDateGmt, o.PostContent, o.PostTitle, o.PostExcerpt, o.PostStatus, o.CommentStatus, o.PingStatus, o.PostPassword, o.PostName, o.ToPing, o.Pinged, o.PostModified, o.PostModifiedGmt, o.PostContentFiltered, o.PostParent, o.Guid, o.MenuOrder, o.PostType, o.PostMimeType, o.CommentCount)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
@@ -3588,73 +3633,73 @@ func (o *Post) Create() (int64, error) {
 	return o._adapter.AffectedRows(), nil
 }
 
-func (o *Post) UpdateAuthor(_upd_Author int64) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `post_author` = '%d' WHERE `ID` = '%d'", o._table, _upd_Author, o.Author)
+func (o *Post) UpdatePostAuthor(_upd_PostAuthor int64) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `post_author` = '%d' WHERE `ID` = '%d'", o._table, _upd_PostAuthor, o.PostAuthor)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.Author = _upd_Author
+	o.PostAuthor = _upd_PostAuthor
 	return o._adapter.AffectedRows(), nil
 }
 
-func (o *Post) UpdateDate(_upd_Date *DateTime) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `post_date` = '%s' WHERE `ID` = '%d'", o._table, _upd_Date, o.Date)
+func (o *Post) UpdatePostDate(_upd_PostDate *DateTime) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `post_date` = '%s' WHERE `ID` = '%d'", o._table, _upd_PostDate, o.PostDate)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.Date = _upd_Date
+	o.PostDate = _upd_PostDate
 	return o._adapter.AffectedRows(), nil
 }
 
-func (o *Post) UpdateDateGmt(_upd_DateGmt *DateTime) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `post_date_gmt` = '%s' WHERE `ID` = '%d'", o._table, _upd_DateGmt, o.DateGmt)
+func (o *Post) UpdatePostDateGmt(_upd_PostDateGmt *DateTime) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `post_date_gmt` = '%s' WHERE `ID` = '%d'", o._table, _upd_PostDateGmt, o.PostDateGmt)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.DateGmt = _upd_DateGmt
+	o.PostDateGmt = _upd_PostDateGmt
 	return o._adapter.AffectedRows(), nil
 }
 
-func (o *Post) UpdateContent(_upd_Content string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `post_content` = '%s' WHERE `ID` = '%d'", o._table, _upd_Content, o.Content)
+func (o *Post) UpdatePostContent(_upd_PostContent string) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `post_content` = '%s' WHERE `ID` = '%d'", o._table, _upd_PostContent, o.PostContent)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.Content = _upd_Content
+	o.PostContent = _upd_PostContent
 	return o._adapter.AffectedRows(), nil
 }
 
-func (o *Post) UpdateTitle(_upd_Title string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `post_title` = '%s' WHERE `ID` = '%d'", o._table, _upd_Title, o.Title)
+func (o *Post) UpdatePostTitle(_upd_PostTitle string) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `post_title` = '%s' WHERE `ID` = '%d'", o._table, _upd_PostTitle, o.PostTitle)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.Title = _upd_Title
+	o.PostTitle = _upd_PostTitle
 	return o._adapter.AffectedRows(), nil
 }
 
-func (o *Post) UpdateExcerpt(_upd_Excerpt string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `post_excerpt` = '%s' WHERE `ID` = '%d'", o._table, _upd_Excerpt, o.Excerpt)
+func (o *Post) UpdatePostExcerpt(_upd_PostExcerpt string) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `post_excerpt` = '%s' WHERE `ID` = '%d'", o._table, _upd_PostExcerpt, o.PostExcerpt)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.Excerpt = _upd_Excerpt
+	o.PostExcerpt = _upd_PostExcerpt
 	return o._adapter.AffectedRows(), nil
 }
 
-func (o *Post) UpdateStatus(_upd_Status string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `post_status` = '%s' WHERE `ID` = '%d'", o._table, _upd_Status, o.Status)
+func (o *Post) UpdatePostStatus(_upd_PostStatus string) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `post_status` = '%s' WHERE `ID` = '%d'", o._table, _upd_PostStatus, o.PostStatus)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.Status = _upd_Status
+	o.PostStatus = _upd_PostStatus
 	return o._adapter.AffectedRows(), nil
 }
 
@@ -3678,23 +3723,23 @@ func (o *Post) UpdatePingStatus(_upd_PingStatus string) (int64, error) {
 	return o._adapter.AffectedRows(), nil
 }
 
-func (o *Post) UpdatePassword(_upd_Password string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `post_password` = '%s' WHERE `ID` = '%d'", o._table, _upd_Password, o.Password)
+func (o *Post) UpdatePostPassword(_upd_PostPassword string) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `post_password` = '%s' WHERE `ID` = '%d'", o._table, _upd_PostPassword, o.PostPassword)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.Password = _upd_Password
+	o.PostPassword = _upd_PostPassword
 	return o._adapter.AffectedRows(), nil
 }
 
-func (o *Post) UpdateName(_upd_Name string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `post_name` = '%s' WHERE `ID` = '%d'", o._table, _upd_Name, o.Name)
+func (o *Post) UpdatePostName(_upd_PostName string) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `post_name` = '%s' WHERE `ID` = '%d'", o._table, _upd_PostName, o.PostName)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.Name = _upd_Name
+	o.PostName = _upd_PostName
 	return o._adapter.AffectedRows(), nil
 }
 
@@ -3718,43 +3763,43 @@ func (o *Post) UpdatePinged(_upd_Pinged string) (int64, error) {
 	return o._adapter.AffectedRows(), nil
 }
 
-func (o *Post) UpdateModified(_upd_Modified *DateTime) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `post_modified` = '%s' WHERE `ID` = '%d'", o._table, _upd_Modified, o.Modified)
+func (o *Post) UpdatePostModified(_upd_PostModified *DateTime) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `post_modified` = '%s' WHERE `ID` = '%d'", o._table, _upd_PostModified, o.PostModified)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.Modified = _upd_Modified
+	o.PostModified = _upd_PostModified
 	return o._adapter.AffectedRows(), nil
 }
 
-func (o *Post) UpdateModifiedGmt(_upd_ModifiedGmt *DateTime) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `post_modified_gmt` = '%s' WHERE `ID` = '%d'", o._table, _upd_ModifiedGmt, o.ModifiedGmt)
+func (o *Post) UpdatePostModifiedGmt(_upd_PostModifiedGmt *DateTime) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `post_modified_gmt` = '%s' WHERE `ID` = '%d'", o._table, _upd_PostModifiedGmt, o.PostModifiedGmt)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.ModifiedGmt = _upd_ModifiedGmt
+	o.PostModifiedGmt = _upd_PostModifiedGmt
 	return o._adapter.AffectedRows(), nil
 }
 
-func (o *Post) UpdateContentFiltered(_upd_ContentFiltered string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `post_content_filtered` = '%s' WHERE `ID` = '%d'", o._table, _upd_ContentFiltered, o.ContentFiltered)
+func (o *Post) UpdatePostContentFiltered(_upd_PostContentFiltered string) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `post_content_filtered` = '%s' WHERE `ID` = '%d'", o._table, _upd_PostContentFiltered, o.PostContentFiltered)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.ContentFiltered = _upd_ContentFiltered
+	o.PostContentFiltered = _upd_PostContentFiltered
 	return o._adapter.AffectedRows(), nil
 }
 
-func (o *Post) UpdateParent(_upd_Parent int64) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `post_parent` = '%d' WHERE `ID` = '%d'", o._table, _upd_Parent, o.Parent)
+func (o *Post) UpdatePostParent(_upd_PostParent int64) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `post_parent` = '%d' WHERE `ID` = '%d'", o._table, _upd_PostParent, o.PostParent)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.Parent = _upd_Parent
+	o.PostParent = _upd_PostParent
 	return o._adapter.AffectedRows(), nil
 }
 
@@ -3778,23 +3823,23 @@ func (o *Post) UpdateMenuOrder(_upd_MenuOrder int) (int64, error) {
 	return o._adapter.AffectedRows(), nil
 }
 
-func (o *Post) UpdateType(_upd_Type string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `post_type` = '%s' WHERE `ID` = '%d'", o._table, _upd_Type, o.Type)
+func (o *Post) UpdatePostType(_upd_PostType string) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `post_type` = '%s' WHERE `ID` = '%d'", o._table, _upd_PostType, o.PostType)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.Type = _upd_Type
+	o.PostType = _upd_PostType
 	return o._adapter.AffectedRows(), nil
 }
 
-func (o *Post) UpdateMimeType(_upd_MimeType string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `post_mime_type` = '%s' WHERE `ID` = '%d'", o._table, _upd_MimeType, o.MimeType)
+func (o *Post) UpdatePostMimeType(_upd_PostMimeType string) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `post_mime_type` = '%s' WHERE `ID` = '%d'", o._table, _upd_PostMimeType, o.PostMimeType)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.MimeType = _upd_MimeType
+	o.PostMimeType = _upd_PostMimeType
 	return o._adapter.AffectedRows(), nil
 }
 
@@ -3821,6 +3866,7 @@ type TermRelationship struct {
 	IsObjectIdDirty       bool
 	IsTermTaxonomyIdDirty bool
 	IsTermOrderDirty      bool
+	// Relationships
 }
 
 func NewTermRelationship(a Adapter) *TermRelationship {
@@ -4017,6 +4063,8 @@ type TermTaxonomy struct {
 	IsDescriptionDirty    bool
 	IsParentDirty         bool
 	IsCountDirty          bool
+	// Relationships
+	Term *Term
 }
 
 func NewTermTaxonomy(a Adapter) *TermTaxonomy {
@@ -4026,6 +4074,18 @@ func NewTermTaxonomy(a Adapter) *TermTaxonomy {
 	o._pkey = "term_taxonomy_id"
 	o._new = false
 	return &o
+}
+
+func (o TermTaxonomy) LoadTerm() (*Term, error) {
+	m := NewTerm(o._adapter)
+	found, err := m.Find(o.GetTermId())
+	if err != nil {
+		return nil, err
+	}
+	if found == false {
+		return nil, errors.New(fmt.Sprintf(`could not find Term with term_id of %d`, o.GetTermId()))
+	}
+	return m, nil
 }
 
 func (m *TermTaxonomy) GetPrimaryKeyValue() int64 {
@@ -4366,6 +4426,7 @@ type Term struct {
 	IsNameDirty      bool
 	IsSlugDirty      bool
 	IsTermGroupDirty bool
+	// Relationships
 }
 
 func NewTerm(a Adapter) *Term {
@@ -4617,6 +4678,8 @@ type UserMeta struct {
 	IsUserIdDirty    bool
 	IsMetaKeyDirty   bool
 	IsMetaValueDirty bool
+	// Relationships
+	User *User
 }
 
 func NewUserMeta(a Adapter) *UserMeta {
@@ -4626,6 +4689,18 @@ func NewUserMeta(a Adapter) *UserMeta {
 	o._pkey = "umeta_id"
 	o._new = false
 	return &o
+}
+
+func (o UserMeta) LoadUser() (*User, error) {
+	m := NewUser(o._adapter)
+	found, err := m.Find(o.GetUserId())
+	if err != nil {
+		return nil, err
+	}
+	if found == false {
+		return nil, errors.New(fmt.Sprintf(`could not find User with ID of %d`, o.GetUserId()))
+	}
+	return m, nil
 }
 
 func (m *UserMeta) GetPrimaryKeyValue() int64 {
@@ -4880,6 +4955,7 @@ type User struct {
 	IsUserActivationKeyDirty bool
 	IsUserStatusDirty        bool
 	IsDisplayNameDirty       bool
+	// Relationships
 }
 
 func NewUser(a Adapter) *User {
@@ -5427,6 +5503,7 @@ type WooAttrTaxonomie struct {
 	IsAttrLabelDirty   bool
 	IsAttrTypeDirty    bool
 	IsAttrOrderbyDirty bool
+	// Relationships
 }
 
 func NewWooAttrTaxonomie(a Adapter) *WooAttrTaxonomie {
@@ -5741,6 +5818,8 @@ type WooDownloadableProductPerm struct {
 	IsAccessGrantedDirty      bool
 	IsAccessExpiresDirty      bool
 	IsDownloadCountDirty      bool
+	// Relationships
+	User *User
 }
 
 func NewWooDownloadableProductPerm(a Adapter) *WooDownloadableProductPerm {
@@ -5750,6 +5829,18 @@ func NewWooDownloadableProductPerm(a Adapter) *WooDownloadableProductPerm {
 	o._pkey = "permission_id"
 	o._new = false
 	return &o
+}
+
+func (o WooDownloadableProductPerm) LoadUser() (*User, error) {
+	m := NewUser(o._adapter)
+	found, err := m.Find(o.GetUserId())
+	if err != nil {
+		return nil, err
+	}
+	if found == false {
+		return nil, errors.New(fmt.Sprintf(`could not find User with ID of %d`, o.GetUserId()))
+	}
+	return m, nil
 }
 
 func (m *WooDownloadableProductPerm) GetPrimaryKeyValue() int64 {
@@ -6335,6 +6426,7 @@ type WooOrderItemMeta struct {
 	IsOrderItemIdDirty bool
 	IsMetaKeyDirty     bool
 	IsMetaValueDirty   bool
+	// Relationships
 }
 
 func NewWooOrderItemMeta(a Adapter) *WooOrderItemMeta {
@@ -6586,6 +6678,7 @@ type WooOrderItem struct {
 	IsOrderItemNameDirty bool
 	IsOrderItemTypeDirty bool
 	IsOrderIdDirty       bool
+	// Relationships
 }
 
 func NewWooOrderItem(a Adapter) *WooOrderItem {
@@ -6837,6 +6930,7 @@ type WooTaxRateLocation struct {
 	IsLocationCodeDirty bool
 	IsTaxRateIdDirty    bool
 	IsLocationTypeDirty bool
+	// Relationships
 }
 
 func NewWooTaxRateLocation(a Adapter) *WooTaxRateLocation {
@@ -7100,6 +7194,7 @@ type WooTaxRate struct {
 	IsTaxRateShippingDirty bool
 	IsTaxRateOrderDirty    bool
 	IsTaxRateClassDirty    bool
+	// Relationships
 }
 
 func NewWooTaxRate(a Adapter) *WooTaxRate {

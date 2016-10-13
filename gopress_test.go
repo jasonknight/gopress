@@ -588,8 +588,8 @@ func TestPostMetaFromDBValueMap(t *testing.T) {
 		return
 	}
 
-	if o.Id != 999 {
-		t.Errorf("o.Id test failed %+v", o)
+	if o.PostId != 999 {
+		t.Errorf("o.PostId test failed %+v", o)
 		return
 	}
 
@@ -609,7 +609,7 @@ func TestPostMetaCreate(t *testing.T) {
 		a, err := NewMysqlAdapterEx(`../gopress.db.yml`)
 		model := NewPostMeta(a)
 
-		model.Id = 999
+		model.PostId = 999
 
 		model.MetaKey = `the rain in spain`
 
@@ -707,66 +707,66 @@ func TestPostFromDBValueMap(t *testing.T) {
 		return
 	}
 
-	if o.Author != 999 {
-		t.Errorf("o.Author test failed %+v", o)
+	if o.PostAuthor != 999 {
+		t.Errorf("o.PostAuthor test failed %+v", o)
 		return
 	}
 
-	if o.Date.Year != 2016 {
-		t.Errorf("year not set for %+v", o.Date)
+	if o.PostDate.Year != 2016 {
+		t.Errorf("year not set for %+v", o.PostDate)
 		return
 	}
-	if o.Date.Year != 2016 ||
-		o.Date.Month != 1 ||
-		o.Date.Day != 1 ||
-		o.Date.Hours != 10 ||
-		o.Date.Minutes != 50 ||
-		o.Date.Seconds != 23 ||
-		o.Date.Offset != 5 ||
-		o.Date.Zone != `Z` {
-		t.Errorf(`fields don't match up for %+v`, o.Date)
+	if o.PostDate.Year != 2016 ||
+		o.PostDate.Month != 1 ||
+		o.PostDate.Day != 1 ||
+		o.PostDate.Hours != 10 ||
+		o.PostDate.Minutes != 50 ||
+		o.PostDate.Seconds != 23 ||
+		o.PostDate.Offset != 5 ||
+		o.PostDate.Zone != `Z` {
+		t.Errorf(`fields don't match up for %+v`, o.PostDate)
 	}
 	r2, _ := m["post_date"].AsString()
-	if o.Date.ToString() != r2 {
-		t.Errorf(`restring of o.Date failed %s`, o.Date.ToString())
+	if o.PostDate.ToString() != r2 {
+		t.Errorf(`restring of o.PostDate failed %s`, o.PostDate.ToString())
 	}
 
-	if o.DateGmt.Year != 2016 {
-		t.Errorf("year not set for %+v", o.DateGmt)
+	if o.PostDateGmt.Year != 2016 {
+		t.Errorf("year not set for %+v", o.PostDateGmt)
 		return
 	}
-	if o.DateGmt.Year != 2016 ||
-		o.DateGmt.Month != 1 ||
-		o.DateGmt.Day != 1 ||
-		o.DateGmt.Hours != 10 ||
-		o.DateGmt.Minutes != 50 ||
-		o.DateGmt.Seconds != 23 ||
-		o.DateGmt.Offset != 5 ||
-		o.DateGmt.Zone != `Z` {
-		t.Errorf(`fields don't match up for %+v`, o.DateGmt)
+	if o.PostDateGmt.Year != 2016 ||
+		o.PostDateGmt.Month != 1 ||
+		o.PostDateGmt.Day != 1 ||
+		o.PostDateGmt.Hours != 10 ||
+		o.PostDateGmt.Minutes != 50 ||
+		o.PostDateGmt.Seconds != 23 ||
+		o.PostDateGmt.Offset != 5 ||
+		o.PostDateGmt.Zone != `Z` {
+		t.Errorf(`fields don't match up for %+v`, o.PostDateGmt)
 	}
 	r3, _ := m["post_date_gmt"].AsString()
-	if o.DateGmt.ToString() != r3 {
-		t.Errorf(`restring of o.DateGmt failed %s`, o.DateGmt.ToString())
+	if o.PostDateGmt.ToString() != r3 {
+		t.Errorf(`restring of o.PostDateGmt failed %s`, o.PostDateGmt.ToString())
 	}
 
-	if o.Content != "AString" {
-		t.Errorf("o.Content test failed %+v", o)
+	if o.PostContent != "AString" {
+		t.Errorf("o.PostContent test failed %+v", o)
 		return
 	}
 
-	if o.Title != "AString" {
-		t.Errorf("o.Title test failed %+v", o)
+	if o.PostTitle != "AString" {
+		t.Errorf("o.PostTitle test failed %+v", o)
 		return
 	}
 
-	if o.Excerpt != "AString" {
-		t.Errorf("o.Excerpt test failed %+v", o)
+	if o.PostExcerpt != "AString" {
+		t.Errorf("o.PostExcerpt test failed %+v", o)
 		return
 	}
 
-	if o.Status != "AString" {
-		t.Errorf("o.Status test failed %+v", o)
+	if o.PostStatus != "AString" {
+		t.Errorf("o.PostStatus test failed %+v", o)
 		return
 	}
 
@@ -780,13 +780,13 @@ func TestPostFromDBValueMap(t *testing.T) {
 		return
 	}
 
-	if o.Password != "AString" {
-		t.Errorf("o.Password test failed %+v", o)
+	if o.PostPassword != "AString" {
+		t.Errorf("o.PostPassword test failed %+v", o)
 		return
 	}
 
-	if o.Name != "AString" {
-		t.Errorf("o.Name test failed %+v", o)
+	if o.PostName != "AString" {
+		t.Errorf("o.PostName test failed %+v", o)
 		return
 	}
 
@@ -800,51 +800,51 @@ func TestPostFromDBValueMap(t *testing.T) {
 		return
 	}
 
-	if o.Modified.Year != 2016 {
-		t.Errorf("year not set for %+v", o.Modified)
+	if o.PostModified.Year != 2016 {
+		t.Errorf("year not set for %+v", o.PostModified)
 		return
 	}
-	if o.Modified.Year != 2016 ||
-		o.Modified.Month != 1 ||
-		o.Modified.Day != 1 ||
-		o.Modified.Hours != 10 ||
-		o.Modified.Minutes != 50 ||
-		o.Modified.Seconds != 23 ||
-		o.Modified.Offset != 5 ||
-		o.Modified.Zone != `Z` {
-		t.Errorf(`fields don't match up for %+v`, o.Modified)
+	if o.PostModified.Year != 2016 ||
+		o.PostModified.Month != 1 ||
+		o.PostModified.Day != 1 ||
+		o.PostModified.Hours != 10 ||
+		o.PostModified.Minutes != 50 ||
+		o.PostModified.Seconds != 23 ||
+		o.PostModified.Offset != 5 ||
+		o.PostModified.Zone != `Z` {
+		t.Errorf(`fields don't match up for %+v`, o.PostModified)
 	}
 	r14, _ := m["post_modified"].AsString()
-	if o.Modified.ToString() != r14 {
-		t.Errorf(`restring of o.Modified failed %s`, o.Modified.ToString())
+	if o.PostModified.ToString() != r14 {
+		t.Errorf(`restring of o.PostModified failed %s`, o.PostModified.ToString())
 	}
 
-	if o.ModifiedGmt.Year != 2016 {
-		t.Errorf("year not set for %+v", o.ModifiedGmt)
+	if o.PostModifiedGmt.Year != 2016 {
+		t.Errorf("year not set for %+v", o.PostModifiedGmt)
 		return
 	}
-	if o.ModifiedGmt.Year != 2016 ||
-		o.ModifiedGmt.Month != 1 ||
-		o.ModifiedGmt.Day != 1 ||
-		o.ModifiedGmt.Hours != 10 ||
-		o.ModifiedGmt.Minutes != 50 ||
-		o.ModifiedGmt.Seconds != 23 ||
-		o.ModifiedGmt.Offset != 5 ||
-		o.ModifiedGmt.Zone != `Z` {
-		t.Errorf(`fields don't match up for %+v`, o.ModifiedGmt)
+	if o.PostModifiedGmt.Year != 2016 ||
+		o.PostModifiedGmt.Month != 1 ||
+		o.PostModifiedGmt.Day != 1 ||
+		o.PostModifiedGmt.Hours != 10 ||
+		o.PostModifiedGmt.Minutes != 50 ||
+		o.PostModifiedGmt.Seconds != 23 ||
+		o.PostModifiedGmt.Offset != 5 ||
+		o.PostModifiedGmt.Zone != `Z` {
+		t.Errorf(`fields don't match up for %+v`, o.PostModifiedGmt)
 	}
 	r15, _ := m["post_modified_gmt"].AsString()
-	if o.ModifiedGmt.ToString() != r15 {
-		t.Errorf(`restring of o.ModifiedGmt failed %s`, o.ModifiedGmt.ToString())
+	if o.PostModifiedGmt.ToString() != r15 {
+		t.Errorf(`restring of o.PostModifiedGmt failed %s`, o.PostModifiedGmt.ToString())
 	}
 
-	if o.ContentFiltered != "AString" {
-		t.Errorf("o.ContentFiltered test failed %+v", o)
+	if o.PostContentFiltered != "AString" {
+		t.Errorf("o.PostContentFiltered test failed %+v", o)
 		return
 	}
 
-	if o.Parent != 999 {
-		t.Errorf("o.Parent test failed %+v", o)
+	if o.PostParent != 999 {
+		t.Errorf("o.PostParent test failed %+v", o)
 		return
 	}
 
@@ -858,13 +858,13 @@ func TestPostFromDBValueMap(t *testing.T) {
 		return
 	}
 
-	if o.Type != "AString" {
-		t.Errorf("o.Type test failed %+v", o)
+	if o.PostType != "AString" {
+		t.Errorf("o.PostType test failed %+v", o)
 		return
 	}
 
-	if o.MimeType != "AString" {
-		t.Errorf("o.MimeType test failed %+v", o)
+	if o.PostMimeType != "AString" {
+		t.Errorf("o.PostMimeType test failed %+v", o)
 		return
 	}
 
@@ -879,31 +879,31 @@ func TestPostCreate(t *testing.T) {
 		a, err := NewMysqlAdapterEx(`../gopress.db.yml`)
 		model := NewPost(a)
 
-		model.Author = 999
+		model.PostAuthor = 999
 
 		d1 := NewDateTime()
 		d1.FromString(`999`)
-		model.Date = d1
+		model.PostDate = d1
 
 		d2 := NewDateTime()
 		d2.FromString(`999`)
-		model.DateGmt = d2
+		model.PostDateGmt = d2
 
-		model.Content = `the rain in spain`
+		model.PostContent = `the rain in spain`
 
-		model.Title = `the rain in spain`
+		model.PostTitle = `the rain in spain`
 
-		model.Excerpt = `the rain in spain`
+		model.PostExcerpt = `the rain in spain`
 
-		model.Status = `the rain in spain`
+		model.PostStatus = `the rain in spain`
 
 		model.CommentStatus = `the rain in spain`
 
 		model.PingStatus = `the rain in spain`
 
-		model.Password = `the rain in spain`
+		model.PostPassword = `the rain in spain`
 
-		model.Name = `the rain in spain`
+		model.PostName = `the rain in spain`
 
 		model.ToPing = `the rain in spain`
 
@@ -911,23 +911,23 @@ func TestPostCreate(t *testing.T) {
 
 		d13 := NewDateTime()
 		d13.FromString(`the rain in spain`)
-		model.Modified = d13
+		model.PostModified = d13
 
 		d14 := NewDateTime()
 		d14.FromString(`the rain in spain`)
-		model.ModifiedGmt = d14
+		model.PostModifiedGmt = d14
 
-		model.ContentFiltered = `the rain in spain`
+		model.PostContentFiltered = `the rain in spain`
 
-		model.Parent = 999
+		model.PostParent = 999
 
 		model.Guid = `the rain in spain`
 
 		model.MenuOrder = 999
 
-		model.Type = `the rain in spain`
+		model.PostType = `the rain in spain`
 
-		model.MimeType = `the rain in spain`
+		model.PostMimeType = `the rain in spain`
 
 		model.CommentCount = 999
 
