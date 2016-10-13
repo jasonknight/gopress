@@ -6,6 +6,7 @@ func TestMysqlAdapterFromYAML(t *testing.T) {
     y,err := fileGetContents(`test_data/adapter.yml`)
     if err != nil {
         $fail(`failed to load yaml %s`,err)
+        return
     }
     err = a.FromYAML(y)
     if err != nil {

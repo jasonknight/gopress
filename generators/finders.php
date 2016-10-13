@@ -15,7 +15,12 @@ foreach($t->fields as $f) {
     }
     $scol = $f->Field;
     // these are here just to save having to loop
-    $from_map_body .= "\t_" . maybeLC(convertFieldName($f->Field)) . ",err := m[\"{$f->Field}\"].As" . ucfirst($f->go_type). "()\n";
+    if ( $f->go_type == "*DateTime" ) {
+        $from_map_body .= "\t_" . maybeLC(convertFieldName($f->Field)) . ",err := m[\"{$f->Field}\"].As" . ucfirst(substr($f->go_type,1)). "()\n";
+    } else {
+        $from_map_body .= "\t_" . maybeLC(convertFieldName($f->Field)) . ",err := m[\"{$f->Field}\"].As" . ucfirst($f->go_type). "()\n";
+    }
+    
     $from_map_body .= "\tif err != nil {\n \t\treturn err\n\t}\n";
     $from_map_body .= "\to." . maybeLC(convertFieldName($f->Field)) . " = _" . maybeLC(convertFieldName($f->Field)) . "\n";
     

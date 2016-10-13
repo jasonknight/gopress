@@ -224,8 +224,8 @@ type Comment struct {
 	CommentAuthorEmail string
 	CommentAuthorUrl   string
 	CommentAuthorIP    string
-	CommentDate        DateTime
-	CommentDateGmt     DateTime
+	CommentDate        *DateTime
+	CommentDateGmt     *DateTime
 	CommentContent     string
 	CommentKarma       int
 	CommentApproved    string
@@ -394,7 +394,7 @@ func (o *Comment) FindByCommentAuthorIP(_find_by_CommentAuthorIP string) ([]Comm
 	return model_slice, nil
 
 }
-func (o *Comment) FindByCommentDate(_find_by_CommentDate DateTime) ([]Comment, error) {
+func (o *Comment) FindByCommentDate(_find_by_CommentDate *DateTime) ([]Comment, error) {
 
 	var model_slice []Comment
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "comment_date", _find_by_CommentDate)
@@ -419,7 +419,7 @@ func (o *Comment) FindByCommentDate(_find_by_CommentDate DateTime) ([]Comment, e
 	return model_slice, nil
 
 }
-func (o *Comment) FindByCommentDateGmt(_find_by_CommentDateGmt DateTime) ([]Comment, error) {
+func (o *Comment) FindByCommentDateGmt(_find_by_CommentDateGmt *DateTime) ([]Comment, error) {
 
 	var model_slice []Comment
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "comment_date_gmt", _find_by_CommentDateGmt)
@@ -772,7 +772,7 @@ func (o *Comment) UpdateCommentAuthorIP(_upd_CommentAuthorIP string) (int64, err
 	return o._adapter.AffectedRows(), nil
 }
 
-func (o *Comment) UpdateCommentDate(_upd_CommentDate DateTime) (int64, error) {
+func (o *Comment) UpdateCommentDate(_upd_CommentDate *DateTime) (int64, error) {
 	frmt := fmt.Sprintf("UPDATE %s SET `comment_date` = '%s' WHERE `comment_ID` = '%d'", o._table, _upd_CommentDate, o.CommentDate)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
@@ -782,7 +782,7 @@ func (o *Comment) UpdateCommentDate(_upd_CommentDate DateTime) (int64, error) {
 	return o._adapter.AffectedRows(), nil
 }
 
-func (o *Comment) UpdateCommentDateGmt(_upd_CommentDateGmt DateTime) (int64, error) {
+func (o *Comment) UpdateCommentDateGmt(_upd_CommentDateGmt *DateTime) (int64, error) {
 	frmt := fmt.Sprintf("UPDATE %s SET `comment_date_gmt` = '%s' WHERE `comment_ID` = '%d'", o._table, _upd_CommentDateGmt, o.CommentDateGmt)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
@@ -877,7 +877,7 @@ type Link struct {
 	LinkVisible     string
 	LinkOwner       int64
 	LinkRating      int
-	LinkUpdated     DateTime
+	LinkUpdated     *DateTime
 	LinkRel         string
 	LinkNotes       string
 	LinkRss         string
@@ -1117,7 +1117,7 @@ func (o *Link) FindByLinkRating(_find_by_LinkRating int) ([]Link, error) {
 	return model_slice, nil
 
 }
-func (o *Link) FindByLinkUpdated(_find_by_LinkUpdated DateTime) ([]Link, error) {
+func (o *Link) FindByLinkUpdated(_find_by_LinkUpdated *DateTime) ([]Link, error) {
 
 	var model_slice []Link
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "link_updated", _find_by_LinkUpdated)
@@ -1390,7 +1390,7 @@ func (o *Link) UpdateLinkRating(_upd_LinkRating int) (int64, error) {
 	return o._adapter.AffectedRows(), nil
 }
 
-func (o *Link) UpdateLinkUpdated(_upd_LinkUpdated DateTime) (int64, error) {
+func (o *Link) UpdateLinkUpdated(_upd_LinkUpdated *DateTime) (int64, error) {
 	frmt := fmt.Sprintf("UPDATE %s SET `link_updated` = '%s' WHERE `link_id` = '%d'", o._table, _upd_LinkUpdated, o.LinkUpdated)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
@@ -1836,8 +1836,8 @@ type Post struct {
 	_new            bool
 	ID              int64
 	Author          int64
-	Date            DateTime
-	DateGmt         DateTime
+	Date            *DateTime
+	DateGmt         *DateTime
 	Content         string
 	Title           string
 	Excerpt         string
@@ -1848,8 +1848,8 @@ type Post struct {
 	Name            string
 	ToPing          string
 	Pinged          string
-	Modified        DateTime
-	ModifiedGmt     DateTime
+	Modified        *DateTime
+	ModifiedGmt     *DateTime
 	ContentFiltered string
 	Parent          int64
 	Guid            string
@@ -1918,7 +1918,7 @@ func (o *Post) FindByAuthor(_find_by_Author int64) ([]Post, error) {
 	return model_slice, nil
 
 }
-func (o *Post) FindByDate(_find_by_Date DateTime) ([]Post, error) {
+func (o *Post) FindByDate(_find_by_Date *DateTime) ([]Post, error) {
 
 	var model_slice []Post
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_date", _find_by_Date)
@@ -1943,7 +1943,7 @@ func (o *Post) FindByDate(_find_by_Date DateTime) ([]Post, error) {
 	return model_slice, nil
 
 }
-func (o *Post) FindByDateGmt(_find_by_DateGmt DateTime) ([]Post, error) {
+func (o *Post) FindByDateGmt(_find_by_DateGmt *DateTime) ([]Post, error) {
 
 	var model_slice []Post
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_date_gmt", _find_by_DateGmt)
@@ -2218,7 +2218,7 @@ func (o *Post) FindByPinged(_find_by_Pinged string) ([]Post, error) {
 	return model_slice, nil
 
 }
-func (o *Post) FindByModified(_find_by_Modified DateTime) ([]Post, error) {
+func (o *Post) FindByModified(_find_by_Modified *DateTime) ([]Post, error) {
 
 	var model_slice []Post
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_modified", _find_by_Modified)
@@ -2243,7 +2243,7 @@ func (o *Post) FindByModified(_find_by_Modified DateTime) ([]Post, error) {
 	return model_slice, nil
 
 }
-func (o *Post) FindByModifiedGmt(_find_by_ModifiedGmt DateTime) ([]Post, error) {
+func (o *Post) FindByModifiedGmt(_find_by_ModifiedGmt *DateTime) ([]Post, error) {
 
 	var model_slice []Post
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_modified_gmt", _find_by_ModifiedGmt)
@@ -2596,7 +2596,7 @@ func (o *Post) UpdateAuthor(_upd_Author int64) (int64, error) {
 	return o._adapter.AffectedRows(), nil
 }
 
-func (o *Post) UpdateDate(_upd_Date DateTime) (int64, error) {
+func (o *Post) UpdateDate(_upd_Date *DateTime) (int64, error) {
 	frmt := fmt.Sprintf("UPDATE %s SET `post_date` = '%s' WHERE `ID` = '%d'", o._table, _upd_Date, o.Date)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
@@ -2606,7 +2606,7 @@ func (o *Post) UpdateDate(_upd_Date DateTime) (int64, error) {
 	return o._adapter.AffectedRows(), nil
 }
 
-func (o *Post) UpdateDateGmt(_upd_DateGmt DateTime) (int64, error) {
+func (o *Post) UpdateDateGmt(_upd_DateGmt *DateTime) (int64, error) {
 	frmt := fmt.Sprintf("UPDATE %s SET `post_date_gmt` = '%s' WHERE `ID` = '%d'", o._table, _upd_DateGmt, o.DateGmt)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
@@ -2716,7 +2716,7 @@ func (o *Post) UpdatePinged(_upd_Pinged string) (int64, error) {
 	return o._adapter.AffectedRows(), nil
 }
 
-func (o *Post) UpdateModified(_upd_Modified DateTime) (int64, error) {
+func (o *Post) UpdateModified(_upd_Modified *DateTime) (int64, error) {
 	frmt := fmt.Sprintf("UPDATE %s SET `post_modified` = '%s' WHERE `ID` = '%d'", o._table, _upd_Modified, o.Modified)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
@@ -2726,7 +2726,7 @@ func (o *Post) UpdateModified(_upd_Modified DateTime) (int64, error) {
 	return o._adapter.AffectedRows(), nil
 }
 
-func (o *Post) UpdateModifiedGmt(_upd_ModifiedGmt DateTime) (int64, error) {
+func (o *Post) UpdateModifiedGmt(_upd_ModifiedGmt *DateTime) (int64, error) {
 	frmt := fmt.Sprintf("UPDATE %s SET `post_modified_gmt` = '%s' WHERE `ID` = '%d'", o._table, _upd_ModifiedGmt, o.ModifiedGmt)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
@@ -3645,7 +3645,7 @@ type User struct {
 	UserNicename      string
 	UserEmail         string
 	UserUrl           string
-	UserRegistered    DateTime
+	UserRegistered    *DateTime
 	UserActivationKey string
 	UserStatus        int
 	DisplayName       string
@@ -3810,7 +3810,7 @@ func (o *User) FindByUserUrl(_find_by_UserUrl string) ([]User, error) {
 	return model_slice, nil
 
 }
-func (o *User) FindByUserRegistered(_find_by_UserRegistered DateTime) ([]User, error) {
+func (o *User) FindByUserRegistered(_find_by_UserRegistered *DateTime) ([]User, error) {
 
 	var model_slice []User
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "user_registered", _find_by_UserRegistered)
@@ -4038,7 +4038,7 @@ func (o *User) UpdateUserUrl(_upd_UserUrl string) (int64, error) {
 	return o._adapter.AffectedRows(), nil
 }
 
-func (o *User) UpdateUserRegistered(_upd_UserRegistered DateTime) (int64, error) {
+func (o *User) UpdateUserRegistered(_upd_UserRegistered *DateTime) (int64, error) {
 	frmt := fmt.Sprintf("UPDATE %s SET `user_registered` = '%s' WHERE `ID` = '%d'", o._table, _upd_UserRegistered, o.UserRegistered)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
@@ -4332,8 +4332,8 @@ type WooDownloadableProductPerm struct {
 	UserEmail          string
 	UserId             int64
 	DownloadsRemaining string
-	AccessGranted      DateTime
-	AccessExpires      DateTime
+	AccessGranted      *DateTime
+	AccessExpires      *DateTime
 	DownloadCount      int64
 }
 
@@ -4546,7 +4546,7 @@ func (o *WooDownloadableProductPerm) FindByDownloadsRemaining(_find_by_Downloads
 	return model_slice, nil
 
 }
-func (o *WooDownloadableProductPerm) FindByAccessGranted(_find_by_AccessGranted DateTime) ([]WooDownloadableProductPerm, error) {
+func (o *WooDownloadableProductPerm) FindByAccessGranted(_find_by_AccessGranted *DateTime) ([]WooDownloadableProductPerm, error) {
 
 	var model_slice []WooDownloadableProductPerm
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "access_granted", _find_by_AccessGranted)
@@ -4571,7 +4571,7 @@ func (o *WooDownloadableProductPerm) FindByAccessGranted(_find_by_AccessGranted 
 	return model_slice, nil
 
 }
-func (o *WooDownloadableProductPerm) FindByAccessExpires(_find_by_AccessExpires DateTime) ([]WooDownloadableProductPerm, error) {
+func (o *WooDownloadableProductPerm) FindByAccessExpires(_find_by_AccessExpires *DateTime) ([]WooDownloadableProductPerm, error) {
 
 	var model_slice []WooDownloadableProductPerm
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "access_expires", _find_by_AccessExpires)
@@ -4774,7 +4774,7 @@ func (o *WooDownloadableProductPerm) UpdateDownloadsRemaining(_upd_DownloadsRema
 	return o._adapter.AffectedRows(), nil
 }
 
-func (o *WooDownloadableProductPerm) UpdateAccessGranted(_upd_AccessGranted DateTime) (int64, error) {
+func (o *WooDownloadableProductPerm) UpdateAccessGranted(_upd_AccessGranted *DateTime) (int64, error) {
 	frmt := fmt.Sprintf("UPDATE %s SET `access_granted` = '%s' WHERE `permission_id` = '%d'", o._table, _upd_AccessGranted, o.AccessGranted)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
@@ -4784,7 +4784,7 @@ func (o *WooDownloadableProductPerm) UpdateAccessGranted(_upd_AccessGranted Date
 	return o._adapter.AffectedRows(), nil
 }
 
-func (o *WooDownloadableProductPerm) UpdateAccessExpires(_upd_AccessExpires DateTime) (int64, error) {
+func (o *WooDownloadableProductPerm) UpdateAccessExpires(_upd_AccessExpires *DateTime) (int64, error) {
 	frmt := fmt.Sprintf("UPDATE %s SET `access_expires` = '%s' WHERE `permission_id` = '%d'", o._table, _upd_AccessExpires, o.AccessExpires)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
@@ -5864,7 +5864,7 @@ type DBValue interface {
 	AsFloat32() (float32, error)
 	AsFloat64() (float64, error)
 	AsString() (string, error)
-	AsDateTime() (DateTime, error)
+	AsDateTime() (*DateTime, error)
 	SetInternalValue(string, string)
 }
 
@@ -5908,11 +5908,11 @@ func (v *MysqlValue) AsFloat64() (float64, error) {
 	return i, err
 }
 
-func (v *MysqlValue) AsDateTime() (DateTime, error) {
-	var dt DateTime
+func (v *MysqlValue) AsDateTime() (*DateTime, error) {
+	dt := NewDateTime()
 	err := dt.FromString(v._v)
 	if err != nil {
-		return DateTime{}, err
+		return &DateTime{}, err
 	}
 	return dt, nil
 }
@@ -5934,6 +5934,19 @@ type MysqlAdapter struct {
 
 func NewMysqlAdapter(pre string) *MysqlAdapter {
 	return &MysqlAdapter{DBPrefix: pre}
+}
+func NewMysqlAdapterEx(fname string) (*MysqlAdapter, error) {
+	a := NewMysqlAdapter(``)
+	y, err := fileGetContents(fname)
+	if err != nil {
+		return nil, err
+	}
+	err = a.FromYAML(y)
+	if err != nil {
+		return nil, err
+	}
+	return a, nil
+
 }
 func (a *MysqlAdapter) NewDBValue() DBValue {
 	return NewMysqlValue()
@@ -6108,6 +6121,10 @@ func (d *DateTime) FromString(s string) error {
 }
 func (d *DateTime) ToString() string {
 	return fmt.Sprintf("%d-%02d-%02d %02d:%02d:%02d.%d%s", d.Year, d.Month, d.Day, d.Hours, d.Minutes, d.Seconds, d.Offset, d.Zone)
+}
+func NewDateTime() *DateTime {
+	d := &DateTime{}
+	return d
 }
 func fileExists(p string) bool {
 	if _, err := os.Stat(p); os.IsNotExist(err) {

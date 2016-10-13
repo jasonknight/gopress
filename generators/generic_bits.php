@@ -18,7 +18,7 @@ type DBValue interface {
     AsFloat32() (float32,error)
     AsFloat64() (float64,error)
     AsString() (string,error)
-    AsDateTime() (DateTime,error)
+    AsDateTime() (*DateTime,error)
     SetInternalValue(string,string)
 }
 
@@ -61,11 +61,11 @@ func (v *MysqlValue) AsFloat64() (float64,error) {
     return i,err
 }
 
-func (v *MysqlValue) AsDateTime() (DateTime,error) {
-    var dt DateTime
+func (v *MysqlValue) AsDateTime() (*DateTime,error) {
+    dt := NewDateTime()
     err := dt.FromString(v._v)
     if err != nil {
-        return DateTime{}, err
+        return &DateTime{}, err
     }
     return dt,nil
 }
@@ -88,6 +88,19 @@ type MysqlAdapter struct {
 func NewMysqlAdapter(pre string) *MysqlAdapter {
     return &MysqlAdapter{DBPrefix: pre}
 } 
+func NewMysqlAdapterEx(fname string) (*MysqlAdapter,error) {
+    a := NewMysqlAdapter(``)
+    y,err := fileGetContents(fname)
+    if err != nil {
+        return nil,err
+    }
+    err = a.FromYAML(y)
+    if err != nil {
+        return nil,err
+    }
+    return a,nil
+
+}
 func (a *MysqlAdapter) NewDBValue() DBValue {
     return NewMysqlValue()
 }
@@ -259,6 +272,10 @@ func (d *DateTime) FromString(s string) error {
 }
 func (d *DateTime) ToString() string {
     return fmt.Sprintf(\"%d-%02d-%02d %02d:%02d:%02d.%d%s\",d.Year,d.Month,d.Day,d.Hours,d.Minutes,d.Seconds,d.Offset,d.Zone)
+}
+func NewDateTime() *DateTime {
+    d := &DateTime{}
+    return d
 }
 func fileExists(p string) bool {
     if _, err := os.Stat(p); os.IsNotExist(err) {

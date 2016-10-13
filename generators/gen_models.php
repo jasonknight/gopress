@@ -61,7 +61,7 @@ function mysqlToGoType($t) {
     }
 
     if ( $t == "datetime" ) {
-        return "DateTime";
+        return "*DateTime";
     }
 }
 function mysqlToFmtType($t) {
@@ -169,6 +169,7 @@ foreach ($tables as $t) {
     }
     $seen[] = $t->model_name;
     include "model_test.php";
+    include "db_tests.php";
 }
 include "generic_tests.php";
 file_put_contents($_SERVER['argv'][1]."_test.go",$_contents);

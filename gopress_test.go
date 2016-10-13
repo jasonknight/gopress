@@ -52,6 +52,29 @@ func TestCommentMetaFromDBValueMap(t *testing.T) {
 	}
 }
 
+func TestCommentMetaCreate(t *testing.T) {
+	if fileExists(`../gopress.db.yml`) {
+		a, err := NewMysqlAdapterEx(`../gopress.db.yml`)
+		model := NewCommentMeta(a)
+
+		model.CommentId = 999
+
+		model.MetaKey = `the rain in spain`
+
+		model.MetaValue = `the rain in spain`
+
+		i, err := model.Create()
+		if err != nil {
+			t.Errorf(`failed to create model %+v error: %s`, model, err)
+			return
+		}
+		if i == 0 {
+			t.Errorf(`zero affected rows`)
+			return
+		}
+	}
+}
+
 func TestNewComment(t *testing.T) {
 	a := NewMysqlAdapter("wp_")
 	o := NewComment(a)
@@ -134,10 +157,38 @@ func TestCommentFromDBValueMap(t *testing.T) {
 		t.Errorf("year not set for %+v", o.CommentDate)
 		return
 	}
+	if o.CommentDate.Year != 2016 ||
+		o.CommentDate.Month != 1 ||
+		o.CommentDate.Day != 1 ||
+		o.CommentDate.Hours != 10 ||
+		o.CommentDate.Minutes != 50 ||
+		o.CommentDate.Seconds != 23 ||
+		o.CommentDate.Offset != 5 ||
+		o.CommentDate.Zone != `Z` {
+		t.Errorf(`fields don't match up for %+v`, o.CommentDate)
+	}
+	r6, _ := m["comment_date"].AsString()
+	if o.CommentDate.ToString() != r6 {
+		t.Errorf(`restring of o.CommentDate failed %s`, o.CommentDate.ToString())
+	}
 
 	if o.CommentDateGmt.Year != 2016 {
 		t.Errorf("year not set for %+v", o.CommentDateGmt)
 		return
+	}
+	if o.CommentDateGmt.Year != 2016 ||
+		o.CommentDateGmt.Month != 1 ||
+		o.CommentDateGmt.Day != 1 ||
+		o.CommentDateGmt.Hours != 10 ||
+		o.CommentDateGmt.Minutes != 50 ||
+		o.CommentDateGmt.Seconds != 23 ||
+		o.CommentDateGmt.Offset != 5 ||
+		o.CommentDateGmt.Zone != `Z` {
+		t.Errorf(`fields don't match up for %+v`, o.CommentDateGmt)
+	}
+	r7, _ := m["comment_date_gmt"].AsString()
+	if o.CommentDateGmt.ToString() != r7 {
+		t.Errorf(`restring of o.CommentDateGmt failed %s`, o.CommentDateGmt.ToString())
 	}
 
 	if o.CommentContent != "AString" {
@@ -173,6 +224,55 @@ func TestCommentFromDBValueMap(t *testing.T) {
 	if o.UserId != 999 {
 		t.Errorf("o.UserId test failed %+v", o)
 		return
+	}
+}
+
+func TestCommentCreate(t *testing.T) {
+	if fileExists(`../gopress.db.yml`) {
+		a, err := NewMysqlAdapterEx(`../gopress.db.yml`)
+		model := NewComment(a)
+
+		model.CommentPostID = 999
+
+		model.CommentAuthor = `the rain in spain`
+
+		model.CommentAuthorEmail = `the rain in spain`
+
+		model.CommentAuthorUrl = `the rain in spain`
+
+		model.CommentAuthorIP = `the rain in spain`
+
+		d5 := NewDateTime()
+		d5.FromString(`the rain in spain`)
+		model.CommentDate = d5
+
+		d6 := NewDateTime()
+		d6.FromString(`the rain in spain`)
+		model.CommentDateGmt = d6
+
+		model.CommentContent = `the rain in spain`
+
+		model.CommentKarma = 999
+
+		model.CommentApproved = `the rain in spain`
+
+		model.CommentAgent = `the rain in spain`
+
+		model.CommentType = `the rain in spain`
+
+		model.CommentParent = 999
+
+		model.UserId = 999
+
+		i, err := model.Create()
+		if err != nil {
+			t.Errorf(`failed to create model %+v error: %s`, model, err)
+			return
+		}
+		if i == 0 {
+			t.Errorf(`zero affected rows`)
+			return
+		}
 	}
 }
 
@@ -269,6 +369,20 @@ func TestLinkFromDBValueMap(t *testing.T) {
 		t.Errorf("year not set for %+v", o.LinkUpdated)
 		return
 	}
+	if o.LinkUpdated.Year != 2016 ||
+		o.LinkUpdated.Month != 1 ||
+		o.LinkUpdated.Day != 1 ||
+		o.LinkUpdated.Hours != 10 ||
+		o.LinkUpdated.Minutes != 50 ||
+		o.LinkUpdated.Seconds != 23 ||
+		o.LinkUpdated.Offset != 5 ||
+		o.LinkUpdated.Zone != `Z` {
+		t.Errorf(`fields don't match up for %+v`, o.LinkUpdated)
+	}
+	r9, _ := m["link_updated"].AsString()
+	if o.LinkUpdated.ToString() != r9 {
+		t.Errorf(`restring of o.LinkUpdated failed %s`, o.LinkUpdated.ToString())
+	}
 
 	if o.LinkRel != "AString" {
 		t.Errorf("o.LinkRel test failed %+v", o)
@@ -283,6 +397,49 @@ func TestLinkFromDBValueMap(t *testing.T) {
 	if o.LinkRss != "AString" {
 		t.Errorf("o.LinkRss test failed %+v", o)
 		return
+	}
+}
+
+func TestLinkCreate(t *testing.T) {
+	if fileExists(`../gopress.db.yml`) {
+		a, err := NewMysqlAdapterEx(`../gopress.db.yml`)
+		model := NewLink(a)
+
+		model.LinkUrl = `the rain in spain`
+
+		model.LinkName = `the rain in spain`
+
+		model.LinkImage = `the rain in spain`
+
+		model.LinkTarget = `the rain in spain`
+
+		model.LinkDescription = `the rain in spain`
+
+		model.LinkVisible = `the rain in spain`
+
+		model.LinkOwner = 999
+
+		model.LinkRating = 999
+
+		d8 := NewDateTime()
+		d8.FromString(`999`)
+		model.LinkUpdated = d8
+
+		model.LinkRel = `the rain in spain`
+
+		model.LinkNotes = `the rain in spain`
+
+		model.LinkRss = `the rain in spain`
+
+		i, err := model.Create()
+		if err != nil {
+			t.Errorf(`failed to create model %+v error: %s`, model, err)
+			return
+		}
+		if i == 0 {
+			t.Errorf(`zero affected rows`)
+			return
+		}
 	}
 }
 
@@ -333,6 +490,29 @@ func TestOptionFromDBValueMap(t *testing.T) {
 	}
 }
 
+func TestOptionCreate(t *testing.T) {
+	if fileExists(`../gopress.db.yml`) {
+		a, err := NewMysqlAdapterEx(`../gopress.db.yml`)
+		model := NewOption(a)
+
+		model.OptionName = `the rain in spain`
+
+		model.OptionValue = `the rain in spain`
+
+		model.Autoload = `the rain in spain`
+
+		i, err := model.Create()
+		if err != nil {
+			t.Errorf(`failed to create model %+v error: %s`, model, err)
+			return
+		}
+		if i == 0 {
+			t.Errorf(`zero affected rows`)
+			return
+		}
+	}
+}
+
 func TestNewPostMeta(t *testing.T) {
 	a := NewMysqlAdapter("wp_")
 	o := NewPostMeta(a)
@@ -377,6 +557,29 @@ func TestPostMetaFromDBValueMap(t *testing.T) {
 	if o.MetaValue != "AString" {
 		t.Errorf("o.MetaValue test failed %+v", o)
 		return
+	}
+}
+
+func TestPostMetaCreate(t *testing.T) {
+	if fileExists(`../gopress.db.yml`) {
+		a, err := NewMysqlAdapterEx(`../gopress.db.yml`)
+		model := NewPostMeta(a)
+
+		model.Id = 999
+
+		model.MetaKey = `the rain in spain`
+
+		model.MetaValue = `the rain in spain`
+
+		i, err := model.Create()
+		if err != nil {
+			t.Errorf(`failed to create model %+v error: %s`, model, err)
+			return
+		}
+		if i == 0 {
+			t.Errorf(`zero affected rows`)
+			return
+		}
 	}
 }
 
@@ -458,10 +661,38 @@ func TestPostFromDBValueMap(t *testing.T) {
 		t.Errorf("year not set for %+v", o.Date)
 		return
 	}
+	if o.Date.Year != 2016 ||
+		o.Date.Month != 1 ||
+		o.Date.Day != 1 ||
+		o.Date.Hours != 10 ||
+		o.Date.Minutes != 50 ||
+		o.Date.Seconds != 23 ||
+		o.Date.Offset != 5 ||
+		o.Date.Zone != `Z` {
+		t.Errorf(`fields don't match up for %+v`, o.Date)
+	}
+	r2, _ := m["post_date"].AsString()
+	if o.Date.ToString() != r2 {
+		t.Errorf(`restring of o.Date failed %s`, o.Date.ToString())
+	}
 
 	if o.DateGmt.Year != 2016 {
 		t.Errorf("year not set for %+v", o.DateGmt)
 		return
+	}
+	if o.DateGmt.Year != 2016 ||
+		o.DateGmt.Month != 1 ||
+		o.DateGmt.Day != 1 ||
+		o.DateGmt.Hours != 10 ||
+		o.DateGmt.Minutes != 50 ||
+		o.DateGmt.Seconds != 23 ||
+		o.DateGmt.Offset != 5 ||
+		o.DateGmt.Zone != `Z` {
+		t.Errorf(`fields don't match up for %+v`, o.DateGmt)
+	}
+	r3, _ := m["post_date_gmt"].AsString()
+	if o.DateGmt.ToString() != r3 {
+		t.Errorf(`restring of o.DateGmt failed %s`, o.DateGmt.ToString())
 	}
 
 	if o.Content != "AString" {
@@ -518,10 +749,38 @@ func TestPostFromDBValueMap(t *testing.T) {
 		t.Errorf("year not set for %+v", o.Modified)
 		return
 	}
+	if o.Modified.Year != 2016 ||
+		o.Modified.Month != 1 ||
+		o.Modified.Day != 1 ||
+		o.Modified.Hours != 10 ||
+		o.Modified.Minutes != 50 ||
+		o.Modified.Seconds != 23 ||
+		o.Modified.Offset != 5 ||
+		o.Modified.Zone != `Z` {
+		t.Errorf(`fields don't match up for %+v`, o.Modified)
+	}
+	r14, _ := m["post_modified"].AsString()
+	if o.Modified.ToString() != r14 {
+		t.Errorf(`restring of o.Modified failed %s`, o.Modified.ToString())
+	}
 
 	if o.ModifiedGmt.Year != 2016 {
 		t.Errorf("year not set for %+v", o.ModifiedGmt)
 		return
+	}
+	if o.ModifiedGmt.Year != 2016 ||
+		o.ModifiedGmt.Month != 1 ||
+		o.ModifiedGmt.Day != 1 ||
+		o.ModifiedGmt.Hours != 10 ||
+		o.ModifiedGmt.Minutes != 50 ||
+		o.ModifiedGmt.Seconds != 23 ||
+		o.ModifiedGmt.Offset != 5 ||
+		o.ModifiedGmt.Zone != `Z` {
+		t.Errorf(`fields don't match up for %+v`, o.ModifiedGmt)
+	}
+	r15, _ := m["post_modified_gmt"].AsString()
+	if o.ModifiedGmt.ToString() != r15 {
+		t.Errorf(`restring of o.ModifiedGmt failed %s`, o.ModifiedGmt.ToString())
 	}
 
 	if o.ContentFiltered != "AString" {
@@ -557,6 +816,75 @@ func TestPostFromDBValueMap(t *testing.T) {
 	if o.CommentCount != 999 {
 		t.Errorf("o.CommentCount test failed %+v", o)
 		return
+	}
+}
+
+func TestPostCreate(t *testing.T) {
+	if fileExists(`../gopress.db.yml`) {
+		a, err := NewMysqlAdapterEx(`../gopress.db.yml`)
+		model := NewPost(a)
+
+		model.Author = 999
+
+		d1 := NewDateTime()
+		d1.FromString(`999`)
+		model.Date = d1
+
+		d2 := NewDateTime()
+		d2.FromString(`999`)
+		model.DateGmt = d2
+
+		model.Content = `the rain in spain`
+
+		model.Title = `the rain in spain`
+
+		model.Excerpt = `the rain in spain`
+
+		model.Status = `the rain in spain`
+
+		model.CommentStatus = `the rain in spain`
+
+		model.PingStatus = `the rain in spain`
+
+		model.Password = `the rain in spain`
+
+		model.Name = `the rain in spain`
+
+		model.ToPing = `the rain in spain`
+
+		model.Pinged = `the rain in spain`
+
+		d13 := NewDateTime()
+		d13.FromString(`the rain in spain`)
+		model.Modified = d13
+
+		d14 := NewDateTime()
+		d14.FromString(`the rain in spain`)
+		model.ModifiedGmt = d14
+
+		model.ContentFiltered = `the rain in spain`
+
+		model.Parent = 999
+
+		model.Guid = `the rain in spain`
+
+		model.MenuOrder = 999
+
+		model.Type = `the rain in spain`
+
+		model.MimeType = `the rain in spain`
+
+		model.CommentCount = 999
+
+		i, err := model.Create()
+		if err != nil {
+			t.Errorf(`failed to create model %+v error: %s`, model, err)
+			return
+		}
+		if i == 0 {
+			t.Errorf(`zero affected rows`)
+			return
+		}
 	}
 }
 
@@ -597,6 +925,25 @@ func TestTermRelationshipFromDBValueMap(t *testing.T) {
 	if o.TermOrder != 999 {
 		t.Errorf("o.TermOrder test failed %+v", o)
 		return
+	}
+}
+
+func TestTermRelationshipCreate(t *testing.T) {
+	if fileExists(`../gopress.db.yml`) {
+		a, err := NewMysqlAdapterEx(`../gopress.db.yml`)
+		model := NewTermRelationship(a)
+
+		model.TermOrder = 999
+
+		i, err := model.Create()
+		if err != nil {
+			t.Errorf(`failed to create model %+v error: %s`, model, err)
+			return
+		}
+		if i == 0 {
+			t.Errorf(`zero affected rows`)
+			return
+		}
 	}
 }
 
@@ -661,6 +1008,33 @@ func TestTermTaxonomyFromDBValueMap(t *testing.T) {
 	}
 }
 
+func TestTermTaxonomyCreate(t *testing.T) {
+	if fileExists(`../gopress.db.yml`) {
+		a, err := NewMysqlAdapterEx(`../gopress.db.yml`)
+		model := NewTermTaxonomy(a)
+
+		model.TermId = 999
+
+		model.Taxonomy = `the rain in spain`
+
+		model.Description = `the rain in spain`
+
+		model.Parent = 999
+
+		model.Count = 999
+
+		i, err := model.Create()
+		if err != nil {
+			t.Errorf(`failed to create model %+v error: %s`, model, err)
+			return
+		}
+		if i == 0 {
+			t.Errorf(`zero affected rows`)
+			return
+		}
+	}
+}
+
 func TestNewTerm(t *testing.T) {
 	a := NewMysqlAdapter("wp_")
 	o := NewTerm(a)
@@ -708,6 +1082,29 @@ func TestTermFromDBValueMap(t *testing.T) {
 	}
 }
 
+func TestTermCreate(t *testing.T) {
+	if fileExists(`../gopress.db.yml`) {
+		a, err := NewMysqlAdapterEx(`../gopress.db.yml`)
+		model := NewTerm(a)
+
+		model.Name = `the rain in spain`
+
+		model.Slug = `the rain in spain`
+
+		model.TermGroup = 999
+
+		i, err := model.Create()
+		if err != nil {
+			t.Errorf(`failed to create model %+v error: %s`, model, err)
+			return
+		}
+		if i == 0 {
+			t.Errorf(`zero affected rows`)
+			return
+		}
+	}
+}
+
 func TestNewUserMeta(t *testing.T) {
 	a := NewMysqlAdapter("wp_")
 	o := NewUserMeta(a)
@@ -752,6 +1149,29 @@ func TestUserMetaFromDBValueMap(t *testing.T) {
 	if o.MetaValue != "AString" {
 		t.Errorf("o.MetaValue test failed %+v", o)
 		return
+	}
+}
+
+func TestUserMetaCreate(t *testing.T) {
+	if fileExists(`../gopress.db.yml`) {
+		a, err := NewMysqlAdapterEx(`../gopress.db.yml`)
+		model := NewUserMeta(a)
+
+		model.UserId = 999
+
+		model.MetaKey = `the rain in spain`
+
+		model.MetaValue = `the rain in spain`
+
+		i, err := model.Create()
+		if err != nil {
+			t.Errorf(`failed to create model %+v error: %s`, model, err)
+			return
+		}
+		if i == 0 {
+			t.Errorf(`zero affected rows`)
+			return
+		}
 	}
 }
 
@@ -827,6 +1247,20 @@ func TestUserFromDBValueMap(t *testing.T) {
 		t.Errorf("year not set for %+v", o.UserRegistered)
 		return
 	}
+	if o.UserRegistered.Year != 2016 ||
+		o.UserRegistered.Month != 1 ||
+		o.UserRegistered.Day != 1 ||
+		o.UserRegistered.Hours != 10 ||
+		o.UserRegistered.Minutes != 50 ||
+		o.UserRegistered.Seconds != 23 ||
+		o.UserRegistered.Offset != 5 ||
+		o.UserRegistered.Zone != `Z` {
+		t.Errorf(`fields don't match up for %+v`, o.UserRegistered)
+	}
+	r6, _ := m["user_registered"].AsString()
+	if o.UserRegistered.ToString() != r6 {
+		t.Errorf(`restring of o.UserRegistered failed %s`, o.UserRegistered.ToString())
+	}
 
 	if o.UserActivationKey != "AString" {
 		t.Errorf("o.UserActivationKey test failed %+v", o)
@@ -841,6 +1275,43 @@ func TestUserFromDBValueMap(t *testing.T) {
 	if o.DisplayName != "AString" {
 		t.Errorf("o.DisplayName test failed %+v", o)
 		return
+	}
+}
+
+func TestUserCreate(t *testing.T) {
+	if fileExists(`../gopress.db.yml`) {
+		a, err := NewMysqlAdapterEx(`../gopress.db.yml`)
+		model := NewUser(a)
+
+		model.UserLogin = `the rain in spain`
+
+		model.UserPass = `the rain in spain`
+
+		model.UserNicename = `the rain in spain`
+
+		model.UserEmail = `the rain in spain`
+
+		model.UserUrl = `the rain in spain`
+
+		d5 := NewDateTime()
+		d5.FromString(`the rain in spain`)
+		model.UserRegistered = d5
+
+		model.UserActivationKey = `the rain in spain`
+
+		model.UserStatus = 999
+
+		model.DisplayName = `the rain in spain`
+
+		i, err := model.Create()
+		if err != nil {
+			t.Errorf(`failed to create model %+v error: %s`, model, err)
+			return
+		}
+		if i == 0 {
+			t.Errorf(`zero affected rows`)
+			return
+		}
 	}
 }
 
@@ -895,6 +1366,31 @@ func TestWooAttrTaxonomieFromDBValueMap(t *testing.T) {
 	if o.AttrOrderby != "AString" {
 		t.Errorf("o.AttrOrderby test failed %+v", o)
 		return
+	}
+}
+
+func TestWooAttrTaxonomieCreate(t *testing.T) {
+	if fileExists(`../gopress.db.yml`) {
+		a, err := NewMysqlAdapterEx(`../gopress.db.yml`)
+		model := NewWooAttrTaxonomie(a)
+
+		model.AttrName = `the rain in spain`
+
+		model.AttrLabel = `the rain in spain`
+
+		model.AttrType = `the rain in spain`
+
+		model.AttrOrderby = `the rain in spain`
+
+		i, err := model.Create()
+		if err != nil {
+			t.Errorf(`failed to create model %+v error: %s`, model, err)
+			return
+		}
+		if i == 0 {
+			t.Errorf(`zero affected rows`)
+			return
+		}
 	}
 }
 
@@ -982,15 +1478,84 @@ func TestWooDownloadableProductPermFromDBValueMap(t *testing.T) {
 		t.Errorf("year not set for %+v", o.AccessGranted)
 		return
 	}
+	if o.AccessGranted.Year != 2016 ||
+		o.AccessGranted.Month != 1 ||
+		o.AccessGranted.Day != 1 ||
+		o.AccessGranted.Hours != 10 ||
+		o.AccessGranted.Minutes != 50 ||
+		o.AccessGranted.Seconds != 23 ||
+		o.AccessGranted.Offset != 5 ||
+		o.AccessGranted.Zone != `Z` {
+		t.Errorf(`fields don't match up for %+v`, o.AccessGranted)
+	}
+	r8, _ := m["access_granted"].AsString()
+	if o.AccessGranted.ToString() != r8 {
+		t.Errorf(`restring of o.AccessGranted failed %s`, o.AccessGranted.ToString())
+	}
 
 	if o.AccessExpires.Year != 2016 {
 		t.Errorf("year not set for %+v", o.AccessExpires)
 		return
 	}
+	if o.AccessExpires.Year != 2016 ||
+		o.AccessExpires.Month != 1 ||
+		o.AccessExpires.Day != 1 ||
+		o.AccessExpires.Hours != 10 ||
+		o.AccessExpires.Minutes != 50 ||
+		o.AccessExpires.Seconds != 23 ||
+		o.AccessExpires.Offset != 5 ||
+		o.AccessExpires.Zone != `Z` {
+		t.Errorf(`fields don't match up for %+v`, o.AccessExpires)
+	}
+	r9, _ := m["access_expires"].AsString()
+	if o.AccessExpires.ToString() != r9 {
+		t.Errorf(`restring of o.AccessExpires failed %s`, o.AccessExpires.ToString())
+	}
 
 	if o.DownloadCount != 999 {
 		t.Errorf("o.DownloadCount test failed %+v", o)
 		return
+	}
+}
+
+func TestWooDownloadableProductPermCreate(t *testing.T) {
+	if fileExists(`../gopress.db.yml`) {
+		a, err := NewMysqlAdapterEx(`../gopress.db.yml`)
+		model := NewWooDownloadableProductPerm(a)
+
+		model.DownloadId = `the rain in spain`
+
+		model.ProductId = 999
+
+		model.OrderId = 999
+
+		model.OrderKey = `the rain in spain`
+
+		model.UserEmail = `the rain in spain`
+
+		model.UserId = 999
+
+		model.DownloadsRemaining = `the rain in spain`
+
+		d7 := NewDateTime()
+		d7.FromString(`the rain in spain`)
+		model.AccessGranted = d7
+
+		d8 := NewDateTime()
+		d8.FromString(`the rain in spain`)
+		model.AccessExpires = d8
+
+		model.DownloadCount = 999
+
+		i, err := model.Create()
+		if err != nil {
+			t.Errorf(`failed to create model %+v error: %s`, model, err)
+			return
+		}
+		if i == 0 {
+			t.Errorf(`zero affected rows`)
+			return
+		}
 	}
 }
 
@@ -1041,6 +1606,29 @@ func TestWooOrderItemMetaFromDBValueMap(t *testing.T) {
 	}
 }
 
+func TestWooOrderItemMetaCreate(t *testing.T) {
+	if fileExists(`../gopress.db.yml`) {
+		a, err := NewMysqlAdapterEx(`../gopress.db.yml`)
+		model := NewWooOrderItemMeta(a)
+
+		model.OrderItemId = 999
+
+		model.MetaKey = `the rain in spain`
+
+		model.MetaValue = `the rain in spain`
+
+		i, err := model.Create()
+		if err != nil {
+			t.Errorf(`failed to create model %+v error: %s`, model, err)
+			return
+		}
+		if i == 0 {
+			t.Errorf(`zero affected rows`)
+			return
+		}
+	}
+}
+
 func TestNewWooOrderItem(t *testing.T) {
 	a := NewMysqlAdapter("wp_")
 	o := NewWooOrderItem(a)
@@ -1088,6 +1676,29 @@ func TestWooOrderItemFromDBValueMap(t *testing.T) {
 	}
 }
 
+func TestWooOrderItemCreate(t *testing.T) {
+	if fileExists(`../gopress.db.yml`) {
+		a, err := NewMysqlAdapterEx(`../gopress.db.yml`)
+		model := NewWooOrderItem(a)
+
+		model.OrderItemName = `the rain in spain`
+
+		model.OrderItemType = `the rain in spain`
+
+		model.OrderId = 999
+
+		i, err := model.Create()
+		if err != nil {
+			t.Errorf(`failed to create model %+v error: %s`, model, err)
+			return
+		}
+		if i == 0 {
+			t.Errorf(`zero affected rows`)
+			return
+		}
+	}
+}
+
 func TestNewWooTaxRateLocation(t *testing.T) {
 	a := NewMysqlAdapter("wp_")
 	o := NewWooTaxRateLocation(a)
@@ -1132,6 +1743,29 @@ func TestWooTaxRateLocationFromDBValueMap(t *testing.T) {
 	if o.LocationType != "AString" {
 		t.Errorf("o.LocationType test failed %+v", o)
 		return
+	}
+}
+
+func TestWooTaxRateLocationCreate(t *testing.T) {
+	if fileExists(`../gopress.db.yml`) {
+		a, err := NewMysqlAdapterEx(`../gopress.db.yml`)
+		model := NewWooTaxRateLocation(a)
+
+		model.LocationCode = `the rain in spain`
+
+		model.TaxRateId = 999
+
+		model.LocationType = `the rain in spain`
+
+		i, err := model.Create()
+		if err != nil {
+			t.Errorf(`failed to create model %+v error: %s`, model, err)
+			return
+		}
+		if i == 0 {
+			t.Errorf(`zero affected rows`)
+			return
+		}
 	}
 }
 
@@ -1224,11 +1858,47 @@ func TestWooTaxRateFromDBValueMap(t *testing.T) {
 	}
 }
 
+func TestWooTaxRateCreate(t *testing.T) {
+	if fileExists(`../gopress.db.yml`) {
+		a, err := NewMysqlAdapterEx(`../gopress.db.yml`)
+		model := NewWooTaxRate(a)
+
+		model.TaxRateCountry = `the rain in spain`
+
+		model.TaxRateState = `the rain in spain`
+
+		model.TaxRate = `the rain in spain`
+
+		model.TaxRateName = `the rain in spain`
+
+		model.TaxRatePriority = 999
+
+		model.TaxRateCompound = 999
+
+		model.TaxRateShipping = 999
+
+		model.TaxRateOrder = 999
+
+		model.TaxRateClass = `the rain in spain`
+
+		i, err := model.Create()
+		if err != nil {
+			t.Errorf(`failed to create model %+v error: %s`, model, err)
+			return
+		}
+		if i == 0 {
+			t.Errorf(`zero affected rows`)
+			return
+		}
+	}
+}
+
 func TestMysqlAdapterFromYAML(t *testing.T) {
 	a := NewMysqlAdapter(`pw_`)
 	y, err := fileGetContents(`test_data/adapter.yml`)
 	if err != nil {
 		t.Errorf(`failed to load yaml %s`, err)
+		return
 	}
 	err = a.FromYAML(y)
 	if err != nil {

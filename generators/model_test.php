@@ -27,7 +27,7 @@ foreach ($t->fields as $f) {
         $v = "\"AString\"";
     } else if ( preg_match("/^int/",$f->go_type) ) {
         $v = "strconv.Itoa(999)";
-    } else if ( $f->go_type == "DateTime" ) {
+    } else if ( $f->go_type == "*DateTime" ) {
         $v = "\"2016-01-01 10:50:23.5Z\"";
     } else {
         die("What? no go_type support for {$f->go_type}\n");
@@ -41,6 +41,7 @@ $txt .= "
         $fail(\"FromDBValueMap failed %s\",err)
     }
 ";
+$j = 0;
 foreach ($t->fields as $f) {
     $k = "\"{$f->Field}\"";
     $fmname = maybeLC(convertFieldName($f->Field));
@@ -48,12 +49,12 @@ foreach ($t->fields as $f) {
         $v = "\"AString\"";
     } else if ( preg_match("/^int/",$f->go_type) ) {
         $v = 999;
-    } else if ( $f->go_type == "DateTime" ) {
+    } else if ( $f->go_type == "*DateTime" ) {
         $v = "\"2016-01-01 10:50:23.5Z\"";
     } else {
         die("What? no go_type support for {$f->go_type}\n");
     }
-    if ($f->go_type != "DateTime" ) {
+    if ($f->go_type != "*DateTime" ) {
 $txt .= "
     if o.{$fmname} != $v {
         $fail(\"o.{$fmname} test failed %+v\",o)
@@ -67,9 +68,23 @@ $txt .= "
         $fail(\"year not set for %+v\",o.{$fmname})
         return
     }
+    if (o.{$fmname}.Year != 2016 || 
+        o.{$fmname}.Month != 1 ||
+        o.{$fmname}.Day != 1 ||
+        o.{$fmname}.Hours != 10 ||
+        o.{$fmname}.Minutes != 50 ||
+        o.{$fmname}.Seconds != 23 ||
+        o.{$fmname}.Offset != 5 ||
+        o.{$fmname}.Zone != `Z`) {
+        $fail(`fields don't match up for %+v`,o.{$fmname})
+    }
+    r{$j},_ := m[$k].AsString()
+    if o.{$fmname}.ToString() != r{$j} {
+        $fail(`restring of o.{$fmname} failed %s`,o.{$fmname}.ToString())
+    }
 ";
     }
-
+$j++;
 
 }
 $txt .= "}";
