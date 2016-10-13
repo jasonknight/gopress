@@ -167,6 +167,7 @@ type {$t->model_name} struct {
     puts("\t// Relationships");
     foreach ($t->belongs_to as $bt) {
         puts("\t{$bt->model} {$bt->go_type}");
+        puts("\tIs{$bt->model}Loaded bool");
     }
     puts("}");
 $newfunc = "

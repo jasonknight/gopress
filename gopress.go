@@ -329,7 +329,8 @@ type CommentMeta struct {
 	IsMetaKeyDirty   bool
 	IsMetaValueDirty bool
 	// Relationships
-	Comment *Comment
+	Comment         *Comment
+	IsCommentLoaded bool
 }
 
 func NewCommentMeta(a Adapter) *CommentMeta {
@@ -341,7 +342,10 @@ func NewCommentMeta(a Adapter) *CommentMeta {
 	return &o
 }
 
-func (o CommentMeta) LoadComment() (*Comment, error) {
+func (o *CommentMeta) LoadComment() (*Comment, error) {
+	if o.IsCommentLoaded == true {
+		return o.Comment, nil
+	}
 	m := NewComment(o._adapter)
 	found, err := m.Find(o.GetCommentId())
 	if err != nil {
@@ -350,6 +354,8 @@ func (o CommentMeta) LoadComment() (*Comment, error) {
 	if found == false {
 		return nil, errors.New(fmt.Sprintf(`could not find Comment with comment_ID of %d`, o.GetCommentId()))
 	}
+	o.IsCommentLoaded = true
+	o.Comment = m
 	return m, nil
 }
 
@@ -616,7 +622,8 @@ type Comment struct {
 	IsCommentParentDirty      bool
 	IsUserIdDirty             bool
 	// Relationships
-	User *User
+	User         *User
+	IsUserLoaded bool
 }
 
 func NewComment(a Adapter) *Comment {
@@ -628,7 +635,10 @@ func NewComment(a Adapter) *Comment {
 	return &o
 }
 
-func (o Comment) LoadUser() (*User, error) {
+func (o *Comment) LoadUser() (*User, error) {
+	if o.IsUserLoaded == true {
+		return o.User, nil
+	}
 	m := NewUser(o._adapter)
 	found, err := m.Find(o.GetUserId())
 	if err != nil {
@@ -637,6 +647,8 @@ func (o Comment) LoadUser() (*User, error) {
 	if found == false {
 		return nil, errors.New(fmt.Sprintf(`could not find User with ID of %d`, o.GetUserId()))
 	}
+	o.IsUserLoaded = true
+	o.User = m
 	return m, nil
 }
 
@@ -2383,7 +2395,8 @@ type PostMeta struct {
 	IsMetaKeyDirty   bool
 	IsMetaValueDirty bool
 	// Relationships
-	Post *Post
+	Post         *Post
+	IsPostLoaded bool
 }
 
 func NewPostMeta(a Adapter) *PostMeta {
@@ -2395,7 +2408,10 @@ func NewPostMeta(a Adapter) *PostMeta {
 	return &o
 }
 
-func (o PostMeta) LoadPost() (*Post, error) {
+func (o *PostMeta) LoadPost() (*Post, error) {
+	if o.IsPostLoaded == true {
+		return o.Post, nil
+	}
 	m := NewPost(o._adapter)
 	found, err := m.Find(o.GetPostId())
 	if err != nil {
@@ -2404,6 +2420,8 @@ func (o PostMeta) LoadPost() (*Post, error) {
 	if found == false {
 		return nil, errors.New(fmt.Sprintf(`could not find Post with ID of %d`, o.GetPostId()))
 	}
+	o.IsPostLoaded = true
+	o.Post = m
 	return m, nil
 }
 
@@ -4064,7 +4082,8 @@ type TermTaxonomy struct {
 	IsParentDirty         bool
 	IsCountDirty          bool
 	// Relationships
-	Term *Term
+	Term         *Term
+	IsTermLoaded bool
 }
 
 func NewTermTaxonomy(a Adapter) *TermTaxonomy {
@@ -4076,7 +4095,10 @@ func NewTermTaxonomy(a Adapter) *TermTaxonomy {
 	return &o
 }
 
-func (o TermTaxonomy) LoadTerm() (*Term, error) {
+func (o *TermTaxonomy) LoadTerm() (*Term, error) {
+	if o.IsTermLoaded == true {
+		return o.Term, nil
+	}
 	m := NewTerm(o._adapter)
 	found, err := m.Find(o.GetTermId())
 	if err != nil {
@@ -4085,6 +4107,8 @@ func (o TermTaxonomy) LoadTerm() (*Term, error) {
 	if found == false {
 		return nil, errors.New(fmt.Sprintf(`could not find Term with term_id of %d`, o.GetTermId()))
 	}
+	o.IsTermLoaded = true
+	o.Term = m
 	return m, nil
 }
 
@@ -4679,7 +4703,8 @@ type UserMeta struct {
 	IsMetaKeyDirty   bool
 	IsMetaValueDirty bool
 	// Relationships
-	User *User
+	User         *User
+	IsUserLoaded bool
 }
 
 func NewUserMeta(a Adapter) *UserMeta {
@@ -4691,7 +4716,10 @@ func NewUserMeta(a Adapter) *UserMeta {
 	return &o
 }
 
-func (o UserMeta) LoadUser() (*User, error) {
+func (o *UserMeta) LoadUser() (*User, error) {
+	if o.IsUserLoaded == true {
+		return o.User, nil
+	}
 	m := NewUser(o._adapter)
 	found, err := m.Find(o.GetUserId())
 	if err != nil {
@@ -4700,6 +4728,8 @@ func (o UserMeta) LoadUser() (*User, error) {
 	if found == false {
 		return nil, errors.New(fmt.Sprintf(`could not find User with ID of %d`, o.GetUserId()))
 	}
+	o.IsUserLoaded = true
+	o.User = m
 	return m, nil
 }
 
@@ -5819,7 +5849,8 @@ type WooDownloadableProductPerm struct {
 	IsAccessExpiresDirty      bool
 	IsDownloadCountDirty      bool
 	// Relationships
-	User *User
+	User         *User
+	IsUserLoaded bool
 }
 
 func NewWooDownloadableProductPerm(a Adapter) *WooDownloadableProductPerm {
@@ -5831,7 +5862,10 @@ func NewWooDownloadableProductPerm(a Adapter) *WooDownloadableProductPerm {
 	return &o
 }
 
-func (o WooDownloadableProductPerm) LoadUser() (*User, error) {
+func (o *WooDownloadableProductPerm) LoadUser() (*User, error) {
+	if o.IsUserLoaded == true {
+		return o.User, nil
+	}
 	m := NewUser(o._adapter)
 	found, err := m.Find(o.GetUserId())
 	if err != nil {
@@ -5840,6 +5874,8 @@ func (o WooDownloadableProductPerm) LoadUser() (*User, error) {
 	if found == false {
 		return nil, errors.New(fmt.Sprintf(`could not find User with ID of %d`, o.GetUserId()))
 	}
+	o.IsUserLoaded = true
+	o.User = m
 	return m, nil
 }
 
