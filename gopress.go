@@ -1,11 +1,14 @@
 package gopress
 
 import (
+	"bufio"
 	"database/sql"
 	"errors"
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
 	"gopkg.in/yaml.v2"
+	"io/ioutil"
+	"os"
 	"regexp"
 	"strconv"
 )
@@ -6099,4 +6102,23 @@ func (d *DateTime) FromString(s string) error {
 }
 func (d *DateTime) ToString() string {
 	return fmt.Sprintf("%d-%d-%d %d:%d:%d.%d.%s", d.Year, d.Month, d.Day, d.Hours, d.Minutes, d.Seconds, d.Offset, d.Zone)
+}
+func fileExists(p string) bool {
+	if _, err := os.Stat(p); os.IsNotExist(err) {
+		return false
+	}
+	return true
+}
+func filePutContents(p string, txt string) error {
+	f, err := os.Create(p)
+	if err != nil {
+		return err
+	}
+	w := bufio.NewWriter(f)
+	_, err = w.WriteString(txt)
+	w.Flush()
+	return nil
+}
+func fileGetContents(p string) ([]byte, error) {
+	return ioutil.ReadFile(p)
 }

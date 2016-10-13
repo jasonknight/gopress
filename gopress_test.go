@@ -1223,3 +1223,24 @@ func TestWooTaxRateFromDBValueMap(t *testing.T) {
 		return
 	}
 }
+
+func TestMysqlAdapterFromYAML(t *testing.T) {
+	a := NewMysqlAdapter(`pw_`)
+	y, err := fileGetContents(`test_data/adapter.yml`)
+	if err != nil {
+		t.Errorf(`failed to load yaml %s`, err)
+	}
+	err = a.FromYAML(y)
+	if err != nil {
+		t.Errorf(`failed to apply yaml %s`, err)
+		return
+	}
+
+	if a.User != `root` ||
+		a.Pass != `rootpass` ||
+		a.Host != `localhost` ||
+		a.Database != `my_db` ||
+		a.DBPrefix != `wp_` {
+		t.Errorf(`did not fully apply yaml file %+v`, a)
+	}
+}

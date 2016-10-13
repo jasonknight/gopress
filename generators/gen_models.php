@@ -107,6 +107,9 @@ puts('import (
     "gopkg.in/yaml.v2"
     "regexp"
     "errors"
+    "os"
+    "io/ioutil"
+    "bufio"
 )');
 $_ii = 0;
 $seen = array();
@@ -164,6 +167,6 @@ foreach ($tables as $t) {
     $seen[] = $t->model_name;
     include "model_test.php";
 }
-
+include "generic_tests.php";
 file_put_contents($_SERVER['argv'][1]."_test.go",$_contents);
 $_contents = "";

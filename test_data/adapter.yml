@@ -1,0 +1,5 @@
+host: "localhost"
+user: "root"
+pass: "rootpass"
+database: "my_db"
+prefix: "wp_"
