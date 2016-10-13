@@ -10,10 +10,10 @@ function _save_create($t) {
     foreach ( $t->fields as $tf) {
         if ($tf->Key == "PRI") {
             $pkeyfmt = mysqlToFmtType($tf->Type);
-            $pkeyname =  lcfirst(convertFieldName($tf->Field));
+            $pkeyname =  maybeLC(convertFieldName($tf->Field));
             continue;
         }
-        $go_fnames[$i] = lcfirst(convertFieldName($tf->Field));
+        $go_fnames[$i] = maybeLC(convertFieldName($tf->Field));
         $mysql_fnames[$i] = $tf->Field;
         $fmts[$i] = mysqlToFmtType($tf->Type);
         $i++;

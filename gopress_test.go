@@ -31,23 +31,23 @@ func TestCommentMetaFromDBValueMap(t *testing.T) {
 		t.Errorf("FromDBValueMap failed %s", err)
 	}
 
-	if o.metaId != 999 {
-		t.Errorf("o.metaId test failed %+v", o)
+	if o.MetaId != 999 {
+		t.Errorf("o.MetaId test failed %+v", o)
 		return
 	}
 
-	if o.commentId != 999 {
-		t.Errorf("o.commentId test failed %+v", o)
+	if o.CommentId != 999 {
+		t.Errorf("o.CommentId test failed %+v", o)
 		return
 	}
 
-	if o.metaKey != "AString" {
-		t.Errorf("o.metaKey test failed %+v", o)
+	if o.MetaKey != "AString" {
+		t.Errorf("o.MetaKey test failed %+v", o)
 		return
 	}
 
-	if o.metaValue != "AString" {
-		t.Errorf("o.metaValue test failed %+v", o)
+	if o.MetaValue != "AString" {
+		t.Errorf("o.MetaValue test failed %+v", o)
 		return
 	}
 }
@@ -100,78 +100,78 @@ func TestCommentFromDBValueMap(t *testing.T) {
 		t.Errorf("FromDBValueMap failed %s", err)
 	}
 
-	if o.commentID != 999 {
-		t.Errorf("o.commentID test failed %+v", o)
+	if o.CommentID != 999 {
+		t.Errorf("o.CommentID test failed %+v", o)
 		return
 	}
 
-	if o.commentPostID != 999 {
-		t.Errorf("o.commentPostID test failed %+v", o)
+	if o.CommentPostID != 999 {
+		t.Errorf("o.CommentPostID test failed %+v", o)
 		return
 	}
 
-	if o.commentAuthor != "AString" {
-		t.Errorf("o.commentAuthor test failed %+v", o)
+	if o.CommentAuthor != "AString" {
+		t.Errorf("o.CommentAuthor test failed %+v", o)
 		return
 	}
 
-	if o.commentAuthorEmail != "AString" {
-		t.Errorf("o.commentAuthorEmail test failed %+v", o)
+	if o.CommentAuthorEmail != "AString" {
+		t.Errorf("o.CommentAuthorEmail test failed %+v", o)
 		return
 	}
 
-	if o.commentAuthorUrl != "AString" {
-		t.Errorf("o.commentAuthorUrl test failed %+v", o)
+	if o.CommentAuthorUrl != "AString" {
+		t.Errorf("o.CommentAuthorUrl test failed %+v", o)
 		return
 	}
 
-	if o.commentAuthorIP != "AString" {
-		t.Errorf("o.commentAuthorIP test failed %+v", o)
+	if o.CommentAuthorIP != "AString" {
+		t.Errorf("o.CommentAuthorIP test failed %+v", o)
 		return
 	}
 
-	if o.commentDate.Year != 2016 {
-		t.Errorf("year not set for %+v", o.commentDate)
+	if o.CommentDate.Year != 2016 {
+		t.Errorf("year not set for %+v", o.CommentDate)
 		return
 	}
 
-	if o.commentDateGmt.Year != 2016 {
-		t.Errorf("year not set for %+v", o.commentDateGmt)
+	if o.CommentDateGmt.Year != 2016 {
+		t.Errorf("year not set for %+v", o.CommentDateGmt)
 		return
 	}
 
-	if o.commentContent != "AString" {
-		t.Errorf("o.commentContent test failed %+v", o)
+	if o.CommentContent != "AString" {
+		t.Errorf("o.CommentContent test failed %+v", o)
 		return
 	}
 
-	if o.commentKarma != 999 {
-		t.Errorf("o.commentKarma test failed %+v", o)
+	if o.CommentKarma != 999 {
+		t.Errorf("o.CommentKarma test failed %+v", o)
 		return
 	}
 
-	if o.commentApproved != "AString" {
-		t.Errorf("o.commentApproved test failed %+v", o)
+	if o.CommentApproved != "AString" {
+		t.Errorf("o.CommentApproved test failed %+v", o)
 		return
 	}
 
-	if o.commentAgent != "AString" {
-		t.Errorf("o.commentAgent test failed %+v", o)
+	if o.CommentAgent != "AString" {
+		t.Errorf("o.CommentAgent test failed %+v", o)
 		return
 	}
 
-	if o.commentType != "AString" {
-		t.Errorf("o.commentType test failed %+v", o)
+	if o.CommentType != "AString" {
+		t.Errorf("o.CommentType test failed %+v", o)
 		return
 	}
 
-	if o.commentParent != 999 {
-		t.Errorf("o.commentParent test failed %+v", o)
+	if o.CommentParent != 999 {
+		t.Errorf("o.CommentParent test failed %+v", o)
 		return
 	}
 
-	if o.userId != 999 {
-		t.Errorf("o.userId test failed %+v", o)
+	if o.UserId != 999 {
+		t.Errorf("o.UserId test failed %+v", o)
 		return
 	}
 }
@@ -220,68 +220,68 @@ func TestLinkFromDBValueMap(t *testing.T) {
 		t.Errorf("FromDBValueMap failed %s", err)
 	}
 
-	if o.linkId != 999 {
-		t.Errorf("o.linkId test failed %+v", o)
+	if o.LinkId != 999 {
+		t.Errorf("o.LinkId test failed %+v", o)
 		return
 	}
 
-	if o.linkUrl != "AString" {
-		t.Errorf("o.linkUrl test failed %+v", o)
+	if o.LinkUrl != "AString" {
+		t.Errorf("o.LinkUrl test failed %+v", o)
 		return
 	}
 
-	if o.linkName != "AString" {
-		t.Errorf("o.linkName test failed %+v", o)
+	if o.LinkName != "AString" {
+		t.Errorf("o.LinkName test failed %+v", o)
 		return
 	}
 
-	if o.linkImage != "AString" {
-		t.Errorf("o.linkImage test failed %+v", o)
+	if o.LinkImage != "AString" {
+		t.Errorf("o.LinkImage test failed %+v", o)
 		return
 	}
 
-	if o.linkTarget != "AString" {
-		t.Errorf("o.linkTarget test failed %+v", o)
+	if o.LinkTarget != "AString" {
+		t.Errorf("o.LinkTarget test failed %+v", o)
 		return
 	}
 
-	if o.linkDescription != "AString" {
-		t.Errorf("o.linkDescription test failed %+v", o)
+	if o.LinkDescription != "AString" {
+		t.Errorf("o.LinkDescription test failed %+v", o)
 		return
 	}
 
-	if o.linkVisible != "AString" {
-		t.Errorf("o.linkVisible test failed %+v", o)
+	if o.LinkVisible != "AString" {
+		t.Errorf("o.LinkVisible test failed %+v", o)
 		return
 	}
 
-	if o.linkOwner != 999 {
-		t.Errorf("o.linkOwner test failed %+v", o)
+	if o.LinkOwner != 999 {
+		t.Errorf("o.LinkOwner test failed %+v", o)
 		return
 	}
 
-	if o.linkRating != 999 {
-		t.Errorf("o.linkRating test failed %+v", o)
+	if o.LinkRating != 999 {
+		t.Errorf("o.LinkRating test failed %+v", o)
 		return
 	}
 
-	if o.linkUpdated.Year != 2016 {
-		t.Errorf("year not set for %+v", o.linkUpdated)
+	if o.LinkUpdated.Year != 2016 {
+		t.Errorf("year not set for %+v", o.LinkUpdated)
 		return
 	}
 
-	if o.linkRel != "AString" {
-		t.Errorf("o.linkRel test failed %+v", o)
+	if o.LinkRel != "AString" {
+		t.Errorf("o.LinkRel test failed %+v", o)
 		return
 	}
 
-	if o.linkNotes != "AString" {
-		t.Errorf("o.linkNotes test failed %+v", o)
+	if o.LinkNotes != "AString" {
+		t.Errorf("o.LinkNotes test failed %+v", o)
 		return
 	}
 
-	if o.linkRss != "AString" {
-		t.Errorf("o.linkRss test failed %+v", o)
+	if o.LinkRss != "AString" {
+		t.Errorf("o.LinkRss test failed %+v", o)
 		return
 	}
 }
@@ -312,23 +312,23 @@ func TestOptionFromDBValueMap(t *testing.T) {
 		t.Errorf("FromDBValueMap failed %s", err)
 	}
 
-	if o.optionId != 999 {
-		t.Errorf("o.optionId test failed %+v", o)
+	if o.OptionId != 999 {
+		t.Errorf("o.OptionId test failed %+v", o)
 		return
 	}
 
-	if o.optionName != "AString" {
-		t.Errorf("o.optionName test failed %+v", o)
+	if o.OptionName != "AString" {
+		t.Errorf("o.OptionName test failed %+v", o)
 		return
 	}
 
-	if o.optionValue != "AString" {
-		t.Errorf("o.optionValue test failed %+v", o)
+	if o.OptionValue != "AString" {
+		t.Errorf("o.OptionValue test failed %+v", o)
 		return
 	}
 
-	if o.autoload != "AString" {
-		t.Errorf("o.autoload test failed %+v", o)
+	if o.Autoload != "AString" {
+		t.Errorf("o.Autoload test failed %+v", o)
 		return
 	}
 }
@@ -359,23 +359,23 @@ func TestPostMetaFromDBValueMap(t *testing.T) {
 		t.Errorf("FromDBValueMap failed %s", err)
 	}
 
-	if o.metaId != 999 {
-		t.Errorf("o.metaId test failed %+v", o)
+	if o.MetaId != 999 {
+		t.Errorf("o.MetaId test failed %+v", o)
 		return
 	}
 
-	if o.stId != 999 {
-		t.Errorf("o.stId test failed %+v", o)
+	if o.Id != 999 {
+		t.Errorf("o.Id test failed %+v", o)
 		return
 	}
 
-	if o.metaKey != "AString" {
-		t.Errorf("o.metaKey test failed %+v", o)
+	if o.MetaKey != "AString" {
+		t.Errorf("o.MetaKey test failed %+v", o)
 		return
 	}
 
-	if o.metaValue != "AString" {
-		t.Errorf("o.metaValue test failed %+v", o)
+	if o.MetaValue != "AString" {
+		t.Errorf("o.MetaValue test failed %+v", o)
 		return
 	}
 }
@@ -444,118 +444,118 @@ func TestPostFromDBValueMap(t *testing.T) {
 		t.Errorf("FromDBValueMap failed %s", err)
 	}
 
-	if o.iD != 999 {
-		t.Errorf("o.iD test failed %+v", o)
+	if o.ID != 999 {
+		t.Errorf("o.ID test failed %+v", o)
 		return
 	}
 
-	if o.stAuthor != 999 {
-		t.Errorf("o.stAuthor test failed %+v", o)
+	if o.Author != 999 {
+		t.Errorf("o.Author test failed %+v", o)
 		return
 	}
 
-	if o.stDate.Year != 2016 {
-		t.Errorf("year not set for %+v", o.stDate)
+	if o.Date.Year != 2016 {
+		t.Errorf("year not set for %+v", o.Date)
 		return
 	}
 
-	if o.stDateGmt.Year != 2016 {
-		t.Errorf("year not set for %+v", o.stDateGmt)
+	if o.DateGmt.Year != 2016 {
+		t.Errorf("year not set for %+v", o.DateGmt)
 		return
 	}
 
-	if o.stContent != "AString" {
-		t.Errorf("o.stContent test failed %+v", o)
+	if o.Content != "AString" {
+		t.Errorf("o.Content test failed %+v", o)
 		return
 	}
 
-	if o.stTitle != "AString" {
-		t.Errorf("o.stTitle test failed %+v", o)
+	if o.Title != "AString" {
+		t.Errorf("o.Title test failed %+v", o)
 		return
 	}
 
-	if o.stExcerpt != "AString" {
-		t.Errorf("o.stExcerpt test failed %+v", o)
+	if o.Excerpt != "AString" {
+		t.Errorf("o.Excerpt test failed %+v", o)
 		return
 	}
 
-	if o.stStatus != "AString" {
-		t.Errorf("o.stStatus test failed %+v", o)
+	if o.Status != "AString" {
+		t.Errorf("o.Status test failed %+v", o)
 		return
 	}
 
-	if o.commentStatus != "AString" {
-		t.Errorf("o.commentStatus test failed %+v", o)
+	if o.CommentStatus != "AString" {
+		t.Errorf("o.CommentStatus test failed %+v", o)
 		return
 	}
 
-	if o.pingStatus != "AString" {
-		t.Errorf("o.pingStatus test failed %+v", o)
+	if o.PingStatus != "AString" {
+		t.Errorf("o.PingStatus test failed %+v", o)
 		return
 	}
 
-	if o.stPassword != "AString" {
-		t.Errorf("o.stPassword test failed %+v", o)
+	if o.Password != "AString" {
+		t.Errorf("o.Password test failed %+v", o)
 		return
 	}
 
-	if o.stName != "AString" {
-		t.Errorf("o.stName test failed %+v", o)
+	if o.Name != "AString" {
+		t.Errorf("o.Name test failed %+v", o)
 		return
 	}
 
-	if o.toPing != "AString" {
-		t.Errorf("o.toPing test failed %+v", o)
+	if o.ToPing != "AString" {
+		t.Errorf("o.ToPing test failed %+v", o)
 		return
 	}
 
-	if o.pinged != "AString" {
-		t.Errorf("o.pinged test failed %+v", o)
+	if o.Pinged != "AString" {
+		t.Errorf("o.Pinged test failed %+v", o)
 		return
 	}
 
-	if o.stModified.Year != 2016 {
-		t.Errorf("year not set for %+v", o.stModified)
+	if o.Modified.Year != 2016 {
+		t.Errorf("year not set for %+v", o.Modified)
 		return
 	}
 
-	if o.stModifiedGmt.Year != 2016 {
-		t.Errorf("year not set for %+v", o.stModifiedGmt)
+	if o.ModifiedGmt.Year != 2016 {
+		t.Errorf("year not set for %+v", o.ModifiedGmt)
 		return
 	}
 
-	if o.stContentFiltered != "AString" {
-		t.Errorf("o.stContentFiltered test failed %+v", o)
+	if o.ContentFiltered != "AString" {
+		t.Errorf("o.ContentFiltered test failed %+v", o)
 		return
 	}
 
-	if o.stParent != 999 {
-		t.Errorf("o.stParent test failed %+v", o)
+	if o.Parent != 999 {
+		t.Errorf("o.Parent test failed %+v", o)
 		return
 	}
 
-	if o.guid != "AString" {
-		t.Errorf("o.guid test failed %+v", o)
+	if o.Guid != "AString" {
+		t.Errorf("o.Guid test failed %+v", o)
 		return
 	}
 
-	if o.menuOrder != 999 {
-		t.Errorf("o.menuOrder test failed %+v", o)
+	if o.MenuOrder != 999 {
+		t.Errorf("o.MenuOrder test failed %+v", o)
 		return
 	}
 
-	if o.stType != "AString" {
-		t.Errorf("o.stType test failed %+v", o)
+	if o.Type != "AString" {
+		t.Errorf("o.Type test failed %+v", o)
 		return
 	}
 
-	if o.stMimeType != "AString" {
-		t.Errorf("o.stMimeType test failed %+v", o)
+	if o.MimeType != "AString" {
+		t.Errorf("o.MimeType test failed %+v", o)
 		return
 	}
 
-	if o.commentCount != 999 {
-		t.Errorf("o.commentCount test failed %+v", o)
+	if o.CommentCount != 999 {
+		t.Errorf("o.CommentCount test failed %+v", o)
 		return
 	}
 }
@@ -584,18 +584,18 @@ func TestTermRelationshipFromDBValueMap(t *testing.T) {
 		t.Errorf("FromDBValueMap failed %s", err)
 	}
 
-	if o.objectId != 999 {
-		t.Errorf("o.objectId test failed %+v", o)
+	if o.ObjectId != 999 {
+		t.Errorf("o.ObjectId test failed %+v", o)
 		return
 	}
 
-	if o.termTaxonomyId != 999 {
-		t.Errorf("o.termTaxonomyId test failed %+v", o)
+	if o.TermTaxonomyId != 999 {
+		t.Errorf("o.TermTaxonomyId test failed %+v", o)
 		return
 	}
 
-	if o.termOrder != 999 {
-		t.Errorf("o.termOrder test failed %+v", o)
+	if o.TermOrder != 999 {
+		t.Errorf("o.TermOrder test failed %+v", o)
 		return
 	}
 }
@@ -630,33 +630,33 @@ func TestTermTaxonomyFromDBValueMap(t *testing.T) {
 		t.Errorf("FromDBValueMap failed %s", err)
 	}
 
-	if o.termTaxonomyId != 999 {
-		t.Errorf("o.termTaxonomyId test failed %+v", o)
+	if o.TermTaxonomyId != 999 {
+		t.Errorf("o.TermTaxonomyId test failed %+v", o)
 		return
 	}
 
-	if o.termId != 999 {
-		t.Errorf("o.termId test failed %+v", o)
+	if o.TermId != 999 {
+		t.Errorf("o.TermId test failed %+v", o)
 		return
 	}
 
-	if o.taxonomy != "AString" {
-		t.Errorf("o.taxonomy test failed %+v", o)
+	if o.Taxonomy != "AString" {
+		t.Errorf("o.Taxonomy test failed %+v", o)
 		return
 	}
 
-	if o.description != "AString" {
-		t.Errorf("o.description test failed %+v", o)
+	if o.Description != "AString" {
+		t.Errorf("o.Description test failed %+v", o)
 		return
 	}
 
-	if o.parent != 999 {
-		t.Errorf("o.parent test failed %+v", o)
+	if o.Parent != 999 {
+		t.Errorf("o.Parent test failed %+v", o)
 		return
 	}
 
-	if o.count != 999 {
-		t.Errorf("o.count test failed %+v", o)
+	if o.Count != 999 {
+		t.Errorf("o.Count test failed %+v", o)
 		return
 	}
 }
@@ -687,23 +687,23 @@ func TestTermFromDBValueMap(t *testing.T) {
 		t.Errorf("FromDBValueMap failed %s", err)
 	}
 
-	if o.termId != 999 {
-		t.Errorf("o.termId test failed %+v", o)
+	if o.TermId != 999 {
+		t.Errorf("o.TermId test failed %+v", o)
 		return
 	}
 
-	if o.name != "AString" {
-		t.Errorf("o.name test failed %+v", o)
+	if o.Name != "AString" {
+		t.Errorf("o.Name test failed %+v", o)
 		return
 	}
 
-	if o.slug != "AString" {
-		t.Errorf("o.slug test failed %+v", o)
+	if o.Slug != "AString" {
+		t.Errorf("o.Slug test failed %+v", o)
 		return
 	}
 
-	if o.termGroup != 999 {
-		t.Errorf("o.termGroup test failed %+v", o)
+	if o.TermGroup != 999 {
+		t.Errorf("o.TermGroup test failed %+v", o)
 		return
 	}
 }
@@ -734,23 +734,23 @@ func TestUserMetaFromDBValueMap(t *testing.T) {
 		t.Errorf("FromDBValueMap failed %s", err)
 	}
 
-	if o.uMetaId != 999 {
-		t.Errorf("o.uMetaId test failed %+v", o)
+	if o.UMetaId != 999 {
+		t.Errorf("o.UMetaId test failed %+v", o)
 		return
 	}
 
-	if o.userId != 999 {
-		t.Errorf("o.userId test failed %+v", o)
+	if o.UserId != 999 {
+		t.Errorf("o.UserId test failed %+v", o)
 		return
 	}
 
-	if o.metaKey != "AString" {
-		t.Errorf("o.metaKey test failed %+v", o)
+	if o.MetaKey != "AString" {
+		t.Errorf("o.MetaKey test failed %+v", o)
 		return
 	}
 
-	if o.metaValue != "AString" {
-		t.Errorf("o.metaValue test failed %+v", o)
+	if o.MetaValue != "AString" {
+		t.Errorf("o.MetaValue test failed %+v", o)
 		return
 	}
 }
@@ -793,53 +793,53 @@ func TestUserFromDBValueMap(t *testing.T) {
 		t.Errorf("FromDBValueMap failed %s", err)
 	}
 
-	if o.iD != 999 {
-		t.Errorf("o.iD test failed %+v", o)
+	if o.ID != 999 {
+		t.Errorf("o.ID test failed %+v", o)
 		return
 	}
 
-	if o.userLogin != "AString" {
-		t.Errorf("o.userLogin test failed %+v", o)
+	if o.UserLogin != "AString" {
+		t.Errorf("o.UserLogin test failed %+v", o)
 		return
 	}
 
-	if o.userPass != "AString" {
-		t.Errorf("o.userPass test failed %+v", o)
+	if o.UserPass != "AString" {
+		t.Errorf("o.UserPass test failed %+v", o)
 		return
 	}
 
-	if o.userNicename != "AString" {
-		t.Errorf("o.userNicename test failed %+v", o)
+	if o.UserNicename != "AString" {
+		t.Errorf("o.UserNicename test failed %+v", o)
 		return
 	}
 
-	if o.userEmail != "AString" {
-		t.Errorf("o.userEmail test failed %+v", o)
+	if o.UserEmail != "AString" {
+		t.Errorf("o.UserEmail test failed %+v", o)
 		return
 	}
 
-	if o.userUrl != "AString" {
-		t.Errorf("o.userUrl test failed %+v", o)
+	if o.UserUrl != "AString" {
+		t.Errorf("o.UserUrl test failed %+v", o)
 		return
 	}
 
-	if o.userRegistered.Year != 2016 {
-		t.Errorf("year not set for %+v", o.userRegistered)
+	if o.UserRegistered.Year != 2016 {
+		t.Errorf("year not set for %+v", o.UserRegistered)
 		return
 	}
 
-	if o.userActivationKey != "AString" {
-		t.Errorf("o.userActivationKey test failed %+v", o)
+	if o.UserActivationKey != "AString" {
+		t.Errorf("o.UserActivationKey test failed %+v", o)
 		return
 	}
 
-	if o.userStatus != 999 {
-		t.Errorf("o.userStatus test failed %+v", o)
+	if o.UserStatus != 999 {
+		t.Errorf("o.UserStatus test failed %+v", o)
 		return
 	}
 
-	if o.displayName != "AString" {
-		t.Errorf("o.displayName test failed %+v", o)
+	if o.DisplayName != "AString" {
+		t.Errorf("o.DisplayName test failed %+v", o)
 		return
 	}
 }
@@ -872,28 +872,28 @@ func TestWooAttrTaxonomieFromDBValueMap(t *testing.T) {
 		t.Errorf("FromDBValueMap failed %s", err)
 	}
 
-	if o.attrId != 999 {
-		t.Errorf("o.attrId test failed %+v", o)
+	if o.AttrId != 999 {
+		t.Errorf("o.AttrId test failed %+v", o)
 		return
 	}
 
-	if o.attrName != "AString" {
-		t.Errorf("o.attrName test failed %+v", o)
+	if o.AttrName != "AString" {
+		t.Errorf("o.AttrName test failed %+v", o)
 		return
 	}
 
-	if o.attrLabel != "AString" {
-		t.Errorf("o.attrLabel test failed %+v", o)
+	if o.AttrLabel != "AString" {
+		t.Errorf("o.AttrLabel test failed %+v", o)
 		return
 	}
 
-	if o.attrType != "AString" {
-		t.Errorf("o.attrType test failed %+v", o)
+	if o.AttrType != "AString" {
+		t.Errorf("o.AttrType test failed %+v", o)
 		return
 	}
 
-	if o.attrOrderby != "AString" {
-		t.Errorf("o.attrOrderby test failed %+v", o)
+	if o.AttrOrderby != "AString" {
+		t.Errorf("o.AttrOrderby test failed %+v", o)
 		return
 	}
 }
@@ -938,58 +938,58 @@ func TestWooDownloadableProductPermFromDBValueMap(t *testing.T) {
 		t.Errorf("FromDBValueMap failed %s", err)
 	}
 
-	if o.permissionId != 999 {
-		t.Errorf("o.permissionId test failed %+v", o)
+	if o.PermissionId != 999 {
+		t.Errorf("o.PermissionId test failed %+v", o)
 		return
 	}
 
-	if o.downloadId != "AString" {
-		t.Errorf("o.downloadId test failed %+v", o)
+	if o.DownloadId != "AString" {
+		t.Errorf("o.DownloadId test failed %+v", o)
 		return
 	}
 
-	if o.productId != 999 {
-		t.Errorf("o.productId test failed %+v", o)
+	if o.ProductId != 999 {
+		t.Errorf("o.ProductId test failed %+v", o)
 		return
 	}
 
-	if o.orderId != 999 {
-		t.Errorf("o.orderId test failed %+v", o)
+	if o.OrderId != 999 {
+		t.Errorf("o.OrderId test failed %+v", o)
 		return
 	}
 
-	if o.orderKey != "AString" {
-		t.Errorf("o.orderKey test failed %+v", o)
+	if o.OrderKey != "AString" {
+		t.Errorf("o.OrderKey test failed %+v", o)
 		return
 	}
 
-	if o.userEmail != "AString" {
-		t.Errorf("o.userEmail test failed %+v", o)
+	if o.UserEmail != "AString" {
+		t.Errorf("o.UserEmail test failed %+v", o)
 		return
 	}
 
-	if o.userId != 999 {
-		t.Errorf("o.userId test failed %+v", o)
+	if o.UserId != 999 {
+		t.Errorf("o.UserId test failed %+v", o)
 		return
 	}
 
-	if o.downloadsRemaining != "AString" {
-		t.Errorf("o.downloadsRemaining test failed %+v", o)
+	if o.DownloadsRemaining != "AString" {
+		t.Errorf("o.DownloadsRemaining test failed %+v", o)
 		return
 	}
 
-	if o.accessGranted.Year != 2016 {
-		t.Errorf("year not set for %+v", o.accessGranted)
+	if o.AccessGranted.Year != 2016 {
+		t.Errorf("year not set for %+v", o.AccessGranted)
 		return
 	}
 
-	if o.accessExpires.Year != 2016 {
-		t.Errorf("year not set for %+v", o.accessExpires)
+	if o.AccessExpires.Year != 2016 {
+		t.Errorf("year not set for %+v", o.AccessExpires)
 		return
 	}
 
-	if o.downloadCount != 999 {
-		t.Errorf("o.downloadCount test failed %+v", o)
+	if o.DownloadCount != 999 {
+		t.Errorf("o.DownloadCount test failed %+v", o)
 		return
 	}
 }
@@ -1020,23 +1020,23 @@ func TestWooOrderItemMetaFromDBValueMap(t *testing.T) {
 		t.Errorf("FromDBValueMap failed %s", err)
 	}
 
-	if o.metaId != 999 {
-		t.Errorf("o.metaId test failed %+v", o)
+	if o.MetaId != 999 {
+		t.Errorf("o.MetaId test failed %+v", o)
 		return
 	}
 
-	if o.orderItemId != 999 {
-		t.Errorf("o.orderItemId test failed %+v", o)
+	if o.OrderItemId != 999 {
+		t.Errorf("o.OrderItemId test failed %+v", o)
 		return
 	}
 
-	if o.metaKey != "AString" {
-		t.Errorf("o.metaKey test failed %+v", o)
+	if o.MetaKey != "AString" {
+		t.Errorf("o.MetaKey test failed %+v", o)
 		return
 	}
 
-	if o.metaValue != "AString" {
-		t.Errorf("o.metaValue test failed %+v", o)
+	if o.MetaValue != "AString" {
+		t.Errorf("o.MetaValue test failed %+v", o)
 		return
 	}
 }
@@ -1067,23 +1067,23 @@ func TestWooOrderItemFromDBValueMap(t *testing.T) {
 		t.Errorf("FromDBValueMap failed %s", err)
 	}
 
-	if o.orderItemId != 999 {
-		t.Errorf("o.orderItemId test failed %+v", o)
+	if o.OrderItemId != 999 {
+		t.Errorf("o.OrderItemId test failed %+v", o)
 		return
 	}
 
-	if o.orderItemName != "AString" {
-		t.Errorf("o.orderItemName test failed %+v", o)
+	if o.OrderItemName != "AString" {
+		t.Errorf("o.OrderItemName test failed %+v", o)
 		return
 	}
 
-	if o.orderItemType != "AString" {
-		t.Errorf("o.orderItemType test failed %+v", o)
+	if o.OrderItemType != "AString" {
+		t.Errorf("o.OrderItemType test failed %+v", o)
 		return
 	}
 
-	if o.orderId != 999 {
-		t.Errorf("o.orderId test failed %+v", o)
+	if o.OrderId != 999 {
+		t.Errorf("o.OrderId test failed %+v", o)
 		return
 	}
 }
@@ -1114,23 +1114,23 @@ func TestWooTaxRateLocationFromDBValueMap(t *testing.T) {
 		t.Errorf("FromDBValueMap failed %s", err)
 	}
 
-	if o.locationId != 999 {
-		t.Errorf("o.locationId test failed %+v", o)
+	if o.LocationId != 999 {
+		t.Errorf("o.LocationId test failed %+v", o)
 		return
 	}
 
-	if o.locationCode != "AString" {
-		t.Errorf("o.locationCode test failed %+v", o)
+	if o.LocationCode != "AString" {
+		t.Errorf("o.LocationCode test failed %+v", o)
 		return
 	}
 
-	if o.taxRateId != 999 {
-		t.Errorf("o.taxRateId test failed %+v", o)
+	if o.TaxRateId != 999 {
+		t.Errorf("o.TaxRateId test failed %+v", o)
 		return
 	}
 
-	if o.locationType != "AString" {
-		t.Errorf("o.locationType test failed %+v", o)
+	if o.LocationType != "AString" {
+		t.Errorf("o.LocationType test failed %+v", o)
 		return
 	}
 }
@@ -1173,53 +1173,53 @@ func TestWooTaxRateFromDBValueMap(t *testing.T) {
 		t.Errorf("FromDBValueMap failed %s", err)
 	}
 
-	if o.taxRateId != 999 {
-		t.Errorf("o.taxRateId test failed %+v", o)
+	if o.TaxRateId != 999 {
+		t.Errorf("o.TaxRateId test failed %+v", o)
 		return
 	}
 
-	if o.taxRateCountry != "AString" {
-		t.Errorf("o.taxRateCountry test failed %+v", o)
+	if o.TaxRateCountry != "AString" {
+		t.Errorf("o.TaxRateCountry test failed %+v", o)
 		return
 	}
 
-	if o.taxRateState != "AString" {
-		t.Errorf("o.taxRateState test failed %+v", o)
+	if o.TaxRateState != "AString" {
+		t.Errorf("o.TaxRateState test failed %+v", o)
 		return
 	}
 
-	if o.taxRate != "AString" {
-		t.Errorf("o.taxRate test failed %+v", o)
+	if o.TaxRate != "AString" {
+		t.Errorf("o.TaxRate test failed %+v", o)
 		return
 	}
 
-	if o.taxRateName != "AString" {
-		t.Errorf("o.taxRateName test failed %+v", o)
+	if o.TaxRateName != "AString" {
+		t.Errorf("o.TaxRateName test failed %+v", o)
 		return
 	}
 
-	if o.taxRatePriority != 999 {
-		t.Errorf("o.taxRatePriority test failed %+v", o)
+	if o.TaxRatePriority != 999 {
+		t.Errorf("o.TaxRatePriority test failed %+v", o)
 		return
 	}
 
-	if o.taxRateCompound != 999 {
-		t.Errorf("o.taxRateCompound test failed %+v", o)
+	if o.TaxRateCompound != 999 {
+		t.Errorf("o.TaxRateCompound test failed %+v", o)
 		return
 	}
 
-	if o.taxRateShipping != 999 {
-		t.Errorf("o.taxRateShipping test failed %+v", o)
+	if o.TaxRateShipping != 999 {
+		t.Errorf("o.TaxRateShipping test failed %+v", o)
 		return
 	}
 
-	if o.taxRateOrder != 999 {
-		t.Errorf("o.taxRateOrder test failed %+v", o)
+	if o.TaxRateOrder != 999 {
+		t.Errorf("o.TaxRateOrder test failed %+v", o)
 		return
 	}
 
-	if o.taxRateClass != "AString" {
-		t.Errorf("o.taxRateClass test failed %+v", o)
+	if o.TaxRateClass != "AString" {
+		t.Errorf("o.TaxRateClass test failed %+v", o)
 		return
 	}
 }

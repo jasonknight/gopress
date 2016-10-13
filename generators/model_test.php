@@ -43,7 +43,7 @@ $txt .= "
 ";
 foreach ($t->fields as $f) {
     $k = "\"{$f->Field}\"";
-    $fmname = lcfirst(convertFieldName($f->Field));
+    $fmname = maybeLC(convertFieldName($f->Field));
     if ( $f->go_type == 'string' ) {
         $v = "\"AString\"";
     } else if ( preg_match("/^int/",$f->go_type) ) {

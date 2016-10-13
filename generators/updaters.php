@@ -7,11 +7,11 @@ function gen_updaters($t) {
             continue;
         }
         $fname = convertFieldName($f->Field);
-        $mname = lcfirst($fname);
-        $arg = "_upd_" . lcfirst(convertFieldName($f->Field));
+        $mname = maybeLC($fname);
+        $arg = "_upd_" . maybeLC(convertFieldName($f->Field));
         $argtype = $f->go_type;
         $fmt_type = mysqlToFmtType($f->Type);
-        $pkmname = lcfirst(convertFieldName($f->Field));
+        $pkmname = maybeLC(convertFieldName($f->Field));
         $pkfname = $t->pfield->Field;
         $pkfmttype = mysqlToFmtType($t->pfield->go_type);
 $txt .= "

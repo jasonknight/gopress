@@ -3,6 +3,9 @@ include "../../db.php";
 $con =  mysql_connect($host,$user,$pass);
         mysql_select_db($database);
 $_contents = "";
+function maybeLC($str) {
+    return $str;
+}
 function convertTableName($n) {
     if ( preg_match("/^wp_/",$n) ) {
         $n = substr($n,2);
@@ -19,7 +22,7 @@ function convertTableName($n) {
 }
 function convertFieldName($n) {
     if ( preg_match("/^post_/",$n) ) {
-        $n = substr($n,2);
+        $n = substr($n,5);
     }
     $camel = str_replace(' ', '', ucwords(str_replace('_', ' ', $n)));
     $camel = str_replace("meta","Meta",$camel);
@@ -127,7 +130,7 @@ type {$t->model_name} struct {
     _new bool");
     
     foreach($t->fields as $f) {
-        $fname = lcfirst(convertFieldName($f->Field));
+        $fname = maybeLC(convertFieldName($f->Field));
         puts("    {$fname} {$f->go_type}");
     }
     puts("}");

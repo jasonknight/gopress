@@ -4,7 +4,7 @@ foreach($t->fields as $f) {
     $fname = convertFieldName($f->Field);
     $field_name = convertFieldName($f->Field);
     $fname = "FindBy{$fname}";
-    $arg = "_find_by_" . lcfirst(convertFieldName($f->Field));
+    $arg = "_find_by_" . maybeLC(convertFieldName($f->Field));
     $argtype = $f->go_type;
     $fmt_type = mysqlToFmtType($f->Type);
     if ($f->Key == "PRI" && $f->Field == $t->pfield->Field) {
@@ -15,9 +15,9 @@ foreach($t->fields as $f) {
     }
     $scol = $f->Field;
     // these are here just to save having to loop
-    $from_map_body .= "\t_" . lcfirst(convertFieldName($f->Field)) . ",err := m[\"{$f->Field}\"].As" . ucfirst($f->go_type). "()\n";
+    $from_map_body .= "\t_" . maybeLC(convertFieldName($f->Field)) . ",err := m[\"{$f->Field}\"].As" . ucfirst($f->go_type). "()\n";
     $from_map_body .= "\tif err != nil {\n \t\treturn err\n\t}\n";
-    $from_map_body .= "\to." . lcfirst(convertFieldName($f->Field)) . " = _" . lcfirst(convertFieldName($f->Field)) . "\n";
+    $from_map_body .= "\to." . maybeLC(convertFieldName($f->Field)) . " = _" . maybeLC(convertFieldName($f->Field)) . "\n";
     
     if ( $fname == "Find" ) {
         $failure_return = "return $rtype{},err";

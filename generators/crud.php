@@ -1,10 +1,10 @@
 <?php
-// $pkeyname = lcfirst(convertFieldName($t->pfield->Field));
+// $pkeyname = maybeLC(convertFieldName($t->pfield->Field));
 // $pkey_fmt_type = $fmt_type = mysqlToFmtType($t->pfield->Type);
 // foreach($t->fields as $f) {
 //     $fname = convertFieldName($f->Field);
 //     $fname = "Update{$fname}";
-//     $arg = "_update_" . lcfirst(convertFieldName($f->Field));
+//     $arg = "_update_" . maybeLC(convertFieldName($f->Field));
 //     $argtype = $f->go_type;
 //     $fmt_type = mysqlToFmtType($f->Type);
 //     if ($f->Key == "PRI") {
