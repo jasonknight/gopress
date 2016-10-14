@@ -400,7 +400,7 @@ func (m *CommentMeta) SetMetaValue(arg string) {
 
 func (o *CommentMeta) Find(_find_by_MetaId int64) (bool, error) {
 
-	var model_slice []CommentMeta
+	var model_slice []*CommentMeta
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "meta_id", _find_by_MetaId)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -413,20 +413,20 @@ func (o *CommentMeta) Find(_find_by_MetaId int64) (bool, error) {
 		if err != nil {
 			return false, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
 		// there was an error!
 		return false, errors.New("not found")
 	}
-	o.FromCommentMeta(&model_slice[0])
+	o.FromCommentMeta(model_slice[0])
 	return true, nil
 
 }
-func (o *CommentMeta) FindByCommentId(_find_by_CommentId int64) ([]CommentMeta, error) {
+func (o *CommentMeta) FindByCommentId(_find_by_CommentId int64) ([]*CommentMeta, error) {
 
-	var model_slice []CommentMeta
+	var model_slice []*CommentMeta
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "comment_id", _find_by_CommentId)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -439,7 +439,7 @@ func (o *CommentMeta) FindByCommentId(_find_by_CommentId int64) ([]CommentMeta, 
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -449,9 +449,9 @@ func (o *CommentMeta) FindByCommentId(_find_by_CommentId int64) ([]CommentMeta, 
 	return model_slice, nil
 
 }
-func (o *CommentMeta) FindByMetaKey(_find_by_MetaKey string) ([]CommentMeta, error) {
+func (o *CommentMeta) FindByMetaKey(_find_by_MetaKey string) ([]*CommentMeta, error) {
 
-	var model_slice []CommentMeta
+	var model_slice []*CommentMeta
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "meta_key", _find_by_MetaKey)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -464,7 +464,7 @@ func (o *CommentMeta) FindByMetaKey(_find_by_MetaKey string) ([]CommentMeta, err
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -474,9 +474,9 @@ func (o *CommentMeta) FindByMetaKey(_find_by_MetaKey string) ([]CommentMeta, err
 	return model_slice, nil
 
 }
-func (o *CommentMeta) FindByMetaValue(_find_by_MetaValue string) ([]CommentMeta, error) {
+func (o *CommentMeta) FindByMetaValue(_find_by_MetaValue string) ([]*CommentMeta, error) {
 
-	var model_slice []CommentMeta
+	var model_slice []*CommentMeta
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "meta_value", _find_by_MetaValue)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -489,7 +489,7 @@ func (o *CommentMeta) FindByMetaValue(_find_by_MetaValue string) ([]CommentMeta,
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -622,8 +622,10 @@ type Comment struct {
 	IsCommentParentDirty      bool
 	IsUserIdDirty             bool
 	// Relationships
-	User         *User
-	IsUserLoaded bool
+	User                 *User
+	IsUserLoaded         bool
+	CommentMetas         []*CommentMeta
+	IsCommentMetasLoaded bool
 }
 
 func NewComment(a Adapter) *Comment {
@@ -650,6 +652,20 @@ func (o *Comment) LoadUser() (*User, error) {
 	o.IsUserLoaded = true
 	o.User = m
 	return m, nil
+}
+
+func (o *Comment) LoadCommentMetas() ([]*CommentMeta, error) {
+	if o.IsCommentMetasLoaded == true {
+		return o.CommentMetas, nil
+	}
+	var finder CommentMeta
+	results, err := finder.FindByCommentId(o.CommentID)
+	if err != nil {
+		return nil, err
+	}
+	o.IsCommentMetasLoaded = true
+	o.CommentMetas = results
+	return results, nil
 }
 
 func (m *Comment) GetPrimaryKeyValue() int64 {
@@ -781,7 +797,7 @@ func (m *Comment) SetUserId(arg int64) {
 
 func (o *Comment) Find(_find_by_CommentID int64) (bool, error) {
 
-	var model_slice []Comment
+	var model_slice []*Comment
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "comment_ID", _find_by_CommentID)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -794,20 +810,20 @@ func (o *Comment) Find(_find_by_CommentID int64) (bool, error) {
 		if err != nil {
 			return false, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
 		// there was an error!
 		return false, errors.New("not found")
 	}
-	o.FromComment(&model_slice[0])
+	o.FromComment(model_slice[0])
 	return true, nil
 
 }
-func (o *Comment) FindByCommentPostID(_find_by_CommentPostID int64) ([]Comment, error) {
+func (o *Comment) FindByCommentPostID(_find_by_CommentPostID int64) ([]*Comment, error) {
 
-	var model_slice []Comment
+	var model_slice []*Comment
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "comment_post_ID", _find_by_CommentPostID)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -820,7 +836,7 @@ func (o *Comment) FindByCommentPostID(_find_by_CommentPostID int64) ([]Comment, 
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -830,9 +846,9 @@ func (o *Comment) FindByCommentPostID(_find_by_CommentPostID int64) ([]Comment, 
 	return model_slice, nil
 
 }
-func (o *Comment) FindByCommentAuthor(_find_by_CommentAuthor string) ([]Comment, error) {
+func (o *Comment) FindByCommentAuthor(_find_by_CommentAuthor string) ([]*Comment, error) {
 
-	var model_slice []Comment
+	var model_slice []*Comment
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "comment_author", _find_by_CommentAuthor)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -845,7 +861,7 @@ func (o *Comment) FindByCommentAuthor(_find_by_CommentAuthor string) ([]Comment,
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -855,9 +871,9 @@ func (o *Comment) FindByCommentAuthor(_find_by_CommentAuthor string) ([]Comment,
 	return model_slice, nil
 
 }
-func (o *Comment) FindByCommentAuthorEmail(_find_by_CommentAuthorEmail string) ([]Comment, error) {
+func (o *Comment) FindByCommentAuthorEmail(_find_by_CommentAuthorEmail string) ([]*Comment, error) {
 
-	var model_slice []Comment
+	var model_slice []*Comment
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "comment_author_email", _find_by_CommentAuthorEmail)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -870,7 +886,7 @@ func (o *Comment) FindByCommentAuthorEmail(_find_by_CommentAuthorEmail string) (
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -880,9 +896,9 @@ func (o *Comment) FindByCommentAuthorEmail(_find_by_CommentAuthorEmail string) (
 	return model_slice, nil
 
 }
-func (o *Comment) FindByCommentAuthorUrl(_find_by_CommentAuthorUrl string) ([]Comment, error) {
+func (o *Comment) FindByCommentAuthorUrl(_find_by_CommentAuthorUrl string) ([]*Comment, error) {
 
-	var model_slice []Comment
+	var model_slice []*Comment
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "comment_author_url", _find_by_CommentAuthorUrl)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -895,7 +911,7 @@ func (o *Comment) FindByCommentAuthorUrl(_find_by_CommentAuthorUrl string) ([]Co
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -905,9 +921,9 @@ func (o *Comment) FindByCommentAuthorUrl(_find_by_CommentAuthorUrl string) ([]Co
 	return model_slice, nil
 
 }
-func (o *Comment) FindByCommentAuthorIP(_find_by_CommentAuthorIP string) ([]Comment, error) {
+func (o *Comment) FindByCommentAuthorIP(_find_by_CommentAuthorIP string) ([]*Comment, error) {
 
-	var model_slice []Comment
+	var model_slice []*Comment
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "comment_author_IP", _find_by_CommentAuthorIP)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -920,7 +936,7 @@ func (o *Comment) FindByCommentAuthorIP(_find_by_CommentAuthorIP string) ([]Comm
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -930,9 +946,9 @@ func (o *Comment) FindByCommentAuthorIP(_find_by_CommentAuthorIP string) ([]Comm
 	return model_slice, nil
 
 }
-func (o *Comment) FindByCommentDate(_find_by_CommentDate *DateTime) ([]Comment, error) {
+func (o *Comment) FindByCommentDate(_find_by_CommentDate *DateTime) ([]*Comment, error) {
 
-	var model_slice []Comment
+	var model_slice []*Comment
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "comment_date", _find_by_CommentDate)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -945,7 +961,7 @@ func (o *Comment) FindByCommentDate(_find_by_CommentDate *DateTime) ([]Comment, 
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -955,9 +971,9 @@ func (o *Comment) FindByCommentDate(_find_by_CommentDate *DateTime) ([]Comment, 
 	return model_slice, nil
 
 }
-func (o *Comment) FindByCommentDateGmt(_find_by_CommentDateGmt *DateTime) ([]Comment, error) {
+func (o *Comment) FindByCommentDateGmt(_find_by_CommentDateGmt *DateTime) ([]*Comment, error) {
 
-	var model_slice []Comment
+	var model_slice []*Comment
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "comment_date_gmt", _find_by_CommentDateGmt)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -970,7 +986,7 @@ func (o *Comment) FindByCommentDateGmt(_find_by_CommentDateGmt *DateTime) ([]Com
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -980,9 +996,9 @@ func (o *Comment) FindByCommentDateGmt(_find_by_CommentDateGmt *DateTime) ([]Com
 	return model_slice, nil
 
 }
-func (o *Comment) FindByCommentContent(_find_by_CommentContent string) ([]Comment, error) {
+func (o *Comment) FindByCommentContent(_find_by_CommentContent string) ([]*Comment, error) {
 
-	var model_slice []Comment
+	var model_slice []*Comment
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "comment_content", _find_by_CommentContent)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -995,7 +1011,7 @@ func (o *Comment) FindByCommentContent(_find_by_CommentContent string) ([]Commen
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -1005,9 +1021,9 @@ func (o *Comment) FindByCommentContent(_find_by_CommentContent string) ([]Commen
 	return model_slice, nil
 
 }
-func (o *Comment) FindByCommentKarma(_find_by_CommentKarma int) ([]Comment, error) {
+func (o *Comment) FindByCommentKarma(_find_by_CommentKarma int) ([]*Comment, error) {
 
-	var model_slice []Comment
+	var model_slice []*Comment
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "comment_karma", _find_by_CommentKarma)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -1020,7 +1036,7 @@ func (o *Comment) FindByCommentKarma(_find_by_CommentKarma int) ([]Comment, erro
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -1030,9 +1046,9 @@ func (o *Comment) FindByCommentKarma(_find_by_CommentKarma int) ([]Comment, erro
 	return model_slice, nil
 
 }
-func (o *Comment) FindByCommentApproved(_find_by_CommentApproved string) ([]Comment, error) {
+func (o *Comment) FindByCommentApproved(_find_by_CommentApproved string) ([]*Comment, error) {
 
-	var model_slice []Comment
+	var model_slice []*Comment
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "comment_approved", _find_by_CommentApproved)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -1045,7 +1061,7 @@ func (o *Comment) FindByCommentApproved(_find_by_CommentApproved string) ([]Comm
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -1055,9 +1071,9 @@ func (o *Comment) FindByCommentApproved(_find_by_CommentApproved string) ([]Comm
 	return model_slice, nil
 
 }
-func (o *Comment) FindByCommentAgent(_find_by_CommentAgent string) ([]Comment, error) {
+func (o *Comment) FindByCommentAgent(_find_by_CommentAgent string) ([]*Comment, error) {
 
-	var model_slice []Comment
+	var model_slice []*Comment
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "comment_agent", _find_by_CommentAgent)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -1070,7 +1086,7 @@ func (o *Comment) FindByCommentAgent(_find_by_CommentAgent string) ([]Comment, e
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -1080,9 +1096,9 @@ func (o *Comment) FindByCommentAgent(_find_by_CommentAgent string) ([]Comment, e
 	return model_slice, nil
 
 }
-func (o *Comment) FindByCommentType(_find_by_CommentType string) ([]Comment, error) {
+func (o *Comment) FindByCommentType(_find_by_CommentType string) ([]*Comment, error) {
 
-	var model_slice []Comment
+	var model_slice []*Comment
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "comment_type", _find_by_CommentType)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -1095,7 +1111,7 @@ func (o *Comment) FindByCommentType(_find_by_CommentType string) ([]Comment, err
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -1105,9 +1121,9 @@ func (o *Comment) FindByCommentType(_find_by_CommentType string) ([]Comment, err
 	return model_slice, nil
 
 }
-func (o *Comment) FindByCommentParent(_find_by_CommentParent int64) ([]Comment, error) {
+func (o *Comment) FindByCommentParent(_find_by_CommentParent int64) ([]*Comment, error) {
 
-	var model_slice []Comment
+	var model_slice []*Comment
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "comment_parent", _find_by_CommentParent)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -1120,7 +1136,7 @@ func (o *Comment) FindByCommentParent(_find_by_CommentParent int64) ([]Comment, 
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -1130,9 +1146,9 @@ func (o *Comment) FindByCommentParent(_find_by_CommentParent int64) ([]Comment, 
 	return model_slice, nil
 
 }
-func (o *Comment) FindByUserId(_find_by_UserId int64) ([]Comment, error) {
+func (o *Comment) FindByUserId(_find_by_UserId int64) ([]*Comment, error) {
 
-	var model_slice []Comment
+	var model_slice []*Comment
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "user_id", _find_by_UserId)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -1145,7 +1161,7 @@ func (o *Comment) FindByUserId(_find_by_UserId int64) ([]Comment, error) {
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -1574,7 +1590,7 @@ func (m *Link) SetLinkRss(arg string) {
 
 func (o *Link) Find(_find_by_LinkId int64) (bool, error) {
 
-	var model_slice []Link
+	var model_slice []*Link
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "link_id", _find_by_LinkId)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -1587,20 +1603,20 @@ func (o *Link) Find(_find_by_LinkId int64) (bool, error) {
 		if err != nil {
 			return false, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
 		// there was an error!
 		return false, errors.New("not found")
 	}
-	o.FromLink(&model_slice[0])
+	o.FromLink(model_slice[0])
 	return true, nil
 
 }
-func (o *Link) FindByLinkUrl(_find_by_LinkUrl string) ([]Link, error) {
+func (o *Link) FindByLinkUrl(_find_by_LinkUrl string) ([]*Link, error) {
 
-	var model_slice []Link
+	var model_slice []*Link
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "link_url", _find_by_LinkUrl)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -1613,7 +1629,7 @@ func (o *Link) FindByLinkUrl(_find_by_LinkUrl string) ([]Link, error) {
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -1623,9 +1639,9 @@ func (o *Link) FindByLinkUrl(_find_by_LinkUrl string) ([]Link, error) {
 	return model_slice, nil
 
 }
-func (o *Link) FindByLinkName(_find_by_LinkName string) ([]Link, error) {
+func (o *Link) FindByLinkName(_find_by_LinkName string) ([]*Link, error) {
 
-	var model_slice []Link
+	var model_slice []*Link
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "link_name", _find_by_LinkName)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -1638,7 +1654,7 @@ func (o *Link) FindByLinkName(_find_by_LinkName string) ([]Link, error) {
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -1648,9 +1664,9 @@ func (o *Link) FindByLinkName(_find_by_LinkName string) ([]Link, error) {
 	return model_slice, nil
 
 }
-func (o *Link) FindByLinkImage(_find_by_LinkImage string) ([]Link, error) {
+func (o *Link) FindByLinkImage(_find_by_LinkImage string) ([]*Link, error) {
 
-	var model_slice []Link
+	var model_slice []*Link
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "link_image", _find_by_LinkImage)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -1663,7 +1679,7 @@ func (o *Link) FindByLinkImage(_find_by_LinkImage string) ([]Link, error) {
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -1673,9 +1689,9 @@ func (o *Link) FindByLinkImage(_find_by_LinkImage string) ([]Link, error) {
 	return model_slice, nil
 
 }
-func (o *Link) FindByLinkTarget(_find_by_LinkTarget string) ([]Link, error) {
+func (o *Link) FindByLinkTarget(_find_by_LinkTarget string) ([]*Link, error) {
 
-	var model_slice []Link
+	var model_slice []*Link
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "link_target", _find_by_LinkTarget)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -1688,7 +1704,7 @@ func (o *Link) FindByLinkTarget(_find_by_LinkTarget string) ([]Link, error) {
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -1698,9 +1714,9 @@ func (o *Link) FindByLinkTarget(_find_by_LinkTarget string) ([]Link, error) {
 	return model_slice, nil
 
 }
-func (o *Link) FindByLinkDescription(_find_by_LinkDescription string) ([]Link, error) {
+func (o *Link) FindByLinkDescription(_find_by_LinkDescription string) ([]*Link, error) {
 
-	var model_slice []Link
+	var model_slice []*Link
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "link_description", _find_by_LinkDescription)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -1713,7 +1729,7 @@ func (o *Link) FindByLinkDescription(_find_by_LinkDescription string) ([]Link, e
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -1723,9 +1739,9 @@ func (o *Link) FindByLinkDescription(_find_by_LinkDescription string) ([]Link, e
 	return model_slice, nil
 
 }
-func (o *Link) FindByLinkVisible(_find_by_LinkVisible string) ([]Link, error) {
+func (o *Link) FindByLinkVisible(_find_by_LinkVisible string) ([]*Link, error) {
 
-	var model_slice []Link
+	var model_slice []*Link
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "link_visible", _find_by_LinkVisible)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -1738,7 +1754,7 @@ func (o *Link) FindByLinkVisible(_find_by_LinkVisible string) ([]Link, error) {
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -1748,9 +1764,9 @@ func (o *Link) FindByLinkVisible(_find_by_LinkVisible string) ([]Link, error) {
 	return model_slice, nil
 
 }
-func (o *Link) FindByLinkOwner(_find_by_LinkOwner int64) ([]Link, error) {
+func (o *Link) FindByLinkOwner(_find_by_LinkOwner int64) ([]*Link, error) {
 
-	var model_slice []Link
+	var model_slice []*Link
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "link_owner", _find_by_LinkOwner)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -1763,7 +1779,7 @@ func (o *Link) FindByLinkOwner(_find_by_LinkOwner int64) ([]Link, error) {
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -1773,9 +1789,9 @@ func (o *Link) FindByLinkOwner(_find_by_LinkOwner int64) ([]Link, error) {
 	return model_slice, nil
 
 }
-func (o *Link) FindByLinkRating(_find_by_LinkRating int) ([]Link, error) {
+func (o *Link) FindByLinkRating(_find_by_LinkRating int) ([]*Link, error) {
 
-	var model_slice []Link
+	var model_slice []*Link
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "link_rating", _find_by_LinkRating)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -1788,7 +1804,7 @@ func (o *Link) FindByLinkRating(_find_by_LinkRating int) ([]Link, error) {
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -1798,9 +1814,9 @@ func (o *Link) FindByLinkRating(_find_by_LinkRating int) ([]Link, error) {
 	return model_slice, nil
 
 }
-func (o *Link) FindByLinkUpdated(_find_by_LinkUpdated *DateTime) ([]Link, error) {
+func (o *Link) FindByLinkUpdated(_find_by_LinkUpdated *DateTime) ([]*Link, error) {
 
-	var model_slice []Link
+	var model_slice []*Link
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "link_updated", _find_by_LinkUpdated)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -1813,7 +1829,7 @@ func (o *Link) FindByLinkUpdated(_find_by_LinkUpdated *DateTime) ([]Link, error)
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -1823,9 +1839,9 @@ func (o *Link) FindByLinkUpdated(_find_by_LinkUpdated *DateTime) ([]Link, error)
 	return model_slice, nil
 
 }
-func (o *Link) FindByLinkRel(_find_by_LinkRel string) ([]Link, error) {
+func (o *Link) FindByLinkRel(_find_by_LinkRel string) ([]*Link, error) {
 
-	var model_slice []Link
+	var model_slice []*Link
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "link_rel", _find_by_LinkRel)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -1838,7 +1854,7 @@ func (o *Link) FindByLinkRel(_find_by_LinkRel string) ([]Link, error) {
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -1848,9 +1864,9 @@ func (o *Link) FindByLinkRel(_find_by_LinkRel string) ([]Link, error) {
 	return model_slice, nil
 
 }
-func (o *Link) FindByLinkNotes(_find_by_LinkNotes string) ([]Link, error) {
+func (o *Link) FindByLinkNotes(_find_by_LinkNotes string) ([]*Link, error) {
 
-	var model_slice []Link
+	var model_slice []*Link
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "link_notes", _find_by_LinkNotes)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -1863,7 +1879,7 @@ func (o *Link) FindByLinkNotes(_find_by_LinkNotes string) ([]Link, error) {
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -1873,9 +1889,9 @@ func (o *Link) FindByLinkNotes(_find_by_LinkNotes string) ([]Link, error) {
 	return model_slice, nil
 
 }
-func (o *Link) FindByLinkRss(_find_by_LinkRss string) ([]Link, error) {
+func (o *Link) FindByLinkRss(_find_by_LinkRss string) ([]*Link, error) {
 
-	var model_slice []Link
+	var model_slice []*Link
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "link_rss", _find_by_LinkRss)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -1888,7 +1904,7 @@ func (o *Link) FindByLinkRss(_find_by_LinkRss string) ([]Link, error) {
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -2195,7 +2211,7 @@ func (m *Option) SetAutoload(arg string) {
 
 func (o *Option) Find(_find_by_OptionId int64) (bool, error) {
 
-	var model_slice []Option
+	var model_slice []*Option
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "option_id", _find_by_OptionId)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -2208,20 +2224,20 @@ func (o *Option) Find(_find_by_OptionId int64) (bool, error) {
 		if err != nil {
 			return false, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
 		// there was an error!
 		return false, errors.New("not found")
 	}
-	o.FromOption(&model_slice[0])
+	o.FromOption(model_slice[0])
 	return true, nil
 
 }
-func (o *Option) FindByOptionName(_find_by_OptionName string) ([]Option, error) {
+func (o *Option) FindByOptionName(_find_by_OptionName string) ([]*Option, error) {
 
-	var model_slice []Option
+	var model_slice []*Option
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "option_name", _find_by_OptionName)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -2234,7 +2250,7 @@ func (o *Option) FindByOptionName(_find_by_OptionName string) ([]Option, error) 
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -2244,9 +2260,9 @@ func (o *Option) FindByOptionName(_find_by_OptionName string) ([]Option, error) 
 	return model_slice, nil
 
 }
-func (o *Option) FindByOptionValue(_find_by_OptionValue string) ([]Option, error) {
+func (o *Option) FindByOptionValue(_find_by_OptionValue string) ([]*Option, error) {
 
-	var model_slice []Option
+	var model_slice []*Option
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "option_value", _find_by_OptionValue)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -2259,7 +2275,7 @@ func (o *Option) FindByOptionValue(_find_by_OptionValue string) ([]Option, error
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -2269,9 +2285,9 @@ func (o *Option) FindByOptionValue(_find_by_OptionValue string) ([]Option, error
 	return model_slice, nil
 
 }
-func (o *Option) FindByAutoload(_find_by_Autoload string) ([]Option, error) {
+func (o *Option) FindByAutoload(_find_by_Autoload string) ([]*Option, error) {
 
-	var model_slice []Option
+	var model_slice []*Option
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "autoload", _find_by_Autoload)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -2284,7 +2300,7 @@ func (o *Option) FindByAutoload(_find_by_Autoload string) ([]Option, error) {
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -2466,7 +2482,7 @@ func (m *PostMeta) SetMetaValue(arg string) {
 
 func (o *PostMeta) Find(_find_by_MetaId int64) (bool, error) {
 
-	var model_slice []PostMeta
+	var model_slice []*PostMeta
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "meta_id", _find_by_MetaId)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -2479,20 +2495,20 @@ func (o *PostMeta) Find(_find_by_MetaId int64) (bool, error) {
 		if err != nil {
 			return false, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
 		// there was an error!
 		return false, errors.New("not found")
 	}
-	o.FromPostMeta(&model_slice[0])
+	o.FromPostMeta(model_slice[0])
 	return true, nil
 
 }
-func (o *PostMeta) FindByPostId(_find_by_PostId int64) ([]PostMeta, error) {
+func (o *PostMeta) FindByPostId(_find_by_PostId int64) ([]*PostMeta, error) {
 
-	var model_slice []PostMeta
+	var model_slice []*PostMeta
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "post_id", _find_by_PostId)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -2505,7 +2521,7 @@ func (o *PostMeta) FindByPostId(_find_by_PostId int64) ([]PostMeta, error) {
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -2515,9 +2531,9 @@ func (o *PostMeta) FindByPostId(_find_by_PostId int64) ([]PostMeta, error) {
 	return model_slice, nil
 
 }
-func (o *PostMeta) FindByMetaKey(_find_by_MetaKey string) ([]PostMeta, error) {
+func (o *PostMeta) FindByMetaKey(_find_by_MetaKey string) ([]*PostMeta, error) {
 
-	var model_slice []PostMeta
+	var model_slice []*PostMeta
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "meta_key", _find_by_MetaKey)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -2530,7 +2546,7 @@ func (o *PostMeta) FindByMetaKey(_find_by_MetaKey string) ([]PostMeta, error) {
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -2540,9 +2556,9 @@ func (o *PostMeta) FindByMetaKey(_find_by_MetaKey string) ([]PostMeta, error) {
 	return model_slice, nil
 
 }
-func (o *PostMeta) FindByMetaValue(_find_by_MetaValue string) ([]PostMeta, error) {
+func (o *PostMeta) FindByMetaValue(_find_by_MetaValue string) ([]*PostMeta, error) {
 
-	var model_slice []PostMeta
+	var model_slice []*PostMeta
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "meta_value", _find_by_MetaValue)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -2555,7 +2571,7 @@ func (o *PostMeta) FindByMetaValue(_find_by_MetaValue string) ([]PostMeta, error
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -2704,6 +2720,8 @@ type Post struct {
 	IsPostMimeTypeDirty        bool
 	IsCommentCountDirty        bool
 	// Relationships
+	PostMetas         []*PostMeta
+	IsPostMetasLoaded bool
 }
 
 func NewPost(a Adapter) *Post {
@@ -2713,6 +2731,20 @@ func NewPost(a Adapter) *Post {
 	o._pkey = "ID"
 	o._new = false
 	return &o
+}
+
+func (o *Post) LoadPostMetas() ([]*PostMeta, error) {
+	if o.IsPostMetasLoaded == true {
+		return o.PostMetas, nil
+	}
+	var finder PostMeta
+	results, err := finder.FindByPostId(o.ID)
+	if err != nil {
+		return nil, err
+	}
+	o.IsPostMetasLoaded = true
+	o.PostMetas = results
+	return results, nil
 }
 
 func (m *Post) GetPrimaryKeyValue() int64 {
@@ -2908,7 +2940,7 @@ func (m *Post) SetCommentCount(arg int64) {
 
 func (o *Post) Find(_find_by_ID int64) (bool, error) {
 
-	var model_slice []Post
+	var model_slice []*Post
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "ID", _find_by_ID)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -2921,20 +2953,20 @@ func (o *Post) Find(_find_by_ID int64) (bool, error) {
 		if err != nil {
 			return false, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
 		// there was an error!
 		return false, errors.New("not found")
 	}
-	o.FromPost(&model_slice[0])
+	o.FromPost(model_slice[0])
 	return true, nil
 
 }
-func (o *Post) FindByPostAuthor(_find_by_PostAuthor int64) ([]Post, error) {
+func (o *Post) FindByPostAuthor(_find_by_PostAuthor int64) ([]*Post, error) {
 
-	var model_slice []Post
+	var model_slice []*Post
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "post_author", _find_by_PostAuthor)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -2947,7 +2979,7 @@ func (o *Post) FindByPostAuthor(_find_by_PostAuthor int64) ([]Post, error) {
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -2957,9 +2989,9 @@ func (o *Post) FindByPostAuthor(_find_by_PostAuthor int64) ([]Post, error) {
 	return model_slice, nil
 
 }
-func (o *Post) FindByPostDate(_find_by_PostDate *DateTime) ([]Post, error) {
+func (o *Post) FindByPostDate(_find_by_PostDate *DateTime) ([]*Post, error) {
 
-	var model_slice []Post
+	var model_slice []*Post
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_date", _find_by_PostDate)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -2972,7 +3004,7 @@ func (o *Post) FindByPostDate(_find_by_PostDate *DateTime) ([]Post, error) {
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -2982,9 +3014,9 @@ func (o *Post) FindByPostDate(_find_by_PostDate *DateTime) ([]Post, error) {
 	return model_slice, nil
 
 }
-func (o *Post) FindByPostDateGmt(_find_by_PostDateGmt *DateTime) ([]Post, error) {
+func (o *Post) FindByPostDateGmt(_find_by_PostDateGmt *DateTime) ([]*Post, error) {
 
-	var model_slice []Post
+	var model_slice []*Post
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_date_gmt", _find_by_PostDateGmt)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -2997,7 +3029,7 @@ func (o *Post) FindByPostDateGmt(_find_by_PostDateGmt *DateTime) ([]Post, error)
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -3007,9 +3039,9 @@ func (o *Post) FindByPostDateGmt(_find_by_PostDateGmt *DateTime) ([]Post, error)
 	return model_slice, nil
 
 }
-func (o *Post) FindByPostContent(_find_by_PostContent string) ([]Post, error) {
+func (o *Post) FindByPostContent(_find_by_PostContent string) ([]*Post, error) {
 
-	var model_slice []Post
+	var model_slice []*Post
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_content", _find_by_PostContent)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -3022,7 +3054,7 @@ func (o *Post) FindByPostContent(_find_by_PostContent string) ([]Post, error) {
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -3032,9 +3064,9 @@ func (o *Post) FindByPostContent(_find_by_PostContent string) ([]Post, error) {
 	return model_slice, nil
 
 }
-func (o *Post) FindByPostTitle(_find_by_PostTitle string) ([]Post, error) {
+func (o *Post) FindByPostTitle(_find_by_PostTitle string) ([]*Post, error) {
 
-	var model_slice []Post
+	var model_slice []*Post
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_title", _find_by_PostTitle)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -3047,7 +3079,7 @@ func (o *Post) FindByPostTitle(_find_by_PostTitle string) ([]Post, error) {
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -3057,9 +3089,9 @@ func (o *Post) FindByPostTitle(_find_by_PostTitle string) ([]Post, error) {
 	return model_slice, nil
 
 }
-func (o *Post) FindByPostExcerpt(_find_by_PostExcerpt string) ([]Post, error) {
+func (o *Post) FindByPostExcerpt(_find_by_PostExcerpt string) ([]*Post, error) {
 
-	var model_slice []Post
+	var model_slice []*Post
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_excerpt", _find_by_PostExcerpt)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -3072,7 +3104,7 @@ func (o *Post) FindByPostExcerpt(_find_by_PostExcerpt string) ([]Post, error) {
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -3082,9 +3114,9 @@ func (o *Post) FindByPostExcerpt(_find_by_PostExcerpt string) ([]Post, error) {
 	return model_slice, nil
 
 }
-func (o *Post) FindByPostStatus(_find_by_PostStatus string) ([]Post, error) {
+func (o *Post) FindByPostStatus(_find_by_PostStatus string) ([]*Post, error) {
 
-	var model_slice []Post
+	var model_slice []*Post
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_status", _find_by_PostStatus)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -3097,7 +3129,7 @@ func (o *Post) FindByPostStatus(_find_by_PostStatus string) ([]Post, error) {
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -3107,9 +3139,9 @@ func (o *Post) FindByPostStatus(_find_by_PostStatus string) ([]Post, error) {
 	return model_slice, nil
 
 }
-func (o *Post) FindByCommentStatus(_find_by_CommentStatus string) ([]Post, error) {
+func (o *Post) FindByCommentStatus(_find_by_CommentStatus string) ([]*Post, error) {
 
-	var model_slice []Post
+	var model_slice []*Post
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "comment_status", _find_by_CommentStatus)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -3122,7 +3154,7 @@ func (o *Post) FindByCommentStatus(_find_by_CommentStatus string) ([]Post, error
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -3132,9 +3164,9 @@ func (o *Post) FindByCommentStatus(_find_by_CommentStatus string) ([]Post, error
 	return model_slice, nil
 
 }
-func (o *Post) FindByPingStatus(_find_by_PingStatus string) ([]Post, error) {
+func (o *Post) FindByPingStatus(_find_by_PingStatus string) ([]*Post, error) {
 
-	var model_slice []Post
+	var model_slice []*Post
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "ping_status", _find_by_PingStatus)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -3147,7 +3179,7 @@ func (o *Post) FindByPingStatus(_find_by_PingStatus string) ([]Post, error) {
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -3157,9 +3189,9 @@ func (o *Post) FindByPingStatus(_find_by_PingStatus string) ([]Post, error) {
 	return model_slice, nil
 
 }
-func (o *Post) FindByPostPassword(_find_by_PostPassword string) ([]Post, error) {
+func (o *Post) FindByPostPassword(_find_by_PostPassword string) ([]*Post, error) {
 
-	var model_slice []Post
+	var model_slice []*Post
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_password", _find_by_PostPassword)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -3172,7 +3204,7 @@ func (o *Post) FindByPostPassword(_find_by_PostPassword string) ([]Post, error) 
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -3182,9 +3214,9 @@ func (o *Post) FindByPostPassword(_find_by_PostPassword string) ([]Post, error) 
 	return model_slice, nil
 
 }
-func (o *Post) FindByPostName(_find_by_PostName string) ([]Post, error) {
+func (o *Post) FindByPostName(_find_by_PostName string) ([]*Post, error) {
 
-	var model_slice []Post
+	var model_slice []*Post
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_name", _find_by_PostName)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -3197,7 +3229,7 @@ func (o *Post) FindByPostName(_find_by_PostName string) ([]Post, error) {
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -3207,9 +3239,9 @@ func (o *Post) FindByPostName(_find_by_PostName string) ([]Post, error) {
 	return model_slice, nil
 
 }
-func (o *Post) FindByToPing(_find_by_ToPing string) ([]Post, error) {
+func (o *Post) FindByToPing(_find_by_ToPing string) ([]*Post, error) {
 
-	var model_slice []Post
+	var model_slice []*Post
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "to_ping", _find_by_ToPing)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -3222,7 +3254,7 @@ func (o *Post) FindByToPing(_find_by_ToPing string) ([]Post, error) {
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -3232,9 +3264,9 @@ func (o *Post) FindByToPing(_find_by_ToPing string) ([]Post, error) {
 	return model_slice, nil
 
 }
-func (o *Post) FindByPinged(_find_by_Pinged string) ([]Post, error) {
+func (o *Post) FindByPinged(_find_by_Pinged string) ([]*Post, error) {
 
-	var model_slice []Post
+	var model_slice []*Post
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "pinged", _find_by_Pinged)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -3247,7 +3279,7 @@ func (o *Post) FindByPinged(_find_by_Pinged string) ([]Post, error) {
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -3257,9 +3289,9 @@ func (o *Post) FindByPinged(_find_by_Pinged string) ([]Post, error) {
 	return model_slice, nil
 
 }
-func (o *Post) FindByPostModified(_find_by_PostModified *DateTime) ([]Post, error) {
+func (o *Post) FindByPostModified(_find_by_PostModified *DateTime) ([]*Post, error) {
 
-	var model_slice []Post
+	var model_slice []*Post
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_modified", _find_by_PostModified)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -3272,7 +3304,7 @@ func (o *Post) FindByPostModified(_find_by_PostModified *DateTime) ([]Post, erro
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -3282,9 +3314,9 @@ func (o *Post) FindByPostModified(_find_by_PostModified *DateTime) ([]Post, erro
 	return model_slice, nil
 
 }
-func (o *Post) FindByPostModifiedGmt(_find_by_PostModifiedGmt *DateTime) ([]Post, error) {
+func (o *Post) FindByPostModifiedGmt(_find_by_PostModifiedGmt *DateTime) ([]*Post, error) {
 
-	var model_slice []Post
+	var model_slice []*Post
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_modified_gmt", _find_by_PostModifiedGmt)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -3297,7 +3329,7 @@ func (o *Post) FindByPostModifiedGmt(_find_by_PostModifiedGmt *DateTime) ([]Post
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -3307,9 +3339,9 @@ func (o *Post) FindByPostModifiedGmt(_find_by_PostModifiedGmt *DateTime) ([]Post
 	return model_slice, nil
 
 }
-func (o *Post) FindByPostContentFiltered(_find_by_PostContentFiltered string) ([]Post, error) {
+func (o *Post) FindByPostContentFiltered(_find_by_PostContentFiltered string) ([]*Post, error) {
 
-	var model_slice []Post
+	var model_slice []*Post
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_content_filtered", _find_by_PostContentFiltered)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -3322,7 +3354,7 @@ func (o *Post) FindByPostContentFiltered(_find_by_PostContentFiltered string) ([
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -3332,9 +3364,9 @@ func (o *Post) FindByPostContentFiltered(_find_by_PostContentFiltered string) ([
 	return model_slice, nil
 
 }
-func (o *Post) FindByPostParent(_find_by_PostParent int64) ([]Post, error) {
+func (o *Post) FindByPostParent(_find_by_PostParent int64) ([]*Post, error) {
 
-	var model_slice []Post
+	var model_slice []*Post
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "post_parent", _find_by_PostParent)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -3347,7 +3379,7 @@ func (o *Post) FindByPostParent(_find_by_PostParent int64) ([]Post, error) {
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -3357,9 +3389,9 @@ func (o *Post) FindByPostParent(_find_by_PostParent int64) ([]Post, error) {
 	return model_slice, nil
 
 }
-func (o *Post) FindByGuid(_find_by_Guid string) ([]Post, error) {
+func (o *Post) FindByGuid(_find_by_Guid string) ([]*Post, error) {
 
-	var model_slice []Post
+	var model_slice []*Post
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "guid", _find_by_Guid)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -3372,7 +3404,7 @@ func (o *Post) FindByGuid(_find_by_Guid string) ([]Post, error) {
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -3382,9 +3414,9 @@ func (o *Post) FindByGuid(_find_by_Guid string) ([]Post, error) {
 	return model_slice, nil
 
 }
-func (o *Post) FindByMenuOrder(_find_by_MenuOrder int) ([]Post, error) {
+func (o *Post) FindByMenuOrder(_find_by_MenuOrder int) ([]*Post, error) {
 
-	var model_slice []Post
+	var model_slice []*Post
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "menu_order", _find_by_MenuOrder)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -3397,7 +3429,7 @@ func (o *Post) FindByMenuOrder(_find_by_MenuOrder int) ([]Post, error) {
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -3407,9 +3439,9 @@ func (o *Post) FindByMenuOrder(_find_by_MenuOrder int) ([]Post, error) {
 	return model_slice, nil
 
 }
-func (o *Post) FindByPostType(_find_by_PostType string) ([]Post, error) {
+func (o *Post) FindByPostType(_find_by_PostType string) ([]*Post, error) {
 
-	var model_slice []Post
+	var model_slice []*Post
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_type", _find_by_PostType)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -3422,7 +3454,7 @@ func (o *Post) FindByPostType(_find_by_PostType string) ([]Post, error) {
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -3432,9 +3464,9 @@ func (o *Post) FindByPostType(_find_by_PostType string) ([]Post, error) {
 	return model_slice, nil
 
 }
-func (o *Post) FindByPostMimeType(_find_by_PostMimeType string) ([]Post, error) {
+func (o *Post) FindByPostMimeType(_find_by_PostMimeType string) ([]*Post, error) {
 
-	var model_slice []Post
+	var model_slice []*Post
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_mime_type", _find_by_PostMimeType)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -3447,7 +3479,7 @@ func (o *Post) FindByPostMimeType(_find_by_PostMimeType string) ([]Post, error) 
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -3457,9 +3489,9 @@ func (o *Post) FindByPostMimeType(_find_by_PostMimeType string) ([]Post, error) 
 	return model_slice, nil
 
 }
-func (o *Post) FindByCommentCount(_find_by_CommentCount int64) ([]Post, error) {
+func (o *Post) FindByCommentCount(_find_by_CommentCount int64) ([]*Post, error) {
 
-	var model_slice []Post
+	var model_slice []*Post
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "comment_count", _find_by_CommentCount)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -3472,7 +3504,7 @@ func (o *Post) FindByCommentCount(_find_by_CommentCount int64) ([]Post, error) {
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -3927,9 +3959,9 @@ func (m *TermRelationship) SetTermOrder(arg int) {
 	m.IsTermOrderDirty = true
 }
 
-func (o *TermRelationship) FindByObjectId(_find_by_ObjectId int64) ([]TermRelationship, error) {
+func (o *TermRelationship) FindByObjectId(_find_by_ObjectId int64) ([]*TermRelationship, error) {
 
-	var model_slice []TermRelationship
+	var model_slice []*TermRelationship
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "object_id", _find_by_ObjectId)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -3942,7 +3974,7 @@ func (o *TermRelationship) FindByObjectId(_find_by_ObjectId int64) ([]TermRelati
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -3954,7 +3986,7 @@ func (o *TermRelationship) FindByObjectId(_find_by_ObjectId int64) ([]TermRelati
 }
 func (o *TermRelationship) Find(_find_by_TermTaxonomyId int64) (bool, error) {
 
-	var model_slice []TermRelationship
+	var model_slice []*TermRelationship
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "term_taxonomy_id", _find_by_TermTaxonomyId)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -3967,20 +3999,20 @@ func (o *TermRelationship) Find(_find_by_TermTaxonomyId int64) (bool, error) {
 		if err != nil {
 			return false, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
 		// there was an error!
 		return false, errors.New("not found")
 	}
-	o.FromTermRelationship(&model_slice[0])
+	o.FromTermRelationship(model_slice[0])
 	return true, nil
 
 }
-func (o *TermRelationship) FindByTermOrder(_find_by_TermOrder int) ([]TermRelationship, error) {
+func (o *TermRelationship) FindByTermOrder(_find_by_TermOrder int) ([]*TermRelationship, error) {
 
-	var model_slice []TermRelationship
+	var model_slice []*TermRelationship
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "term_order", _find_by_TermOrder)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -3993,7 +4025,7 @@ func (o *TermRelationship) FindByTermOrder(_find_by_TermOrder int) ([]TermRelati
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -4169,7 +4201,7 @@ func (m *TermTaxonomy) SetCount(arg int64) {
 
 func (o *TermTaxonomy) Find(_find_by_TermTaxonomyId int64) (bool, error) {
 
-	var model_slice []TermTaxonomy
+	var model_slice []*TermTaxonomy
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "term_taxonomy_id", _find_by_TermTaxonomyId)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -4182,20 +4214,20 @@ func (o *TermTaxonomy) Find(_find_by_TermTaxonomyId int64) (bool, error) {
 		if err != nil {
 			return false, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
 		// there was an error!
 		return false, errors.New("not found")
 	}
-	o.FromTermTaxonomy(&model_slice[0])
+	o.FromTermTaxonomy(model_slice[0])
 	return true, nil
 
 }
-func (o *TermTaxonomy) FindByTermId(_find_by_TermId int64) ([]TermTaxonomy, error) {
+func (o *TermTaxonomy) FindByTermId(_find_by_TermId int64) ([]*TermTaxonomy, error) {
 
-	var model_slice []TermTaxonomy
+	var model_slice []*TermTaxonomy
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "term_id", _find_by_TermId)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -4208,7 +4240,7 @@ func (o *TermTaxonomy) FindByTermId(_find_by_TermId int64) ([]TermTaxonomy, erro
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -4218,9 +4250,9 @@ func (o *TermTaxonomy) FindByTermId(_find_by_TermId int64) ([]TermTaxonomy, erro
 	return model_slice, nil
 
 }
-func (o *TermTaxonomy) FindByTaxonomy(_find_by_Taxonomy string) ([]TermTaxonomy, error) {
+func (o *TermTaxonomy) FindByTaxonomy(_find_by_Taxonomy string) ([]*TermTaxonomy, error) {
 
-	var model_slice []TermTaxonomy
+	var model_slice []*TermTaxonomy
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "taxonomy", _find_by_Taxonomy)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -4233,7 +4265,7 @@ func (o *TermTaxonomy) FindByTaxonomy(_find_by_Taxonomy string) ([]TermTaxonomy,
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -4243,9 +4275,9 @@ func (o *TermTaxonomy) FindByTaxonomy(_find_by_Taxonomy string) ([]TermTaxonomy,
 	return model_slice, nil
 
 }
-func (o *TermTaxonomy) FindByDescription(_find_by_Description string) ([]TermTaxonomy, error) {
+func (o *TermTaxonomy) FindByDescription(_find_by_Description string) ([]*TermTaxonomy, error) {
 
-	var model_slice []TermTaxonomy
+	var model_slice []*TermTaxonomy
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "description", _find_by_Description)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -4258,7 +4290,7 @@ func (o *TermTaxonomy) FindByDescription(_find_by_Description string) ([]TermTax
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -4268,9 +4300,9 @@ func (o *TermTaxonomy) FindByDescription(_find_by_Description string) ([]TermTax
 	return model_slice, nil
 
 }
-func (o *TermTaxonomy) FindByParent(_find_by_Parent int64) ([]TermTaxonomy, error) {
+func (o *TermTaxonomy) FindByParent(_find_by_Parent int64) ([]*TermTaxonomy, error) {
 
-	var model_slice []TermTaxonomy
+	var model_slice []*TermTaxonomy
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "parent", _find_by_Parent)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -4283,7 +4315,7 @@ func (o *TermTaxonomy) FindByParent(_find_by_Parent int64) ([]TermTaxonomy, erro
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -4293,9 +4325,9 @@ func (o *TermTaxonomy) FindByParent(_find_by_Parent int64) ([]TermTaxonomy, erro
 	return model_slice, nil
 
 }
-func (o *TermTaxonomy) FindByCount(_find_by_Count int64) ([]TermTaxonomy, error) {
+func (o *TermTaxonomy) FindByCount(_find_by_Count int64) ([]*TermTaxonomy, error) {
 
-	var model_slice []TermTaxonomy
+	var model_slice []*TermTaxonomy
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "count", _find_by_Count)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -4308,7 +4340,7 @@ func (o *TermTaxonomy) FindByCount(_find_by_Count int64) ([]TermTaxonomy, error)
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -4451,6 +4483,8 @@ type Term struct {
 	IsSlugDirty      bool
 	IsTermGroupDirty bool
 	// Relationships
+	TermTaxonomys         []*TermTaxonomy
+	IsTermTaxonomysLoaded bool
 }
 
 func NewTerm(a Adapter) *Term {
@@ -4460,6 +4494,20 @@ func NewTerm(a Adapter) *Term {
 	o._pkey = "term_id"
 	o._new = false
 	return &o
+}
+
+func (o *Term) LoadTermTaxonomys() ([]*TermTaxonomy, error) {
+	if o.IsTermTaxonomysLoaded == true {
+		return o.TermTaxonomys, nil
+	}
+	var finder TermTaxonomy
+	results, err := finder.FindByTermId(o.TermId)
+	if err != nil {
+		return nil, err
+	}
+	o.IsTermTaxonomysLoaded = true
+	o.TermTaxonomys = results
+	return results, nil
 }
 
 func (m *Term) GetPrimaryKeyValue() int64 {
@@ -4503,7 +4551,7 @@ func (m *Term) SetTermGroup(arg int64) {
 
 func (o *Term) Find(_find_by_TermId int64) (bool, error) {
 
-	var model_slice []Term
+	var model_slice []*Term
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "term_id", _find_by_TermId)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -4516,20 +4564,20 @@ func (o *Term) Find(_find_by_TermId int64) (bool, error) {
 		if err != nil {
 			return false, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
 		// there was an error!
 		return false, errors.New("not found")
 	}
-	o.FromTerm(&model_slice[0])
+	o.FromTerm(model_slice[0])
 	return true, nil
 
 }
-func (o *Term) FindByName(_find_by_Name string) ([]Term, error) {
+func (o *Term) FindByName(_find_by_Name string) ([]*Term, error) {
 
-	var model_slice []Term
+	var model_slice []*Term
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "name", _find_by_Name)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -4542,7 +4590,7 @@ func (o *Term) FindByName(_find_by_Name string) ([]Term, error) {
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -4552,9 +4600,9 @@ func (o *Term) FindByName(_find_by_Name string) ([]Term, error) {
 	return model_slice, nil
 
 }
-func (o *Term) FindBySlug(_find_by_Slug string) ([]Term, error) {
+func (o *Term) FindBySlug(_find_by_Slug string) ([]*Term, error) {
 
-	var model_slice []Term
+	var model_slice []*Term
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "slug", _find_by_Slug)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -4567,7 +4615,7 @@ func (o *Term) FindBySlug(_find_by_Slug string) ([]Term, error) {
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -4577,9 +4625,9 @@ func (o *Term) FindBySlug(_find_by_Slug string) ([]Term, error) {
 	return model_slice, nil
 
 }
-func (o *Term) FindByTermGroup(_find_by_TermGroup int64) ([]Term, error) {
+func (o *Term) FindByTermGroup(_find_by_TermGroup int64) ([]*Term, error) {
 
-	var model_slice []Term
+	var model_slice []*Term
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "term_group", _find_by_TermGroup)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -4592,7 +4640,7 @@ func (o *Term) FindByTermGroup(_find_by_TermGroup int64) ([]Term, error) {
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -4774,7 +4822,7 @@ func (m *UserMeta) SetMetaValue(arg string) {
 
 func (o *UserMeta) Find(_find_by_UMetaId int64) (bool, error) {
 
-	var model_slice []UserMeta
+	var model_slice []*UserMeta
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "umeta_id", _find_by_UMetaId)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -4787,20 +4835,20 @@ func (o *UserMeta) Find(_find_by_UMetaId int64) (bool, error) {
 		if err != nil {
 			return false, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
 		// there was an error!
 		return false, errors.New("not found")
 	}
-	o.FromUserMeta(&model_slice[0])
+	o.FromUserMeta(model_slice[0])
 	return true, nil
 
 }
-func (o *UserMeta) FindByUserId(_find_by_UserId int64) ([]UserMeta, error) {
+func (o *UserMeta) FindByUserId(_find_by_UserId int64) ([]*UserMeta, error) {
 
-	var model_slice []UserMeta
+	var model_slice []*UserMeta
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "user_id", _find_by_UserId)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -4813,7 +4861,7 @@ func (o *UserMeta) FindByUserId(_find_by_UserId int64) ([]UserMeta, error) {
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -4823,9 +4871,9 @@ func (o *UserMeta) FindByUserId(_find_by_UserId int64) ([]UserMeta, error) {
 	return model_slice, nil
 
 }
-func (o *UserMeta) FindByMetaKey(_find_by_MetaKey string) ([]UserMeta, error) {
+func (o *UserMeta) FindByMetaKey(_find_by_MetaKey string) ([]*UserMeta, error) {
 
-	var model_slice []UserMeta
+	var model_slice []*UserMeta
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "meta_key", _find_by_MetaKey)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -4838,7 +4886,7 @@ func (o *UserMeta) FindByMetaKey(_find_by_MetaKey string) ([]UserMeta, error) {
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -4848,9 +4896,9 @@ func (o *UserMeta) FindByMetaKey(_find_by_MetaKey string) ([]UserMeta, error) {
 	return model_slice, nil
 
 }
-func (o *UserMeta) FindByMetaValue(_find_by_MetaValue string) ([]UserMeta, error) {
+func (o *UserMeta) FindByMetaValue(_find_by_MetaValue string) ([]*UserMeta, error) {
 
-	var model_slice []UserMeta
+	var model_slice []*UserMeta
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "meta_value", _find_by_MetaValue)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -4863,7 +4911,7 @@ func (o *UserMeta) FindByMetaValue(_find_by_MetaValue string) ([]UserMeta, error
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -4986,6 +5034,12 @@ type User struct {
 	IsUserStatusDirty        bool
 	IsDisplayNameDirty       bool
 	// Relationships
+	Comments                            []*Comment
+	IsCommentsLoaded                    bool
+	UserMetas                           []*UserMeta
+	IsUserMetasLoaded                   bool
+	WooDownloadableProductPerms         []*WooDownloadableProductPerm
+	IsWooDownloadableProductPermsLoaded bool
 }
 
 func NewUser(a Adapter) *User {
@@ -4995,6 +5049,48 @@ func NewUser(a Adapter) *User {
 	o._pkey = "ID"
 	o._new = false
 	return &o
+}
+
+func (o *User) LoadComments() ([]*Comment, error) {
+	if o.IsCommentsLoaded == true {
+		return o.Comments, nil
+	}
+	var finder Comment
+	results, err := finder.FindByUserId(o.ID)
+	if err != nil {
+		return nil, err
+	}
+	o.IsCommentsLoaded = true
+	o.Comments = results
+	return results, nil
+}
+
+func (o *User) LoadUserMetas() ([]*UserMeta, error) {
+	if o.IsUserMetasLoaded == true {
+		return o.UserMetas, nil
+	}
+	var finder UserMeta
+	results, err := finder.FindByUserId(o.ID)
+	if err != nil {
+		return nil, err
+	}
+	o.IsUserMetasLoaded = true
+	o.UserMetas = results
+	return results, nil
+}
+
+func (o *User) LoadWooDownloadableProductPerms() ([]*WooDownloadableProductPerm, error) {
+	if o.IsWooDownloadableProductPermsLoaded == true {
+		return o.WooDownloadableProductPerms, nil
+	}
+	var finder WooDownloadableProductPerm
+	results, err := finder.FindByUserId(o.ID)
+	if err != nil {
+		return nil, err
+	}
+	o.IsWooDownloadableProductPermsLoaded = true
+	o.WooDownloadableProductPerms = results
+	return results, nil
 }
 
 func (m *User) GetPrimaryKeyValue() int64 {
@@ -5086,7 +5182,7 @@ func (m *User) SetDisplayName(arg string) {
 
 func (o *User) Find(_find_by_ID int64) (bool, error) {
 
-	var model_slice []User
+	var model_slice []*User
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "ID", _find_by_ID)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -5099,20 +5195,20 @@ func (o *User) Find(_find_by_ID int64) (bool, error) {
 		if err != nil {
 			return false, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
 		// there was an error!
 		return false, errors.New("not found")
 	}
-	o.FromUser(&model_slice[0])
+	o.FromUser(model_slice[0])
 	return true, nil
 
 }
-func (o *User) FindByUserLogin(_find_by_UserLogin string) ([]User, error) {
+func (o *User) FindByUserLogin(_find_by_UserLogin string) ([]*User, error) {
 
-	var model_slice []User
+	var model_slice []*User
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "user_login", _find_by_UserLogin)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -5125,7 +5221,7 @@ func (o *User) FindByUserLogin(_find_by_UserLogin string) ([]User, error) {
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -5135,9 +5231,9 @@ func (o *User) FindByUserLogin(_find_by_UserLogin string) ([]User, error) {
 	return model_slice, nil
 
 }
-func (o *User) FindByUserPass(_find_by_UserPass string) ([]User, error) {
+func (o *User) FindByUserPass(_find_by_UserPass string) ([]*User, error) {
 
-	var model_slice []User
+	var model_slice []*User
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "user_pass", _find_by_UserPass)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -5150,7 +5246,7 @@ func (o *User) FindByUserPass(_find_by_UserPass string) ([]User, error) {
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -5160,9 +5256,9 @@ func (o *User) FindByUserPass(_find_by_UserPass string) ([]User, error) {
 	return model_slice, nil
 
 }
-func (o *User) FindByUserNicename(_find_by_UserNicename string) ([]User, error) {
+func (o *User) FindByUserNicename(_find_by_UserNicename string) ([]*User, error) {
 
-	var model_slice []User
+	var model_slice []*User
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "user_nicename", _find_by_UserNicename)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -5175,7 +5271,7 @@ func (o *User) FindByUserNicename(_find_by_UserNicename string) ([]User, error) 
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -5185,9 +5281,9 @@ func (o *User) FindByUserNicename(_find_by_UserNicename string) ([]User, error) 
 	return model_slice, nil
 
 }
-func (o *User) FindByUserEmail(_find_by_UserEmail string) ([]User, error) {
+func (o *User) FindByUserEmail(_find_by_UserEmail string) ([]*User, error) {
 
-	var model_slice []User
+	var model_slice []*User
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "user_email", _find_by_UserEmail)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -5200,7 +5296,7 @@ func (o *User) FindByUserEmail(_find_by_UserEmail string) ([]User, error) {
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -5210,9 +5306,9 @@ func (o *User) FindByUserEmail(_find_by_UserEmail string) ([]User, error) {
 	return model_slice, nil
 
 }
-func (o *User) FindByUserUrl(_find_by_UserUrl string) ([]User, error) {
+func (o *User) FindByUserUrl(_find_by_UserUrl string) ([]*User, error) {
 
-	var model_slice []User
+	var model_slice []*User
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "user_url", _find_by_UserUrl)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -5225,7 +5321,7 @@ func (o *User) FindByUserUrl(_find_by_UserUrl string) ([]User, error) {
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -5235,9 +5331,9 @@ func (o *User) FindByUserUrl(_find_by_UserUrl string) ([]User, error) {
 	return model_slice, nil
 
 }
-func (o *User) FindByUserRegistered(_find_by_UserRegistered *DateTime) ([]User, error) {
+func (o *User) FindByUserRegistered(_find_by_UserRegistered *DateTime) ([]*User, error) {
 
-	var model_slice []User
+	var model_slice []*User
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "user_registered", _find_by_UserRegistered)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -5250,7 +5346,7 @@ func (o *User) FindByUserRegistered(_find_by_UserRegistered *DateTime) ([]User, 
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -5260,9 +5356,9 @@ func (o *User) FindByUserRegistered(_find_by_UserRegistered *DateTime) ([]User, 
 	return model_slice, nil
 
 }
-func (o *User) FindByUserActivationKey(_find_by_UserActivationKey string) ([]User, error) {
+func (o *User) FindByUserActivationKey(_find_by_UserActivationKey string) ([]*User, error) {
 
-	var model_slice []User
+	var model_slice []*User
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "user_activation_key", _find_by_UserActivationKey)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -5275,7 +5371,7 @@ func (o *User) FindByUserActivationKey(_find_by_UserActivationKey string) ([]Use
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -5285,9 +5381,9 @@ func (o *User) FindByUserActivationKey(_find_by_UserActivationKey string) ([]Use
 	return model_slice, nil
 
 }
-func (o *User) FindByUserStatus(_find_by_UserStatus int) ([]User, error) {
+func (o *User) FindByUserStatus(_find_by_UserStatus int) ([]*User, error) {
 
-	var model_slice []User
+	var model_slice []*User
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "user_status", _find_by_UserStatus)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -5300,7 +5396,7 @@ func (o *User) FindByUserStatus(_find_by_UserStatus int) ([]User, error) {
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -5310,9 +5406,9 @@ func (o *User) FindByUserStatus(_find_by_UserStatus int) ([]User, error) {
 	return model_slice, nil
 
 }
-func (o *User) FindByDisplayName(_find_by_DisplayName string) ([]User, error) {
+func (o *User) FindByDisplayName(_find_by_DisplayName string) ([]*User, error) {
 
-	var model_slice []User
+	var model_slice []*User
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "display_name", _find_by_DisplayName)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -5325,7 +5421,7 @@ func (o *User) FindByDisplayName(_find_by_DisplayName string) ([]User, error) {
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -5594,7 +5690,7 @@ func (m *WooAttrTaxonomie) SetAttrOrderby(arg string) {
 
 func (o *WooAttrTaxonomie) Find(_find_by_AttrId int64) (bool, error) {
 
-	var model_slice []WooAttrTaxonomie
+	var model_slice []*WooAttrTaxonomie
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "attribute_id", _find_by_AttrId)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -5607,20 +5703,20 @@ func (o *WooAttrTaxonomie) Find(_find_by_AttrId int64) (bool, error) {
 		if err != nil {
 			return false, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
 		// there was an error!
 		return false, errors.New("not found")
 	}
-	o.FromWooAttrTaxonomie(&model_slice[0])
+	o.FromWooAttrTaxonomie(model_slice[0])
 	return true, nil
 
 }
-func (o *WooAttrTaxonomie) FindByAttrName(_find_by_AttrName string) ([]WooAttrTaxonomie, error) {
+func (o *WooAttrTaxonomie) FindByAttrName(_find_by_AttrName string) ([]*WooAttrTaxonomie, error) {
 
-	var model_slice []WooAttrTaxonomie
+	var model_slice []*WooAttrTaxonomie
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "attribute_name", _find_by_AttrName)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -5633,7 +5729,7 @@ func (o *WooAttrTaxonomie) FindByAttrName(_find_by_AttrName string) ([]WooAttrTa
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -5643,9 +5739,9 @@ func (o *WooAttrTaxonomie) FindByAttrName(_find_by_AttrName string) ([]WooAttrTa
 	return model_slice, nil
 
 }
-func (o *WooAttrTaxonomie) FindByAttrLabel(_find_by_AttrLabel string) ([]WooAttrTaxonomie, error) {
+func (o *WooAttrTaxonomie) FindByAttrLabel(_find_by_AttrLabel string) ([]*WooAttrTaxonomie, error) {
 
-	var model_slice []WooAttrTaxonomie
+	var model_slice []*WooAttrTaxonomie
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "attribute_label", _find_by_AttrLabel)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -5658,7 +5754,7 @@ func (o *WooAttrTaxonomie) FindByAttrLabel(_find_by_AttrLabel string) ([]WooAttr
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -5668,9 +5764,9 @@ func (o *WooAttrTaxonomie) FindByAttrLabel(_find_by_AttrLabel string) ([]WooAttr
 	return model_slice, nil
 
 }
-func (o *WooAttrTaxonomie) FindByAttrType(_find_by_AttrType string) ([]WooAttrTaxonomie, error) {
+func (o *WooAttrTaxonomie) FindByAttrType(_find_by_AttrType string) ([]*WooAttrTaxonomie, error) {
 
-	var model_slice []WooAttrTaxonomie
+	var model_slice []*WooAttrTaxonomie
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "attribute_type", _find_by_AttrType)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -5683,7 +5779,7 @@ func (o *WooAttrTaxonomie) FindByAttrType(_find_by_AttrType string) ([]WooAttrTa
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -5693,9 +5789,9 @@ func (o *WooAttrTaxonomie) FindByAttrType(_find_by_AttrType string) ([]WooAttrTa
 	return model_slice, nil
 
 }
-func (o *WooAttrTaxonomie) FindByAttrOrderby(_find_by_AttrOrderby string) ([]WooAttrTaxonomie, error) {
+func (o *WooAttrTaxonomie) FindByAttrOrderby(_find_by_AttrOrderby string) ([]*WooAttrTaxonomie, error) {
 
-	var model_slice []WooAttrTaxonomie
+	var model_slice []*WooAttrTaxonomie
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "attribute_orderby", _find_by_AttrOrderby)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -5708,7 +5804,7 @@ func (o *WooAttrTaxonomie) FindByAttrOrderby(_find_by_AttrOrderby string) ([]Woo
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -5976,7 +6072,7 @@ func (m *WooDownloadableProductPerm) SetDownloadCount(arg int64) {
 
 func (o *WooDownloadableProductPerm) Find(_find_by_PermissionId int64) (bool, error) {
 
-	var model_slice []WooDownloadableProductPerm
+	var model_slice []*WooDownloadableProductPerm
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "permission_id", _find_by_PermissionId)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -5989,20 +6085,20 @@ func (o *WooDownloadableProductPerm) Find(_find_by_PermissionId int64) (bool, er
 		if err != nil {
 			return false, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
 		// there was an error!
 		return false, errors.New("not found")
 	}
-	o.FromWooDownloadableProductPerm(&model_slice[0])
+	o.FromWooDownloadableProductPerm(model_slice[0])
 	return true, nil
 
 }
-func (o *WooDownloadableProductPerm) FindByDownloadId(_find_by_DownloadId string) ([]WooDownloadableProductPerm, error) {
+func (o *WooDownloadableProductPerm) FindByDownloadId(_find_by_DownloadId string) ([]*WooDownloadableProductPerm, error) {
 
-	var model_slice []WooDownloadableProductPerm
+	var model_slice []*WooDownloadableProductPerm
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "download_id", _find_by_DownloadId)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -6015,7 +6111,7 @@ func (o *WooDownloadableProductPerm) FindByDownloadId(_find_by_DownloadId string
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -6025,9 +6121,9 @@ func (o *WooDownloadableProductPerm) FindByDownloadId(_find_by_DownloadId string
 	return model_slice, nil
 
 }
-func (o *WooDownloadableProductPerm) FindByProductId(_find_by_ProductId int64) ([]WooDownloadableProductPerm, error) {
+func (o *WooDownloadableProductPerm) FindByProductId(_find_by_ProductId int64) ([]*WooDownloadableProductPerm, error) {
 
-	var model_slice []WooDownloadableProductPerm
+	var model_slice []*WooDownloadableProductPerm
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "product_id", _find_by_ProductId)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -6040,7 +6136,7 @@ func (o *WooDownloadableProductPerm) FindByProductId(_find_by_ProductId int64) (
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -6050,9 +6146,9 @@ func (o *WooDownloadableProductPerm) FindByProductId(_find_by_ProductId int64) (
 	return model_slice, nil
 
 }
-func (o *WooDownloadableProductPerm) FindByOrderId(_find_by_OrderId int64) ([]WooDownloadableProductPerm, error) {
+func (o *WooDownloadableProductPerm) FindByOrderId(_find_by_OrderId int64) ([]*WooDownloadableProductPerm, error) {
 
-	var model_slice []WooDownloadableProductPerm
+	var model_slice []*WooDownloadableProductPerm
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "order_id", _find_by_OrderId)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -6065,7 +6161,7 @@ func (o *WooDownloadableProductPerm) FindByOrderId(_find_by_OrderId int64) ([]Wo
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -6075,9 +6171,9 @@ func (o *WooDownloadableProductPerm) FindByOrderId(_find_by_OrderId int64) ([]Wo
 	return model_slice, nil
 
 }
-func (o *WooDownloadableProductPerm) FindByOrderKey(_find_by_OrderKey string) ([]WooDownloadableProductPerm, error) {
+func (o *WooDownloadableProductPerm) FindByOrderKey(_find_by_OrderKey string) ([]*WooDownloadableProductPerm, error) {
 
-	var model_slice []WooDownloadableProductPerm
+	var model_slice []*WooDownloadableProductPerm
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "order_key", _find_by_OrderKey)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -6090,7 +6186,7 @@ func (o *WooDownloadableProductPerm) FindByOrderKey(_find_by_OrderKey string) ([
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -6100,9 +6196,9 @@ func (o *WooDownloadableProductPerm) FindByOrderKey(_find_by_OrderKey string) ([
 	return model_slice, nil
 
 }
-func (o *WooDownloadableProductPerm) FindByUserEmail(_find_by_UserEmail string) ([]WooDownloadableProductPerm, error) {
+func (o *WooDownloadableProductPerm) FindByUserEmail(_find_by_UserEmail string) ([]*WooDownloadableProductPerm, error) {
 
-	var model_slice []WooDownloadableProductPerm
+	var model_slice []*WooDownloadableProductPerm
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "user_email", _find_by_UserEmail)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -6115,7 +6211,7 @@ func (o *WooDownloadableProductPerm) FindByUserEmail(_find_by_UserEmail string) 
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -6125,9 +6221,9 @@ func (o *WooDownloadableProductPerm) FindByUserEmail(_find_by_UserEmail string) 
 	return model_slice, nil
 
 }
-func (o *WooDownloadableProductPerm) FindByUserId(_find_by_UserId int64) ([]WooDownloadableProductPerm, error) {
+func (o *WooDownloadableProductPerm) FindByUserId(_find_by_UserId int64) ([]*WooDownloadableProductPerm, error) {
 
-	var model_slice []WooDownloadableProductPerm
+	var model_slice []*WooDownloadableProductPerm
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "user_id", _find_by_UserId)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -6140,7 +6236,7 @@ func (o *WooDownloadableProductPerm) FindByUserId(_find_by_UserId int64) ([]WooD
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -6150,9 +6246,9 @@ func (o *WooDownloadableProductPerm) FindByUserId(_find_by_UserId int64) ([]WooD
 	return model_slice, nil
 
 }
-func (o *WooDownloadableProductPerm) FindByDownloadsRemaining(_find_by_DownloadsRemaining string) ([]WooDownloadableProductPerm, error) {
+func (o *WooDownloadableProductPerm) FindByDownloadsRemaining(_find_by_DownloadsRemaining string) ([]*WooDownloadableProductPerm, error) {
 
-	var model_slice []WooDownloadableProductPerm
+	var model_slice []*WooDownloadableProductPerm
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "downloads_remaining", _find_by_DownloadsRemaining)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -6165,7 +6261,7 @@ func (o *WooDownloadableProductPerm) FindByDownloadsRemaining(_find_by_Downloads
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -6175,9 +6271,9 @@ func (o *WooDownloadableProductPerm) FindByDownloadsRemaining(_find_by_Downloads
 	return model_slice, nil
 
 }
-func (o *WooDownloadableProductPerm) FindByAccessGranted(_find_by_AccessGranted *DateTime) ([]WooDownloadableProductPerm, error) {
+func (o *WooDownloadableProductPerm) FindByAccessGranted(_find_by_AccessGranted *DateTime) ([]*WooDownloadableProductPerm, error) {
 
-	var model_slice []WooDownloadableProductPerm
+	var model_slice []*WooDownloadableProductPerm
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "access_granted", _find_by_AccessGranted)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -6190,7 +6286,7 @@ func (o *WooDownloadableProductPerm) FindByAccessGranted(_find_by_AccessGranted 
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -6200,9 +6296,9 @@ func (o *WooDownloadableProductPerm) FindByAccessGranted(_find_by_AccessGranted 
 	return model_slice, nil
 
 }
-func (o *WooDownloadableProductPerm) FindByAccessExpires(_find_by_AccessExpires *DateTime) ([]WooDownloadableProductPerm, error) {
+func (o *WooDownloadableProductPerm) FindByAccessExpires(_find_by_AccessExpires *DateTime) ([]*WooDownloadableProductPerm, error) {
 
-	var model_slice []WooDownloadableProductPerm
+	var model_slice []*WooDownloadableProductPerm
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "access_expires", _find_by_AccessExpires)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -6215,7 +6311,7 @@ func (o *WooDownloadableProductPerm) FindByAccessExpires(_find_by_AccessExpires 
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -6225,9 +6321,9 @@ func (o *WooDownloadableProductPerm) FindByAccessExpires(_find_by_AccessExpires 
 	return model_slice, nil
 
 }
-func (o *WooDownloadableProductPerm) FindByDownloadCount(_find_by_DownloadCount int64) ([]WooDownloadableProductPerm, error) {
+func (o *WooDownloadableProductPerm) FindByDownloadCount(_find_by_DownloadCount int64) ([]*WooDownloadableProductPerm, error) {
 
-	var model_slice []WooDownloadableProductPerm
+	var model_slice []*WooDownloadableProductPerm
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "download_count", _find_by_DownloadCount)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -6240,7 +6336,7 @@ func (o *WooDownloadableProductPerm) FindByDownloadCount(_find_by_DownloadCount 
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -6515,7 +6611,7 @@ func (m *WooOrderItemMeta) SetMetaValue(arg string) {
 
 func (o *WooOrderItemMeta) Find(_find_by_MetaId int64) (bool, error) {
 
-	var model_slice []WooOrderItemMeta
+	var model_slice []*WooOrderItemMeta
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "meta_id", _find_by_MetaId)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -6528,20 +6624,20 @@ func (o *WooOrderItemMeta) Find(_find_by_MetaId int64) (bool, error) {
 		if err != nil {
 			return false, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
 		// there was an error!
 		return false, errors.New("not found")
 	}
-	o.FromWooOrderItemMeta(&model_slice[0])
+	o.FromWooOrderItemMeta(model_slice[0])
 	return true, nil
 
 }
-func (o *WooOrderItemMeta) FindByOrderItemId(_find_by_OrderItemId int64) ([]WooOrderItemMeta, error) {
+func (o *WooOrderItemMeta) FindByOrderItemId(_find_by_OrderItemId int64) ([]*WooOrderItemMeta, error) {
 
-	var model_slice []WooOrderItemMeta
+	var model_slice []*WooOrderItemMeta
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "order_item_id", _find_by_OrderItemId)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -6554,7 +6650,7 @@ func (o *WooOrderItemMeta) FindByOrderItemId(_find_by_OrderItemId int64) ([]WooO
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -6564,9 +6660,9 @@ func (o *WooOrderItemMeta) FindByOrderItemId(_find_by_OrderItemId int64) ([]WooO
 	return model_slice, nil
 
 }
-func (o *WooOrderItemMeta) FindByMetaKey(_find_by_MetaKey string) ([]WooOrderItemMeta, error) {
+func (o *WooOrderItemMeta) FindByMetaKey(_find_by_MetaKey string) ([]*WooOrderItemMeta, error) {
 
-	var model_slice []WooOrderItemMeta
+	var model_slice []*WooOrderItemMeta
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "meta_key", _find_by_MetaKey)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -6579,7 +6675,7 @@ func (o *WooOrderItemMeta) FindByMetaKey(_find_by_MetaKey string) ([]WooOrderIte
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -6589,9 +6685,9 @@ func (o *WooOrderItemMeta) FindByMetaKey(_find_by_MetaKey string) ([]WooOrderIte
 	return model_slice, nil
 
 }
-func (o *WooOrderItemMeta) FindByMetaValue(_find_by_MetaValue string) ([]WooOrderItemMeta, error) {
+func (o *WooOrderItemMeta) FindByMetaValue(_find_by_MetaValue string) ([]*WooOrderItemMeta, error) {
 
-	var model_slice []WooOrderItemMeta
+	var model_slice []*WooOrderItemMeta
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "meta_value", _find_by_MetaValue)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -6604,7 +6700,7 @@ func (o *WooOrderItemMeta) FindByMetaValue(_find_by_MetaValue string) ([]WooOrde
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -6767,7 +6863,7 @@ func (m *WooOrderItem) SetOrderId(arg int64) {
 
 func (o *WooOrderItem) Find(_find_by_OrderItemId int64) (bool, error) {
 
-	var model_slice []WooOrderItem
+	var model_slice []*WooOrderItem
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "order_item_id", _find_by_OrderItemId)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -6780,20 +6876,20 @@ func (o *WooOrderItem) Find(_find_by_OrderItemId int64) (bool, error) {
 		if err != nil {
 			return false, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
 		// there was an error!
 		return false, errors.New("not found")
 	}
-	o.FromWooOrderItem(&model_slice[0])
+	o.FromWooOrderItem(model_slice[0])
 	return true, nil
 
 }
-func (o *WooOrderItem) FindByOrderItemName(_find_by_OrderItemName string) ([]WooOrderItem, error) {
+func (o *WooOrderItem) FindByOrderItemName(_find_by_OrderItemName string) ([]*WooOrderItem, error) {
 
-	var model_slice []WooOrderItem
+	var model_slice []*WooOrderItem
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "order_item_name", _find_by_OrderItemName)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -6806,7 +6902,7 @@ func (o *WooOrderItem) FindByOrderItemName(_find_by_OrderItemName string) ([]Woo
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -6816,9 +6912,9 @@ func (o *WooOrderItem) FindByOrderItemName(_find_by_OrderItemName string) ([]Woo
 	return model_slice, nil
 
 }
-func (o *WooOrderItem) FindByOrderItemType(_find_by_OrderItemType string) ([]WooOrderItem, error) {
+func (o *WooOrderItem) FindByOrderItemType(_find_by_OrderItemType string) ([]*WooOrderItem, error) {
 
-	var model_slice []WooOrderItem
+	var model_slice []*WooOrderItem
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "order_item_type", _find_by_OrderItemType)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -6831,7 +6927,7 @@ func (o *WooOrderItem) FindByOrderItemType(_find_by_OrderItemType string) ([]Woo
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -6841,9 +6937,9 @@ func (o *WooOrderItem) FindByOrderItemType(_find_by_OrderItemType string) ([]Woo
 	return model_slice, nil
 
 }
-func (o *WooOrderItem) FindByOrderId(_find_by_OrderId int64) ([]WooOrderItem, error) {
+func (o *WooOrderItem) FindByOrderId(_find_by_OrderId int64) ([]*WooOrderItem, error) {
 
-	var model_slice []WooOrderItem
+	var model_slice []*WooOrderItem
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "order_id", _find_by_OrderId)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -6856,7 +6952,7 @@ func (o *WooOrderItem) FindByOrderId(_find_by_OrderId int64) ([]WooOrderItem, er
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -7019,7 +7115,7 @@ func (m *WooTaxRateLocation) SetLocationType(arg string) {
 
 func (o *WooTaxRateLocation) Find(_find_by_LocationId int64) (bool, error) {
 
-	var model_slice []WooTaxRateLocation
+	var model_slice []*WooTaxRateLocation
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "location_id", _find_by_LocationId)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -7032,20 +7128,20 @@ func (o *WooTaxRateLocation) Find(_find_by_LocationId int64) (bool, error) {
 		if err != nil {
 			return false, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
 		// there was an error!
 		return false, errors.New("not found")
 	}
-	o.FromWooTaxRateLocation(&model_slice[0])
+	o.FromWooTaxRateLocation(model_slice[0])
 	return true, nil
 
 }
-func (o *WooTaxRateLocation) FindByLocationCode(_find_by_LocationCode string) ([]WooTaxRateLocation, error) {
+func (o *WooTaxRateLocation) FindByLocationCode(_find_by_LocationCode string) ([]*WooTaxRateLocation, error) {
 
-	var model_slice []WooTaxRateLocation
+	var model_slice []*WooTaxRateLocation
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "location_code", _find_by_LocationCode)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -7058,7 +7154,7 @@ func (o *WooTaxRateLocation) FindByLocationCode(_find_by_LocationCode string) ([
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -7068,9 +7164,9 @@ func (o *WooTaxRateLocation) FindByLocationCode(_find_by_LocationCode string) ([
 	return model_slice, nil
 
 }
-func (o *WooTaxRateLocation) FindByTaxRateId(_find_by_TaxRateId int64) ([]WooTaxRateLocation, error) {
+func (o *WooTaxRateLocation) FindByTaxRateId(_find_by_TaxRateId int64) ([]*WooTaxRateLocation, error) {
 
-	var model_slice []WooTaxRateLocation
+	var model_slice []*WooTaxRateLocation
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "tax_rate_id", _find_by_TaxRateId)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -7083,7 +7179,7 @@ func (o *WooTaxRateLocation) FindByTaxRateId(_find_by_TaxRateId int64) ([]WooTax
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -7093,9 +7189,9 @@ func (o *WooTaxRateLocation) FindByTaxRateId(_find_by_TaxRateId int64) ([]WooTax
 	return model_slice, nil
 
 }
-func (o *WooTaxRateLocation) FindByLocationType(_find_by_LocationType string) ([]WooTaxRateLocation, error) {
+func (o *WooTaxRateLocation) FindByLocationType(_find_by_LocationType string) ([]*WooTaxRateLocation, error) {
 
-	var model_slice []WooTaxRateLocation
+	var model_slice []*WooTaxRateLocation
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "location_type", _find_by_LocationType)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -7108,7 +7204,7 @@ func (o *WooTaxRateLocation) FindByLocationType(_find_by_LocationType string) ([
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -7331,7 +7427,7 @@ func (m *WooTaxRate) SetTaxRateClass(arg string) {
 
 func (o *WooTaxRate) Find(_find_by_TaxRateId int64) (bool, error) {
 
-	var model_slice []WooTaxRate
+	var model_slice []*WooTaxRate
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "tax_rate_id", _find_by_TaxRateId)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -7344,20 +7440,20 @@ func (o *WooTaxRate) Find(_find_by_TaxRateId int64) (bool, error) {
 		if err != nil {
 			return false, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
 		// there was an error!
 		return false, errors.New("not found")
 	}
-	o.FromWooTaxRate(&model_slice[0])
+	o.FromWooTaxRate(model_slice[0])
 	return true, nil
 
 }
-func (o *WooTaxRate) FindByTaxRateCountry(_find_by_TaxRateCountry string) ([]WooTaxRate, error) {
+func (o *WooTaxRate) FindByTaxRateCountry(_find_by_TaxRateCountry string) ([]*WooTaxRate, error) {
 
-	var model_slice []WooTaxRate
+	var model_slice []*WooTaxRate
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "tax_rate_country", _find_by_TaxRateCountry)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -7370,7 +7466,7 @@ func (o *WooTaxRate) FindByTaxRateCountry(_find_by_TaxRateCountry string) ([]Woo
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -7380,9 +7476,9 @@ func (o *WooTaxRate) FindByTaxRateCountry(_find_by_TaxRateCountry string) ([]Woo
 	return model_slice, nil
 
 }
-func (o *WooTaxRate) FindByTaxRateState(_find_by_TaxRateState string) ([]WooTaxRate, error) {
+func (o *WooTaxRate) FindByTaxRateState(_find_by_TaxRateState string) ([]*WooTaxRate, error) {
 
-	var model_slice []WooTaxRate
+	var model_slice []*WooTaxRate
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "tax_rate_state", _find_by_TaxRateState)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -7395,7 +7491,7 @@ func (o *WooTaxRate) FindByTaxRateState(_find_by_TaxRateState string) ([]WooTaxR
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -7405,9 +7501,9 @@ func (o *WooTaxRate) FindByTaxRateState(_find_by_TaxRateState string) ([]WooTaxR
 	return model_slice, nil
 
 }
-func (o *WooTaxRate) FindByTaxRate(_find_by_TaxRate string) ([]WooTaxRate, error) {
+func (o *WooTaxRate) FindByTaxRate(_find_by_TaxRate string) ([]*WooTaxRate, error) {
 
-	var model_slice []WooTaxRate
+	var model_slice []*WooTaxRate
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "tax_rate", _find_by_TaxRate)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -7420,7 +7516,7 @@ func (o *WooTaxRate) FindByTaxRate(_find_by_TaxRate string) ([]WooTaxRate, error
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -7430,9 +7526,9 @@ func (o *WooTaxRate) FindByTaxRate(_find_by_TaxRate string) ([]WooTaxRate, error
 	return model_slice, nil
 
 }
-func (o *WooTaxRate) FindByTaxRateName(_find_by_TaxRateName string) ([]WooTaxRate, error) {
+func (o *WooTaxRate) FindByTaxRateName(_find_by_TaxRateName string) ([]*WooTaxRate, error) {
 
-	var model_slice []WooTaxRate
+	var model_slice []*WooTaxRate
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "tax_rate_name", _find_by_TaxRateName)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -7445,7 +7541,7 @@ func (o *WooTaxRate) FindByTaxRateName(_find_by_TaxRateName string) ([]WooTaxRat
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -7455,9 +7551,9 @@ func (o *WooTaxRate) FindByTaxRateName(_find_by_TaxRateName string) ([]WooTaxRat
 	return model_slice, nil
 
 }
-func (o *WooTaxRate) FindByTaxRatePriority(_find_by_TaxRatePriority int64) ([]WooTaxRate, error) {
+func (o *WooTaxRate) FindByTaxRatePriority(_find_by_TaxRatePriority int64) ([]*WooTaxRate, error) {
 
-	var model_slice []WooTaxRate
+	var model_slice []*WooTaxRate
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "tax_rate_priority", _find_by_TaxRatePriority)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -7470,7 +7566,7 @@ func (o *WooTaxRate) FindByTaxRatePriority(_find_by_TaxRatePriority int64) ([]Wo
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -7480,9 +7576,9 @@ func (o *WooTaxRate) FindByTaxRatePriority(_find_by_TaxRatePriority int64) ([]Wo
 	return model_slice, nil
 
 }
-func (o *WooTaxRate) FindByTaxRateCompound(_find_by_TaxRateCompound int) ([]WooTaxRate, error) {
+func (o *WooTaxRate) FindByTaxRateCompound(_find_by_TaxRateCompound int) ([]*WooTaxRate, error) {
 
-	var model_slice []WooTaxRate
+	var model_slice []*WooTaxRate
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "tax_rate_compound", _find_by_TaxRateCompound)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -7495,7 +7591,7 @@ func (o *WooTaxRate) FindByTaxRateCompound(_find_by_TaxRateCompound int) ([]WooT
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -7505,9 +7601,9 @@ func (o *WooTaxRate) FindByTaxRateCompound(_find_by_TaxRateCompound int) ([]WooT
 	return model_slice, nil
 
 }
-func (o *WooTaxRate) FindByTaxRateShipping(_find_by_TaxRateShipping int) ([]WooTaxRate, error) {
+func (o *WooTaxRate) FindByTaxRateShipping(_find_by_TaxRateShipping int) ([]*WooTaxRate, error) {
 
-	var model_slice []WooTaxRate
+	var model_slice []*WooTaxRate
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "tax_rate_shipping", _find_by_TaxRateShipping)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -7520,7 +7616,7 @@ func (o *WooTaxRate) FindByTaxRateShipping(_find_by_TaxRateShipping int) ([]WooT
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -7530,9 +7626,9 @@ func (o *WooTaxRate) FindByTaxRateShipping(_find_by_TaxRateShipping int) ([]WooT
 	return model_slice, nil
 
 }
-func (o *WooTaxRate) FindByTaxRateOrder(_find_by_TaxRateOrder int64) ([]WooTaxRate, error) {
+func (o *WooTaxRate) FindByTaxRateOrder(_find_by_TaxRateOrder int64) ([]*WooTaxRate, error) {
 
-	var model_slice []WooTaxRate
+	var model_slice []*WooTaxRate
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "tax_rate_order", _find_by_TaxRateOrder)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -7545,7 +7641,7 @@ func (o *WooTaxRate) FindByTaxRateOrder(_find_by_TaxRateOrder int64) ([]WooTaxRa
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {
@@ -7555,9 +7651,9 @@ func (o *WooTaxRate) FindByTaxRateOrder(_find_by_TaxRateOrder int64) ([]WooTaxRa
 	return model_slice, nil
 
 }
-func (o *WooTaxRate) FindByTaxRateClass(_find_by_TaxRateClass string) ([]WooTaxRate, error) {
+func (o *WooTaxRate) FindByTaxRateClass(_find_by_TaxRateClass string) ([]*WooTaxRate, error) {
 
-	var model_slice []WooTaxRate
+	var model_slice []*WooTaxRate
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "tax_rate_class", _find_by_TaxRateClass)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -7570,7 +7666,7 @@ func (o *WooTaxRate) FindByTaxRateClass(_find_by_TaxRateClass string) ([]WooTaxR
 		if err != nil {
 			return model_slice, err
 		}
-		model_slice = append(model_slice, ro)
+		model_slice = append(model_slice, &ro)
 	}
 
 	if len(model_slice) == 0 {

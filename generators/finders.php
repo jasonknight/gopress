@@ -12,7 +12,7 @@ foreach($t->fields as $f) {
         $fname = "Find";
         $rtype = "bool"; //i.e. we set the current model
     } else {
-        $rtype = "[]{$t->model_name}";
+        $rtype = "[]*{$t->model_name}";
     }
     $scol = $f->Field;
     // these are here just to save having to loop
@@ -33,7 +33,7 @@ foreach($t->fields as $f) {
     }
     $sig = "func (o *{$t->model_name}) $fname($arg $argtype) ($rtype,error) {";
 $body = "
-    var model_slice []{$t->model_name}
+    var model_slice []*{$t->model_name}
     q := fmt.Sprintf(\"SELECT * FROM %s WHERE `%s` = '$fmt_type'\",o._table, \"{$f->Field}\", $arg)
     results, err := o._adapter.Query(q)
     if err != nil {
@@ -46,7 +46,7 @@ $body = "
         if err != nil {
             $failure_return
         }
-        model_slice = append(model_slice,ro)
+        model_slice = append(model_slice,&ro)
     }
 ";
 if ( $fname == "Find" ) {
@@ -56,7 +56,7 @@ if ( $fname == "Find" ) {
         // there was an error!
         return false, errors.New(\"not found\")
     }
-    o.From{$t->model_name}(&model_slice[0])
+    o.From{$t->model_name}(model_slice[0])
     return true,nil
 ";
 } else {
