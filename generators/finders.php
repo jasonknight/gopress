@@ -2,6 +2,7 @@
 $from_map_body = "";
 $from_model_body = "";
 foreach($t->fields as $f) {
+
     $fname = convertFieldName($f->Field);
     $field_name = convertFieldName($f->Field);
     $fname = "FindBy{$fname}";
@@ -9,8 +10,17 @@ foreach($t->fields as $f) {
     $argtype = $f->go_type;
     $fmt_type = mysqlToFmtType($f->Type);
     if (isPrimaryKey($f)) {
+
         $fname = "Find";
         $rtype = "bool"; //i.e. we set the current model
+        if ($t->model_name == "TermRelationship") {
+            $from_map_body .= "\t_" . $f->model_field_name . ",err := m[\"{$f->Field}\"].As" . ucfirst($f->go_type). "()\n";
+            $from_map_body .= "\tif err != nil {\n \t\treturn o._adapter.Oops(fmt.Sprintf(`%s`,err))\n\t}\n";
+            $from_map_body .= "\to." . $f->model_field_name . " = _" . $f->model_field_name . "\n";
+    
+            include "term_relationship_finder.php";
+            continue;
+        }
     } else {
         $rtype = "[]*{$t->model_name}";
     }
@@ -23,11 +33,11 @@ foreach($t->fields as $f) {
     }
     $from_model_body .= "\to.{$f->model_field_name} = m.{$f->model_field_name}\n";
     
-    $from_map_body .= "\tif err != nil {\n \t\treturn err\n\t}\n";
+    $from_map_body .= "\tif err != nil {\n \t\treturn o._adapter.Oops(fmt.Sprintf(`%s`,err))\n\t}\n";
     $from_map_body .= "\to." . $f->model_field_name . " = _" . $f->model_field_name . "\n";
     
     if ( $fname == "Find" ) {
-        $failure_return = "return false,err";
+        $failure_return = "return false,o._adapter.Oops(fmt.Sprintf(`%s`,err))";
     } else {
         $failure_return = "return model_slice,err";
     }
@@ -54,7 +64,7 @@ if ( $fname == "Find" ) {
     $body .= "
     if len(model_slice) == 0 {
         // there was an error!
-        return false, errors.New(\"not found\")
+        return false, o._adapter.Oops(`not found`)
     }
     o.From{$t->model_name}(model_slice[0])
     return true,nil
@@ -63,7 +73,7 @@ if ( $fname == "Find" ) {
     $body .= "
     if len(model_slice) == 0 {
         // there was an error!
-        return nil, errors.New(\"no results\")
+        return nil, o._adapter.Oops(`no results`)
     }
     return model_slice,nil
 ";

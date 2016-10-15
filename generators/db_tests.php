@@ -23,7 +23,7 @@ function randomInt() {
 }
 }
 foreach ($t->fields as $f) {
-    if ( isPrimaryKey($f)) {
+    if ( isPrimaryKey($f) && $t->model_name != "TermRelationship") {
         // skip primary key
         continue;
     }
@@ -31,13 +31,28 @@ foreach ($t->fields as $f) {
     $dbname = $f->Field;
     $gotype = $f->go_type;
     if ( $gotype == "string") {
-        $tval = randomString();
+        preg_match("/varchar\((\d+)\)/",$f->Type,$m);
+        if (!empty($m)) {
+            $m[1] = intval($m[1]);
+            if ( $m[1] > 20 ) {
+                $m[1] = 20;
+            }
+            $m[1] -= 1;
+            $tval = "randomString({$m[1]})";
+        } else {
+            $tval = "randomString(25)";
+        }
+        
     } else if (preg_match("/^int/",$gotype) ) {
-        $tval = randomInt();
+        if ($gotype == "int64") {
+            $tval = "int64(randomInteger())";
+        } else {
+            $tval = "randomInteger()";
+        }
     } else if (preg_match("/^float/",$gotype) ) {
-        $tval = randomInt() / 3.14;
-    } else if ( $gotype == "DateTime") {
-        $tval = "2016-10-11 03:05:21.4Z";
+        $tval = "randomFloat()";
+    } else if ( $gotype == "*DateTime") {
+        $tval = "randomDateTime(a)";
     }
     $fields[] = array(
         'type' => $gotype,
@@ -55,26 +70,21 @@ func Test{$t->model_name}Create(t *testing.T) {
         $fail(`could not load $cnf %s`,err)
         return
     }
+    file, err := os.OpenFile(\"adapter.log\", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+    if err != nil {
+        $fail(\"Failed to open log file %s\", err)
+    }
+    a.SetLogs(file)
     model := New{$t->model_name}(a)
 ";
 $i = 0;
 foreach ($fields as $f) {
-    if ($f['type'] == '*DateTime') {
-        $txt .= "
-    d{$i} := NewDateTime()
-    d{$i}.FromString(`{$f['value']}`)
-    model.{$f['name']} = d{$i}
-        ";
-    } else if ($f['type'] == 'string') {
-        $txt .= "
-    model.{$f['name']} = `{$f['value']}`
-        ";
-    } else {
-        $txt .= "
-    model.{$f['name']} = {$f['value']}
-        ";        
-    }
+    $txt .= "model.{$f['name']} = {$f['value']}\n";
     $i++;
+}
+$find_line = "model2.Find(model.GetPrimaryKeyValue())";
+if ($t->model_name == "TermRelationship") {
+    $find_line = "model2.Find(model.GetTermTaxonomyId(),model.GetObjectId())";
 }
 $txt .= "
     i,err := model.Create()
@@ -87,7 +97,7 @@ $txt .= "
         return
     }
     model2 := New{$t->model_name}(a)
-    found,err := model2.Find(model.GetPrimaryKeyValue())
+    found,err := $find_line
     if err != nil {
         $fail(`did not find record for %s = {$t->pfield->mysql_fmt_type} because of %s`,model.GetPrimaryKeyName(),model.GetPrimaryKeyValue(),err)
         return
@@ -108,7 +118,7 @@ foreach ($fields as $f) {
         model.{$f['name']}.Hours != model2.{$f['name']}.Hours ||
         model.{$f['name']}.Minutes != model2.{$f['name']}.Minutes ||
         model.{$f['name']}.Seconds != model2.{$f['name']}.Seconds ) {
-        $fail(`model.{$f['name']} != model2.{$f['name']}`)
+        $fail(`model.{$f['name']} != model2.{$f['name']} %+v --- %+v`,model.{$f['name']},model2.{$f['name']})
         return
     }
 ";

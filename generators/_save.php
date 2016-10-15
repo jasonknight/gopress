@@ -13,7 +13,12 @@ function _save_create($t) {
             $pkeyname =  maybeLC(convertFieldName($tf->Field));
             continue;
         }
-        $go_fnames[$i] = maybeLC(convertFieldName($tf->Field));
+        if ($tf->go_type == "*DateTime") {
+             $go_fnames[$i] = maybeLC(convertFieldName($tf->Field)) . ".ToString()";
+        } else {
+             $go_fnames[$i] = maybeLC(convertFieldName($tf->Field));
+        }
+       
         $mysql_fnames[$i] = $tf->Field;
         $fmts[$i] = mysqlToFmtType($tf->Type);
         $i++;
@@ -56,9 +61,9 @@ func (o *{$t->model_name}) Create() (int64,error) {
     frmt := fmt.Sprintf(\"INSERT INTO %s ($cr_col_line) VALUES ($cr_val_line)\",o._table,$cr_gn_line)
     err := o._adapter.Execute(frmt)
     if err != nil {
-        return 0,errors.New(fmt.Sprintf(`%s led to %s`,frmt,err))
+        return 0,o._adapter.Oops(fmt.Sprintf(`%s led to %s`,frmt,err))
     }
-    o.Set{$t->pfield->model_field_name}(o._adapter.LastInsertedId())
+    o.{$t->pfield->model_field_name} = o._adapter.LastInsertedId()
 
     return o._adapter.AffectedRows(),nil
 }

@@ -206,9 +206,12 @@ puts('import (
     "regexp"
     "errors"
     "os"
+    "io"
     "io/ioutil"
     "bufio"
+    "log"
 )
+
 ');
 
 include "generic_bits.php";
@@ -274,7 +277,42 @@ puts("package gopress
 import (
     \"testing\"
     \"strconv\"
+    \"math/rand\"
+    \"os\"
+    \"time\"
 )
+var letters = []rune(\"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\")
+
+func randomString(n int) string {
+    rand.Seed(time.Now().UnixNano())
+    b := make([]rune, n)
+    for i := range b {
+        b[i] = letters[rand.Intn(len(letters))]
+    }
+    return string(b)
+}
+func randomInteger() int {
+    rand.Seed(time.Now().UnixNano())
+    return rand.Intn(10000)
+}
+func randomFloat() float32 {
+    rand.Seed(time.Now().UnixNano())
+    return rand.Float32() * 100
+}
+func randomDateTime(a Adapter) *DateTime {
+    rand.Seed(time.Now().UnixNano())
+    d := NewDateTime(a)
+    d.Year = rand.Intn(2017)
+    d.Month = rand.Intn(11)
+    d.Day = rand.Intn(28)
+    d.Hours = rand.Intn(23)
+    d.Minutes = rand.Intn(59)
+    d.Seconds = rand.Intn(56)
+    if d.Year < 1000 {
+        d.Year = d.Year + 1000
+    }
+    return d
+}
 ");
 $seen = array();
 foreach ($tables as $t) {
