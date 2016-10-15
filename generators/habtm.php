@@ -46,19 +46,49 @@ func (o *{$bt->model_name}) Load{$bt->model}() ({$bt->go_type},error) {
 
     foreach ($t->has_many as $hm) {
 $txt .= "
-    func (o *{$t->model_name}) Load{$hm->name}() ({$hm->type},error) {
-        if o.Is{$hm->name}Loaded == true {
-            return o.{$hm->name},nil
-        }
-        var finder {$hm->model_name}
-        results, err := finder.FindBy{$hm->model_field_name}(o.{$t->pfield->model_field_name})
-        if err != nil {
-            return nil,err
-        }
-        o.Is{$hm->name}Loaded = true
-        o.{$hm->name} = results
-        return results,nil
+func (o *{$t->model_name}) Load{$hm->name}() ({$hm->type},error) {
+    if o.Is{$hm->name}Loaded == true {
+        return o.{$hm->name},nil
     }
+    var finder {$hm->model_name}
+    results, err := finder.FindBy{$hm->model_field_name}(o.{$t->pfield->model_field_name})
+    if err != nil {
+        return nil,err
+    }
+    o.Is{$hm->name}Loaded = true
+    o.{$hm->name} = results
+    return results,nil
+}
+";
+    }
+    if (!empty($t->has_many) || !empty($t->belongs_to) ) {
+        $txt .= "
+func (o *{$t->model_name}) SaveRelations() (error) {
+";
+    $i = 0;
+        foreach ($t->has_many as $hm) {
+$txt .= "
+        for _,m := range o.{$hm->name} {
+            _,err :=  m.Save()
+            if err != nil {
+                return errors.New(fmt.Sprintf(`while saving relation {$hm->name} %s`,err))
+            }
+        }
+";
+            $i++;
+        }
+        foreach ($t->belongs_to as $bt) {
+$txt .= "
+        _,err :=  o.{$bt->model}.Save()
+        if err != nil {
+            return errors.New(fmt.Sprintf(`while saving relation {$bt->model} %s`,err))
+        }
+";
+            $i++;
+        }
+$txt .= "
+    return nil
+}
 ";
     }
     return $txt;
