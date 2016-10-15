@@ -346,6 +346,9 @@ func (d *DateTime) FromString(s string) error {
 func (d *DateTime) ToString() string {
     return fmt.Sprintf(\"%d-%02d-%02d %02d:%02d:%02d\",d.Year,d.Month,d.Day,d.Hours,d.Minutes,d.Seconds)
 }
+func (d *DateTime) String() string {
+    return d.ToString()
+}
 func NewDateTime(a Adapter) *DateTime {
     d := &DateTime{_adapter: a}
     return d
