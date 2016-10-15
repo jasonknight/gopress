@@ -75,7 +75,16 @@ $txt .= "
     }
 
 ";
-
+$i = 0;
+foreach ($fields as $f) {
+   $txt .= "
+    if model.{$f['name']} != model2.{$f['name']} {
+        $fail(`model.{$f['name']} != model2.{$f['name']}`)
+        return
+    }
+";
+    $i++;
+}
 $txt .= "} // end of if fileExists
 };\n";
 

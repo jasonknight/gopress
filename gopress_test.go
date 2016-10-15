@@ -83,6 +83,20 @@ func TestCommentMetaCreate(t *testing.T) {
 			return
 		}
 
+		if model.CommentId != model2.CommentId {
+			t.Errorf(`model.CommentId != model2.CommentId`)
+			return
+		}
+
+		if model.MetaKey != model2.MetaKey {
+			t.Errorf(`model.MetaKey != model2.MetaKey`)
+			return
+		}
+
+		if model.MetaValue != model2.MetaValue {
+			t.Errorf(`model.MetaValue != model2.MetaValue`)
+			return
+		}
 	} // end of if fileExists
 }
 
@@ -295,6 +309,75 @@ func TestCommentCreate(t *testing.T) {
 			return
 		}
 
+		if model.CommentPostID != model2.CommentPostID {
+			t.Errorf(`model.CommentPostID != model2.CommentPostID`)
+			return
+		}
+
+		if model.CommentAuthor != model2.CommentAuthor {
+			t.Errorf(`model.CommentAuthor != model2.CommentAuthor`)
+			return
+		}
+
+		if model.CommentAuthorEmail != model2.CommentAuthorEmail {
+			t.Errorf(`model.CommentAuthorEmail != model2.CommentAuthorEmail`)
+			return
+		}
+
+		if model.CommentAuthorUrl != model2.CommentAuthorUrl {
+			t.Errorf(`model.CommentAuthorUrl != model2.CommentAuthorUrl`)
+			return
+		}
+
+		if model.CommentAuthorIP != model2.CommentAuthorIP {
+			t.Errorf(`model.CommentAuthorIP != model2.CommentAuthorIP`)
+			return
+		}
+
+		if model.CommentDate != model2.CommentDate {
+			t.Errorf(`model.CommentDate != model2.CommentDate`)
+			return
+		}
+
+		if model.CommentDateGmt != model2.CommentDateGmt {
+			t.Errorf(`model.CommentDateGmt != model2.CommentDateGmt`)
+			return
+		}
+
+		if model.CommentContent != model2.CommentContent {
+			t.Errorf(`model.CommentContent != model2.CommentContent`)
+			return
+		}
+
+		if model.CommentKarma != model2.CommentKarma {
+			t.Errorf(`model.CommentKarma != model2.CommentKarma`)
+			return
+		}
+
+		if model.CommentApproved != model2.CommentApproved {
+			t.Errorf(`model.CommentApproved != model2.CommentApproved`)
+			return
+		}
+
+		if model.CommentAgent != model2.CommentAgent {
+			t.Errorf(`model.CommentAgent != model2.CommentAgent`)
+			return
+		}
+
+		if model.CommentType != model2.CommentType {
+			t.Errorf(`model.CommentType != model2.CommentType`)
+			return
+		}
+
+		if model.CommentParent != model2.CommentParent {
+			t.Errorf(`model.CommentParent != model2.CommentParent`)
+			return
+		}
+
+		if model.UserId != model2.UserId {
+			t.Errorf(`model.UserId != model2.UserId`)
+			return
+		}
 	} // end of if fileExists
 }
 
@@ -473,6 +556,65 @@ func TestLinkCreate(t *testing.T) {
 			return
 		}
 
+		if model.LinkUrl != model2.LinkUrl {
+			t.Errorf(`model.LinkUrl != model2.LinkUrl`)
+			return
+		}
+
+		if model.LinkName != model2.LinkName {
+			t.Errorf(`model.LinkName != model2.LinkName`)
+			return
+		}
+
+		if model.LinkImage != model2.LinkImage {
+			t.Errorf(`model.LinkImage != model2.LinkImage`)
+			return
+		}
+
+		if model.LinkTarget != model2.LinkTarget {
+			t.Errorf(`model.LinkTarget != model2.LinkTarget`)
+			return
+		}
+
+		if model.LinkDescription != model2.LinkDescription {
+			t.Errorf(`model.LinkDescription != model2.LinkDescription`)
+			return
+		}
+
+		if model.LinkVisible != model2.LinkVisible {
+			t.Errorf(`model.LinkVisible != model2.LinkVisible`)
+			return
+		}
+
+		if model.LinkOwner != model2.LinkOwner {
+			t.Errorf(`model.LinkOwner != model2.LinkOwner`)
+			return
+		}
+
+		if model.LinkRating != model2.LinkRating {
+			t.Errorf(`model.LinkRating != model2.LinkRating`)
+			return
+		}
+
+		if model.LinkUpdated != model2.LinkUpdated {
+			t.Errorf(`model.LinkUpdated != model2.LinkUpdated`)
+			return
+		}
+
+		if model.LinkRel != model2.LinkRel {
+			t.Errorf(`model.LinkRel != model2.LinkRel`)
+			return
+		}
+
+		if model.LinkNotes != model2.LinkNotes {
+			t.Errorf(`model.LinkNotes != model2.LinkNotes`)
+			return
+		}
+
+		if model.LinkRss != model2.LinkRss {
+			t.Errorf(`model.LinkRss != model2.LinkRss`)
+			return
+		}
 	} // end of if fileExists
 }
 
@@ -554,6 +696,20 @@ func TestOptionCreate(t *testing.T) {
 			return
 		}
 
+		if model.OptionName != model2.OptionName {
+			t.Errorf(`model.OptionName != model2.OptionName`)
+			return
+		}
+
+		if model.OptionValue != model2.OptionValue {
+			t.Errorf(`model.OptionValue != model2.OptionValue`)
+			return
+		}
+
+		if model.Autoload != model2.Autoload {
+			t.Errorf(`model.Autoload != model2.Autoload`)
+			return
+		}
 	} // end of if fileExists
 }
 
@@ -635,6 +791,20 @@ func TestPostMetaCreate(t *testing.T) {
 			return
 		}
 
+		if model.PostId != model2.PostId {
+			t.Errorf(`model.PostId != model2.PostId`)
+			return
+		}
+
+		if model.MetaKey != model2.MetaKey {
+			t.Errorf(`model.MetaKey != model2.MetaKey`)
+			return
+		}
+
+		if model.MetaValue != model2.MetaValue {
+			t.Errorf(`model.MetaValue != model2.MetaValue`)
+			return
+		}
 	} // end of if fileExists
 }
 
@@ -951,6 +1121,115 @@ func TestPostCreate(t *testing.T) {
 			return
 		}
 
+		if model.PostAuthor != model2.PostAuthor {
+			t.Errorf(`model.PostAuthor != model2.PostAuthor`)
+			return
+		}
+
+		if model.PostDate != model2.PostDate {
+			t.Errorf(`model.PostDate != model2.PostDate`)
+			return
+		}
+
+		if model.PostDateGmt != model2.PostDateGmt {
+			t.Errorf(`model.PostDateGmt != model2.PostDateGmt`)
+			return
+		}
+
+		if model.PostContent != model2.PostContent {
+			t.Errorf(`model.PostContent != model2.PostContent`)
+			return
+		}
+
+		if model.PostTitle != model2.PostTitle {
+			t.Errorf(`model.PostTitle != model2.PostTitle`)
+			return
+		}
+
+		if model.PostExcerpt != model2.PostExcerpt {
+			t.Errorf(`model.PostExcerpt != model2.PostExcerpt`)
+			return
+		}
+
+		if model.PostStatus != model2.PostStatus {
+			t.Errorf(`model.PostStatus != model2.PostStatus`)
+			return
+		}
+
+		if model.CommentStatus != model2.CommentStatus {
+			t.Errorf(`model.CommentStatus != model2.CommentStatus`)
+			return
+		}
+
+		if model.PingStatus != model2.PingStatus {
+			t.Errorf(`model.PingStatus != model2.PingStatus`)
+			return
+		}
+
+		if model.PostPassword != model2.PostPassword {
+			t.Errorf(`model.PostPassword != model2.PostPassword`)
+			return
+		}
+
+		if model.PostName != model2.PostName {
+			t.Errorf(`model.PostName != model2.PostName`)
+			return
+		}
+
+		if model.ToPing != model2.ToPing {
+			t.Errorf(`model.ToPing != model2.ToPing`)
+			return
+		}
+
+		if model.Pinged != model2.Pinged {
+			t.Errorf(`model.Pinged != model2.Pinged`)
+			return
+		}
+
+		if model.PostModified != model2.PostModified {
+			t.Errorf(`model.PostModified != model2.PostModified`)
+			return
+		}
+
+		if model.PostModifiedGmt != model2.PostModifiedGmt {
+			t.Errorf(`model.PostModifiedGmt != model2.PostModifiedGmt`)
+			return
+		}
+
+		if model.PostContentFiltered != model2.PostContentFiltered {
+			t.Errorf(`model.PostContentFiltered != model2.PostContentFiltered`)
+			return
+		}
+
+		if model.PostParent != model2.PostParent {
+			t.Errorf(`model.PostParent != model2.PostParent`)
+			return
+		}
+
+		if model.Guid != model2.Guid {
+			t.Errorf(`model.Guid != model2.Guid`)
+			return
+		}
+
+		if model.MenuOrder != model2.MenuOrder {
+			t.Errorf(`model.MenuOrder != model2.MenuOrder`)
+			return
+		}
+
+		if model.PostType != model2.PostType {
+			t.Errorf(`model.PostType != model2.PostType`)
+			return
+		}
+
+		if model.PostMimeType != model2.PostMimeType {
+			t.Errorf(`model.PostMimeType != model2.PostMimeType`)
+			return
+		}
+
+		if model.CommentCount != model2.CommentCount {
+			t.Errorf(`model.CommentCount != model2.CommentCount`)
+			return
+		}
 	} // end of if fileExists
 }
 
@@ -1021,6 +1300,10 @@ func TestTermRelationshipCreate(t *testing.T) {
 			return
 		}
 
+		if model.TermOrder != model2.TermOrder {
+			t.Errorf(`model.TermOrder != model2.TermOrder`)
+			return
+		}
 	} // end of if fileExists
 }
 
@@ -1120,6 +1403,30 @@ func TestTermTaxonomyCreate(t *testing.T) {
 			return
 		}
 
+		if model.TermId != model2.TermId {
+			t.Errorf(`model.TermId != model2.TermId`)
+			return
+		}
+
+		if model.Taxonomy != model2.Taxonomy {
+			t.Errorf(`model.Taxonomy != model2.Taxonomy`)
+			return
+		}
+
+		if model.Description != model2.Description {
+			t.Errorf(`model.Description != model2.Description`)
+			return
+		}
+
+		if model.Parent != model2.Parent {
+			t.Errorf(`model.Parent != model2.Parent`)
+			return
+		}
+
+		if model.Count != model2.Count {
+			t.Errorf(`model.Count != model2.Count`)
+			return
+		}
 	} // end of if fileExists
 }
 
@@ -1201,6 +1508,20 @@ func TestTermCreate(t *testing.T) {
 			return
 		}
 
+		if model.Name != model2.Name {
+			t.Errorf(`model.Name != model2.Name`)
+			return
+		}
+
+		if model.Slug != model2.Slug {
+			t.Errorf(`model.Slug != model2.Slug`)
+			return
+		}
+
+		if model.TermGroup != model2.TermGroup {
+			t.Errorf(`model.TermGroup != model2.TermGroup`)
+			return
+		}
 	} // end of if fileExists
 }
 
@@ -1282,6 +1603,20 @@ func TestUserMetaCreate(t *testing.T) {
 			return
 		}
 
+		if model.UserId != model2.UserId {
+			t.Errorf(`model.UserId != model2.UserId`)
+			return
+		}
+
+		if model.MetaKey != model2.MetaKey {
+			t.Errorf(`model.MetaKey != model2.MetaKey`)
+			return
+		}
+
+		if model.MetaValue != model2.MetaValue {
+			t.Errorf(`model.MetaValue != model2.MetaValue`)
+			return
+		}
 	} // end of if fileExists
 }
 
@@ -1433,6 +1768,50 @@ func TestUserCreate(t *testing.T) {
 			return
 		}
 
+		if model.UserLogin != model2.UserLogin {
+			t.Errorf(`model.UserLogin != model2.UserLogin`)
+			return
+		}
+
+		if model.UserPass != model2.UserPass {
+			t.Errorf(`model.UserPass != model2.UserPass`)
+			return
+		}
+
+		if model.UserNicename != model2.UserNicename {
+			t.Errorf(`model.UserNicename != model2.UserNicename`)
+			return
+		}
+
+		if model.UserEmail != model2.UserEmail {
+			t.Errorf(`model.UserEmail != model2.UserEmail`)
+			return
+		}
+
+		if model.UserUrl != model2.UserUrl {
+			t.Errorf(`model.UserUrl != model2.UserUrl`)
+			return
+		}
+
+		if model.UserRegistered != model2.UserRegistered {
+			t.Errorf(`model.UserRegistered != model2.UserRegistered`)
+			return
+		}
+
+		if model.UserActivationKey != model2.UserActivationKey {
+			t.Errorf(`model.UserActivationKey != model2.UserActivationKey`)
+			return
+		}
+
+		if model.UserStatus != model2.UserStatus {
+			t.Errorf(`model.UserStatus != model2.UserStatus`)
+			return
+		}
+
+		if model.DisplayName != model2.DisplayName {
+			t.Errorf(`model.DisplayName != model2.DisplayName`)
+			return
+		}
 	} // end of if fileExists
 }
 
@@ -1523,6 +1902,25 @@ func TestWooAttrTaxonomieCreate(t *testing.T) {
 			return
 		}
 
+		if model.AttrName != model2.AttrName {
+			t.Errorf(`model.AttrName != model2.AttrName`)
+			return
+		}
+
+		if model.AttrLabel != model2.AttrLabel {
+			t.Errorf(`model.AttrLabel != model2.AttrLabel`)
+			return
+		}
+
+		if model.AttrType != model2.AttrType {
+			t.Errorf(`model.AttrType != model2.AttrType`)
+			return
+		}
+
+		if model.AttrOrderby != model2.AttrOrderby {
+			t.Errorf(`model.AttrOrderby != model2.AttrOrderby`)
+			return
+		}
 	} // end of if fileExists
 }
 
@@ -1699,6 +2097,55 @@ func TestWooDownloadableProductPermCreate(t *testing.T) {
 			return
 		}
 
+		if model.DownloadId != model2.DownloadId {
+			t.Errorf(`model.DownloadId != model2.DownloadId`)
+			return
+		}
+
+		if model.ProductId != model2.ProductId {
+			t.Errorf(`model.ProductId != model2.ProductId`)
+			return
+		}
+
+		if model.OrderId != model2.OrderId {
+			t.Errorf(`model.OrderId != model2.OrderId`)
+			return
+		}
+
+		if model.OrderKey != model2.OrderKey {
+			t.Errorf(`model.OrderKey != model2.OrderKey`)
+			return
+		}
+
+		if model.UserEmail != model2.UserEmail {
+			t.Errorf(`model.UserEmail != model2.UserEmail`)
+			return
+		}
+
+		if model.UserId != model2.UserId {
+			t.Errorf(`model.UserId != model2.UserId`)
+			return
+		}
+
+		if model.DownloadsRemaining != model2.DownloadsRemaining {
+			t.Errorf(`model.DownloadsRemaining != model2.DownloadsRemaining`)
+			return
+		}
+
+		if model.AccessGranted != model2.AccessGranted {
+			t.Errorf(`model.AccessGranted != model2.AccessGranted`)
+			return
+		}
+
+		if model.AccessExpires != model2.AccessExpires {
+			t.Errorf(`model.AccessExpires != model2.AccessExpires`)
+			return
+		}
+
+		if model.DownloadCount != model2.DownloadCount {
+			t.Errorf(`model.DownloadCount != model2.DownloadCount`)
+			return
+		}
 	} // end of if fileExists
 }
 
@@ -1780,6 +2227,20 @@ func TestWooOrderItemMetaCreate(t *testing.T) {
 			return
 		}
 
+		if model.OrderItemId != model2.OrderItemId {
+			t.Errorf(`model.OrderItemId != model2.OrderItemId`)
+			return
+		}
+
+		if model.MetaKey != model2.MetaKey {
+			t.Errorf(`model.MetaKey != model2.MetaKey`)
+			return
+		}
+
+		if model.MetaValue != model2.MetaValue {
+			t.Errorf(`model.MetaValue != model2.MetaValue`)
+			return
+		}
 	} // end of if fileExists
 }
 
@@ -1861,6 +2322,20 @@ func TestWooOrderItemCreate(t *testing.T) {
 			return
 		}
 
+		if model.OrderItemName != model2.OrderItemName {
+			t.Errorf(`model.OrderItemName != model2.OrderItemName`)
+			return
+		}
+
+		if model.OrderItemType != model2.OrderItemType {
+			t.Errorf(`model.OrderItemType != model2.OrderItemType`)
+			return
+		}
+
+		if model.OrderId != model2.OrderId {
+			t.Errorf(`model.OrderId != model2.OrderId`)
+			return
+		}
 	} // end of if fileExists
 }
 
@@ -1942,6 +2417,20 @@ func TestWooTaxRateLocationCreate(t *testing.T) {
 			return
 		}
 
+		if model.LocationCode != model2.LocationCode {
+			t.Errorf(`model.LocationCode != model2.LocationCode`)
+			return
+		}
+
+		if model.TaxRateId != model2.TaxRateId {
+			t.Errorf(`model.TaxRateId != model2.TaxRateId`)
+			return
+		}
+
+		if model.LocationType != model2.LocationType {
+			t.Errorf(`model.LocationType != model2.LocationType`)
+			return
+		}
 	} // end of if fileExists
 }
 
@@ -2077,6 +2566,50 @@ func TestWooTaxRateCreate(t *testing.T) {
 			return
 		}
 
+		if model.TaxRateCountry != model2.TaxRateCountry {
+			t.Errorf(`model.TaxRateCountry != model2.TaxRateCountry`)
+			return
+		}
+
+		if model.TaxRateState != model2.TaxRateState {
+			t.Errorf(`model.TaxRateState != model2.TaxRateState`)
+			return
+		}
+
+		if model.TaxRate != model2.TaxRate {
+			t.Errorf(`model.TaxRate != model2.TaxRate`)
+			return
+		}
+
+		if model.TaxRateName != model2.TaxRateName {
+			t.Errorf(`model.TaxRateName != model2.TaxRateName`)
+			return
+		}
+
+		if model.TaxRatePriority != model2.TaxRatePriority {
+			t.Errorf(`model.TaxRatePriority != model2.TaxRatePriority`)
+			return
+		}
+
+		if model.TaxRateCompound != model2.TaxRateCompound {
+			t.Errorf(`model.TaxRateCompound != model2.TaxRateCompound`)
+			return
+		}
+
+		if model.TaxRateShipping != model2.TaxRateShipping {
+			t.Errorf(`model.TaxRateShipping != model2.TaxRateShipping`)
+			return
+		}
+
+		if model.TaxRateOrder != model2.TaxRateOrder {
+			t.Errorf(`model.TaxRateOrder != model2.TaxRateOrder`)
+			return
+		}
+
+		if model.TaxRateClass != model2.TaxRateClass {
+			t.Errorf(`model.TaxRateClass != model2.TaxRateClass`)
+			return
+		}
 	} // end of if fileExists
 }
 
