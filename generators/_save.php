@@ -8,7 +8,7 @@ function _save_create($t) {
     $pkeyfmt = "";
     $pkeyname = "";
     foreach ( $t->fields as $tf) {
-        if (isPrimaryKey($tf)) {
+        if (isPrimaryKey($tf) && $t->model_name != "TermRelationship") {
             $pkeyfmt = mysqlToFmtType($tf->Type);
             $pkeyname =  maybeLC(convertFieldName($tf->Field));
             continue;
@@ -44,12 +44,23 @@ function _save_create($t) {
     $cr_gn_line = $up_gn_line;
     $cr_col_line = join(", ",$cr_cols);
     $cr_val_line = join(", ",$cr_vals);
+    if ( $t->model_name == "TermRelationship") {
+        $where = "`term_taxonomy_id` = '%d' AND object_id = '%d'";
+        $up_gn_line .= ",o.TermTaxonomyId, o.ObjectId";
+    } else {
+        $where = "%s = '$pkeyfmt'";
+        $up_gn_line .= ",o._pkey, o.$pkeyname";  
+    }
+    $set_primary_key_field = "o.{$t->pfield->model_field_name} = o._adapter.LastInsertedId()";
+    if ($t->model_name == "TermRelationship") {
+        $set_primary_key_field = "";
+    }
 $txt = "
 func (o *{$t->model_name}) Save() (int64,error) {
     if o._new == true {
         return o.Create()
     }
-    frmt := fmt.Sprintf(\"UPDATE %s SET $up_fmt_line WHERE %s = '$pkeyfmt' LIMIT 1\",o._table,$up_gn_line,o._pkey, o.$pkeyname)
+    frmt := fmt.Sprintf(\"UPDATE %s SET $up_fmt_line WHERE $where LIMIT 1\",o._table,$up_gn_line)
     err := o._adapter.Execute(frmt)
     if err != nil {
         return 0,err
@@ -63,7 +74,7 @@ func (o *{$t->model_name}) Create() (int64,error) {
     if err != nil {
         return 0,o._adapter.Oops(fmt.Sprintf(`%s led to %s`,frmt,err))
     }
-    o.{$t->pfield->model_field_name} = o._adapter.LastInsertedId()
+    $set_primary_key_field
 
     return o._adapter.AffectedRows(),nil
 }

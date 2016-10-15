@@ -83,27 +83,29 @@ foreach ($fields as $f) {
     $i++;
 }
 $find_line = "model2.Find(model.GetPrimaryKeyValue())";
+$find_fail_line = "$fail(`did not find record for %s = {$t->pfield->mysql_fmt_type} because of %s`,model.GetPrimaryKeyName(),model.GetPrimaryKeyValue(),err)";
 if ($t->model_name == "TermRelationship") {
-    $find_line = "model2.Find(model.GetTermTaxonomyId(),model.GetObjectId())";
+    $find_line = "model2.Find(model.TermTaxonomyId,model.ObjectId)\nif model.TermTaxonomyId == 0 {\n$fail(`it's 0`)\n} \n";
+    $find_fail_line = "$fail(`did not find record for term_taxonomy_id = %d AND object_id = %d because of %s`,model.TermTaxonomyId,model.ObjectId,err)";
 }
 $txt .= "
-    i,err := model.Create()
+    _,err = model.Create()
     if err != nil {
         $fail(`failed to create model %s`,err)
         return
     }
-    if i == 0 {
-        $fail(`zero affected rows`)
-        return
-    }
+    // if i == 0 {
+    //     $fail(`zero affected rows`)
+    //     return
+    // }
     model2 := New{$t->model_name}(a)
     found,err := $find_line
     if err != nil {
-        $fail(`did not find record for %s = {$t->pfield->mysql_fmt_type} because of %s`,model.GetPrimaryKeyName(),model.GetPrimaryKeyValue(),err)
+        $find_fail_line
         return
     }
     if found == false {
-        $fail(`did not find record for %s = {$t->pfield->mysql_fmt_type}`,model.GetPrimaryKeyName(),model.GetPrimaryKeyValue())
+        $find_fail_line
         return
     }
 
@@ -126,6 +128,37 @@ foreach ($fields as $f) {
    }
    $txt .= "
     if model.{$f['name']} != model2.{$f['name']} {
+        $fail(`model.{$f['name']}[{$f['fmt']}] != model2.{$f['name']}[{$f['fmt']}]`,model.{$f['name']},model2.{$f['name']})
+        return
+    }
+";
+    $i++;
+}
+foreach ($fields as $f) {
+    $txt .= "model2.Set{$f['name']}({$f['value']})\n";
+    $i++;
+}
+$txt .= "
+    _,err = model2.Save()
+    if err != nil {
+        $fail(`failed to save model2 %s`,err)
+    }
+    // if i{$i} < 1 {
+    //     $fail(`no rows affected!`)
+    // }
+";
+foreach ($fields as $f) {
+   if ( $f['type'] == "*DateTime") {
+   $txt .= "
+    if (model.{$f['name']}.Year == model2.{$f['name']}.Year) {
+        $fail(`model.{$f['name']}.Year == model2.{$f['name']} but should not!`,model.{$f['name']},model2.{$f['name']})
+        return
+    }
+";
+    continue;
+   }
+   $txt .= "
+    if model.{$f['name']} == model2.{$f['name']} {
         $fail(`model.{$f['name']}[{$f['fmt']}] != model2.{$f['name']}[{$f['fmt']}]`,model.{$f['name']},model2.{$f['name']})
         return
     }

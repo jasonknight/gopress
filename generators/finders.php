@@ -17,7 +17,7 @@ foreach($t->fields as $f) {
             $from_map_body .= "\t_" . $f->model_field_name . ",err := m[\"{$f->Field}\"].As" . ucfirst($f->go_type). "()\n";
             $from_map_body .= "\tif err != nil {\n \t\treturn o._adapter.Oops(fmt.Sprintf(`%s`,err))\n\t}\n";
             $from_map_body .= "\to." . $f->model_field_name . " = _" . $f->model_field_name . "\n";
-    
+            $from_model_body .= "\to.{$f->model_field_name} = m.{$f->model_field_name}\n";
             include "term_relationship_finder.php";
             continue;
         }

@@ -293,7 +293,11 @@ func randomString(n int) string {
 }
 func randomInteger() int {
     rand.Seed(time.Now().UnixNano())
-    return rand.Intn(10000)
+    x := rand.Intn(10000) + 100
+    if x == 0 {
+        return randomInteger();
+    }
+    return x + 100
 }
 func randomFloat() float32 {
     rand.Seed(time.Now().UnixNano())
