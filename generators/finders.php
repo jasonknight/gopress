@@ -8,7 +8,7 @@ foreach($t->fields as $f) {
     $arg = "_find_by_" . $f->model_field_name;
     $argtype = $f->go_type;
     $fmt_type = mysqlToFmtType($f->Type);
-    if ($f->Key == "PRI" && $f->Field == $t->pfield->Field) {
+    if (isPrimaryKey($f)) {
         $fname = "Find";
         $rtype = "bool"; //i.e. we set the current model
     } else {

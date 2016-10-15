@@ -3,7 +3,7 @@ if ( !function_exists("gen_updaters")) {
 function gen_updaters($t) {
     $txt = "";
     foreach ($t->fields as $f) {
-        if ( $f->Key == 'PRI' ) {
+        if ( isPrimaryKey($f) ) {
             continue;
         }
         $fname = convertFieldName($f->Field);

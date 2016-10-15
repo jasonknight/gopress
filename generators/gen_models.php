@@ -79,7 +79,15 @@ function mysqlToFmtType($t) {
         return "%s";
     }
 }
-
+function isPrimaryKey($p) {
+    if ( $p->Field == "object_id" ) {
+        return false;
+    }
+    if ( $p->Key != "PRI" ) {
+        return false;
+    }
+    return true;
+}
 foreach ($tables as &$t) {
     $t->fields = array();
     $t->belongs_to = array();
@@ -90,7 +98,7 @@ foreach ($tables as &$t) {
         $row->model_field_name = convertFieldName($row->Field);
         $row->mysql_fmt_type = mysqlToFmtType($row->Type);
         $row->dirty_marker = "Is" . convertFieldName($row->Field) . "Dirty"; 
-        if (preg_match("/\w+_id/",$row->Field) &&  $row->Key != "PRI") {
+        if (preg_match("/\w+_id/",$row->Field) &&  isPrimaryKey($row) == false) {
             $bt = belongsTo($row);
             
             $bt->model_name = $t->model_name;
@@ -106,7 +114,7 @@ foreach ($tables as &$t) {
                 }
             }
         }
-        if ( $row->Key == "PRI" ) {
+        if ( isPrimaryKey($row) ) {
             $t->pfield = $row;
         }
         $t->fields[] = $row;

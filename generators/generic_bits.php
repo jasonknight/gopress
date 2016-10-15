@@ -83,6 +83,7 @@ type MysqlAdapter struct {
     _conn_ *sql.DB
     _lid int64
     _cnt int64
+    _opened bool
 }
 
 func NewMysqlAdapter(pre string) *MysqlAdapter {
@@ -98,7 +99,8 @@ func NewMysqlAdapterEx(fname string) (*MysqlAdapter,error) {
     if err != nil {
         return nil,err
     }
-    return a,nil
+    err = a.Open(a.Host,a.User,a.Pass,a.Database)
+    return a,err
 
 }
 func (a *MysqlAdapter) NewDBValue() DBValue {
@@ -113,18 +115,21 @@ func (a *MysqlAdapter) FromYAML(b []byte) error {
 
 func (a *MysqlAdapter) Open(h,u,p,d string) error {
     if ( h != \"localhost\") {
-        tc, err := sql.Open(\"mysql\",fmt.Sprintf(\"%s:%s@tcp(%s)/%s\",u,p,h,d))
+        l := fmt.Sprintf(\"%s:%s@tcp(%s)/%s\",u,p,h,d)
+        tc, err := sql.Open(\"mysql\",l)
         if err != nil {
-            return err
+            return errors.New(fmt.Sprintf(`%s with %s`,err,l))
         }
         a._conn_ = tc
     } else {
-        tc, err := sql.Open(\"mysql\",fmt.Sprintf(\"%s:%s@/%s\",u,p,d))
+        l := fmt.Sprintf(\"%s:%s@/%s\",u,p,d)
+        tc, err := sql.Open(\"mysql\",l)
         if err != nil {
-            return err
+            return errors.New(fmt.Sprintf(`%s with %s`,err,l))
         }
         a._conn_ = tc
     }
+    a._opened = true
     return nil
 
 }
@@ -133,6 +138,9 @@ func (a *MysqlAdapter) Close() {
 }
 
 func (a *MysqlAdapter) Query(q string) ([]map[string]DBValue,error) {
+    if a._opened != true {
+        return nil,errors.New(`you must first open the connection`)
+    }
     results := new([]map[string]DBValue)
     rows, err := a._conn_.Query(q)
     if err != nil {
@@ -164,30 +172,36 @@ func (a *MysqlAdapter) Query(q string) ([]map[string]DBValue,error) {
     return *results,nil
 }
 func (a *MysqlAdapter) Execute(q string) error {
+    if a._opened != true {
+        return errors.New(`you must first open the connection`)
+    }
     tx, err := a._conn_.Begin()
     if err != nil {
-        return err
+        return errors.New(fmt.Sprintf(`could not Begin Transaction %s`,err))
     }
     defer tx.Rollback();
     stmt, err := tx.Prepare(q)
     if err != nil {
-        return err
+        return errors.New(fmt.Sprintf(`could not Prepare Statement %s`,err))
     }
     defer stmt.Close()
-    res,err := stmt.Exec(q)
+    res,err := stmt.Exec()
     if err != nil {
-        return err
+        return errors.New(fmt.Sprintf(`could not Exec stmt %s`,err))
     }
     a._lid,err = res.LastInsertId()
     if err != nil {
-        return err
+        return errors.New(fmt.Sprintf(`could not get LastInsertId %s`,err))
     }
     a._cnt,err = res.RowsAffected()
     if err != nil {
-        return err
+        return errors.New(fmt.Sprintf(`could not get RowsAffected %s`,err))
     }
     err = tx.Commit()
-    return err
+    if err != nil {
+        return errors.New(fmt.Sprintf(`could not Commit Transaction %s`,err))
+    }
+    return nil
 }
 func (a *MysqlAdapter) LastInsertedId() int64 {
     return a._lid
@@ -202,16 +216,14 @@ type DateTime struct {
     Hours int
     Minutes int
     Seconds int
-    Zone string
-    Offset int
 }
 func (d *DateTime) FromString(s string) error {
     es := s
-    re := regexp.MustCompile(\"(?P<year>[\\\d]{4})-(?P<month>[\\\d]{2})-(?P<day>[\\\d]{2}) (?P<hours>[\\\d]{2}):(?P<minutes>[\\\d]{2}):(?P<seconds>[\\\d]{2})\\\.(?P<offset>[\\\d]+)(?P<zone>[\\\w]+)\")
+    re := regexp.MustCompile(\"(?P<year>[\\\d]{4})-(?P<month>[\\\d]{2})-(?P<day>[\\\d]{2}) (?P<hours>[\\\d]{2}):(?P<minutes>[\\\d]{2}):(?P<seconds>[\\\d]{2})\")
     n1 := re.SubexpNames()
     ir2 := re.FindAllStringSubmatch(es, -1)
     if len(ir2) == 0 {
-        return errors.New(fmt.Sprintf(\"found now data to capture in %s\",es))
+        return errors.New(fmt.Sprintf(\"found no data to capture in %s\",es))
     }
     r2 := ir2[0]
     for i, n := range r2 {
@@ -257,21 +269,11 @@ func (d *DateTime) FromString(s string) error {
                 return errors.New(fmt.Sprintf(\"failed to convert %s in %s received %s\",n[i],es,err))
             }
         }
-        if n1[i] == \"offset\" {
-            _Offset,err := strconv.ParseInt(n,10,32)
-            d.Offset = int(_Offset)
-            if err != nil {
-                return errors.New(fmt.Sprintf(\"failed to convert %s in %s received %s\",n[i],es,err))
-            }
-        }
-        if n1[i] == \"zone\" {
-            d.Zone = n
-        }
     }
     return nil
 }
 func (d *DateTime) ToString() string {
-    return fmt.Sprintf(\"%d-%02d-%02d %02d:%02d:%02d.%d%s\",d.Year,d.Month,d.Day,d.Hours,d.Minutes,d.Seconds,d.Offset,d.Zone)
+    return fmt.Sprintf(\"%d-%02d-%02d %02d:%02d:%02d\",d.Year,d.Month,d.Day,d.Hours,d.Minutes,d.Seconds)
 }
 func NewDateTime() *DateTime {
     d := &DateTime{}

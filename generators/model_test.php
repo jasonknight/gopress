@@ -28,7 +28,7 @@ foreach ($t->fields as $f) {
     } else if ( preg_match("/^int/",$f->go_type) ) {
         $v = "strconv.Itoa(999)";
     } else if ( $f->go_type == "*DateTime" ) {
-        $v = "\"2016-01-01 10:50:23.5Z\"";
+        $v = "\"2016-01-01 10:50:23\"";
     } else {
         die("What? no go_type support for {$f->go_type}\n");
     }
@@ -50,7 +50,7 @@ foreach ($t->fields as $f) {
     } else if ( preg_match("/^int/",$f->go_type) ) {
         $v = 999;
     } else if ( $f->go_type == "*DateTime" ) {
-        $v = "\"2016-01-01 10:50:23.5Z\"";
+        $v = "\"2016-01-01 10:50:23\"";
     } else {
         die("What? no go_type support for {$f->go_type}\n");
     }
@@ -73,9 +73,7 @@ $txt .= "
         o.{$fmname}.Day != 1 ||
         o.{$fmname}.Hours != 10 ||
         o.{$fmname}.Minutes != 50 ||
-        o.{$fmname}.Seconds != 23 ||
-        o.{$fmname}.Offset != 5 ||
-        o.{$fmname}.Zone != `Z`) {
+        o.{$fmname}.Seconds != 23 ) {
         $fail(`fields don't match up for %+v`,o.{$fmname})
     }
     r{$j},_ := m[$k].AsString()

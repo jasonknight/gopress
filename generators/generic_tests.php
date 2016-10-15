@@ -57,7 +57,7 @@ $txt .= "
 }
 $txt .= "
     dvar := a.NewDBValue()
-    dvar.SetInternalValue(`x`,`2016-01-09 23:24:50.7Z`)
+    dvar.SetInternalValue(`x`,`2016-01-09 23:24:50`)
     dc,err := dvar.AsDateTime()
     if err != nil {
         $fail(`failed to convert datetime %+v`,dc)
@@ -68,9 +68,7 @@ $txt .= "
         dc.Day != 9 ||
         dc.Hours != 23 ||
         dc.Minutes != 24 ||
-        dc.Seconds != 50 ||
-        dc.Offset != 7 ||
-        dc.Zone != `Z`) {
+        dc.Seconds != 50 ) {
         $fail(`fields don't match up for %+v`,dc)
     }
     r,_ := dvar.AsString()
