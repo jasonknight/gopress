@@ -111,6 +111,27 @@ func TestCommentMetaUpdaters(t *testing.T) {
 
 	model.SetMetaValue(randomString(25))
 
+	if model.GetCommentId() != model.CommentId {
+		t.Errorf(`CommentMeta.GetCommentId() != CommentMeta.CommentId`)
+	}
+	if model.IsCommentIdDirty != true {
+		t.Errorf(`CommentMeta.IsCommentIdDirty != true`)
+	}
+
+	if model.GetMetaKey() != model.MetaKey {
+		t.Errorf(`CommentMeta.GetMetaKey() != CommentMeta.MetaKey`)
+	}
+	if model.IsMetaKeyDirty != true {
+		t.Errorf(`CommentMeta.IsMetaKeyDirty != true`)
+	}
+
+	if model.GetMetaValue() != model.MetaValue {
+		t.Errorf(`CommentMeta.GetMetaValue() != CommentMeta.MetaValue`)
+	}
+	if model.IsMetaValueDirty != true {
+		t.Errorf(`CommentMeta.IsMetaValueDirty != true`)
+	}
+
 }
 
 func TestNewComment(t *testing.T) {
@@ -302,6 +323,104 @@ func TestCommentUpdaters(t *testing.T) {
 
 	model.SetUserId(int64(randomInteger()))
 
+	if model.GetCommentPostID() != model.CommentPostID {
+		t.Errorf(`Comment.GetCommentPostID() != Comment.CommentPostID`)
+	}
+	if model.IsCommentPostIDDirty != true {
+		t.Errorf(`Comment.IsCommentPostIDDirty != true`)
+	}
+
+	if model.GetCommentAuthor() != model.CommentAuthor {
+		t.Errorf(`Comment.GetCommentAuthor() != Comment.CommentAuthor`)
+	}
+	if model.IsCommentAuthorDirty != true {
+		t.Errorf(`Comment.IsCommentAuthorDirty != true`)
+	}
+
+	if model.GetCommentAuthorEmail() != model.CommentAuthorEmail {
+		t.Errorf(`Comment.GetCommentAuthorEmail() != Comment.CommentAuthorEmail`)
+	}
+	if model.IsCommentAuthorEmailDirty != true {
+		t.Errorf(`Comment.IsCommentAuthorEmailDirty != true`)
+	}
+
+	if model.GetCommentAuthorUrl() != model.CommentAuthorUrl {
+		t.Errorf(`Comment.GetCommentAuthorUrl() != Comment.CommentAuthorUrl`)
+	}
+	if model.IsCommentAuthorUrlDirty != true {
+		t.Errorf(`Comment.IsCommentAuthorUrlDirty != true`)
+	}
+
+	if model.GetCommentAuthorIP() != model.CommentAuthorIP {
+		t.Errorf(`Comment.GetCommentAuthorIP() != Comment.CommentAuthorIP`)
+	}
+	if model.IsCommentAuthorIPDirty != true {
+		t.Errorf(`Comment.IsCommentAuthorIPDirty != true`)
+	}
+
+	if model.GetCommentDate() != model.CommentDate {
+		t.Errorf(`Comment.GetCommentDate() != Comment.CommentDate`)
+	}
+	if model.IsCommentDateDirty != true {
+		t.Errorf(`Comment.IsCommentDateDirty != true`)
+	}
+
+	if model.GetCommentDateGmt() != model.CommentDateGmt {
+		t.Errorf(`Comment.GetCommentDateGmt() != Comment.CommentDateGmt`)
+	}
+	if model.IsCommentDateGmtDirty != true {
+		t.Errorf(`Comment.IsCommentDateGmtDirty != true`)
+	}
+
+	if model.GetCommentContent() != model.CommentContent {
+		t.Errorf(`Comment.GetCommentContent() != Comment.CommentContent`)
+	}
+	if model.IsCommentContentDirty != true {
+		t.Errorf(`Comment.IsCommentContentDirty != true`)
+	}
+
+	if model.GetCommentKarma() != model.CommentKarma {
+		t.Errorf(`Comment.GetCommentKarma() != Comment.CommentKarma`)
+	}
+	if model.IsCommentKarmaDirty != true {
+		t.Errorf(`Comment.IsCommentKarmaDirty != true`)
+	}
+
+	if model.GetCommentApproved() != model.CommentApproved {
+		t.Errorf(`Comment.GetCommentApproved() != Comment.CommentApproved`)
+	}
+	if model.IsCommentApprovedDirty != true {
+		t.Errorf(`Comment.IsCommentApprovedDirty != true`)
+	}
+
+	if model.GetCommentAgent() != model.CommentAgent {
+		t.Errorf(`Comment.GetCommentAgent() != Comment.CommentAgent`)
+	}
+	if model.IsCommentAgentDirty != true {
+		t.Errorf(`Comment.IsCommentAgentDirty != true`)
+	}
+
+	if model.GetCommentType() != model.CommentType {
+		t.Errorf(`Comment.GetCommentType() != Comment.CommentType`)
+	}
+	if model.IsCommentTypeDirty != true {
+		t.Errorf(`Comment.IsCommentTypeDirty != true`)
+	}
+
+	if model.GetCommentParent() != model.CommentParent {
+		t.Errorf(`Comment.GetCommentParent() != Comment.CommentParent`)
+	}
+	if model.IsCommentParentDirty != true {
+		t.Errorf(`Comment.IsCommentParentDirty != true`)
+	}
+
+	if model.GetUserId() != model.UserId {
+		t.Errorf(`Comment.GetUserId() != Comment.UserId`)
+	}
+	if model.IsUserIdDirty != true {
+		t.Errorf(`Comment.IsUserIdDirty != true`)
+	}
+
 }
 
 func TestNewLink(t *testing.T) {
@@ -463,6 +582,90 @@ func TestLinkUpdaters(t *testing.T) {
 
 	model.SetLinkRss(randomString(19))
 
+	if model.GetLinkUrl() != model.LinkUrl {
+		t.Errorf(`Link.GetLinkUrl() != Link.LinkUrl`)
+	}
+	if model.IsLinkUrlDirty != true {
+		t.Errorf(`Link.IsLinkUrlDirty != true`)
+	}
+
+	if model.GetLinkName() != model.LinkName {
+		t.Errorf(`Link.GetLinkName() != Link.LinkName`)
+	}
+	if model.IsLinkNameDirty != true {
+		t.Errorf(`Link.IsLinkNameDirty != true`)
+	}
+
+	if model.GetLinkImage() != model.LinkImage {
+		t.Errorf(`Link.GetLinkImage() != Link.LinkImage`)
+	}
+	if model.IsLinkImageDirty != true {
+		t.Errorf(`Link.IsLinkImageDirty != true`)
+	}
+
+	if model.GetLinkTarget() != model.LinkTarget {
+		t.Errorf(`Link.GetLinkTarget() != Link.LinkTarget`)
+	}
+	if model.IsLinkTargetDirty != true {
+		t.Errorf(`Link.IsLinkTargetDirty != true`)
+	}
+
+	if model.GetLinkDescription() != model.LinkDescription {
+		t.Errorf(`Link.GetLinkDescription() != Link.LinkDescription`)
+	}
+	if model.IsLinkDescriptionDirty != true {
+		t.Errorf(`Link.IsLinkDescriptionDirty != true`)
+	}
+
+	if model.GetLinkVisible() != model.LinkVisible {
+		t.Errorf(`Link.GetLinkVisible() != Link.LinkVisible`)
+	}
+	if model.IsLinkVisibleDirty != true {
+		t.Errorf(`Link.IsLinkVisibleDirty != true`)
+	}
+
+	if model.GetLinkOwner() != model.LinkOwner {
+		t.Errorf(`Link.GetLinkOwner() != Link.LinkOwner`)
+	}
+	if model.IsLinkOwnerDirty != true {
+		t.Errorf(`Link.IsLinkOwnerDirty != true`)
+	}
+
+	if model.GetLinkRating() != model.LinkRating {
+		t.Errorf(`Link.GetLinkRating() != Link.LinkRating`)
+	}
+	if model.IsLinkRatingDirty != true {
+		t.Errorf(`Link.IsLinkRatingDirty != true`)
+	}
+
+	if model.GetLinkUpdated() != model.LinkUpdated {
+		t.Errorf(`Link.GetLinkUpdated() != Link.LinkUpdated`)
+	}
+	if model.IsLinkUpdatedDirty != true {
+		t.Errorf(`Link.IsLinkUpdatedDirty != true`)
+	}
+
+	if model.GetLinkRel() != model.LinkRel {
+		t.Errorf(`Link.GetLinkRel() != Link.LinkRel`)
+	}
+	if model.IsLinkRelDirty != true {
+		t.Errorf(`Link.IsLinkRelDirty != true`)
+	}
+
+	if model.GetLinkNotes() != model.LinkNotes {
+		t.Errorf(`Link.GetLinkNotes() != Link.LinkNotes`)
+	}
+	if model.IsLinkNotesDirty != true {
+		t.Errorf(`Link.IsLinkNotesDirty != true`)
+	}
+
+	if model.GetLinkRss() != model.LinkRss {
+		t.Errorf(`Link.GetLinkRss() != Link.LinkRss`)
+	}
+	if model.IsLinkRssDirty != true {
+		t.Errorf(`Link.IsLinkRssDirty != true`)
+	}
+
 }
 
 func TestNewOption(t *testing.T) {
@@ -531,6 +734,27 @@ func TestOptionUpdaters(t *testing.T) {
 
 	model.SetAutoload(randomString(19))
 
+	if model.GetOptionName() != model.OptionName {
+		t.Errorf(`Option.GetOptionName() != Option.OptionName`)
+	}
+	if model.IsOptionNameDirty != true {
+		t.Errorf(`Option.IsOptionNameDirty != true`)
+	}
+
+	if model.GetOptionValue() != model.OptionValue {
+		t.Errorf(`Option.GetOptionValue() != Option.OptionValue`)
+	}
+	if model.IsOptionValueDirty != true {
+		t.Errorf(`Option.IsOptionValueDirty != true`)
+	}
+
+	if model.GetAutoload() != model.Autoload {
+		t.Errorf(`Option.GetAutoload() != Option.Autoload`)
+	}
+	if model.IsAutoloadDirty != true {
+		t.Errorf(`Option.IsAutoloadDirty != true`)
+	}
+
 }
 
 func TestNewPostMeta(t *testing.T) {
@@ -598,6 +822,27 @@ func TestPostMetaUpdaters(t *testing.T) {
 	model.SetMetaKey(randomString(19))
 
 	model.SetMetaValue(randomString(25))
+
+	if model.GetPostId() != model.PostId {
+		t.Errorf(`PostMeta.GetPostId() != PostMeta.PostId`)
+	}
+	if model.IsPostIdDirty != true {
+		t.Errorf(`PostMeta.IsPostIdDirty != true`)
+	}
+
+	if model.GetMetaKey() != model.MetaKey {
+		t.Errorf(`PostMeta.GetMetaKey() != PostMeta.MetaKey`)
+	}
+	if model.IsMetaKeyDirty != true {
+		t.Errorf(`PostMeta.IsMetaKeyDirty != true`)
+	}
+
+	if model.GetMetaValue() != model.MetaValue {
+		t.Errorf(`PostMeta.GetMetaValue() != PostMeta.MetaValue`)
+	}
+	if model.IsMetaValueDirty != true {
+		t.Errorf(`PostMeta.IsMetaValueDirty != true`)
+	}
 
 }
 
@@ -886,6 +1131,160 @@ func TestPostUpdaters(t *testing.T) {
 
 	model.SetCommentCount(int64(randomInteger()))
 
+	if model.GetPostAuthor() != model.PostAuthor {
+		t.Errorf(`Post.GetPostAuthor() != Post.PostAuthor`)
+	}
+	if model.IsPostAuthorDirty != true {
+		t.Errorf(`Post.IsPostAuthorDirty != true`)
+	}
+
+	if model.GetPostDate() != model.PostDate {
+		t.Errorf(`Post.GetPostDate() != Post.PostDate`)
+	}
+	if model.IsPostDateDirty != true {
+		t.Errorf(`Post.IsPostDateDirty != true`)
+	}
+
+	if model.GetPostDateGmt() != model.PostDateGmt {
+		t.Errorf(`Post.GetPostDateGmt() != Post.PostDateGmt`)
+	}
+	if model.IsPostDateGmtDirty != true {
+		t.Errorf(`Post.IsPostDateGmtDirty != true`)
+	}
+
+	if model.GetPostContent() != model.PostContent {
+		t.Errorf(`Post.GetPostContent() != Post.PostContent`)
+	}
+	if model.IsPostContentDirty != true {
+		t.Errorf(`Post.IsPostContentDirty != true`)
+	}
+
+	if model.GetPostTitle() != model.PostTitle {
+		t.Errorf(`Post.GetPostTitle() != Post.PostTitle`)
+	}
+	if model.IsPostTitleDirty != true {
+		t.Errorf(`Post.IsPostTitleDirty != true`)
+	}
+
+	if model.GetPostExcerpt() != model.PostExcerpt {
+		t.Errorf(`Post.GetPostExcerpt() != Post.PostExcerpt`)
+	}
+	if model.IsPostExcerptDirty != true {
+		t.Errorf(`Post.IsPostExcerptDirty != true`)
+	}
+
+	if model.GetPostStatus() != model.PostStatus {
+		t.Errorf(`Post.GetPostStatus() != Post.PostStatus`)
+	}
+	if model.IsPostStatusDirty != true {
+		t.Errorf(`Post.IsPostStatusDirty != true`)
+	}
+
+	if model.GetCommentStatus() != model.CommentStatus {
+		t.Errorf(`Post.GetCommentStatus() != Post.CommentStatus`)
+	}
+	if model.IsCommentStatusDirty != true {
+		t.Errorf(`Post.IsCommentStatusDirty != true`)
+	}
+
+	if model.GetPingStatus() != model.PingStatus {
+		t.Errorf(`Post.GetPingStatus() != Post.PingStatus`)
+	}
+	if model.IsPingStatusDirty != true {
+		t.Errorf(`Post.IsPingStatusDirty != true`)
+	}
+
+	if model.GetPostPassword() != model.PostPassword {
+		t.Errorf(`Post.GetPostPassword() != Post.PostPassword`)
+	}
+	if model.IsPostPasswordDirty != true {
+		t.Errorf(`Post.IsPostPasswordDirty != true`)
+	}
+
+	if model.GetPostName() != model.PostName {
+		t.Errorf(`Post.GetPostName() != Post.PostName`)
+	}
+	if model.IsPostNameDirty != true {
+		t.Errorf(`Post.IsPostNameDirty != true`)
+	}
+
+	if model.GetToPing() != model.ToPing {
+		t.Errorf(`Post.GetToPing() != Post.ToPing`)
+	}
+	if model.IsToPingDirty != true {
+		t.Errorf(`Post.IsToPingDirty != true`)
+	}
+
+	if model.GetPinged() != model.Pinged {
+		t.Errorf(`Post.GetPinged() != Post.Pinged`)
+	}
+	if model.IsPingedDirty != true {
+		t.Errorf(`Post.IsPingedDirty != true`)
+	}
+
+	if model.GetPostModified() != model.PostModified {
+		t.Errorf(`Post.GetPostModified() != Post.PostModified`)
+	}
+	if model.IsPostModifiedDirty != true {
+		t.Errorf(`Post.IsPostModifiedDirty != true`)
+	}
+
+	if model.GetPostModifiedGmt() != model.PostModifiedGmt {
+		t.Errorf(`Post.GetPostModifiedGmt() != Post.PostModifiedGmt`)
+	}
+	if model.IsPostModifiedGmtDirty != true {
+		t.Errorf(`Post.IsPostModifiedGmtDirty != true`)
+	}
+
+	if model.GetPostContentFiltered() != model.PostContentFiltered {
+		t.Errorf(`Post.GetPostContentFiltered() != Post.PostContentFiltered`)
+	}
+	if model.IsPostContentFilteredDirty != true {
+		t.Errorf(`Post.IsPostContentFilteredDirty != true`)
+	}
+
+	if model.GetPostParent() != model.PostParent {
+		t.Errorf(`Post.GetPostParent() != Post.PostParent`)
+	}
+	if model.IsPostParentDirty != true {
+		t.Errorf(`Post.IsPostParentDirty != true`)
+	}
+
+	if model.GetGuid() != model.Guid {
+		t.Errorf(`Post.GetGuid() != Post.Guid`)
+	}
+	if model.IsGuidDirty != true {
+		t.Errorf(`Post.IsGuidDirty != true`)
+	}
+
+	if model.GetMenuOrder() != model.MenuOrder {
+		t.Errorf(`Post.GetMenuOrder() != Post.MenuOrder`)
+	}
+	if model.IsMenuOrderDirty != true {
+		t.Errorf(`Post.IsMenuOrderDirty != true`)
+	}
+
+	if model.GetPostType() != model.PostType {
+		t.Errorf(`Post.GetPostType() != Post.PostType`)
+	}
+	if model.IsPostTypeDirty != true {
+		t.Errorf(`Post.IsPostTypeDirty != true`)
+	}
+
+	if model.GetPostMimeType() != model.PostMimeType {
+		t.Errorf(`Post.GetPostMimeType() != Post.PostMimeType`)
+	}
+	if model.IsPostMimeTypeDirty != true {
+		t.Errorf(`Post.IsPostMimeTypeDirty != true`)
+	}
+
+	if model.GetCommentCount() != model.CommentCount {
+		t.Errorf(`Post.GetCommentCount() != Post.CommentCount`)
+	}
+	if model.IsCommentCountDirty != true {
+		t.Errorf(`Post.IsCommentCountDirty != true`)
+	}
+
 }
 
 func TestNewTermRelationship(t *testing.T) {
@@ -944,6 +1343,20 @@ func TestTermRelationshipUpdaters(t *testing.T) {
 	model.SetObjectId(int64(randomInteger()))
 
 	model.SetTermOrder(int(randomInteger()))
+
+	if model.GetObjectId() != model.ObjectId {
+		t.Errorf(`TermRelationship.GetObjectId() != TermRelationship.ObjectId`)
+	}
+	if model.IsObjectIdDirty != true {
+		t.Errorf(`TermRelationship.IsObjectIdDirty != true`)
+	}
+
+	if model.GetTermOrder() != model.TermOrder {
+		t.Errorf(`TermRelationship.GetTermOrder() != TermRelationship.TermOrder`)
+	}
+	if model.IsTermOrderDirty != true {
+		t.Errorf(`TermRelationship.IsTermOrderDirty != true`)
+	}
 
 }
 
@@ -1031,6 +1444,41 @@ func TestTermTaxonomyUpdaters(t *testing.T) {
 
 	model.SetCount(int64(randomInteger()))
 
+	if model.GetTermId() != model.TermId {
+		t.Errorf(`TermTaxonomy.GetTermId() != TermTaxonomy.TermId`)
+	}
+	if model.IsTermIdDirty != true {
+		t.Errorf(`TermTaxonomy.IsTermIdDirty != true`)
+	}
+
+	if model.GetTaxonomy() != model.Taxonomy {
+		t.Errorf(`TermTaxonomy.GetTaxonomy() != TermTaxonomy.Taxonomy`)
+	}
+	if model.IsTaxonomyDirty != true {
+		t.Errorf(`TermTaxonomy.IsTaxonomyDirty != true`)
+	}
+
+	if model.GetDescription() != model.Description {
+		t.Errorf(`TermTaxonomy.GetDescription() != TermTaxonomy.Description`)
+	}
+	if model.IsDescriptionDirty != true {
+		t.Errorf(`TermTaxonomy.IsDescriptionDirty != true`)
+	}
+
+	if model.GetParent() != model.Parent {
+		t.Errorf(`TermTaxonomy.GetParent() != TermTaxonomy.Parent`)
+	}
+	if model.IsParentDirty != true {
+		t.Errorf(`TermTaxonomy.IsParentDirty != true`)
+	}
+
+	if model.GetCount() != model.Count {
+		t.Errorf(`TermTaxonomy.GetCount() != TermTaxonomy.Count`)
+	}
+	if model.IsCountDirty != true {
+		t.Errorf(`TermTaxonomy.IsCountDirty != true`)
+	}
+
 }
 
 func TestNewTerm(t *testing.T) {
@@ -1099,6 +1547,27 @@ func TestTermUpdaters(t *testing.T) {
 
 	model.SetTermGroup(int64(randomInteger()))
 
+	if model.GetName() != model.Name {
+		t.Errorf(`Term.GetName() != Term.Name`)
+	}
+	if model.IsNameDirty != true {
+		t.Errorf(`Term.IsNameDirty != true`)
+	}
+
+	if model.GetSlug() != model.Slug {
+		t.Errorf(`Term.GetSlug() != Term.Slug`)
+	}
+	if model.IsSlugDirty != true {
+		t.Errorf(`Term.IsSlugDirty != true`)
+	}
+
+	if model.GetTermGroup() != model.TermGroup {
+		t.Errorf(`Term.GetTermGroup() != Term.TermGroup`)
+	}
+	if model.IsTermGroupDirty != true {
+		t.Errorf(`Term.IsTermGroupDirty != true`)
+	}
+
 }
 
 func TestNewUserMeta(t *testing.T) {
@@ -1166,6 +1635,27 @@ func TestUserMetaUpdaters(t *testing.T) {
 	model.SetMetaKey(randomString(19))
 
 	model.SetMetaValue(randomString(25))
+
+	if model.GetUserId() != model.UserId {
+		t.Errorf(`UserMeta.GetUserId() != UserMeta.UserId`)
+	}
+	if model.IsUserIdDirty != true {
+		t.Errorf(`UserMeta.IsUserIdDirty != true`)
+	}
+
+	if model.GetMetaKey() != model.MetaKey {
+		t.Errorf(`UserMeta.GetMetaKey() != UserMeta.MetaKey`)
+	}
+	if model.IsMetaKeyDirty != true {
+		t.Errorf(`UserMeta.IsMetaKeyDirty != true`)
+	}
+
+	if model.GetMetaValue() != model.MetaValue {
+		t.Errorf(`UserMeta.GetMetaValue() != UserMeta.MetaValue`)
+	}
+	if model.IsMetaValueDirty != true {
+		t.Errorf(`UserMeta.IsMetaValueDirty != true`)
+	}
 
 }
 
