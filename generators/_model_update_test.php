@@ -1,6 +1,9 @@
 <?php
 $txt = "
 func Test{$t->model_name}Updaters(t *testing.T) {
+    if fileExists(`../gopress.db.yml`) == false {
+        return
+    }
     a,err := NewMysqlAdapterEx(`../gopress.db.yml`)
     if err != nil {
         $fail(`could not load $cnf %s`,err)

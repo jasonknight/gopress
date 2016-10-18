@@ -93,6 +93,9 @@ func TestCommentMetaFromDBValueMap(t *testing.T) {
 }
 
 func TestCommentMetaUpdaters(t *testing.T) {
+	if fileExists(`../gopress.db.yml`) == false {
+		return
+	}
 	a, err := NewMysqlAdapterEx(`../gopress.db.yml`)
 	if err != nil {
 		t.Errorf(`could not load ../gopress.db.yml %s`, err)
@@ -335,6 +338,9 @@ func TestCommentFromDBValueMap(t *testing.T) {
 }
 
 func TestCommentUpdaters(t *testing.T) {
+	if fileExists(`../gopress.db.yml`) == false {
+		return
+	}
 	a, err := NewMysqlAdapterEx(`../gopress.db.yml`)
 	if err != nil {
 		t.Errorf(`could not load ../gopress.db.yml %s`, err)
@@ -837,6 +843,9 @@ func TestLinkFromDBValueMap(t *testing.T) {
 }
 
 func TestLinkUpdaters(t *testing.T) {
+	if fileExists(`../gopress.db.yml`) == false {
+		return
+	}
 	a, err := NewMysqlAdapterEx(`../gopress.db.yml`)
 	if err != nil {
 		t.Errorf(`could not load ../gopress.db.yml %s`, err)
@@ -1212,6 +1221,9 @@ func TestOptionFromDBValueMap(t *testing.T) {
 }
 
 func TestOptionUpdaters(t *testing.T) {
+	if fileExists(`../gopress.db.yml`) == false {
+		return
+	}
 	a, err := NewMysqlAdapterEx(`../gopress.db.yml`)
 	if err != nil {
 		t.Errorf(`could not load ../gopress.db.yml %s`, err)
@@ -1353,6 +1365,9 @@ func TestPostMetaFromDBValueMap(t *testing.T) {
 }
 
 func TestPostMetaUpdaters(t *testing.T) {
+	if fileExists(`../gopress.db.yml`) == false {
+		return
+	}
 	a, err := NewMysqlAdapterEx(`../gopress.db.yml`)
 	if err != nil {
 		t.Errorf(`could not load ../gopress.db.yml %s`, err)
@@ -1675,6 +1690,9 @@ func TestPostFromDBValueMap(t *testing.T) {
 }
 
 func TestPostUpdaters(t *testing.T) {
+	if fileExists(`../gopress.db.yml`) == false {
+		return
+	}
 	a, err := NewMysqlAdapterEx(`../gopress.db.yml`)
 	if err != nil {
 		t.Errorf(`could not load ../gopress.db.yml %s`, err)
@@ -2303,6 +2321,9 @@ func TestTermRelationshipFromDBValueMap(t *testing.T) {
 }
 
 func TestTermRelationshipUpdaters(t *testing.T) {
+	if fileExists(`../gopress.db.yml`) == false {
+		return
+	}
 	a, err := NewMysqlAdapterEx(`../gopress.db.yml`)
 	if err != nil {
 		t.Errorf(`could not load ../gopress.db.yml %s`, err)
@@ -2432,6 +2453,9 @@ func TestTermTaxonomyFromDBValueMap(t *testing.T) {
 }
 
 func TestTermTaxonomyUpdaters(t *testing.T) {
+	if fileExists(`../gopress.db.yml`) == false {
+		return
+	}
 	a, err := NewMysqlAdapterEx(`../gopress.db.yml`)
 	if err != nil {
 		t.Errorf(`could not load ../gopress.db.yml %s`, err)
@@ -2625,6 +2649,9 @@ func TestTermFromDBValueMap(t *testing.T) {
 }
 
 func TestTermUpdaters(t *testing.T) {
+	if fileExists(`../gopress.db.yml`) == false {
+		return
+	}
 	a, err := NewMysqlAdapterEx(`../gopress.db.yml`)
 	if err != nil {
 		t.Errorf(`could not load ../gopress.db.yml %s`, err)
@@ -2766,6 +2793,9 @@ func TestUserMetaFromDBValueMap(t *testing.T) {
 }
 
 func TestUserMetaUpdaters(t *testing.T) {
+	if fileExists(`../gopress.db.yml`) == false {
+		return
+	}
 	a, err := NewMysqlAdapterEx(`../gopress.db.yml`)
 	if err != nil {
 		t.Errorf(`could not load ../gopress.db.yml %s`, err)
