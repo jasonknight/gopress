@@ -22,7 +22,7 @@ type Adapter interface {
 type MysqlAdapter struct {
     Host string `yaml:\"host\"`
     User string `yaml:\"user\"`
-    Pass string `yaml: \"pass\"`
+    Pass string `yaml:\"pass\"`
     Database string `yaml:\"database\"`
     DBPrefix string `yaml:\"prefix\"`
     _info_log *log.Logger
@@ -306,42 +306,42 @@ func (d *DateTime) FromString(s string) error {
             _Year,err := strconv.ParseInt(n,10,32)
             d.Year = int(_Year)
             if err != nil {
-                return d._adapter.Oops(fmt.Sprintf(\"failed to convert %s in %s received %s\",n[i],es,err))
+                return d._adapter.Oops(fmt.Sprintf(\"failed to convert %d in %v received %s\",n[i],es,err))
             }
         }
         if n1[i] == \"month\" {
             _Month,err := strconv.ParseInt(n,10,32)
             d.Month = int(_Month)
             if err != nil {
-                return d._adapter.Oops(fmt.Sprintf(\"failed to convert %s in %s received %s\",n[i],es,err))
+                return d._adapter.Oops(fmt.Sprintf(\"failed to convert %d in %v received %s\",n[i],es,err))
             }
         }
         if n1[i] == \"day\" {
             _Day,err := strconv.ParseInt(n,10,32)
             d.Day = int(_Day)
             if err != nil {
-                return d._adapter.Oops(fmt.Sprintf(\"failed to convert %s in %s received %s\",n[i],es,err))
+                return d._adapter.Oops(fmt.Sprintf(\"failed to convert %d in %v received %s\",n[i],es,err))
             }
         }
         if n1[i] == \"hours\" {
             _Hours,err := strconv.ParseInt(n,10,32)
             d.Hours = int(_Hours)
             if err != nil {
-                return d._adapter.Oops(fmt.Sprintf(\"failed to convert %s in %s received %s\",n[i],es,err))
+                return d._adapter.Oops(fmt.Sprintf(\"failed to convert %d in %v received %s\",n[i],es,err))
             }
         }
         if n1[i] == \"minutes\" {
             _Minutes,err := strconv.ParseInt(n,10,32)
             d.Minutes = int(_Minutes)
             if err != nil {
-                return d._adapter.Oops(fmt.Sprintf(\"failed to convert %s in %s received %s\",n[i],es,err))
+                return d._adapter.Oops(fmt.Sprintf(\"failed to convert %d in %v received %s\",n[i],es,err))
             }
         }
         if n1[i] == \"seconds\" {
             _Seconds,err := strconv.ParseInt(n,10,32)
             d.Seconds = int(_Seconds)
             if err != nil {
-                return d._adapter.Oops(fmt.Sprintf(\"failed to convert %s in %s received %s\",n[i],es,err))
+                return d._adapter.Oops(fmt.Sprintf(\"failed to convert %d in %v received %s\",n[i],es,err))
             }
         }
     }

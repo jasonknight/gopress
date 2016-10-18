@@ -38,7 +38,7 @@ type Adapter interface {
 type MysqlAdapter struct {
 	Host        string `yaml:"host"`
 	User        string `yaml:"user"`
-	Pass        string `yaml: "pass"`
+	Pass        string `yaml:"pass"`
 	Database    string `yaml:"database"`
 	DBPrefix    string `yaml:"prefix"`
 	_info_log   *log.Logger
@@ -325,42 +325,42 @@ func (d *DateTime) FromString(s string) error {
 			_Year, err := strconv.ParseInt(n, 10, 32)
 			d.Year = int(_Year)
 			if err != nil {
-				return d._adapter.Oops(fmt.Sprintf("failed to convert %s in %s received %s", n[i], es, err))
+				return d._adapter.Oops(fmt.Sprintf("failed to convert %d in %v received %s", n[i], es, err))
 			}
 		}
 		if n1[i] == "month" {
 			_Month, err := strconv.ParseInt(n, 10, 32)
 			d.Month = int(_Month)
 			if err != nil {
-				return d._adapter.Oops(fmt.Sprintf("failed to convert %s in %s received %s", n[i], es, err))
+				return d._adapter.Oops(fmt.Sprintf("failed to convert %d in %v received %s", n[i], es, err))
 			}
 		}
 		if n1[i] == "day" {
 			_Day, err := strconv.ParseInt(n, 10, 32)
 			d.Day = int(_Day)
 			if err != nil {
-				return d._adapter.Oops(fmt.Sprintf("failed to convert %s in %s received %s", n[i], es, err))
+				return d._adapter.Oops(fmt.Sprintf("failed to convert %d in %v received %s", n[i], es, err))
 			}
 		}
 		if n1[i] == "hours" {
 			_Hours, err := strconv.ParseInt(n, 10, 32)
 			d.Hours = int(_Hours)
 			if err != nil {
-				return d._adapter.Oops(fmt.Sprintf("failed to convert %s in %s received %s", n[i], es, err))
+				return d._adapter.Oops(fmt.Sprintf("failed to convert %d in %v received %s", n[i], es, err))
 			}
 		}
 		if n1[i] == "minutes" {
 			_Minutes, err := strconv.ParseInt(n, 10, 32)
 			d.Minutes = int(_Minutes)
 			if err != nil {
-				return d._adapter.Oops(fmt.Sprintf("failed to convert %s in %s received %s", n[i], es, err))
+				return d._adapter.Oops(fmt.Sprintf("failed to convert %d in %v received %s", n[i], es, err))
 			}
 		}
 		if n1[i] == "seconds" {
 			_Seconds, err := strconv.ParseInt(n, 10, 32)
 			d.Seconds = int(_Seconds)
 			if err != nil {
-				return d._adapter.Oops(fmt.Sprintf("failed to convert %s in %s received %s", n[i], es, err))
+				return d._adapter.Oops(fmt.Sprintf("failed to convert %d in %v received %s", n[i], es, err))
 			}
 		}
 	}
@@ -614,7 +614,7 @@ func (o *CommentMeta) Save() error {
 		sets = append(sets, fmt.Sprintf(`meta_value = '%s'`, o._adapter.SafeString(o.MetaValue)))
 	}
 
-	frmt := fmt.Sprintf("UPDATE %s SET %s WHERE %s = '%d'", o._table, strings.Join(sets, `,`))
+	frmt := fmt.Sprintf("UPDATE %s SET %s WHERE %s = '%d'", o._table, strings.Join(sets, `,`), o._pkey, o.MetaId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return err
@@ -636,7 +636,7 @@ func (o *CommentMeta) Update() error {
 		sets = append(sets, fmt.Sprintf(`meta_value = '%s'`, o._adapter.SafeString(o.MetaValue)))
 	}
 
-	frmt := fmt.Sprintf("UPDATE %s SET %s WHERE %s = '%d'", o._table, strings.Join(sets, `,`))
+	frmt := fmt.Sprintf("UPDATE %s SET %s WHERE %s = '%d'", o._table, strings.Join(sets, `,`), o._pkey, o.MetaId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return err
@@ -655,7 +655,7 @@ func (o *CommentMeta) Create() error {
 }
 
 func (o *CommentMeta) UpdateCommentId(_upd_CommentId int64) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `comment_id` = '%d' WHERE `meta_id` = '%d'", o._table, _upd_CommentId, o.CommentId)
+	frmt := fmt.Sprintf("UPDATE %s SET `comment_id` = '%d' WHERE `meta_id` = '%d'", o._table, _upd_CommentId, o.MetaId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
@@ -665,7 +665,7 @@ func (o *CommentMeta) UpdateCommentId(_upd_CommentId int64) (int64, error) {
 }
 
 func (o *CommentMeta) UpdateMetaKey(_upd_MetaKey string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `meta_key` = '%s' WHERE `meta_id` = '%d'", o._table, _upd_MetaKey, o.MetaKey)
+	frmt := fmt.Sprintf("UPDATE %s SET `meta_key` = '%s' WHERE `meta_id` = '%d'", o._table, _upd_MetaKey, o.MetaId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
@@ -675,7 +675,7 @@ func (o *CommentMeta) UpdateMetaKey(_upd_MetaKey string) (int64, error) {
 }
 
 func (o *CommentMeta) UpdateMetaValue(_upd_MetaValue string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `meta_value` = '%s' WHERE `meta_id` = '%d'", o._table, _upd_MetaValue, o.MetaValue)
+	frmt := fmt.Sprintf("UPDATE %s SET `meta_value` = '%s' WHERE `meta_id` = '%d'", o._table, _upd_MetaValue, o.MetaId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
@@ -1397,7 +1397,7 @@ func (o *Comment) Save() error {
 		sets = append(sets, fmt.Sprintf(`user_id = '%d'`, o.UserId))
 	}
 
-	frmt := fmt.Sprintf("UPDATE %s SET %s WHERE %s = '%d'", o._table, strings.Join(sets, `,`))
+	frmt := fmt.Sprintf("UPDATE %s SET %s WHERE %s = '%d'", o._table, strings.Join(sets, `,`), o._pkey, o.CommentID)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return err
@@ -1463,7 +1463,7 @@ func (o *Comment) Update() error {
 		sets = append(sets, fmt.Sprintf(`user_id = '%d'`, o.UserId))
 	}
 
-	frmt := fmt.Sprintf("UPDATE %s SET %s WHERE %s = '%d'", o._table, strings.Join(sets, `,`))
+	frmt := fmt.Sprintf("UPDATE %s SET %s WHERE %s = '%d'", o._table, strings.Join(sets, `,`), o._pkey, o.CommentID)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return err
@@ -1482,7 +1482,7 @@ func (o *Comment) Create() error {
 }
 
 func (o *Comment) UpdateCommentPostID(_upd_CommentPostID int64) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `comment_post_ID` = '%d' WHERE `comment_ID` = '%d'", o._table, _upd_CommentPostID, o.CommentPostID)
+	frmt := fmt.Sprintf("UPDATE %s SET `comment_post_ID` = '%d' WHERE `comment_ID` = '%d'", o._table, _upd_CommentPostID, o.CommentID)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
@@ -1492,7 +1492,7 @@ func (o *Comment) UpdateCommentPostID(_upd_CommentPostID int64) (int64, error) {
 }
 
 func (o *Comment) UpdateCommentAuthor(_upd_CommentAuthor string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `comment_author` = '%s' WHERE `comment_ID` = '%d'", o._table, _upd_CommentAuthor, o.CommentAuthor)
+	frmt := fmt.Sprintf("UPDATE %s SET `comment_author` = '%s' WHERE `comment_ID` = '%d'", o._table, _upd_CommentAuthor, o.CommentID)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
@@ -1502,7 +1502,7 @@ func (o *Comment) UpdateCommentAuthor(_upd_CommentAuthor string) (int64, error) 
 }
 
 func (o *Comment) UpdateCommentAuthorEmail(_upd_CommentAuthorEmail string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `comment_author_email` = '%s' WHERE `comment_ID` = '%d'", o._table, _upd_CommentAuthorEmail, o.CommentAuthorEmail)
+	frmt := fmt.Sprintf("UPDATE %s SET `comment_author_email` = '%s' WHERE `comment_ID` = '%d'", o._table, _upd_CommentAuthorEmail, o.CommentID)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
@@ -1512,7 +1512,7 @@ func (o *Comment) UpdateCommentAuthorEmail(_upd_CommentAuthorEmail string) (int6
 }
 
 func (o *Comment) UpdateCommentAuthorUrl(_upd_CommentAuthorUrl string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `comment_author_url` = '%s' WHERE `comment_ID` = '%d'", o._table, _upd_CommentAuthorUrl, o.CommentAuthorUrl)
+	frmt := fmt.Sprintf("UPDATE %s SET `comment_author_url` = '%s' WHERE `comment_ID` = '%d'", o._table, _upd_CommentAuthorUrl, o.CommentID)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
@@ -1522,7 +1522,7 @@ func (o *Comment) UpdateCommentAuthorUrl(_upd_CommentAuthorUrl string) (int64, e
 }
 
 func (o *Comment) UpdateCommentAuthorIP(_upd_CommentAuthorIP string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `comment_author_IP` = '%s' WHERE `comment_ID` = '%d'", o._table, _upd_CommentAuthorIP, o.CommentAuthorIP)
+	frmt := fmt.Sprintf("UPDATE %s SET `comment_author_IP` = '%s' WHERE `comment_ID` = '%d'", o._table, _upd_CommentAuthorIP, o.CommentID)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
@@ -1532,7 +1532,7 @@ func (o *Comment) UpdateCommentAuthorIP(_upd_CommentAuthorIP string) (int64, err
 }
 
 func (o *Comment) UpdateCommentDate(_upd_CommentDate *DateTime) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `comment_date` = '%s' WHERE `comment_ID` = '%d'", o._table, _upd_CommentDate, o.CommentDate)
+	frmt := fmt.Sprintf("UPDATE %s SET `comment_date` = '%s' WHERE `comment_ID` = '%d'", o._table, _upd_CommentDate, o.CommentID)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
@@ -1542,7 +1542,7 @@ func (o *Comment) UpdateCommentDate(_upd_CommentDate *DateTime) (int64, error) {
 }
 
 func (o *Comment) UpdateCommentDateGmt(_upd_CommentDateGmt *DateTime) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `comment_date_gmt` = '%s' WHERE `comment_ID` = '%d'", o._table, _upd_CommentDateGmt, o.CommentDateGmt)
+	frmt := fmt.Sprintf("UPDATE %s SET `comment_date_gmt` = '%s' WHERE `comment_ID` = '%d'", o._table, _upd_CommentDateGmt, o.CommentID)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
@@ -1552,7 +1552,7 @@ func (o *Comment) UpdateCommentDateGmt(_upd_CommentDateGmt *DateTime) (int64, er
 }
 
 func (o *Comment) UpdateCommentContent(_upd_CommentContent string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `comment_content` = '%s' WHERE `comment_ID` = '%d'", o._table, _upd_CommentContent, o.CommentContent)
+	frmt := fmt.Sprintf("UPDATE %s SET `comment_content` = '%s' WHERE `comment_ID` = '%d'", o._table, _upd_CommentContent, o.CommentID)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
@@ -1562,7 +1562,7 @@ func (o *Comment) UpdateCommentContent(_upd_CommentContent string) (int64, error
 }
 
 func (o *Comment) UpdateCommentKarma(_upd_CommentKarma int) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `comment_karma` = '%d' WHERE `comment_ID` = '%d'", o._table, _upd_CommentKarma, o.CommentKarma)
+	frmt := fmt.Sprintf("UPDATE %s SET `comment_karma` = '%d' WHERE `comment_ID` = '%d'", o._table, _upd_CommentKarma, o.CommentID)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
@@ -1572,7 +1572,7 @@ func (o *Comment) UpdateCommentKarma(_upd_CommentKarma int) (int64, error) {
 }
 
 func (o *Comment) UpdateCommentApproved(_upd_CommentApproved string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `comment_approved` = '%s' WHERE `comment_ID` = '%d'", o._table, _upd_CommentApproved, o.CommentApproved)
+	frmt := fmt.Sprintf("UPDATE %s SET `comment_approved` = '%s' WHERE `comment_ID` = '%d'", o._table, _upd_CommentApproved, o.CommentID)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
@@ -1582,7 +1582,7 @@ func (o *Comment) UpdateCommentApproved(_upd_CommentApproved string) (int64, err
 }
 
 func (o *Comment) UpdateCommentAgent(_upd_CommentAgent string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `comment_agent` = '%s' WHERE `comment_ID` = '%d'", o._table, _upd_CommentAgent, o.CommentAgent)
+	frmt := fmt.Sprintf("UPDATE %s SET `comment_agent` = '%s' WHERE `comment_ID` = '%d'", o._table, _upd_CommentAgent, o.CommentID)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
@@ -1592,7 +1592,7 @@ func (o *Comment) UpdateCommentAgent(_upd_CommentAgent string) (int64, error) {
 }
 
 func (o *Comment) UpdateCommentType(_upd_CommentType string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `comment_type` = '%s' WHERE `comment_ID` = '%d'", o._table, _upd_CommentType, o.CommentType)
+	frmt := fmt.Sprintf("UPDATE %s SET `comment_type` = '%s' WHERE `comment_ID` = '%d'", o._table, _upd_CommentType, o.CommentID)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
@@ -1602,7 +1602,7 @@ func (o *Comment) UpdateCommentType(_upd_CommentType string) (int64, error) {
 }
 
 func (o *Comment) UpdateCommentParent(_upd_CommentParent int64) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `comment_parent` = '%d' WHERE `comment_ID` = '%d'", o._table, _upd_CommentParent, o.CommentParent)
+	frmt := fmt.Sprintf("UPDATE %s SET `comment_parent` = '%d' WHERE `comment_ID` = '%d'", o._table, _upd_CommentParent, o.CommentID)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
@@ -1612,7 +1612,7 @@ func (o *Comment) UpdateCommentParent(_upd_CommentParent int64) (int64, error) {
 }
 
 func (o *Comment) UpdateUserId(_upd_UserId int64) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `user_id` = '%d' WHERE `comment_ID` = '%d'", o._table, _upd_UserId, o.UserId)
+	frmt := fmt.Sprintf("UPDATE %s SET `user_id` = '%d' WHERE `comment_ID` = '%d'", o._table, _upd_UserId, o.CommentID)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
@@ -2244,7 +2244,7 @@ func (o *Link) Save() error {
 		sets = append(sets, fmt.Sprintf(`link_rss = '%s'`, o._adapter.SafeString(o.LinkRss)))
 	}
 
-	frmt := fmt.Sprintf("UPDATE %s SET %s WHERE %s = '%d'", o._table, strings.Join(sets, `,`))
+	frmt := fmt.Sprintf("UPDATE %s SET %s WHERE %s = '%d'", o._table, strings.Join(sets, `,`), o._pkey, o.LinkId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return err
@@ -2302,7 +2302,7 @@ func (o *Link) Update() error {
 		sets = append(sets, fmt.Sprintf(`link_rss = '%s'`, o._adapter.SafeString(o.LinkRss)))
 	}
 
-	frmt := fmt.Sprintf("UPDATE %s SET %s WHERE %s = '%d'", o._table, strings.Join(sets, `,`))
+	frmt := fmt.Sprintf("UPDATE %s SET %s WHERE %s = '%d'", o._table, strings.Join(sets, `,`), o._pkey, o.LinkId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return err
@@ -2321,7 +2321,7 @@ func (o *Link) Create() error {
 }
 
 func (o *Link) UpdateLinkUrl(_upd_LinkUrl string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `link_url` = '%s' WHERE `link_id` = '%d'", o._table, _upd_LinkUrl, o.LinkUrl)
+	frmt := fmt.Sprintf("UPDATE %s SET `link_url` = '%s' WHERE `link_id` = '%d'", o._table, _upd_LinkUrl, o.LinkId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
@@ -2331,7 +2331,7 @@ func (o *Link) UpdateLinkUrl(_upd_LinkUrl string) (int64, error) {
 }
 
 func (o *Link) UpdateLinkName(_upd_LinkName string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `link_name` = '%s' WHERE `link_id` = '%d'", o._table, _upd_LinkName, o.LinkName)
+	frmt := fmt.Sprintf("UPDATE %s SET `link_name` = '%s' WHERE `link_id` = '%d'", o._table, _upd_LinkName, o.LinkId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
@@ -2341,7 +2341,7 @@ func (o *Link) UpdateLinkName(_upd_LinkName string) (int64, error) {
 }
 
 func (o *Link) UpdateLinkImage(_upd_LinkImage string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `link_image` = '%s' WHERE `link_id` = '%d'", o._table, _upd_LinkImage, o.LinkImage)
+	frmt := fmt.Sprintf("UPDATE %s SET `link_image` = '%s' WHERE `link_id` = '%d'", o._table, _upd_LinkImage, o.LinkId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
@@ -2351,7 +2351,7 @@ func (o *Link) UpdateLinkImage(_upd_LinkImage string) (int64, error) {
 }
 
 func (o *Link) UpdateLinkTarget(_upd_LinkTarget string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `link_target` = '%s' WHERE `link_id` = '%d'", o._table, _upd_LinkTarget, o.LinkTarget)
+	frmt := fmt.Sprintf("UPDATE %s SET `link_target` = '%s' WHERE `link_id` = '%d'", o._table, _upd_LinkTarget, o.LinkId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
@@ -2361,7 +2361,7 @@ func (o *Link) UpdateLinkTarget(_upd_LinkTarget string) (int64, error) {
 }
 
 func (o *Link) UpdateLinkDescription(_upd_LinkDescription string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `link_description` = '%s' WHERE `link_id` = '%d'", o._table, _upd_LinkDescription, o.LinkDescription)
+	frmt := fmt.Sprintf("UPDATE %s SET `link_description` = '%s' WHERE `link_id` = '%d'", o._table, _upd_LinkDescription, o.LinkId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
@@ -2371,7 +2371,7 @@ func (o *Link) UpdateLinkDescription(_upd_LinkDescription string) (int64, error)
 }
 
 func (o *Link) UpdateLinkVisible(_upd_LinkVisible string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `link_visible` = '%s' WHERE `link_id` = '%d'", o._table, _upd_LinkVisible, o.LinkVisible)
+	frmt := fmt.Sprintf("UPDATE %s SET `link_visible` = '%s' WHERE `link_id` = '%d'", o._table, _upd_LinkVisible, o.LinkId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
@@ -2381,7 +2381,7 @@ func (o *Link) UpdateLinkVisible(_upd_LinkVisible string) (int64, error) {
 }
 
 func (o *Link) UpdateLinkOwner(_upd_LinkOwner int64) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `link_owner` = '%d' WHERE `link_id` = '%d'", o._table, _upd_LinkOwner, o.LinkOwner)
+	frmt := fmt.Sprintf("UPDATE %s SET `link_owner` = '%d' WHERE `link_id` = '%d'", o._table, _upd_LinkOwner, o.LinkId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
@@ -2391,7 +2391,7 @@ func (o *Link) UpdateLinkOwner(_upd_LinkOwner int64) (int64, error) {
 }
 
 func (o *Link) UpdateLinkRating(_upd_LinkRating int) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `link_rating` = '%d' WHERE `link_id` = '%d'", o._table, _upd_LinkRating, o.LinkRating)
+	frmt := fmt.Sprintf("UPDATE %s SET `link_rating` = '%d' WHERE `link_id` = '%d'", o._table, _upd_LinkRating, o.LinkId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
@@ -2401,7 +2401,7 @@ func (o *Link) UpdateLinkRating(_upd_LinkRating int) (int64, error) {
 }
 
 func (o *Link) UpdateLinkUpdated(_upd_LinkUpdated *DateTime) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `link_updated` = '%s' WHERE `link_id` = '%d'", o._table, _upd_LinkUpdated, o.LinkUpdated)
+	frmt := fmt.Sprintf("UPDATE %s SET `link_updated` = '%s' WHERE `link_id` = '%d'", o._table, _upd_LinkUpdated, o.LinkId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
@@ -2411,7 +2411,7 @@ func (o *Link) UpdateLinkUpdated(_upd_LinkUpdated *DateTime) (int64, error) {
 }
 
 func (o *Link) UpdateLinkRel(_upd_LinkRel string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `link_rel` = '%s' WHERE `link_id` = '%d'", o._table, _upd_LinkRel, o.LinkRel)
+	frmt := fmt.Sprintf("UPDATE %s SET `link_rel` = '%s' WHERE `link_id` = '%d'", o._table, _upd_LinkRel, o.LinkId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
@@ -2421,7 +2421,7 @@ func (o *Link) UpdateLinkRel(_upd_LinkRel string) (int64, error) {
 }
 
 func (o *Link) UpdateLinkNotes(_upd_LinkNotes string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `link_notes` = '%s' WHERE `link_id` = '%d'", o._table, _upd_LinkNotes, o.LinkNotes)
+	frmt := fmt.Sprintf("UPDATE %s SET `link_notes` = '%s' WHERE `link_id` = '%d'", o._table, _upd_LinkNotes, o.LinkId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
@@ -2431,7 +2431,7 @@ func (o *Link) UpdateLinkNotes(_upd_LinkNotes string) (int64, error) {
 }
 
 func (o *Link) UpdateLinkRss(_upd_LinkRss string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `link_rss` = '%s' WHERE `link_id` = '%d'", o._table, _upd_LinkRss, o.LinkRss)
+	frmt := fmt.Sprintf("UPDATE %s SET `link_rss` = '%s' WHERE `link_id` = '%d'", o._table, _upd_LinkRss, o.LinkId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
@@ -2658,7 +2658,7 @@ func (o *Option) Save() error {
 		sets = append(sets, fmt.Sprintf(`autoload = '%s'`, o._adapter.SafeString(o.Autoload)))
 	}
 
-	frmt := fmt.Sprintf("UPDATE %s SET %s WHERE %s = '%d'", o._table, strings.Join(sets, `,`))
+	frmt := fmt.Sprintf("UPDATE %s SET %s WHERE %s = '%d'", o._table, strings.Join(sets, `,`), o._pkey, o.OptionId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return err
@@ -2680,7 +2680,7 @@ func (o *Option) Update() error {
 		sets = append(sets, fmt.Sprintf(`autoload = '%s'`, o._adapter.SafeString(o.Autoload)))
 	}
 
-	frmt := fmt.Sprintf("UPDATE %s SET %s WHERE %s = '%d'", o._table, strings.Join(sets, `,`))
+	frmt := fmt.Sprintf("UPDATE %s SET %s WHERE %s = '%d'", o._table, strings.Join(sets, `,`), o._pkey, o.OptionId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return err
@@ -2699,7 +2699,7 @@ func (o *Option) Create() error {
 }
 
 func (o *Option) UpdateOptionName(_upd_OptionName string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `option_name` = '%s' WHERE `option_id` = '%d'", o._table, _upd_OptionName, o.OptionName)
+	frmt := fmt.Sprintf("UPDATE %s SET `option_name` = '%s' WHERE `option_id` = '%d'", o._table, _upd_OptionName, o.OptionId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
@@ -2709,7 +2709,7 @@ func (o *Option) UpdateOptionName(_upd_OptionName string) (int64, error) {
 }
 
 func (o *Option) UpdateOptionValue(_upd_OptionValue string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `option_value` = '%s' WHERE `option_id` = '%d'", o._table, _upd_OptionValue, o.OptionValue)
+	frmt := fmt.Sprintf("UPDATE %s SET `option_value` = '%s' WHERE `option_id` = '%d'", o._table, _upd_OptionValue, o.OptionId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
@@ -2719,7 +2719,7 @@ func (o *Option) UpdateOptionValue(_upd_OptionValue string) (int64, error) {
 }
 
 func (o *Option) UpdateAutoload(_upd_Autoload string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `autoload` = '%s' WHERE `option_id` = '%d'", o._table, _upd_Autoload, o.Autoload)
+	frmt := fmt.Sprintf("UPDATE %s SET `autoload` = '%s' WHERE `option_id` = '%d'", o._table, _upd_Autoload, o.OptionId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
@@ -2946,7 +2946,7 @@ func (o *PostMeta) Save() error {
 		sets = append(sets, fmt.Sprintf(`meta_value = '%s'`, o._adapter.SafeString(o.MetaValue)))
 	}
 
-	frmt := fmt.Sprintf("UPDATE %s SET %s WHERE %s = '%d'", o._table, strings.Join(sets, `,`))
+	frmt := fmt.Sprintf("UPDATE %s SET %s WHERE %s = '%d'", o._table, strings.Join(sets, `,`), o._pkey, o.MetaId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return err
@@ -2968,7 +2968,7 @@ func (o *PostMeta) Update() error {
 		sets = append(sets, fmt.Sprintf(`meta_value = '%s'`, o._adapter.SafeString(o.MetaValue)))
 	}
 
-	frmt := fmt.Sprintf("UPDATE %s SET %s WHERE %s = '%d'", o._table, strings.Join(sets, `,`))
+	frmt := fmt.Sprintf("UPDATE %s SET %s WHERE %s = '%d'", o._table, strings.Join(sets, `,`), o._pkey, o.MetaId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return err
@@ -2987,7 +2987,7 @@ func (o *PostMeta) Create() error {
 }
 
 func (o *PostMeta) UpdatePostId(_upd_PostId int64) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `post_id` = '%d' WHERE `meta_id` = '%d'", o._table, _upd_PostId, o.PostId)
+	frmt := fmt.Sprintf("UPDATE %s SET `post_id` = '%d' WHERE `meta_id` = '%d'", o._table, _upd_PostId, o.MetaId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
@@ -2997,7 +2997,7 @@ func (o *PostMeta) UpdatePostId(_upd_PostId int64) (int64, error) {
 }
 
 func (o *PostMeta) UpdateMetaKey(_upd_MetaKey string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `meta_key` = '%s' WHERE `meta_id` = '%d'", o._table, _upd_MetaKey, o.MetaKey)
+	frmt := fmt.Sprintf("UPDATE %s SET `meta_key` = '%s' WHERE `meta_id` = '%d'", o._table, _upd_MetaKey, o.MetaId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
@@ -3007,7 +3007,7 @@ func (o *PostMeta) UpdateMetaKey(_upd_MetaKey string) (int64, error) {
 }
 
 func (o *PostMeta) UpdateMetaValue(_upd_MetaValue string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `meta_value` = '%s' WHERE `meta_id` = '%d'", o._table, _upd_MetaValue, o.MetaValue)
+	frmt := fmt.Sprintf("UPDATE %s SET `meta_value` = '%s' WHERE `meta_id` = '%d'", o._table, _upd_MetaValue, o.MetaId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
@@ -4089,7 +4089,7 @@ func (o *Post) Save() error {
 		sets = append(sets, fmt.Sprintf(`comment_count = '%d'`, o.CommentCount))
 	}
 
-	frmt := fmt.Sprintf("UPDATE %s SET %s WHERE %s = '%d'", o._table, strings.Join(sets, `,`))
+	frmt := fmt.Sprintf("UPDATE %s SET %s WHERE %s = '%d'", o._table, strings.Join(sets, `,`), o._pkey, o.ID)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return err
@@ -4187,7 +4187,7 @@ func (o *Post) Update() error {
 		sets = append(sets, fmt.Sprintf(`comment_count = '%d'`, o.CommentCount))
 	}
 
-	frmt := fmt.Sprintf("UPDATE %s SET %s WHERE %s = '%d'", o._table, strings.Join(sets, `,`))
+	frmt := fmt.Sprintf("UPDATE %s SET %s WHERE %s = '%d'", o._table, strings.Join(sets, `,`), o._pkey, o.ID)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return err
@@ -4206,7 +4206,7 @@ func (o *Post) Create() error {
 }
 
 func (o *Post) UpdatePostAuthor(_upd_PostAuthor int64) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `post_author` = '%d' WHERE `ID` = '%d'", o._table, _upd_PostAuthor, o.PostAuthor)
+	frmt := fmt.Sprintf("UPDATE %s SET `post_author` = '%d' WHERE `ID` = '%d'", o._table, _upd_PostAuthor, o.ID)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
@@ -4216,7 +4216,7 @@ func (o *Post) UpdatePostAuthor(_upd_PostAuthor int64) (int64, error) {
 }
 
 func (o *Post) UpdatePostDate(_upd_PostDate *DateTime) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `post_date` = '%s' WHERE `ID` = '%d'", o._table, _upd_PostDate, o.PostDate)
+	frmt := fmt.Sprintf("UPDATE %s SET `post_date` = '%s' WHERE `ID` = '%d'", o._table, _upd_PostDate, o.ID)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
@@ -4226,7 +4226,7 @@ func (o *Post) UpdatePostDate(_upd_PostDate *DateTime) (int64, error) {
 }
 
 func (o *Post) UpdatePostDateGmt(_upd_PostDateGmt *DateTime) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `post_date_gmt` = '%s' WHERE `ID` = '%d'", o._table, _upd_PostDateGmt, o.PostDateGmt)
+	frmt := fmt.Sprintf("UPDATE %s SET `post_date_gmt` = '%s' WHERE `ID` = '%d'", o._table, _upd_PostDateGmt, o.ID)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
@@ -4236,7 +4236,7 @@ func (o *Post) UpdatePostDateGmt(_upd_PostDateGmt *DateTime) (int64, error) {
 }
 
 func (o *Post) UpdatePostContent(_upd_PostContent string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `post_content` = '%s' WHERE `ID` = '%d'", o._table, _upd_PostContent, o.PostContent)
+	frmt := fmt.Sprintf("UPDATE %s SET `post_content` = '%s' WHERE `ID` = '%d'", o._table, _upd_PostContent, o.ID)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
@@ -4246,7 +4246,7 @@ func (o *Post) UpdatePostContent(_upd_PostContent string) (int64, error) {
 }
 
 func (o *Post) UpdatePostTitle(_upd_PostTitle string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `post_title` = '%s' WHERE `ID` = '%d'", o._table, _upd_PostTitle, o.PostTitle)
+	frmt := fmt.Sprintf("UPDATE %s SET `post_title` = '%s' WHERE `ID` = '%d'", o._table, _upd_PostTitle, o.ID)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
@@ -4256,7 +4256,7 @@ func (o *Post) UpdatePostTitle(_upd_PostTitle string) (int64, error) {
 }
 
 func (o *Post) UpdatePostExcerpt(_upd_PostExcerpt string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `post_excerpt` = '%s' WHERE `ID` = '%d'", o._table, _upd_PostExcerpt, o.PostExcerpt)
+	frmt := fmt.Sprintf("UPDATE %s SET `post_excerpt` = '%s' WHERE `ID` = '%d'", o._table, _upd_PostExcerpt, o.ID)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
@@ -4266,7 +4266,7 @@ func (o *Post) UpdatePostExcerpt(_upd_PostExcerpt string) (int64, error) {
 }
 
 func (o *Post) UpdatePostStatus(_upd_PostStatus string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `post_status` = '%s' WHERE `ID` = '%d'", o._table, _upd_PostStatus, o.PostStatus)
+	frmt := fmt.Sprintf("UPDATE %s SET `post_status` = '%s' WHERE `ID` = '%d'", o._table, _upd_PostStatus, o.ID)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
@@ -4276,7 +4276,7 @@ func (o *Post) UpdatePostStatus(_upd_PostStatus string) (int64, error) {
 }
 
 func (o *Post) UpdateCommentStatus(_upd_CommentStatus string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `comment_status` = '%s' WHERE `ID` = '%d'", o._table, _upd_CommentStatus, o.CommentStatus)
+	frmt := fmt.Sprintf("UPDATE %s SET `comment_status` = '%s' WHERE `ID` = '%d'", o._table, _upd_CommentStatus, o.ID)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
@@ -4286,7 +4286,7 @@ func (o *Post) UpdateCommentStatus(_upd_CommentStatus string) (int64, error) {
 }
 
 func (o *Post) UpdatePingStatus(_upd_PingStatus string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `ping_status` = '%s' WHERE `ID` = '%d'", o._table, _upd_PingStatus, o.PingStatus)
+	frmt := fmt.Sprintf("UPDATE %s SET `ping_status` = '%s' WHERE `ID` = '%d'", o._table, _upd_PingStatus, o.ID)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
@@ -4296,7 +4296,7 @@ func (o *Post) UpdatePingStatus(_upd_PingStatus string) (int64, error) {
 }
 
 func (o *Post) UpdatePostPassword(_upd_PostPassword string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `post_password` = '%s' WHERE `ID` = '%d'", o._table, _upd_PostPassword, o.PostPassword)
+	frmt := fmt.Sprintf("UPDATE %s SET `post_password` = '%s' WHERE `ID` = '%d'", o._table, _upd_PostPassword, o.ID)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
@@ -4306,7 +4306,7 @@ func (o *Post) UpdatePostPassword(_upd_PostPassword string) (int64, error) {
 }
 
 func (o *Post) UpdatePostName(_upd_PostName string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `post_name` = '%s' WHERE `ID` = '%d'", o._table, _upd_PostName, o.PostName)
+	frmt := fmt.Sprintf("UPDATE %s SET `post_name` = '%s' WHERE `ID` = '%d'", o._table, _upd_PostName, o.ID)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
@@ -4316,7 +4316,7 @@ func (o *Post) UpdatePostName(_upd_PostName string) (int64, error) {
 }
 
 func (o *Post) UpdateToPing(_upd_ToPing string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `to_ping` = '%s' WHERE `ID` = '%d'", o._table, _upd_ToPing, o.ToPing)
+	frmt := fmt.Sprintf("UPDATE %s SET `to_ping` = '%s' WHERE `ID` = '%d'", o._table, _upd_ToPing, o.ID)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
@@ -4326,7 +4326,7 @@ func (o *Post) UpdateToPing(_upd_ToPing string) (int64, error) {
 }
 
 func (o *Post) UpdatePinged(_upd_Pinged string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `pinged` = '%s' WHERE `ID` = '%d'", o._table, _upd_Pinged, o.Pinged)
+	frmt := fmt.Sprintf("UPDATE %s SET `pinged` = '%s' WHERE `ID` = '%d'", o._table, _upd_Pinged, o.ID)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
@@ -4336,7 +4336,7 @@ func (o *Post) UpdatePinged(_upd_Pinged string) (int64, error) {
 }
 
 func (o *Post) UpdatePostModified(_upd_PostModified *DateTime) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `post_modified` = '%s' WHERE `ID` = '%d'", o._table, _upd_PostModified, o.PostModified)
+	frmt := fmt.Sprintf("UPDATE %s SET `post_modified` = '%s' WHERE `ID` = '%d'", o._table, _upd_PostModified, o.ID)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
@@ -4346,7 +4346,7 @@ func (o *Post) UpdatePostModified(_upd_PostModified *DateTime) (int64, error) {
 }
 
 func (o *Post) UpdatePostModifiedGmt(_upd_PostModifiedGmt *DateTime) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `post_modified_gmt` = '%s' WHERE `ID` = '%d'", o._table, _upd_PostModifiedGmt, o.PostModifiedGmt)
+	frmt := fmt.Sprintf("UPDATE %s SET `post_modified_gmt` = '%s' WHERE `ID` = '%d'", o._table, _upd_PostModifiedGmt, o.ID)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
@@ -4356,7 +4356,7 @@ func (o *Post) UpdatePostModifiedGmt(_upd_PostModifiedGmt *DateTime) (int64, err
 }
 
 func (o *Post) UpdatePostContentFiltered(_upd_PostContentFiltered string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `post_content_filtered` = '%s' WHERE `ID` = '%d'", o._table, _upd_PostContentFiltered, o.PostContentFiltered)
+	frmt := fmt.Sprintf("UPDATE %s SET `post_content_filtered` = '%s' WHERE `ID` = '%d'", o._table, _upd_PostContentFiltered, o.ID)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
@@ -4366,7 +4366,7 @@ func (o *Post) UpdatePostContentFiltered(_upd_PostContentFiltered string) (int64
 }
 
 func (o *Post) UpdatePostParent(_upd_PostParent int64) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `post_parent` = '%d' WHERE `ID` = '%d'", o._table, _upd_PostParent, o.PostParent)
+	frmt := fmt.Sprintf("UPDATE %s SET `post_parent` = '%d' WHERE `ID` = '%d'", o._table, _upd_PostParent, o.ID)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
@@ -4376,7 +4376,7 @@ func (o *Post) UpdatePostParent(_upd_PostParent int64) (int64, error) {
 }
 
 func (o *Post) UpdateGuid(_upd_Guid string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `guid` = '%s' WHERE `ID` = '%d'", o._table, _upd_Guid, o.Guid)
+	frmt := fmt.Sprintf("UPDATE %s SET `guid` = '%s' WHERE `ID` = '%d'", o._table, _upd_Guid, o.ID)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
@@ -4386,7 +4386,7 @@ func (o *Post) UpdateGuid(_upd_Guid string) (int64, error) {
 }
 
 func (o *Post) UpdateMenuOrder(_upd_MenuOrder int) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `menu_order` = '%d' WHERE `ID` = '%d'", o._table, _upd_MenuOrder, o.MenuOrder)
+	frmt := fmt.Sprintf("UPDATE %s SET `menu_order` = '%d' WHERE `ID` = '%d'", o._table, _upd_MenuOrder, o.ID)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
@@ -4396,7 +4396,7 @@ func (o *Post) UpdateMenuOrder(_upd_MenuOrder int) (int64, error) {
 }
 
 func (o *Post) UpdatePostType(_upd_PostType string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `post_type` = '%s' WHERE `ID` = '%d'", o._table, _upd_PostType, o.PostType)
+	frmt := fmt.Sprintf("UPDATE %s SET `post_type` = '%s' WHERE `ID` = '%d'", o._table, _upd_PostType, o.ID)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
@@ -4406,7 +4406,7 @@ func (o *Post) UpdatePostType(_upd_PostType string) (int64, error) {
 }
 
 func (o *Post) UpdatePostMimeType(_upd_PostMimeType string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `post_mime_type` = '%s' WHERE `ID` = '%d'", o._table, _upd_PostMimeType, o.PostMimeType)
+	frmt := fmt.Sprintf("UPDATE %s SET `post_mime_type` = '%s' WHERE `ID` = '%d'", o._table, _upd_PostMimeType, o.ID)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
@@ -4416,7 +4416,7 @@ func (o *Post) UpdatePostMimeType(_upd_PostMimeType string) (int64, error) {
 }
 
 func (o *Post) UpdateCommentCount(_upd_CommentCount int64) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `comment_count` = '%d' WHERE `ID` = '%d'", o._table, _upd_CommentCount, o.CommentCount)
+	frmt := fmt.Sprintf("UPDATE %s SET `comment_count` = '%d' WHERE `ID` = '%d'", o._table, _upd_CommentCount, o.ID)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
@@ -4602,7 +4602,7 @@ func (o *TermRelationship) Save() error {
 		sets = append(sets, fmt.Sprintf(`term_order = '%d'`, o.TermOrder))
 	}
 
-	frmt := fmt.Sprintf("UPDATE %s SET %s WHERE `term_taxonomy_id` = '%d' AND object_id = '%d'", o._table, strings.Join(sets, `,`))
+	frmt := fmt.Sprintf("UPDATE %s SET %s WHERE `term_taxonomy_id` = '%d' AND object_id = '%d'", o._table, strings.Join(sets, `,`), o.TermTaxonomyId, o.ObjectId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return err
@@ -4624,7 +4624,7 @@ func (o *TermRelationship) Update() error {
 		sets = append(sets, fmt.Sprintf(`term_order = '%d'`, o.TermOrder))
 	}
 
-	frmt := fmt.Sprintf("UPDATE %s SET %s WHERE `term_taxonomy_id` = '%d' AND object_id = '%d'", o._table, strings.Join(sets, `,`))
+	frmt := fmt.Sprintf("UPDATE %s SET %s WHERE `term_taxonomy_id` = '%d' AND object_id = '%d'", o._table, strings.Join(sets, `,`), o.TermTaxonomyId, o.ObjectId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return err
@@ -4970,7 +4970,7 @@ func (o *TermTaxonomy) Save() error {
 		sets = append(sets, fmt.Sprintf(`count = '%d'`, o.Count))
 	}
 
-	frmt := fmt.Sprintf("UPDATE %s SET %s WHERE %s = '%d'", o._table, strings.Join(sets, `,`))
+	frmt := fmt.Sprintf("UPDATE %s SET %s WHERE %s = '%d'", o._table, strings.Join(sets, `,`), o._pkey, o.TermTaxonomyId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return err
@@ -5000,7 +5000,7 @@ func (o *TermTaxonomy) Update() error {
 		sets = append(sets, fmt.Sprintf(`count = '%d'`, o.Count))
 	}
 
-	frmt := fmt.Sprintf("UPDATE %s SET %s WHERE %s = '%d'", o._table, strings.Join(sets, `,`))
+	frmt := fmt.Sprintf("UPDATE %s SET %s WHERE %s = '%d'", o._table, strings.Join(sets, `,`), o._pkey, o.TermTaxonomyId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return err
@@ -5019,7 +5019,7 @@ func (o *TermTaxonomy) Create() error {
 }
 
 func (o *TermTaxonomy) UpdateTermId(_upd_TermId int64) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `term_id` = '%d' WHERE `term_taxonomy_id` = '%d'", o._table, _upd_TermId, o.TermId)
+	frmt := fmt.Sprintf("UPDATE %s SET `term_id` = '%d' WHERE `term_taxonomy_id` = '%d'", o._table, _upd_TermId, o.TermTaxonomyId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
@@ -5029,7 +5029,7 @@ func (o *TermTaxonomy) UpdateTermId(_upd_TermId int64) (int64, error) {
 }
 
 func (o *TermTaxonomy) UpdateTaxonomy(_upd_Taxonomy string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `taxonomy` = '%s' WHERE `term_taxonomy_id` = '%d'", o._table, _upd_Taxonomy, o.Taxonomy)
+	frmt := fmt.Sprintf("UPDATE %s SET `taxonomy` = '%s' WHERE `term_taxonomy_id` = '%d'", o._table, _upd_Taxonomy, o.TermTaxonomyId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
@@ -5039,7 +5039,7 @@ func (o *TermTaxonomy) UpdateTaxonomy(_upd_Taxonomy string) (int64, error) {
 }
 
 func (o *TermTaxonomy) UpdateDescription(_upd_Description string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `description` = '%s' WHERE `term_taxonomy_id` = '%d'", o._table, _upd_Description, o.Description)
+	frmt := fmt.Sprintf("UPDATE %s SET `description` = '%s' WHERE `term_taxonomy_id` = '%d'", o._table, _upd_Description, o.TermTaxonomyId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
@@ -5049,7 +5049,7 @@ func (o *TermTaxonomy) UpdateDescription(_upd_Description string) (int64, error)
 }
 
 func (o *TermTaxonomy) UpdateParent(_upd_Parent int64) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `parent` = '%d' WHERE `term_taxonomy_id` = '%d'", o._table, _upd_Parent, o.Parent)
+	frmt := fmt.Sprintf("UPDATE %s SET `parent` = '%d' WHERE `term_taxonomy_id` = '%d'", o._table, _upd_Parent, o.TermTaxonomyId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
@@ -5059,7 +5059,7 @@ func (o *TermTaxonomy) UpdateParent(_upd_Parent int64) (int64, error) {
 }
 
 func (o *TermTaxonomy) UpdateCount(_upd_Count int64) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `count` = '%d' WHERE `term_taxonomy_id` = '%d'", o._table, _upd_Count, o.Count)
+	frmt := fmt.Sprintf("UPDATE %s SET `count` = '%d' WHERE `term_taxonomy_id` = '%d'", o._table, _upd_Count, o.TermTaxonomyId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
@@ -5286,7 +5286,7 @@ func (o *Term) Save() error {
 		sets = append(sets, fmt.Sprintf(`term_group = '%d'`, o.TermGroup))
 	}
 
-	frmt := fmt.Sprintf("UPDATE %s SET %s WHERE %s = '%d'", o._table, strings.Join(sets, `,`))
+	frmt := fmt.Sprintf("UPDATE %s SET %s WHERE %s = '%d'", o._table, strings.Join(sets, `,`), o._pkey, o.TermId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return err
@@ -5308,7 +5308,7 @@ func (o *Term) Update() error {
 		sets = append(sets, fmt.Sprintf(`term_group = '%d'`, o.TermGroup))
 	}
 
-	frmt := fmt.Sprintf("UPDATE %s SET %s WHERE %s = '%d'", o._table, strings.Join(sets, `,`))
+	frmt := fmt.Sprintf("UPDATE %s SET %s WHERE %s = '%d'", o._table, strings.Join(sets, `,`), o._pkey, o.TermId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return err
@@ -5327,7 +5327,7 @@ func (o *Term) Create() error {
 }
 
 func (o *Term) UpdateName(_upd_Name string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `name` = '%s' WHERE `term_id` = '%d'", o._table, _upd_Name, o.Name)
+	frmt := fmt.Sprintf("UPDATE %s SET `name` = '%s' WHERE `term_id` = '%d'", o._table, _upd_Name, o.TermId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
@@ -5337,7 +5337,7 @@ func (o *Term) UpdateName(_upd_Name string) (int64, error) {
 }
 
 func (o *Term) UpdateSlug(_upd_Slug string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `slug` = '%s' WHERE `term_id` = '%d'", o._table, _upd_Slug, o.Slug)
+	frmt := fmt.Sprintf("UPDATE %s SET `slug` = '%s' WHERE `term_id` = '%d'", o._table, _upd_Slug, o.TermId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
@@ -5347,7 +5347,7 @@ func (o *Term) UpdateSlug(_upd_Slug string) (int64, error) {
 }
 
 func (o *Term) UpdateTermGroup(_upd_TermGroup int64) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `term_group` = '%d' WHERE `term_id` = '%d'", o._table, _upd_TermGroup, o.TermGroup)
+	frmt := fmt.Sprintf("UPDATE %s SET `term_group` = '%d' WHERE `term_id` = '%d'", o._table, _upd_TermGroup, o.TermId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
@@ -5574,7 +5574,7 @@ func (o *UserMeta) Save() error {
 		sets = append(sets, fmt.Sprintf(`meta_value = '%s'`, o._adapter.SafeString(o.MetaValue)))
 	}
 
-	frmt := fmt.Sprintf("UPDATE %s SET %s WHERE %s = '%d'", o._table, strings.Join(sets, `,`))
+	frmt := fmt.Sprintf("UPDATE %s SET %s WHERE %s = '%d'", o._table, strings.Join(sets, `,`), o._pkey, o.UMetaId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return err
@@ -5596,7 +5596,7 @@ func (o *UserMeta) Update() error {
 		sets = append(sets, fmt.Sprintf(`meta_value = '%s'`, o._adapter.SafeString(o.MetaValue)))
 	}
 
-	frmt := fmt.Sprintf("UPDATE %s SET %s WHERE %s = '%d'", o._table, strings.Join(sets, `,`))
+	frmt := fmt.Sprintf("UPDATE %s SET %s WHERE %s = '%d'", o._table, strings.Join(sets, `,`), o._pkey, o.UMetaId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return err
@@ -5615,7 +5615,7 @@ func (o *UserMeta) Create() error {
 }
 
 func (o *UserMeta) UpdateUserId(_upd_UserId int64) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `user_id` = '%d' WHERE `umeta_id` = '%d'", o._table, _upd_UserId, o.UserId)
+	frmt := fmt.Sprintf("UPDATE %s SET `user_id` = '%d' WHERE `umeta_id` = '%d'", o._table, _upd_UserId, o.UMetaId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
@@ -5625,7 +5625,7 @@ func (o *UserMeta) UpdateUserId(_upd_UserId int64) (int64, error) {
 }
 
 func (o *UserMeta) UpdateMetaKey(_upd_MetaKey string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `meta_key` = '%s' WHERE `umeta_id` = '%d'", o._table, _upd_MetaKey, o.MetaKey)
+	frmt := fmt.Sprintf("UPDATE %s SET `meta_key` = '%s' WHERE `umeta_id` = '%d'", o._table, _upd_MetaKey, o.UMetaId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
@@ -5635,7 +5635,7 @@ func (o *UserMeta) UpdateMetaKey(_upd_MetaKey string) (int64, error) {
 }
 
 func (o *UserMeta) UpdateMetaValue(_upd_MetaValue string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `meta_value` = '%s' WHERE `umeta_id` = '%d'", o._table, _upd_MetaValue, o.MetaValue)
+	frmt := fmt.Sprintf("UPDATE %s SET `meta_value` = '%s' WHERE `umeta_id` = '%d'", o._table, _upd_MetaValue, o.UMetaId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err

@@ -8,10 +8,10 @@ function _save_create($t) {
     $pkeyfmt = "";
     $pkeyname = "";
     $sets = "";
+    $pkeyfmt = mysqlToFmtType($t->pfield->Type);
+    $pkeyname =  maybeLC(convertFieldName($t->pfield->Field));
     foreach ( $t->fields as $tf) {
         if (isPrimaryKey($tf) && $t->model_name != "TermRelationship") {
-            $pkeyfmt = mysqlToFmtType($tf->Type);
-            $pkeyname =  maybeLC(convertFieldName($tf->Field));
             continue;
         }
         if ($tf->go_type == "*DateTime") {
@@ -58,10 +58,10 @@ function _save_create($t) {
     $cr_val_line = join(", ",$cr_vals);
     if ( $t->model_name == "TermRelationship") {
         $where = "`term_taxonomy_id` = '%d' AND object_id = '%d'";
-        $up_gn_line .= ",o.TermTaxonomyId, o.ObjectId";
+        $up_gn_line = "o.TermTaxonomyId, o.ObjectId";
     } else {
         $where = "%s = '$pkeyfmt'";
-        $up_gn_line .= ",o._pkey, o.$pkeyname";  
+        $up_gn_line = "o._pkey, o.$pkeyname";  
     }
     $set_primary_key_field = "o.{$t->pfield->model_field_name} = o._adapter.LastInsertedId()";
     if ($t->model_name == "TermRelationship") {
@@ -74,7 +74,7 @@ func (o *{$t->model_name}) Save() error {
     }
     var sets []string
     $sets
-    frmt := fmt.Sprintf(\"UPDATE %s SET %s WHERE $where\",o._table,strings.Join(sets,`,`))
+    frmt := fmt.Sprintf(\"UPDATE %s SET %s WHERE $where\",o._table,strings.Join(sets,`,`),$up_gn_line)
     err := o._adapter.Execute(frmt)
     if err != nil {
         return err
@@ -84,7 +84,7 @@ func (o *{$t->model_name}) Save() error {
 func (o *{$t->model_name}) Update() error {
     var sets []string
     $sets
-    frmt := fmt.Sprintf(\"UPDATE %s SET %s WHERE $where\",o._table,strings.Join(sets,`,`))
+    frmt := fmt.Sprintf(\"UPDATE %s SET %s WHERE $where\",o._table,strings.Join(sets,`,`),$up_gn_line)
     err := o._adapter.Execute(frmt)
     if err != nil {
         return err
