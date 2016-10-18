@@ -13,6 +13,7 @@ import (
 	"os"
 	"regexp"
 	"strconv"
+	"strings"
 )
 
 type LogFilter func(string, string) string
@@ -30,6 +31,7 @@ type Adapter interface {
 	SetLogs(io.Writer)
 	SetLogFilter(LogFilter)
 	Oops(string) error
+	SafeString(string) string
 	NewDBValue() DBValue
 }
 
@@ -71,6 +73,9 @@ func NewMysqlAdapterEx(fname string) (*MysqlAdapter, error) {
 }
 func (a *MysqlAdapter) SetLogFilter(f LogFilter) {
 	a._log_filter = f
+}
+func (a *MysqlAdapter) SafeString(s string) string {
+	return s
 }
 func (a *MysqlAdapter) SetInfoLog(t io.Writer) {
 	a._info_log = log.New(t, `[INFO]:`, log.Ldate|log.Ltime|log.Lshortfile)
@@ -364,6 +369,9 @@ func (d *DateTime) FromString(s string) error {
 func (d *DateTime) ToString() string {
 	return fmt.Sprintf("%d-%02d-%02d %02d:%02d:%02d", d.Year, d.Month, d.Day, d.Hours, d.Minutes, d.Seconds)
 }
+func (d *DateTime) String() string {
+	return d.ToString()
+}
 func NewDateTime(a Adapter) *DateTime {
 	d := &DateTime{_adapter: a}
 	return d
@@ -404,8 +412,6 @@ type CommentMeta struct {
 	IsMetaKeyDirty   bool
 	IsMetaValueDirty bool
 	// Relationships
-	Comment         *Comment
-	IsCommentLoaded bool
 }
 
 func NewCommentMeta(a Adapter) *CommentMeta {
@@ -415,33 +421,6 @@ func NewCommentMeta(a Adapter) *CommentMeta {
 	o._pkey = "meta_id"
 	o._new = false
 	return &o
-}
-
-func (o *CommentMeta) LoadComment() (*Comment, error) {
-	if o.IsCommentLoaded == true {
-		return o.Comment, nil
-	}
-	m := NewComment(o._adapter)
-	found, err := m.Find(o.GetCommentId())
-	if err != nil {
-		return nil, err
-	}
-	if found == false {
-		return nil, errors.New(fmt.Sprintf(`could not find Comment with comment_ID of %d`, o.GetCommentId()))
-	}
-	o.IsCommentLoaded = true
-	o.Comment = m
-	return m, nil
-}
-
-func (o *CommentMeta) SaveRelations() error {
-
-	_, err := o.Comment.Save()
-	if err != nil {
-		return errors.New(fmt.Sprintf(`while saving relation Comment %s`, err))
-	}
-
-	return nil
 }
 
 func (m *CommentMeta) GetPrimaryKeyValue() int64 {
@@ -617,27 +596,62 @@ func (o *CommentMeta) FromCommentMeta(m *CommentMeta) {
 
 }
 
-func (o *CommentMeta) Save() (int64, error) {
+func (o *CommentMeta) Save() error {
 	if o._new == true {
 		return o.Create()
 	}
-	frmt := fmt.Sprintf("UPDATE %s SET `comment_id` = '%d', `meta_key` = '%s', `meta_value` = '%s' WHERE %s = '%d' LIMIT 1", o._table, o.CommentId, o.MetaKey, o.MetaValue, o._pkey, o.MetaId)
-	err := o._adapter.Execute(frmt)
-	if err != nil {
-		return 0, err
+	var sets []string
+
+	if o.IsCommentIdDirty == true {
+		sets = append(sets, fmt.Sprintf(`comment_id = '%d'`, o.CommentId))
 	}
 
-	return o._adapter.AffectedRows(), nil
+	if o.IsMetaKeyDirty == true {
+		sets = append(sets, fmt.Sprintf(`meta_key = '%s'`, o._adapter.SafeString(o.MetaKey)))
+	}
+
+	if o.IsMetaValueDirty == true {
+		sets = append(sets, fmt.Sprintf(`meta_value = '%s'`, o._adapter.SafeString(o.MetaValue)))
+	}
+
+	frmt := fmt.Sprintf("UPDATE %s SET %s WHERE %s = '%d'", o._table, strings.Join(sets, `,`))
+	err := o._adapter.Execute(frmt)
+	if err != nil {
+		return err
+	}
+	return nil
 }
-func (o *CommentMeta) Create() (int64, error) {
+func (o *CommentMeta) Update() error {
+	var sets []string
+
+	if o.IsCommentIdDirty == true {
+		sets = append(sets, fmt.Sprintf(`comment_id = '%d'`, o.CommentId))
+	}
+
+	if o.IsMetaKeyDirty == true {
+		sets = append(sets, fmt.Sprintf(`meta_key = '%s'`, o._adapter.SafeString(o.MetaKey)))
+	}
+
+	if o.IsMetaValueDirty == true {
+		sets = append(sets, fmt.Sprintf(`meta_value = '%s'`, o._adapter.SafeString(o.MetaValue)))
+	}
+
+	frmt := fmt.Sprintf("UPDATE %s SET %s WHERE %s = '%d'", o._table, strings.Join(sets, `,`))
+	err := o._adapter.Execute(frmt)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+func (o *CommentMeta) Create() error {
 	frmt := fmt.Sprintf("INSERT INTO %s (`comment_id`, `meta_key`, `meta_value`) VALUES ('%d', '%s', '%s')", o._table, o.CommentId, o.MetaKey, o.MetaValue)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
-		return 0, o._adapter.Oops(fmt.Sprintf(`%s led to %s`, frmt, err))
+		return o._adapter.Oops(fmt.Sprintf(`%s led to %s`, frmt, err))
 	}
 	o.MetaId = o._adapter.LastInsertedId()
-
-	return o._adapter.AffectedRows(), nil
+	o._new = false
+	return nil
 }
 
 func (o *CommentMeta) UpdateCommentId(_upd_CommentId int64) (int64, error) {
@@ -708,10 +722,6 @@ type Comment struct {
 	IsCommentParentDirty      bool
 	IsUserIdDirty             bool
 	// Relationships
-	User                 *User
-	IsUserLoaded         bool
-	CommentMetas         []*CommentMeta
-	IsCommentMetasLoaded bool
 }
 
 func NewComment(a Adapter) *Comment {
@@ -721,54 +731,6 @@ func NewComment(a Adapter) *Comment {
 	o._pkey = "comment_ID"
 	o._new = false
 	return &o
-}
-
-func (o *Comment) LoadUser() (*User, error) {
-	if o.IsUserLoaded == true {
-		return o.User, nil
-	}
-	m := NewUser(o._adapter)
-	found, err := m.Find(o.GetUserId())
-	if err != nil {
-		return nil, err
-	}
-	if found == false {
-		return nil, errors.New(fmt.Sprintf(`could not find User with ID of %d`, o.GetUserId()))
-	}
-	o.IsUserLoaded = true
-	o.User = m
-	return m, nil
-}
-
-func (o *Comment) LoadCommentMetas() ([]*CommentMeta, error) {
-	if o.IsCommentMetasLoaded == true {
-		return o.CommentMetas, nil
-	}
-	var finder CommentMeta
-	results, err := finder.FindByCommentId(o.CommentID)
-	if err != nil {
-		return nil, err
-	}
-	o.IsCommentMetasLoaded = true
-	o.CommentMetas = results
-	return results, nil
-}
-
-func (o *Comment) SaveRelations() error {
-
-	for _, m := range o.CommentMetas {
-		_, err := m.Save()
-		if err != nil {
-			return errors.New(fmt.Sprintf(`while saving relation CommentMetas %s`, err))
-		}
-	}
-
-	_, err := o.User.Save()
-	if err != nil {
-		return errors.New(fmt.Sprintf(`while saving relation User %s`, err))
-	}
-
-	return nil
 }
 
 func (m *Comment) GetPrimaryKeyValue() int64 {
@@ -1373,27 +1335,150 @@ func (o *Comment) FromComment(m *Comment) {
 
 }
 
-func (o *Comment) Save() (int64, error) {
+func (o *Comment) Save() error {
 	if o._new == true {
 		return o.Create()
 	}
-	frmt := fmt.Sprintf("UPDATE %s SET `comment_post_ID` = '%d', `comment_author` = '%s', `comment_author_email` = '%s', `comment_author_url` = '%s', `comment_author_IP` = '%s', `comment_date` = '%s', `comment_date_gmt` = '%s', `comment_content` = '%s', `comment_karma` = '%d', `comment_approved` = '%s', `comment_agent` = '%s', `comment_type` = '%s', `comment_parent` = '%d', `user_id` = '%d' WHERE %s = '%d' LIMIT 1", o._table, o.CommentPostID, o.CommentAuthor, o.CommentAuthorEmail, o.CommentAuthorUrl, o.CommentAuthorIP, o.CommentDate.ToString(), o.CommentDateGmt.ToString(), o.CommentContent, o.CommentKarma, o.CommentApproved, o.CommentAgent, o.CommentType, o.CommentParent, o.UserId, o._pkey, o.CommentID)
-	err := o._adapter.Execute(frmt)
-	if err != nil {
-		return 0, err
+	var sets []string
+
+	if o.IsCommentPostIDDirty == true {
+		sets = append(sets, fmt.Sprintf(`comment_post_ID = '%d'`, o.CommentPostID))
 	}
 
-	return o._adapter.AffectedRows(), nil
+	if o.IsCommentAuthorDirty == true {
+		sets = append(sets, fmt.Sprintf(`comment_author = '%s'`, o._adapter.SafeString(o.CommentAuthor)))
+	}
+
+	if o.IsCommentAuthorEmailDirty == true {
+		sets = append(sets, fmt.Sprintf(`comment_author_email = '%s'`, o._adapter.SafeString(o.CommentAuthorEmail)))
+	}
+
+	if o.IsCommentAuthorUrlDirty == true {
+		sets = append(sets, fmt.Sprintf(`comment_author_url = '%s'`, o._adapter.SafeString(o.CommentAuthorUrl)))
+	}
+
+	if o.IsCommentAuthorIPDirty == true {
+		sets = append(sets, fmt.Sprintf(`comment_author_IP = '%s'`, o._adapter.SafeString(o.CommentAuthorIP)))
+	}
+
+	if o.IsCommentDateDirty == true {
+		sets = append(sets, fmt.Sprintf(`comment_date = '%s'`, o.CommentDate))
+	}
+
+	if o.IsCommentDateGmtDirty == true {
+		sets = append(sets, fmt.Sprintf(`comment_date_gmt = '%s'`, o.CommentDateGmt))
+	}
+
+	if o.IsCommentContentDirty == true {
+		sets = append(sets, fmt.Sprintf(`comment_content = '%s'`, o._adapter.SafeString(o.CommentContent)))
+	}
+
+	if o.IsCommentKarmaDirty == true {
+		sets = append(sets, fmt.Sprintf(`comment_karma = '%d'`, o.CommentKarma))
+	}
+
+	if o.IsCommentApprovedDirty == true {
+		sets = append(sets, fmt.Sprintf(`comment_approved = '%s'`, o._adapter.SafeString(o.CommentApproved)))
+	}
+
+	if o.IsCommentAgentDirty == true {
+		sets = append(sets, fmt.Sprintf(`comment_agent = '%s'`, o._adapter.SafeString(o.CommentAgent)))
+	}
+
+	if o.IsCommentTypeDirty == true {
+		sets = append(sets, fmt.Sprintf(`comment_type = '%s'`, o._adapter.SafeString(o.CommentType)))
+	}
+
+	if o.IsCommentParentDirty == true {
+		sets = append(sets, fmt.Sprintf(`comment_parent = '%d'`, o.CommentParent))
+	}
+
+	if o.IsUserIdDirty == true {
+		sets = append(sets, fmt.Sprintf(`user_id = '%d'`, o.UserId))
+	}
+
+	frmt := fmt.Sprintf("UPDATE %s SET %s WHERE %s = '%d'", o._table, strings.Join(sets, `,`))
+	err := o._adapter.Execute(frmt)
+	if err != nil {
+		return err
+	}
+	return nil
 }
-func (o *Comment) Create() (int64, error) {
+func (o *Comment) Update() error {
+	var sets []string
+
+	if o.IsCommentPostIDDirty == true {
+		sets = append(sets, fmt.Sprintf(`comment_post_ID = '%d'`, o.CommentPostID))
+	}
+
+	if o.IsCommentAuthorDirty == true {
+		sets = append(sets, fmt.Sprintf(`comment_author = '%s'`, o._adapter.SafeString(o.CommentAuthor)))
+	}
+
+	if o.IsCommentAuthorEmailDirty == true {
+		sets = append(sets, fmt.Sprintf(`comment_author_email = '%s'`, o._adapter.SafeString(o.CommentAuthorEmail)))
+	}
+
+	if o.IsCommentAuthorUrlDirty == true {
+		sets = append(sets, fmt.Sprintf(`comment_author_url = '%s'`, o._adapter.SafeString(o.CommentAuthorUrl)))
+	}
+
+	if o.IsCommentAuthorIPDirty == true {
+		sets = append(sets, fmt.Sprintf(`comment_author_IP = '%s'`, o._adapter.SafeString(o.CommentAuthorIP)))
+	}
+
+	if o.IsCommentDateDirty == true {
+		sets = append(sets, fmt.Sprintf(`comment_date = '%s'`, o.CommentDate))
+	}
+
+	if o.IsCommentDateGmtDirty == true {
+		sets = append(sets, fmt.Sprintf(`comment_date_gmt = '%s'`, o.CommentDateGmt))
+	}
+
+	if o.IsCommentContentDirty == true {
+		sets = append(sets, fmt.Sprintf(`comment_content = '%s'`, o._adapter.SafeString(o.CommentContent)))
+	}
+
+	if o.IsCommentKarmaDirty == true {
+		sets = append(sets, fmt.Sprintf(`comment_karma = '%d'`, o.CommentKarma))
+	}
+
+	if o.IsCommentApprovedDirty == true {
+		sets = append(sets, fmt.Sprintf(`comment_approved = '%s'`, o._adapter.SafeString(o.CommentApproved)))
+	}
+
+	if o.IsCommentAgentDirty == true {
+		sets = append(sets, fmt.Sprintf(`comment_agent = '%s'`, o._adapter.SafeString(o.CommentAgent)))
+	}
+
+	if o.IsCommentTypeDirty == true {
+		sets = append(sets, fmt.Sprintf(`comment_type = '%s'`, o._adapter.SafeString(o.CommentType)))
+	}
+
+	if o.IsCommentParentDirty == true {
+		sets = append(sets, fmt.Sprintf(`comment_parent = '%d'`, o.CommentParent))
+	}
+
+	if o.IsUserIdDirty == true {
+		sets = append(sets, fmt.Sprintf(`user_id = '%d'`, o.UserId))
+	}
+
+	frmt := fmt.Sprintf("UPDATE %s SET %s WHERE %s = '%d'", o._table, strings.Join(sets, `,`))
+	err := o._adapter.Execute(frmt)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+func (o *Comment) Create() error {
 	frmt := fmt.Sprintf("INSERT INTO %s (`comment_post_ID`, `comment_author`, `comment_author_email`, `comment_author_url`, `comment_author_IP`, `comment_date`, `comment_date_gmt`, `comment_content`, `comment_karma`, `comment_approved`, `comment_agent`, `comment_type`, `comment_parent`, `user_id`) VALUES ('%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%d', '%s', '%s', '%s', '%d', '%d')", o._table, o.CommentPostID, o.CommentAuthor, o.CommentAuthorEmail, o.CommentAuthorUrl, o.CommentAuthorIP, o.CommentDate.ToString(), o.CommentDateGmt.ToString(), o.CommentContent, o.CommentKarma, o.CommentApproved, o.CommentAgent, o.CommentType, o.CommentParent, o.UserId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
-		return 0, o._adapter.Oops(fmt.Sprintf(`%s led to %s`, frmt, err))
+		return o._adapter.Oops(fmt.Sprintf(`%s led to %s`, frmt, err))
 	}
 	o.CommentID = o._adapter.LastInsertedId()
-
-	return o._adapter.AffectedRows(), nil
+	o._new = false
+	return nil
 }
 
 func (o *Comment) UpdateCommentPostID(_upd_CommentPostID int64) (int64, error) {
@@ -2105,27 +2190,134 @@ func (o *Link) FromLink(m *Link) {
 
 }
 
-func (o *Link) Save() (int64, error) {
+func (o *Link) Save() error {
 	if o._new == true {
 		return o.Create()
 	}
-	frmt := fmt.Sprintf("UPDATE %s SET `link_url` = '%s', `link_name` = '%s', `link_image` = '%s', `link_target` = '%s', `link_description` = '%s', `link_visible` = '%s', `link_owner` = '%d', `link_rating` = '%d', `link_updated` = '%s', `link_rel` = '%s', `link_notes` = '%s', `link_rss` = '%s' WHERE %s = '%d' LIMIT 1", o._table, o.LinkUrl, o.LinkName, o.LinkImage, o.LinkTarget, o.LinkDescription, o.LinkVisible, o.LinkOwner, o.LinkRating, o.LinkUpdated.ToString(), o.LinkRel, o.LinkNotes, o.LinkRss, o._pkey, o.LinkId)
-	err := o._adapter.Execute(frmt)
-	if err != nil {
-		return 0, err
+	var sets []string
+
+	if o.IsLinkUrlDirty == true {
+		sets = append(sets, fmt.Sprintf(`link_url = '%s'`, o._adapter.SafeString(o.LinkUrl)))
 	}
 
-	return o._adapter.AffectedRows(), nil
+	if o.IsLinkNameDirty == true {
+		sets = append(sets, fmt.Sprintf(`link_name = '%s'`, o._adapter.SafeString(o.LinkName)))
+	}
+
+	if o.IsLinkImageDirty == true {
+		sets = append(sets, fmt.Sprintf(`link_image = '%s'`, o._adapter.SafeString(o.LinkImage)))
+	}
+
+	if o.IsLinkTargetDirty == true {
+		sets = append(sets, fmt.Sprintf(`link_target = '%s'`, o._adapter.SafeString(o.LinkTarget)))
+	}
+
+	if o.IsLinkDescriptionDirty == true {
+		sets = append(sets, fmt.Sprintf(`link_description = '%s'`, o._adapter.SafeString(o.LinkDescription)))
+	}
+
+	if o.IsLinkVisibleDirty == true {
+		sets = append(sets, fmt.Sprintf(`link_visible = '%s'`, o._adapter.SafeString(o.LinkVisible)))
+	}
+
+	if o.IsLinkOwnerDirty == true {
+		sets = append(sets, fmt.Sprintf(`link_owner = '%d'`, o.LinkOwner))
+	}
+
+	if o.IsLinkRatingDirty == true {
+		sets = append(sets, fmt.Sprintf(`link_rating = '%d'`, o.LinkRating))
+	}
+
+	if o.IsLinkUpdatedDirty == true {
+		sets = append(sets, fmt.Sprintf(`link_updated = '%s'`, o.LinkUpdated))
+	}
+
+	if o.IsLinkRelDirty == true {
+		sets = append(sets, fmt.Sprintf(`link_rel = '%s'`, o._adapter.SafeString(o.LinkRel)))
+	}
+
+	if o.IsLinkNotesDirty == true {
+		sets = append(sets, fmt.Sprintf(`link_notes = '%s'`, o._adapter.SafeString(o.LinkNotes)))
+	}
+
+	if o.IsLinkRssDirty == true {
+		sets = append(sets, fmt.Sprintf(`link_rss = '%s'`, o._adapter.SafeString(o.LinkRss)))
+	}
+
+	frmt := fmt.Sprintf("UPDATE %s SET %s WHERE %s = '%d'", o._table, strings.Join(sets, `,`))
+	err := o._adapter.Execute(frmt)
+	if err != nil {
+		return err
+	}
+	return nil
 }
-func (o *Link) Create() (int64, error) {
+func (o *Link) Update() error {
+	var sets []string
+
+	if o.IsLinkUrlDirty == true {
+		sets = append(sets, fmt.Sprintf(`link_url = '%s'`, o._adapter.SafeString(o.LinkUrl)))
+	}
+
+	if o.IsLinkNameDirty == true {
+		sets = append(sets, fmt.Sprintf(`link_name = '%s'`, o._adapter.SafeString(o.LinkName)))
+	}
+
+	if o.IsLinkImageDirty == true {
+		sets = append(sets, fmt.Sprintf(`link_image = '%s'`, o._adapter.SafeString(o.LinkImage)))
+	}
+
+	if o.IsLinkTargetDirty == true {
+		sets = append(sets, fmt.Sprintf(`link_target = '%s'`, o._adapter.SafeString(o.LinkTarget)))
+	}
+
+	if o.IsLinkDescriptionDirty == true {
+		sets = append(sets, fmt.Sprintf(`link_description = '%s'`, o._adapter.SafeString(o.LinkDescription)))
+	}
+
+	if o.IsLinkVisibleDirty == true {
+		sets = append(sets, fmt.Sprintf(`link_visible = '%s'`, o._adapter.SafeString(o.LinkVisible)))
+	}
+
+	if o.IsLinkOwnerDirty == true {
+		sets = append(sets, fmt.Sprintf(`link_owner = '%d'`, o.LinkOwner))
+	}
+
+	if o.IsLinkRatingDirty == true {
+		sets = append(sets, fmt.Sprintf(`link_rating = '%d'`, o.LinkRating))
+	}
+
+	if o.IsLinkUpdatedDirty == true {
+		sets = append(sets, fmt.Sprintf(`link_updated = '%s'`, o.LinkUpdated))
+	}
+
+	if o.IsLinkRelDirty == true {
+		sets = append(sets, fmt.Sprintf(`link_rel = '%s'`, o._adapter.SafeString(o.LinkRel)))
+	}
+
+	if o.IsLinkNotesDirty == true {
+		sets = append(sets, fmt.Sprintf(`link_notes = '%s'`, o._adapter.SafeString(o.LinkNotes)))
+	}
+
+	if o.IsLinkRssDirty == true {
+		sets = append(sets, fmt.Sprintf(`link_rss = '%s'`, o._adapter.SafeString(o.LinkRss)))
+	}
+
+	frmt := fmt.Sprintf("UPDATE %s SET %s WHERE %s = '%d'", o._table, strings.Join(sets, `,`))
+	err := o._adapter.Execute(frmt)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+func (o *Link) Create() error {
 	frmt := fmt.Sprintf("INSERT INTO %s (`link_url`, `link_name`, `link_image`, `link_target`, `link_description`, `link_visible`, `link_owner`, `link_rating`, `link_updated`, `link_rel`, `link_notes`, `link_rss`) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%d', '%d', '%s', '%s', '%s', '%s')", o._table, o.LinkUrl, o.LinkName, o.LinkImage, o.LinkTarget, o.LinkDescription, o.LinkVisible, o.LinkOwner, o.LinkRating, o.LinkUpdated.ToString(), o.LinkRel, o.LinkNotes, o.LinkRss)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
-		return 0, o._adapter.Oops(fmt.Sprintf(`%s led to %s`, frmt, err))
+		return o._adapter.Oops(fmt.Sprintf(`%s led to %s`, frmt, err))
 	}
 	o.LinkId = o._adapter.LastInsertedId()
-
-	return o._adapter.AffectedRows(), nil
+	o._new = false
+	return nil
 }
 
 func (o *Link) UpdateLinkUrl(_upd_LinkUrl string) (int64, error) {
@@ -2448,27 +2640,62 @@ func (o *Option) FromOption(m *Option) {
 
 }
 
-func (o *Option) Save() (int64, error) {
+func (o *Option) Save() error {
 	if o._new == true {
 		return o.Create()
 	}
-	frmt := fmt.Sprintf("UPDATE %s SET `option_name` = '%s', `option_value` = '%s', `autoload` = '%s' WHERE %s = '%d' LIMIT 1", o._table, o.OptionName, o.OptionValue, o.Autoload, o._pkey, o.OptionId)
-	err := o._adapter.Execute(frmt)
-	if err != nil {
-		return 0, err
+	var sets []string
+
+	if o.IsOptionNameDirty == true {
+		sets = append(sets, fmt.Sprintf(`option_name = '%s'`, o._adapter.SafeString(o.OptionName)))
 	}
 
-	return o._adapter.AffectedRows(), nil
+	if o.IsOptionValueDirty == true {
+		sets = append(sets, fmt.Sprintf(`option_value = '%s'`, o._adapter.SafeString(o.OptionValue)))
+	}
+
+	if o.IsAutoloadDirty == true {
+		sets = append(sets, fmt.Sprintf(`autoload = '%s'`, o._adapter.SafeString(o.Autoload)))
+	}
+
+	frmt := fmt.Sprintf("UPDATE %s SET %s WHERE %s = '%d'", o._table, strings.Join(sets, `,`))
+	err := o._adapter.Execute(frmt)
+	if err != nil {
+		return err
+	}
+	return nil
 }
-func (o *Option) Create() (int64, error) {
+func (o *Option) Update() error {
+	var sets []string
+
+	if o.IsOptionNameDirty == true {
+		sets = append(sets, fmt.Sprintf(`option_name = '%s'`, o._adapter.SafeString(o.OptionName)))
+	}
+
+	if o.IsOptionValueDirty == true {
+		sets = append(sets, fmt.Sprintf(`option_value = '%s'`, o._adapter.SafeString(o.OptionValue)))
+	}
+
+	if o.IsAutoloadDirty == true {
+		sets = append(sets, fmt.Sprintf(`autoload = '%s'`, o._adapter.SafeString(o.Autoload)))
+	}
+
+	frmt := fmt.Sprintf("UPDATE %s SET %s WHERE %s = '%d'", o._table, strings.Join(sets, `,`))
+	err := o._adapter.Execute(frmt)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+func (o *Option) Create() error {
 	frmt := fmt.Sprintf("INSERT INTO %s (`option_name`, `option_value`, `autoload`) VALUES ('%s', '%s', '%s')", o._table, o.OptionName, o.OptionValue, o.Autoload)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
-		return 0, o._adapter.Oops(fmt.Sprintf(`%s led to %s`, frmt, err))
+		return o._adapter.Oops(fmt.Sprintf(`%s led to %s`, frmt, err))
 	}
 	o.OptionId = o._adapter.LastInsertedId()
-
-	return o._adapter.AffectedRows(), nil
+	o._new = false
+	return nil
 }
 
 func (o *Option) UpdateOptionName(_upd_OptionName string) (int64, error) {
@@ -2517,8 +2744,6 @@ type PostMeta struct {
 	IsMetaKeyDirty   bool
 	IsMetaValueDirty bool
 	// Relationships
-	Post         *Post
-	IsPostLoaded bool
 }
 
 func NewPostMeta(a Adapter) *PostMeta {
@@ -2528,33 +2753,6 @@ func NewPostMeta(a Adapter) *PostMeta {
 	o._pkey = "meta_id"
 	o._new = false
 	return &o
-}
-
-func (o *PostMeta) LoadPost() (*Post, error) {
-	if o.IsPostLoaded == true {
-		return o.Post, nil
-	}
-	m := NewPost(o._adapter)
-	found, err := m.Find(o.GetPostId())
-	if err != nil {
-		return nil, err
-	}
-	if found == false {
-		return nil, errors.New(fmt.Sprintf(`could not find Post with ID of %d`, o.GetPostId()))
-	}
-	o.IsPostLoaded = true
-	o.Post = m
-	return m, nil
-}
-
-func (o *PostMeta) SaveRelations() error {
-
-	_, err := o.Post.Save()
-	if err != nil {
-		return errors.New(fmt.Sprintf(`while saving relation Post %s`, err))
-	}
-
-	return nil
 }
 
 func (m *PostMeta) GetPrimaryKeyValue() int64 {
@@ -2730,27 +2928,62 @@ func (o *PostMeta) FromPostMeta(m *PostMeta) {
 
 }
 
-func (o *PostMeta) Save() (int64, error) {
+func (o *PostMeta) Save() error {
 	if o._new == true {
 		return o.Create()
 	}
-	frmt := fmt.Sprintf("UPDATE %s SET `post_id` = '%d', `meta_key` = '%s', `meta_value` = '%s' WHERE %s = '%d' LIMIT 1", o._table, o.PostId, o.MetaKey, o.MetaValue, o._pkey, o.MetaId)
-	err := o._adapter.Execute(frmt)
-	if err != nil {
-		return 0, err
+	var sets []string
+
+	if o.IsPostIdDirty == true {
+		sets = append(sets, fmt.Sprintf(`post_id = '%d'`, o.PostId))
 	}
 
-	return o._adapter.AffectedRows(), nil
+	if o.IsMetaKeyDirty == true {
+		sets = append(sets, fmt.Sprintf(`meta_key = '%s'`, o._adapter.SafeString(o.MetaKey)))
+	}
+
+	if o.IsMetaValueDirty == true {
+		sets = append(sets, fmt.Sprintf(`meta_value = '%s'`, o._adapter.SafeString(o.MetaValue)))
+	}
+
+	frmt := fmt.Sprintf("UPDATE %s SET %s WHERE %s = '%d'", o._table, strings.Join(sets, `,`))
+	err := o._adapter.Execute(frmt)
+	if err != nil {
+		return err
+	}
+	return nil
 }
-func (o *PostMeta) Create() (int64, error) {
+func (o *PostMeta) Update() error {
+	var sets []string
+
+	if o.IsPostIdDirty == true {
+		sets = append(sets, fmt.Sprintf(`post_id = '%d'`, o.PostId))
+	}
+
+	if o.IsMetaKeyDirty == true {
+		sets = append(sets, fmt.Sprintf(`meta_key = '%s'`, o._adapter.SafeString(o.MetaKey)))
+	}
+
+	if o.IsMetaValueDirty == true {
+		sets = append(sets, fmt.Sprintf(`meta_value = '%s'`, o._adapter.SafeString(o.MetaValue)))
+	}
+
+	frmt := fmt.Sprintf("UPDATE %s SET %s WHERE %s = '%d'", o._table, strings.Join(sets, `,`))
+	err := o._adapter.Execute(frmt)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+func (o *PostMeta) Create() error {
 	frmt := fmt.Sprintf("INSERT INTO %s (`post_id`, `meta_key`, `meta_value`) VALUES ('%d', '%s', '%s')", o._table, o.PostId, o.MetaKey, o.MetaValue)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
-		return 0, o._adapter.Oops(fmt.Sprintf(`%s led to %s`, frmt, err))
+		return o._adapter.Oops(fmt.Sprintf(`%s led to %s`, frmt, err))
 	}
 	o.MetaId = o._adapter.LastInsertedId()
-
-	return o._adapter.AffectedRows(), nil
+	o._new = false
+	return nil
 }
 
 func (o *PostMeta) UpdatePostId(_upd_PostId int64) (int64, error) {
@@ -2837,8 +3070,6 @@ type Post struct {
 	IsPostMimeTypeDirty        bool
 	IsCommentCountDirty        bool
 	// Relationships
-	PostMetas         []*PostMeta
-	IsPostMetasLoaded bool
 }
 
 func NewPost(a Adapter) *Post {
@@ -2848,32 +3079,6 @@ func NewPost(a Adapter) *Post {
 	o._pkey = "ID"
 	o._new = false
 	return &o
-}
-
-func (o *Post) LoadPostMetas() ([]*PostMeta, error) {
-	if o.IsPostMetasLoaded == true {
-		return o.PostMetas, nil
-	}
-	var finder PostMeta
-	results, err := finder.FindByPostId(o.ID)
-	if err != nil {
-		return nil, err
-	}
-	o.IsPostMetasLoaded = true
-	o.PostMetas = results
-	return results, nil
-}
-
-func (o *Post) SaveRelations() error {
-
-	for _, m := range o.PostMetas {
-		_, err := m.Save()
-		if err != nil {
-			return errors.New(fmt.Sprintf(`while saving relation PostMetas %s`, err))
-		}
-	}
-
-	return nil
 }
 
 func (m *Post) GetPrimaryKeyValue() int64 {
@@ -3790,27 +3995,214 @@ func (o *Post) FromPost(m *Post) {
 
 }
 
-func (o *Post) Save() (int64, error) {
+func (o *Post) Save() error {
 	if o._new == true {
 		return o.Create()
 	}
-	frmt := fmt.Sprintf("UPDATE %s SET `post_author` = '%d', `post_date` = '%s', `post_date_gmt` = '%s', `post_content` = '%s', `post_title` = '%s', `post_excerpt` = '%s', `post_status` = '%s', `comment_status` = '%s', `ping_status` = '%s', `post_password` = '%s', `post_name` = '%s', `to_ping` = '%s', `pinged` = '%s', `post_modified` = '%s', `post_modified_gmt` = '%s', `post_content_filtered` = '%s', `post_parent` = '%d', `guid` = '%s', `menu_order` = '%d', `post_type` = '%s', `post_mime_type` = '%s', `comment_count` = '%d' WHERE %s = '%d' LIMIT 1", o._table, o.PostAuthor, o.PostDate.ToString(), o.PostDateGmt.ToString(), o.PostContent, o.PostTitle, o.PostExcerpt, o.PostStatus, o.CommentStatus, o.PingStatus, o.PostPassword, o.PostName, o.ToPing, o.Pinged, o.PostModified.ToString(), o.PostModifiedGmt.ToString(), o.PostContentFiltered, o.PostParent, o.Guid, o.MenuOrder, o.PostType, o.PostMimeType, o.CommentCount, o._pkey, o.ID)
-	err := o._adapter.Execute(frmt)
-	if err != nil {
-		return 0, err
+	var sets []string
+
+	if o.IsPostAuthorDirty == true {
+		sets = append(sets, fmt.Sprintf(`post_author = '%d'`, o.PostAuthor))
 	}
 
-	return o._adapter.AffectedRows(), nil
+	if o.IsPostDateDirty == true {
+		sets = append(sets, fmt.Sprintf(`post_date = '%s'`, o.PostDate))
+	}
+
+	if o.IsPostDateGmtDirty == true {
+		sets = append(sets, fmt.Sprintf(`post_date_gmt = '%s'`, o.PostDateGmt))
+	}
+
+	if o.IsPostContentDirty == true {
+		sets = append(sets, fmt.Sprintf(`post_content = '%s'`, o._adapter.SafeString(o.PostContent)))
+	}
+
+	if o.IsPostTitleDirty == true {
+		sets = append(sets, fmt.Sprintf(`post_title = '%s'`, o._adapter.SafeString(o.PostTitle)))
+	}
+
+	if o.IsPostExcerptDirty == true {
+		sets = append(sets, fmt.Sprintf(`post_excerpt = '%s'`, o._adapter.SafeString(o.PostExcerpt)))
+	}
+
+	if o.IsPostStatusDirty == true {
+		sets = append(sets, fmt.Sprintf(`post_status = '%s'`, o._adapter.SafeString(o.PostStatus)))
+	}
+
+	if o.IsCommentStatusDirty == true {
+		sets = append(sets, fmt.Sprintf(`comment_status = '%s'`, o._adapter.SafeString(o.CommentStatus)))
+	}
+
+	if o.IsPingStatusDirty == true {
+		sets = append(sets, fmt.Sprintf(`ping_status = '%s'`, o._adapter.SafeString(o.PingStatus)))
+	}
+
+	if o.IsPostPasswordDirty == true {
+		sets = append(sets, fmt.Sprintf(`post_password = '%s'`, o._adapter.SafeString(o.PostPassword)))
+	}
+
+	if o.IsPostNameDirty == true {
+		sets = append(sets, fmt.Sprintf(`post_name = '%s'`, o._adapter.SafeString(o.PostName)))
+	}
+
+	if o.IsToPingDirty == true {
+		sets = append(sets, fmt.Sprintf(`to_ping = '%s'`, o._adapter.SafeString(o.ToPing)))
+	}
+
+	if o.IsPingedDirty == true {
+		sets = append(sets, fmt.Sprintf(`pinged = '%s'`, o._adapter.SafeString(o.Pinged)))
+	}
+
+	if o.IsPostModifiedDirty == true {
+		sets = append(sets, fmt.Sprintf(`post_modified = '%s'`, o.PostModified))
+	}
+
+	if o.IsPostModifiedGmtDirty == true {
+		sets = append(sets, fmt.Sprintf(`post_modified_gmt = '%s'`, o.PostModifiedGmt))
+	}
+
+	if o.IsPostContentFilteredDirty == true {
+		sets = append(sets, fmt.Sprintf(`post_content_filtered = '%s'`, o._adapter.SafeString(o.PostContentFiltered)))
+	}
+
+	if o.IsPostParentDirty == true {
+		sets = append(sets, fmt.Sprintf(`post_parent = '%d'`, o.PostParent))
+	}
+
+	if o.IsGuidDirty == true {
+		sets = append(sets, fmt.Sprintf(`guid = '%s'`, o._adapter.SafeString(o.Guid)))
+	}
+
+	if o.IsMenuOrderDirty == true {
+		sets = append(sets, fmt.Sprintf(`menu_order = '%d'`, o.MenuOrder))
+	}
+
+	if o.IsPostTypeDirty == true {
+		sets = append(sets, fmt.Sprintf(`post_type = '%s'`, o._adapter.SafeString(o.PostType)))
+	}
+
+	if o.IsPostMimeTypeDirty == true {
+		sets = append(sets, fmt.Sprintf(`post_mime_type = '%s'`, o._adapter.SafeString(o.PostMimeType)))
+	}
+
+	if o.IsCommentCountDirty == true {
+		sets = append(sets, fmt.Sprintf(`comment_count = '%d'`, o.CommentCount))
+	}
+
+	frmt := fmt.Sprintf("UPDATE %s SET %s WHERE %s = '%d'", o._table, strings.Join(sets, `,`))
+	err := o._adapter.Execute(frmt)
+	if err != nil {
+		return err
+	}
+	return nil
 }
-func (o *Post) Create() (int64, error) {
+func (o *Post) Update() error {
+	var sets []string
+
+	if o.IsPostAuthorDirty == true {
+		sets = append(sets, fmt.Sprintf(`post_author = '%d'`, o.PostAuthor))
+	}
+
+	if o.IsPostDateDirty == true {
+		sets = append(sets, fmt.Sprintf(`post_date = '%s'`, o.PostDate))
+	}
+
+	if o.IsPostDateGmtDirty == true {
+		sets = append(sets, fmt.Sprintf(`post_date_gmt = '%s'`, o.PostDateGmt))
+	}
+
+	if o.IsPostContentDirty == true {
+		sets = append(sets, fmt.Sprintf(`post_content = '%s'`, o._adapter.SafeString(o.PostContent)))
+	}
+
+	if o.IsPostTitleDirty == true {
+		sets = append(sets, fmt.Sprintf(`post_title = '%s'`, o._adapter.SafeString(o.PostTitle)))
+	}
+
+	if o.IsPostExcerptDirty == true {
+		sets = append(sets, fmt.Sprintf(`post_excerpt = '%s'`, o._adapter.SafeString(o.PostExcerpt)))
+	}
+
+	if o.IsPostStatusDirty == true {
+		sets = append(sets, fmt.Sprintf(`post_status = '%s'`, o._adapter.SafeString(o.PostStatus)))
+	}
+
+	if o.IsCommentStatusDirty == true {
+		sets = append(sets, fmt.Sprintf(`comment_status = '%s'`, o._adapter.SafeString(o.CommentStatus)))
+	}
+
+	if o.IsPingStatusDirty == true {
+		sets = append(sets, fmt.Sprintf(`ping_status = '%s'`, o._adapter.SafeString(o.PingStatus)))
+	}
+
+	if o.IsPostPasswordDirty == true {
+		sets = append(sets, fmt.Sprintf(`post_password = '%s'`, o._adapter.SafeString(o.PostPassword)))
+	}
+
+	if o.IsPostNameDirty == true {
+		sets = append(sets, fmt.Sprintf(`post_name = '%s'`, o._adapter.SafeString(o.PostName)))
+	}
+
+	if o.IsToPingDirty == true {
+		sets = append(sets, fmt.Sprintf(`to_ping = '%s'`, o._adapter.SafeString(o.ToPing)))
+	}
+
+	if o.IsPingedDirty == true {
+		sets = append(sets, fmt.Sprintf(`pinged = '%s'`, o._adapter.SafeString(o.Pinged)))
+	}
+
+	if o.IsPostModifiedDirty == true {
+		sets = append(sets, fmt.Sprintf(`post_modified = '%s'`, o.PostModified))
+	}
+
+	if o.IsPostModifiedGmtDirty == true {
+		sets = append(sets, fmt.Sprintf(`post_modified_gmt = '%s'`, o.PostModifiedGmt))
+	}
+
+	if o.IsPostContentFilteredDirty == true {
+		sets = append(sets, fmt.Sprintf(`post_content_filtered = '%s'`, o._adapter.SafeString(o.PostContentFiltered)))
+	}
+
+	if o.IsPostParentDirty == true {
+		sets = append(sets, fmt.Sprintf(`post_parent = '%d'`, o.PostParent))
+	}
+
+	if o.IsGuidDirty == true {
+		sets = append(sets, fmt.Sprintf(`guid = '%s'`, o._adapter.SafeString(o.Guid)))
+	}
+
+	if o.IsMenuOrderDirty == true {
+		sets = append(sets, fmt.Sprintf(`menu_order = '%d'`, o.MenuOrder))
+	}
+
+	if o.IsPostTypeDirty == true {
+		sets = append(sets, fmt.Sprintf(`post_type = '%s'`, o._adapter.SafeString(o.PostType)))
+	}
+
+	if o.IsPostMimeTypeDirty == true {
+		sets = append(sets, fmt.Sprintf(`post_mime_type = '%s'`, o._adapter.SafeString(o.PostMimeType)))
+	}
+
+	if o.IsCommentCountDirty == true {
+		sets = append(sets, fmt.Sprintf(`comment_count = '%d'`, o.CommentCount))
+	}
+
+	frmt := fmt.Sprintf("UPDATE %s SET %s WHERE %s = '%d'", o._table, strings.Join(sets, `,`))
+	err := o._adapter.Execute(frmt)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+func (o *Post) Create() error {
 	frmt := fmt.Sprintf("INSERT INTO %s (`post_author`, `post_date`, `post_date_gmt`, `post_content`, `post_title`, `post_excerpt`, `post_status`, `comment_status`, `ping_status`, `post_password`, `post_name`, `to_ping`, `pinged`, `post_modified`, `post_modified_gmt`, `post_content_filtered`, `post_parent`, `guid`, `menu_order`, `post_type`, `post_mime_type`, `comment_count`) VALUES ('%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%d', '%s', '%d', '%s', '%s', '%d')", o._table, o.PostAuthor, o.PostDate.ToString(), o.PostDateGmt.ToString(), o.PostContent, o.PostTitle, o.PostExcerpt, o.PostStatus, o.CommentStatus, o.PingStatus, o.PostPassword, o.PostName, o.ToPing, o.Pinged, o.PostModified.ToString(), o.PostModifiedGmt.ToString(), o.PostContentFiltered, o.PostParent, o.Guid, o.MenuOrder, o.PostType, o.PostMimeType, o.CommentCount)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
-		return 0, o._adapter.Oops(fmt.Sprintf(`%s led to %s`, frmt, err))
+		return o._adapter.Oops(fmt.Sprintf(`%s led to %s`, frmt, err))
 	}
 	o.ID = o._adapter.LastInsertedId()
-
-	return o._adapter.AffectedRows(), nil
+	o._new = false
+	return nil
 }
 
 func (o *Post) UpdatePostAuthor(_upd_PostAuthor int64) (int64, error) {
@@ -4192,30 +4584,66 @@ func (o *TermRelationship) FromTermRelationship(m *TermRelationship) {
 
 }
 
-func (o *TermRelationship) Save() (int64, error) {
+func (o *TermRelationship) Save() error {
 	if o._new == true {
 		return o.Create()
 	}
-	frmt := fmt.Sprintf("UPDATE %s SET `object_id` = '%d', `term_taxonomy_id` = '%d', `term_order` = '%d' WHERE `term_taxonomy_id` = '%d' AND object_id = '%d' LIMIT 1", o._table, o.ObjectId, o.TermTaxonomyId, o.TermOrder, o.TermTaxonomyId, o.ObjectId)
-	err := o._adapter.Execute(frmt)
-	if err != nil {
-		return 0, err
+	var sets []string
+
+	if o.IsObjectIdDirty == true {
+		sets = append(sets, fmt.Sprintf(`object_id = '%d'`, o.ObjectId))
 	}
 
-	return o._adapter.AffectedRows(), nil
+	if o.IsTermTaxonomyIdDirty == true {
+		sets = append(sets, fmt.Sprintf(`term_taxonomy_id = '%d'`, o.TermTaxonomyId))
+	}
+
+	if o.IsTermOrderDirty == true {
+		sets = append(sets, fmt.Sprintf(`term_order = '%d'`, o.TermOrder))
+	}
+
+	frmt := fmt.Sprintf("UPDATE %s SET %s WHERE `term_taxonomy_id` = '%d' AND object_id = '%d'", o._table, strings.Join(sets, `,`))
+	err := o._adapter.Execute(frmt)
+	if err != nil {
+		return err
+	}
+	return nil
 }
-func (o *TermRelationship) Create() (int64, error) {
+func (o *TermRelationship) Update() error {
+	var sets []string
+
+	if o.IsObjectIdDirty == true {
+		sets = append(sets, fmt.Sprintf(`object_id = '%d'`, o.ObjectId))
+	}
+
+	if o.IsTermTaxonomyIdDirty == true {
+		sets = append(sets, fmt.Sprintf(`term_taxonomy_id = '%d'`, o.TermTaxonomyId))
+	}
+
+	if o.IsTermOrderDirty == true {
+		sets = append(sets, fmt.Sprintf(`term_order = '%d'`, o.TermOrder))
+	}
+
+	frmt := fmt.Sprintf("UPDATE %s SET %s WHERE `term_taxonomy_id` = '%d' AND object_id = '%d'", o._table, strings.Join(sets, `,`))
+	err := o._adapter.Execute(frmt)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+func (o *TermRelationship) Create() error {
 	frmt := fmt.Sprintf("INSERT INTO %s (`object_id`, `term_taxonomy_id`, `term_order`) VALUES ('%d', '%d', '%d')", o._table, o.ObjectId, o.TermTaxonomyId, o.TermOrder)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
-		return 0, o._adapter.Oops(fmt.Sprintf(`%s led to %s`, frmt, err))
+		return o._adapter.Oops(fmt.Sprintf(`%s led to %s`, frmt, err))
 	}
 
-	return o._adapter.AffectedRows(), nil
+	o._new = false
+	return nil
 }
 
 func (o *TermRelationship) UpdateObjectId(_upd_ObjectId int64) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `object_id` = '%d' WHERE `term_taxonomy_id` = '%d'", o._table, _upd_ObjectId, o.ObjectId)
+	frmt := fmt.Sprintf("UPDATE %s SET `object_id` = '%d' WHERE term_taxonomy_id = '%d' AND object_id = '%d'", o._table, _upd_ObjectId, o.TermTaxonomyId, o.ObjectId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
@@ -4225,7 +4653,7 @@ func (o *TermRelationship) UpdateObjectId(_upd_ObjectId int64) (int64, error) {
 }
 
 func (o *TermRelationship) UpdateTermOrder(_upd_TermOrder int) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `term_order` = '%d' WHERE `term_taxonomy_id` = '%d'", o._table, _upd_TermOrder, o.TermOrder)
+	frmt := fmt.Sprintf("UPDATE %s SET `term_order` = '%d' WHERE term_taxonomy_id = '%d' AND object_id = '%d'", o._table, _upd_TermOrder, o.TermTaxonomyId, o.ObjectId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
@@ -4254,8 +4682,6 @@ type TermTaxonomy struct {
 	IsParentDirty         bool
 	IsCountDirty          bool
 	// Relationships
-	Term         *Term
-	IsTermLoaded bool
 }
 
 func NewTermTaxonomy(a Adapter) *TermTaxonomy {
@@ -4265,33 +4691,6 @@ func NewTermTaxonomy(a Adapter) *TermTaxonomy {
 	o._pkey = "term_taxonomy_id"
 	o._new = false
 	return &o
-}
-
-func (o *TermTaxonomy) LoadTerm() (*Term, error) {
-	if o.IsTermLoaded == true {
-		return o.Term, nil
-	}
-	m := NewTerm(o._adapter)
-	found, err := m.Find(o.GetTermId())
-	if err != nil {
-		return nil, err
-	}
-	if found == false {
-		return nil, errors.New(fmt.Sprintf(`could not find Term with term_id of %d`, o.GetTermId()))
-	}
-	o.IsTermLoaded = true
-	o.Term = m
-	return m, nil
-}
-
-func (o *TermTaxonomy) SaveRelations() error {
-
-	_, err := o.Term.Save()
-	if err != nil {
-		return errors.New(fmt.Sprintf(`while saving relation Term %s`, err))
-	}
-
-	return nil
 }
 
 func (m *TermTaxonomy) GetPrimaryKeyValue() int64 {
@@ -4545,27 +4944,78 @@ func (o *TermTaxonomy) FromTermTaxonomy(m *TermTaxonomy) {
 
 }
 
-func (o *TermTaxonomy) Save() (int64, error) {
+func (o *TermTaxonomy) Save() error {
 	if o._new == true {
 		return o.Create()
 	}
-	frmt := fmt.Sprintf("UPDATE %s SET `term_id` = '%d', `taxonomy` = '%s', `description` = '%s', `parent` = '%d', `count` = '%d' WHERE %s = '%d' LIMIT 1", o._table, o.TermId, o.Taxonomy, o.Description, o.Parent, o.Count, o._pkey, o.TermTaxonomyId)
-	err := o._adapter.Execute(frmt)
-	if err != nil {
-		return 0, err
+	var sets []string
+
+	if o.IsTermIdDirty == true {
+		sets = append(sets, fmt.Sprintf(`term_id = '%d'`, o.TermId))
 	}
 
-	return o._adapter.AffectedRows(), nil
+	if o.IsTaxonomyDirty == true {
+		sets = append(sets, fmt.Sprintf(`taxonomy = '%s'`, o._adapter.SafeString(o.Taxonomy)))
+	}
+
+	if o.IsDescriptionDirty == true {
+		sets = append(sets, fmt.Sprintf(`description = '%s'`, o._adapter.SafeString(o.Description)))
+	}
+
+	if o.IsParentDirty == true {
+		sets = append(sets, fmt.Sprintf(`parent = '%d'`, o.Parent))
+	}
+
+	if o.IsCountDirty == true {
+		sets = append(sets, fmt.Sprintf(`count = '%d'`, o.Count))
+	}
+
+	frmt := fmt.Sprintf("UPDATE %s SET %s WHERE %s = '%d'", o._table, strings.Join(sets, `,`))
+	err := o._adapter.Execute(frmt)
+	if err != nil {
+		return err
+	}
+	return nil
 }
-func (o *TermTaxonomy) Create() (int64, error) {
+func (o *TermTaxonomy) Update() error {
+	var sets []string
+
+	if o.IsTermIdDirty == true {
+		sets = append(sets, fmt.Sprintf(`term_id = '%d'`, o.TermId))
+	}
+
+	if o.IsTaxonomyDirty == true {
+		sets = append(sets, fmt.Sprintf(`taxonomy = '%s'`, o._adapter.SafeString(o.Taxonomy)))
+	}
+
+	if o.IsDescriptionDirty == true {
+		sets = append(sets, fmt.Sprintf(`description = '%s'`, o._adapter.SafeString(o.Description)))
+	}
+
+	if o.IsParentDirty == true {
+		sets = append(sets, fmt.Sprintf(`parent = '%d'`, o.Parent))
+	}
+
+	if o.IsCountDirty == true {
+		sets = append(sets, fmt.Sprintf(`count = '%d'`, o.Count))
+	}
+
+	frmt := fmt.Sprintf("UPDATE %s SET %s WHERE %s = '%d'", o._table, strings.Join(sets, `,`))
+	err := o._adapter.Execute(frmt)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+func (o *TermTaxonomy) Create() error {
 	frmt := fmt.Sprintf("INSERT INTO %s (`term_id`, `taxonomy`, `description`, `parent`, `count`) VALUES ('%d', '%s', '%s', '%d', '%d')", o._table, o.TermId, o.Taxonomy, o.Description, o.Parent, o.Count)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
-		return 0, o._adapter.Oops(fmt.Sprintf(`%s led to %s`, frmt, err))
+		return o._adapter.Oops(fmt.Sprintf(`%s led to %s`, frmt, err))
 	}
 	o.TermTaxonomyId = o._adapter.LastInsertedId()
-
-	return o._adapter.AffectedRows(), nil
+	o._new = false
+	return nil
 }
 
 func (o *TermTaxonomy) UpdateTermId(_upd_TermId int64) (int64, error) {
@@ -4634,8 +5084,6 @@ type Term struct {
 	IsSlugDirty      bool
 	IsTermGroupDirty bool
 	// Relationships
-	TermTaxonomys         []*TermTaxonomy
-	IsTermTaxonomysLoaded bool
 }
 
 func NewTerm(a Adapter) *Term {
@@ -4645,32 +5093,6 @@ func NewTerm(a Adapter) *Term {
 	o._pkey = "term_id"
 	o._new = false
 	return &o
-}
-
-func (o *Term) LoadTermTaxonomys() ([]*TermTaxonomy, error) {
-	if o.IsTermTaxonomysLoaded == true {
-		return o.TermTaxonomys, nil
-	}
-	var finder TermTaxonomy
-	results, err := finder.FindByTermId(o.TermId)
-	if err != nil {
-		return nil, err
-	}
-	o.IsTermTaxonomysLoaded = true
-	o.TermTaxonomys = results
-	return results, nil
-}
-
-func (o *Term) SaveRelations() error {
-
-	for _, m := range o.TermTaxonomys {
-		_, err := m.Save()
-		if err != nil {
-			return errors.New(fmt.Sprintf(`while saving relation TermTaxonomys %s`, err))
-		}
-	}
-
-	return nil
 }
 
 func (m *Term) GetPrimaryKeyValue() int64 {
@@ -4846,27 +5268,62 @@ func (o *Term) FromTerm(m *Term) {
 
 }
 
-func (o *Term) Save() (int64, error) {
+func (o *Term) Save() error {
 	if o._new == true {
 		return o.Create()
 	}
-	frmt := fmt.Sprintf("UPDATE %s SET `name` = '%s', `slug` = '%s', `term_group` = '%d' WHERE %s = '%d' LIMIT 1", o._table, o.Name, o.Slug, o.TermGroup, o._pkey, o.TermId)
-	err := o._adapter.Execute(frmt)
-	if err != nil {
-		return 0, err
+	var sets []string
+
+	if o.IsNameDirty == true {
+		sets = append(sets, fmt.Sprintf(`name = '%s'`, o._adapter.SafeString(o.Name)))
 	}
 
-	return o._adapter.AffectedRows(), nil
+	if o.IsSlugDirty == true {
+		sets = append(sets, fmt.Sprintf(`slug = '%s'`, o._adapter.SafeString(o.Slug)))
+	}
+
+	if o.IsTermGroupDirty == true {
+		sets = append(sets, fmt.Sprintf(`term_group = '%d'`, o.TermGroup))
+	}
+
+	frmt := fmt.Sprintf("UPDATE %s SET %s WHERE %s = '%d'", o._table, strings.Join(sets, `,`))
+	err := o._adapter.Execute(frmt)
+	if err != nil {
+		return err
+	}
+	return nil
 }
-func (o *Term) Create() (int64, error) {
+func (o *Term) Update() error {
+	var sets []string
+
+	if o.IsNameDirty == true {
+		sets = append(sets, fmt.Sprintf(`name = '%s'`, o._adapter.SafeString(o.Name)))
+	}
+
+	if o.IsSlugDirty == true {
+		sets = append(sets, fmt.Sprintf(`slug = '%s'`, o._adapter.SafeString(o.Slug)))
+	}
+
+	if o.IsTermGroupDirty == true {
+		sets = append(sets, fmt.Sprintf(`term_group = '%d'`, o.TermGroup))
+	}
+
+	frmt := fmt.Sprintf("UPDATE %s SET %s WHERE %s = '%d'", o._table, strings.Join(sets, `,`))
+	err := o._adapter.Execute(frmt)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+func (o *Term) Create() error {
 	frmt := fmt.Sprintf("INSERT INTO %s (`name`, `slug`, `term_group`) VALUES ('%s', '%s', '%d')", o._table, o.Name, o.Slug, o.TermGroup)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
-		return 0, o._adapter.Oops(fmt.Sprintf(`%s led to %s`, frmt, err))
+		return o._adapter.Oops(fmt.Sprintf(`%s led to %s`, frmt, err))
 	}
 	o.TermId = o._adapter.LastInsertedId()
-
-	return o._adapter.AffectedRows(), nil
+	o._new = false
+	return nil
 }
 
 func (o *Term) UpdateName(_upd_Name string) (int64, error) {
@@ -4915,8 +5372,6 @@ type UserMeta struct {
 	IsMetaKeyDirty   bool
 	IsMetaValueDirty bool
 	// Relationships
-	User         *User
-	IsUserLoaded bool
 }
 
 func NewUserMeta(a Adapter) *UserMeta {
@@ -4926,33 +5381,6 @@ func NewUserMeta(a Adapter) *UserMeta {
 	o._pkey = "umeta_id"
 	o._new = false
 	return &o
-}
-
-func (o *UserMeta) LoadUser() (*User, error) {
-	if o.IsUserLoaded == true {
-		return o.User, nil
-	}
-	m := NewUser(o._adapter)
-	found, err := m.Find(o.GetUserId())
-	if err != nil {
-		return nil, err
-	}
-	if found == false {
-		return nil, errors.New(fmt.Sprintf(`could not find User with ID of %d`, o.GetUserId()))
-	}
-	o.IsUserLoaded = true
-	o.User = m
-	return m, nil
-}
-
-func (o *UserMeta) SaveRelations() error {
-
-	_, err := o.User.Save()
-	if err != nil {
-		return errors.New(fmt.Sprintf(`while saving relation User %s`, err))
-	}
-
-	return nil
 }
 
 func (m *UserMeta) GetPrimaryKeyValue() int64 {
@@ -5128,27 +5556,62 @@ func (o *UserMeta) FromUserMeta(m *UserMeta) {
 
 }
 
-func (o *UserMeta) Save() (int64, error) {
+func (o *UserMeta) Save() error {
 	if o._new == true {
 		return o.Create()
 	}
-	frmt := fmt.Sprintf("UPDATE %s SET `user_id` = '%d', `meta_key` = '%s', `meta_value` = '%s' WHERE %s = '%d' LIMIT 1", o._table, o.UserId, o.MetaKey, o.MetaValue, o._pkey, o.UMetaId)
-	err := o._adapter.Execute(frmt)
-	if err != nil {
-		return 0, err
+	var sets []string
+
+	if o.IsUserIdDirty == true {
+		sets = append(sets, fmt.Sprintf(`user_id = '%d'`, o.UserId))
 	}
 
-	return o._adapter.AffectedRows(), nil
+	if o.IsMetaKeyDirty == true {
+		sets = append(sets, fmt.Sprintf(`meta_key = '%s'`, o._adapter.SafeString(o.MetaKey)))
+	}
+
+	if o.IsMetaValueDirty == true {
+		sets = append(sets, fmt.Sprintf(`meta_value = '%s'`, o._adapter.SafeString(o.MetaValue)))
+	}
+
+	frmt := fmt.Sprintf("UPDATE %s SET %s WHERE %s = '%d'", o._table, strings.Join(sets, `,`))
+	err := o._adapter.Execute(frmt)
+	if err != nil {
+		return err
+	}
+	return nil
 }
-func (o *UserMeta) Create() (int64, error) {
+func (o *UserMeta) Update() error {
+	var sets []string
+
+	if o.IsUserIdDirty == true {
+		sets = append(sets, fmt.Sprintf(`user_id = '%d'`, o.UserId))
+	}
+
+	if o.IsMetaKeyDirty == true {
+		sets = append(sets, fmt.Sprintf(`meta_key = '%s'`, o._adapter.SafeString(o.MetaKey)))
+	}
+
+	if o.IsMetaValueDirty == true {
+		sets = append(sets, fmt.Sprintf(`meta_value = '%s'`, o._adapter.SafeString(o.MetaValue)))
+	}
+
+	frmt := fmt.Sprintf("UPDATE %s SET %s WHERE %s = '%d'", o._table, strings.Join(sets, `,`))
+	err := o._adapter.Execute(frmt)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+func (o *UserMeta) Create() error {
 	frmt := fmt.Sprintf("INSERT INTO %s (`user_id`, `meta_key`, `meta_value`) VALUES ('%d', '%s', '%s')", o._table, o.UserId, o.MetaKey, o.MetaValue)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
-		return 0, o._adapter.Oops(fmt.Sprintf(`%s led to %s`, frmt, err))
+		return o._adapter.Oops(fmt.Sprintf(`%s led to %s`, frmt, err))
 	}
 	o.UMetaId = o._adapter.LastInsertedId()
-
-	return o._adapter.AffectedRows(), nil
+	o._new = false
+	return nil
 }
 
 func (o *UserMeta) UpdateUserId(_upd_UserId int64) (int64, error) {
@@ -5178,2899 +5641,5 @@ func (o *UserMeta) UpdateMetaValue(_upd_MetaValue string) (int64, error) {
 		return 0, err
 	}
 	o.MetaValue = _upd_MetaValue
-	return o._adapter.AffectedRows(), nil
-}
-
-type User struct {
-	_table            string
-	_adapter          Adapter
-	_pkey             string // 0 The name of the primary key in this table
-	_conds            []string
-	_new              bool
-	ID                int64
-	UserLogin         string
-	UserPass          string
-	UserNicename      string
-	UserEmail         string
-	UserUrl           string
-	UserRegistered    *DateTime
-	UserActivationKey string
-	UserStatus        int
-	DisplayName       string
-	// Dirty markers for smart updates
-	IsIDDirty                bool
-	IsUserLoginDirty         bool
-	IsUserPassDirty          bool
-	IsUserNicenameDirty      bool
-	IsUserEmailDirty         bool
-	IsUserUrlDirty           bool
-	IsUserRegisteredDirty    bool
-	IsUserActivationKeyDirty bool
-	IsUserStatusDirty        bool
-	IsDisplayNameDirty       bool
-	// Relationships
-	Comments                            []*Comment
-	IsCommentsLoaded                    bool
-	UserMetas                           []*UserMeta
-	IsUserMetasLoaded                   bool
-	WooDownloadableProductPerms         []*WooDownloadableProductPerm
-	IsWooDownloadableProductPermsLoaded bool
-}
-
-func NewUser(a Adapter) *User {
-	var o User
-	o._table = fmt.Sprintf("%susers", a.DatabasePrefix())
-	o._adapter = a
-	o._pkey = "ID"
-	o._new = false
-	return &o
-}
-
-func (o *User) LoadComments() ([]*Comment, error) {
-	if o.IsCommentsLoaded == true {
-		return o.Comments, nil
-	}
-	var finder Comment
-	results, err := finder.FindByUserId(o.ID)
-	if err != nil {
-		return nil, err
-	}
-	o.IsCommentsLoaded = true
-	o.Comments = results
-	return results, nil
-}
-
-func (o *User) LoadUserMetas() ([]*UserMeta, error) {
-	if o.IsUserMetasLoaded == true {
-		return o.UserMetas, nil
-	}
-	var finder UserMeta
-	results, err := finder.FindByUserId(o.ID)
-	if err != nil {
-		return nil, err
-	}
-	o.IsUserMetasLoaded = true
-	o.UserMetas = results
-	return results, nil
-}
-
-func (o *User) LoadWooDownloadableProductPerms() ([]*WooDownloadableProductPerm, error) {
-	if o.IsWooDownloadableProductPermsLoaded == true {
-		return o.WooDownloadableProductPerms, nil
-	}
-	var finder WooDownloadableProductPerm
-	results, err := finder.FindByUserId(o.ID)
-	if err != nil {
-		return nil, err
-	}
-	o.IsWooDownloadableProductPermsLoaded = true
-	o.WooDownloadableProductPerms = results
-	return results, nil
-}
-
-func (o *User) SaveRelations() error {
-
-	for _, m := range o.Comments {
-		_, err := m.Save()
-		if err != nil {
-			return errors.New(fmt.Sprintf(`while saving relation Comments %s`, err))
-		}
-	}
-
-	for _, m := range o.UserMetas {
-		_, err := m.Save()
-		if err != nil {
-			return errors.New(fmt.Sprintf(`while saving relation UserMetas %s`, err))
-		}
-	}
-
-	for _, m := range o.WooDownloadableProductPerms {
-		_, err := m.Save()
-		if err != nil {
-			return errors.New(fmt.Sprintf(`while saving relation WooDownloadableProductPerms %s`, err))
-		}
-	}
-
-	return nil
-}
-
-func (m *User) GetPrimaryKeyValue() int64 {
-	return m.ID
-}
-func (m *User) GetPrimaryKeyName() string {
-	return `ID`
-}
-
-func (m *User) GetID() int64 {
-	return m.ID
-}
-func (m *User) SetID(arg int64) {
-	m.ID = arg
-	m.IsIDDirty = true
-}
-
-func (m *User) GetUserLogin() string {
-	return m.UserLogin
-}
-func (m *User) SetUserLogin(arg string) {
-	m.UserLogin = arg
-	m.IsUserLoginDirty = true
-}
-
-func (m *User) GetUserPass() string {
-	return m.UserPass
-}
-func (m *User) SetUserPass(arg string) {
-	m.UserPass = arg
-	m.IsUserPassDirty = true
-}
-
-func (m *User) GetUserNicename() string {
-	return m.UserNicename
-}
-func (m *User) SetUserNicename(arg string) {
-	m.UserNicename = arg
-	m.IsUserNicenameDirty = true
-}
-
-func (m *User) GetUserEmail() string {
-	return m.UserEmail
-}
-func (m *User) SetUserEmail(arg string) {
-	m.UserEmail = arg
-	m.IsUserEmailDirty = true
-}
-
-func (m *User) GetUserUrl() string {
-	return m.UserUrl
-}
-func (m *User) SetUserUrl(arg string) {
-	m.UserUrl = arg
-	m.IsUserUrlDirty = true
-}
-
-func (m *User) GetUserRegistered() *DateTime {
-	return m.UserRegistered
-}
-func (m *User) SetUserRegistered(arg *DateTime) {
-	m.UserRegistered = arg
-	m.IsUserRegisteredDirty = true
-}
-
-func (m *User) GetUserActivationKey() string {
-	return m.UserActivationKey
-}
-func (m *User) SetUserActivationKey(arg string) {
-	m.UserActivationKey = arg
-	m.IsUserActivationKeyDirty = true
-}
-
-func (m *User) GetUserStatus() int {
-	return m.UserStatus
-}
-func (m *User) SetUserStatus(arg int) {
-	m.UserStatus = arg
-	m.IsUserStatusDirty = true
-}
-
-func (m *User) GetDisplayName() string {
-	return m.DisplayName
-}
-func (m *User) SetDisplayName(arg string) {
-	m.DisplayName = arg
-	m.IsDisplayNameDirty = true
-}
-
-func (o *User) Find(_find_by_ID int64) (bool, error) {
-
-	var model_slice []*User
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "ID", _find_by_ID)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return false, o._adapter.Oops(fmt.Sprintf(`%s`, err))
-	}
-
-	for _, result := range results {
-		ro := User{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return false, o._adapter.Oops(fmt.Sprintf(`%s`, err))
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return false, o._adapter.Oops(`not found`)
-	}
-	o.FromUser(model_slice[0])
-	return true, nil
-
-}
-func (o *User) FindByUserLogin(_find_by_UserLogin string) ([]*User, error) {
-
-	var model_slice []*User
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "user_login", _find_by_UserLogin)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := User{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *User) FindByUserPass(_find_by_UserPass string) ([]*User, error) {
-
-	var model_slice []*User
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "user_pass", _find_by_UserPass)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := User{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *User) FindByUserNicename(_find_by_UserNicename string) ([]*User, error) {
-
-	var model_slice []*User
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "user_nicename", _find_by_UserNicename)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := User{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *User) FindByUserEmail(_find_by_UserEmail string) ([]*User, error) {
-
-	var model_slice []*User
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "user_email", _find_by_UserEmail)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := User{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *User) FindByUserUrl(_find_by_UserUrl string) ([]*User, error) {
-
-	var model_slice []*User
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "user_url", _find_by_UserUrl)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := User{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *User) FindByUserRegistered(_find_by_UserRegistered *DateTime) ([]*User, error) {
-
-	var model_slice []*User
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "user_registered", _find_by_UserRegistered)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := User{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *User) FindByUserActivationKey(_find_by_UserActivationKey string) ([]*User, error) {
-
-	var model_slice []*User
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "user_activation_key", _find_by_UserActivationKey)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := User{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *User) FindByUserStatus(_find_by_UserStatus int) ([]*User, error) {
-
-	var model_slice []*User
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "user_status", _find_by_UserStatus)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := User{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *User) FindByDisplayName(_find_by_DisplayName string) ([]*User, error) {
-
-	var model_slice []*User
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "display_name", _find_by_DisplayName)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := User{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-
-func (o *User) FromDBValueMap(m map[string]DBValue) error {
-	_ID, err := m["ID"].AsInt64()
-	if err != nil {
-		return o._adapter.Oops(fmt.Sprintf(`%s`, err))
-	}
-	o.ID = _ID
-	_UserLogin, err := m["user_login"].AsString()
-	if err != nil {
-		return o._adapter.Oops(fmt.Sprintf(`%s`, err))
-	}
-	o.UserLogin = _UserLogin
-	_UserPass, err := m["user_pass"].AsString()
-	if err != nil {
-		return o._adapter.Oops(fmt.Sprintf(`%s`, err))
-	}
-	o.UserPass = _UserPass
-	_UserNicename, err := m["user_nicename"].AsString()
-	if err != nil {
-		return o._adapter.Oops(fmt.Sprintf(`%s`, err))
-	}
-	o.UserNicename = _UserNicename
-	_UserEmail, err := m["user_email"].AsString()
-	if err != nil {
-		return o._adapter.Oops(fmt.Sprintf(`%s`, err))
-	}
-	o.UserEmail = _UserEmail
-	_UserUrl, err := m["user_url"].AsString()
-	if err != nil {
-		return o._adapter.Oops(fmt.Sprintf(`%s`, err))
-	}
-	o.UserUrl = _UserUrl
-	_UserRegistered, err := m["user_registered"].AsDateTime()
-	if err != nil {
-		return o._adapter.Oops(fmt.Sprintf(`%s`, err))
-	}
-	o.UserRegistered = _UserRegistered
-	_UserActivationKey, err := m["user_activation_key"].AsString()
-	if err != nil {
-		return o._adapter.Oops(fmt.Sprintf(`%s`, err))
-	}
-	o.UserActivationKey = _UserActivationKey
-	_UserStatus, err := m["user_status"].AsInt()
-	if err != nil {
-		return o._adapter.Oops(fmt.Sprintf(`%s`, err))
-	}
-	o.UserStatus = _UserStatus
-	_DisplayName, err := m["display_name"].AsString()
-	if err != nil {
-		return o._adapter.Oops(fmt.Sprintf(`%s`, err))
-	}
-	o.DisplayName = _DisplayName
-
-	return nil
-}
-func (o *User) FromUser(m *User) {
-	o.ID = m.ID
-	o.UserLogin = m.UserLogin
-	o.UserPass = m.UserPass
-	o.UserNicename = m.UserNicename
-	o.UserEmail = m.UserEmail
-	o.UserUrl = m.UserUrl
-	o.UserRegistered = m.UserRegistered
-	o.UserActivationKey = m.UserActivationKey
-	o.UserStatus = m.UserStatus
-	o.DisplayName = m.DisplayName
-
-}
-
-func (o *User) Save() (int64, error) {
-	if o._new == true {
-		return o.Create()
-	}
-	frmt := fmt.Sprintf("UPDATE %s SET `user_login` = '%s', `user_pass` = '%s', `user_nicename` = '%s', `user_email` = '%s', `user_url` = '%s', `user_registered` = '%s', `user_activation_key` = '%s', `user_status` = '%d', `display_name` = '%s' WHERE %s = '%d' LIMIT 1", o._table, o.UserLogin, o.UserPass, o.UserNicename, o.UserEmail, o.UserUrl, o.UserRegistered.ToString(), o.UserActivationKey, o.UserStatus, o.DisplayName, o._pkey, o.ID)
-	err := o._adapter.Execute(frmt)
-	if err != nil {
-		return 0, err
-	}
-
-	return o._adapter.AffectedRows(), nil
-}
-func (o *User) Create() (int64, error) {
-	frmt := fmt.Sprintf("INSERT INTO %s (`user_login`, `user_pass`, `user_nicename`, `user_email`, `user_url`, `user_registered`, `user_activation_key`, `user_status`, `display_name`) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%d', '%s')", o._table, o.UserLogin, o.UserPass, o.UserNicename, o.UserEmail, o.UserUrl, o.UserRegistered.ToString(), o.UserActivationKey, o.UserStatus, o.DisplayName)
-	err := o._adapter.Execute(frmt)
-	if err != nil {
-		return 0, o._adapter.Oops(fmt.Sprintf(`%s led to %s`, frmt, err))
-	}
-	o.ID = o._adapter.LastInsertedId()
-
-	return o._adapter.AffectedRows(), nil
-}
-
-func (o *User) UpdateUserLogin(_upd_UserLogin string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `user_login` = '%s' WHERE `ID` = '%d'", o._table, _upd_UserLogin, o.UserLogin)
-	err := o._adapter.Execute(frmt)
-	if err != nil {
-		return 0, err
-	}
-	o.UserLogin = _upd_UserLogin
-	return o._adapter.AffectedRows(), nil
-}
-
-func (o *User) UpdateUserPass(_upd_UserPass string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `user_pass` = '%s' WHERE `ID` = '%d'", o._table, _upd_UserPass, o.UserPass)
-	err := o._adapter.Execute(frmt)
-	if err != nil {
-		return 0, err
-	}
-	o.UserPass = _upd_UserPass
-	return o._adapter.AffectedRows(), nil
-}
-
-func (o *User) UpdateUserNicename(_upd_UserNicename string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `user_nicename` = '%s' WHERE `ID` = '%d'", o._table, _upd_UserNicename, o.UserNicename)
-	err := o._adapter.Execute(frmt)
-	if err != nil {
-		return 0, err
-	}
-	o.UserNicename = _upd_UserNicename
-	return o._adapter.AffectedRows(), nil
-}
-
-func (o *User) UpdateUserEmail(_upd_UserEmail string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `user_email` = '%s' WHERE `ID` = '%d'", o._table, _upd_UserEmail, o.UserEmail)
-	err := o._adapter.Execute(frmt)
-	if err != nil {
-		return 0, err
-	}
-	o.UserEmail = _upd_UserEmail
-	return o._adapter.AffectedRows(), nil
-}
-
-func (o *User) UpdateUserUrl(_upd_UserUrl string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `user_url` = '%s' WHERE `ID` = '%d'", o._table, _upd_UserUrl, o.UserUrl)
-	err := o._adapter.Execute(frmt)
-	if err != nil {
-		return 0, err
-	}
-	o.UserUrl = _upd_UserUrl
-	return o._adapter.AffectedRows(), nil
-}
-
-func (o *User) UpdateUserRegistered(_upd_UserRegistered *DateTime) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `user_registered` = '%s' WHERE `ID` = '%d'", o._table, _upd_UserRegistered, o.UserRegistered)
-	err := o._adapter.Execute(frmt)
-	if err != nil {
-		return 0, err
-	}
-	o.UserRegistered = _upd_UserRegistered
-	return o._adapter.AffectedRows(), nil
-}
-
-func (o *User) UpdateUserActivationKey(_upd_UserActivationKey string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `user_activation_key` = '%s' WHERE `ID` = '%d'", o._table, _upd_UserActivationKey, o.UserActivationKey)
-	err := o._adapter.Execute(frmt)
-	if err != nil {
-		return 0, err
-	}
-	o.UserActivationKey = _upd_UserActivationKey
-	return o._adapter.AffectedRows(), nil
-}
-
-func (o *User) UpdateUserStatus(_upd_UserStatus int) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `user_status` = '%d' WHERE `ID` = '%d'", o._table, _upd_UserStatus, o.UserStatus)
-	err := o._adapter.Execute(frmt)
-	if err != nil {
-		return 0, err
-	}
-	o.UserStatus = _upd_UserStatus
-	return o._adapter.AffectedRows(), nil
-}
-
-func (o *User) UpdateDisplayName(_upd_DisplayName string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `display_name` = '%s' WHERE `ID` = '%d'", o._table, _upd_DisplayName, o.DisplayName)
-	err := o._adapter.Execute(frmt)
-	if err != nil {
-		return 0, err
-	}
-	o.DisplayName = _upd_DisplayName
-	return o._adapter.AffectedRows(), nil
-}
-
-type WooAttrTaxonomie struct {
-	_table      string
-	_adapter    Adapter
-	_pkey       string // 0 The name of the primary key in this table
-	_conds      []string
-	_new        bool
-	AttrId      int64
-	AttrName    string
-	AttrLabel   string
-	AttrType    string
-	AttrOrderby string
-	// Dirty markers for smart updates
-	IsAttrIdDirty      bool
-	IsAttrNameDirty    bool
-	IsAttrLabelDirty   bool
-	IsAttrTypeDirty    bool
-	IsAttrOrderbyDirty bool
-	// Relationships
-}
-
-func NewWooAttrTaxonomie(a Adapter) *WooAttrTaxonomie {
-	var o WooAttrTaxonomie
-	o._table = fmt.Sprintf("%swoocommerce_attribute_taxonomies", a.DatabasePrefix())
-	o._adapter = a
-	o._pkey = "attribute_id"
-	o._new = false
-	return &o
-}
-
-func (m *WooAttrTaxonomie) GetPrimaryKeyValue() int64 {
-	return m.AttrId
-}
-func (m *WooAttrTaxonomie) GetPrimaryKeyName() string {
-	return `attribute_id`
-}
-
-func (m *WooAttrTaxonomie) GetAttrId() int64 {
-	return m.AttrId
-}
-func (m *WooAttrTaxonomie) SetAttrId(arg int64) {
-	m.AttrId = arg
-	m.IsAttrIdDirty = true
-}
-
-func (m *WooAttrTaxonomie) GetAttrName() string {
-	return m.AttrName
-}
-func (m *WooAttrTaxonomie) SetAttrName(arg string) {
-	m.AttrName = arg
-	m.IsAttrNameDirty = true
-}
-
-func (m *WooAttrTaxonomie) GetAttrLabel() string {
-	return m.AttrLabel
-}
-func (m *WooAttrTaxonomie) SetAttrLabel(arg string) {
-	m.AttrLabel = arg
-	m.IsAttrLabelDirty = true
-}
-
-func (m *WooAttrTaxonomie) GetAttrType() string {
-	return m.AttrType
-}
-func (m *WooAttrTaxonomie) SetAttrType(arg string) {
-	m.AttrType = arg
-	m.IsAttrTypeDirty = true
-}
-
-func (m *WooAttrTaxonomie) GetAttrOrderby() string {
-	return m.AttrOrderby
-}
-func (m *WooAttrTaxonomie) SetAttrOrderby(arg string) {
-	m.AttrOrderby = arg
-	m.IsAttrOrderbyDirty = true
-}
-
-func (o *WooAttrTaxonomie) Find(_find_by_AttrId int64) (bool, error) {
-
-	var model_slice []*WooAttrTaxonomie
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "attribute_id", _find_by_AttrId)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return false, o._adapter.Oops(fmt.Sprintf(`%s`, err))
-	}
-
-	for _, result := range results {
-		ro := WooAttrTaxonomie{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return false, o._adapter.Oops(fmt.Sprintf(`%s`, err))
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return false, o._adapter.Oops(`not found`)
-	}
-	o.FromWooAttrTaxonomie(model_slice[0])
-	return true, nil
-
-}
-func (o *WooAttrTaxonomie) FindByAttrName(_find_by_AttrName string) ([]*WooAttrTaxonomie, error) {
-
-	var model_slice []*WooAttrTaxonomie
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "attribute_name", _find_by_AttrName)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := WooAttrTaxonomie{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *WooAttrTaxonomie) FindByAttrLabel(_find_by_AttrLabel string) ([]*WooAttrTaxonomie, error) {
-
-	var model_slice []*WooAttrTaxonomie
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "attribute_label", _find_by_AttrLabel)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := WooAttrTaxonomie{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *WooAttrTaxonomie) FindByAttrType(_find_by_AttrType string) ([]*WooAttrTaxonomie, error) {
-
-	var model_slice []*WooAttrTaxonomie
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "attribute_type", _find_by_AttrType)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := WooAttrTaxonomie{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *WooAttrTaxonomie) FindByAttrOrderby(_find_by_AttrOrderby string) ([]*WooAttrTaxonomie, error) {
-
-	var model_slice []*WooAttrTaxonomie
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "attribute_orderby", _find_by_AttrOrderby)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := WooAttrTaxonomie{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-
-func (o *WooAttrTaxonomie) FromDBValueMap(m map[string]DBValue) error {
-	_AttrId, err := m["attribute_id"].AsInt64()
-	if err != nil {
-		return o._adapter.Oops(fmt.Sprintf(`%s`, err))
-	}
-	o.AttrId = _AttrId
-	_AttrName, err := m["attribute_name"].AsString()
-	if err != nil {
-		return o._adapter.Oops(fmt.Sprintf(`%s`, err))
-	}
-	o.AttrName = _AttrName
-	_AttrLabel, err := m["attribute_label"].AsString()
-	if err != nil {
-		return o._adapter.Oops(fmt.Sprintf(`%s`, err))
-	}
-	o.AttrLabel = _AttrLabel
-	_AttrType, err := m["attribute_type"].AsString()
-	if err != nil {
-		return o._adapter.Oops(fmt.Sprintf(`%s`, err))
-	}
-	o.AttrType = _AttrType
-	_AttrOrderby, err := m["attribute_orderby"].AsString()
-	if err != nil {
-		return o._adapter.Oops(fmt.Sprintf(`%s`, err))
-	}
-	o.AttrOrderby = _AttrOrderby
-
-	return nil
-}
-func (o *WooAttrTaxonomie) FromWooAttrTaxonomie(m *WooAttrTaxonomie) {
-	o.AttrId = m.AttrId
-	o.AttrName = m.AttrName
-	o.AttrLabel = m.AttrLabel
-	o.AttrType = m.AttrType
-	o.AttrOrderby = m.AttrOrderby
-
-}
-
-func (o *WooAttrTaxonomie) Save() (int64, error) {
-	if o._new == true {
-		return o.Create()
-	}
-	frmt := fmt.Sprintf("UPDATE %s SET `attribute_name` = '%s', `attribute_label` = '%s', `attribute_type` = '%s', `attribute_orderby` = '%s' WHERE %s = '%d' LIMIT 1", o._table, o.AttrName, o.AttrLabel, o.AttrType, o.AttrOrderby, o._pkey, o.AttrId)
-	err := o._adapter.Execute(frmt)
-	if err != nil {
-		return 0, err
-	}
-
-	return o._adapter.AffectedRows(), nil
-}
-func (o *WooAttrTaxonomie) Create() (int64, error) {
-	frmt := fmt.Sprintf("INSERT INTO %s (`attribute_name`, `attribute_label`, `attribute_type`, `attribute_orderby`) VALUES ('%s', '%s', '%s', '%s')", o._table, o.AttrName, o.AttrLabel, o.AttrType, o.AttrOrderby)
-	err := o._adapter.Execute(frmt)
-	if err != nil {
-		return 0, o._adapter.Oops(fmt.Sprintf(`%s led to %s`, frmt, err))
-	}
-	o.AttrId = o._adapter.LastInsertedId()
-
-	return o._adapter.AffectedRows(), nil
-}
-
-func (o *WooAttrTaxonomie) UpdateAttrName(_upd_AttrName string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `attribute_name` = '%s' WHERE `attribute_id` = '%d'", o._table, _upd_AttrName, o.AttrName)
-	err := o._adapter.Execute(frmt)
-	if err != nil {
-		return 0, err
-	}
-	o.AttrName = _upd_AttrName
-	return o._adapter.AffectedRows(), nil
-}
-
-func (o *WooAttrTaxonomie) UpdateAttrLabel(_upd_AttrLabel string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `attribute_label` = '%s' WHERE `attribute_id` = '%d'", o._table, _upd_AttrLabel, o.AttrLabel)
-	err := o._adapter.Execute(frmt)
-	if err != nil {
-		return 0, err
-	}
-	o.AttrLabel = _upd_AttrLabel
-	return o._adapter.AffectedRows(), nil
-}
-
-func (o *WooAttrTaxonomie) UpdateAttrType(_upd_AttrType string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `attribute_type` = '%s' WHERE `attribute_id` = '%d'", o._table, _upd_AttrType, o.AttrType)
-	err := o._adapter.Execute(frmt)
-	if err != nil {
-		return 0, err
-	}
-	o.AttrType = _upd_AttrType
-	return o._adapter.AffectedRows(), nil
-}
-
-func (o *WooAttrTaxonomie) UpdateAttrOrderby(_upd_AttrOrderby string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `attribute_orderby` = '%s' WHERE `attribute_id` = '%d'", o._table, _upd_AttrOrderby, o.AttrOrderby)
-	err := o._adapter.Execute(frmt)
-	if err != nil {
-		return 0, err
-	}
-	o.AttrOrderby = _upd_AttrOrderby
-	return o._adapter.AffectedRows(), nil
-}
-
-type WooDownloadableProductPerm struct {
-	_table             string
-	_adapter           Adapter
-	_pkey              string // 0 The name of the primary key in this table
-	_conds             []string
-	_new               bool
-	PermissionId       int64
-	DownloadId         string
-	ProductId          int64
-	OrderId            int64
-	OrderKey           string
-	UserEmail          string
-	UserId             int64
-	DownloadsRemaining string
-	AccessGranted      *DateTime
-	AccessExpires      *DateTime
-	DownloadCount      int64
-	// Dirty markers for smart updates
-	IsPermissionIdDirty       bool
-	IsDownloadIdDirty         bool
-	IsProductIdDirty          bool
-	IsOrderIdDirty            bool
-	IsOrderKeyDirty           bool
-	IsUserEmailDirty          bool
-	IsUserIdDirty             bool
-	IsDownloadsRemainingDirty bool
-	IsAccessGrantedDirty      bool
-	IsAccessExpiresDirty      bool
-	IsDownloadCountDirty      bool
-	// Relationships
-	User         *User
-	IsUserLoaded bool
-}
-
-func NewWooDownloadableProductPerm(a Adapter) *WooDownloadableProductPerm {
-	var o WooDownloadableProductPerm
-	o._table = fmt.Sprintf("%swoocommerce_downloadable_product_permissions", a.DatabasePrefix())
-	o._adapter = a
-	o._pkey = "permission_id"
-	o._new = false
-	return &o
-}
-
-func (o *WooDownloadableProductPerm) LoadUser() (*User, error) {
-	if o.IsUserLoaded == true {
-		return o.User, nil
-	}
-	m := NewUser(o._adapter)
-	found, err := m.Find(o.GetUserId())
-	if err != nil {
-		return nil, err
-	}
-	if found == false {
-		return nil, errors.New(fmt.Sprintf(`could not find User with ID of %d`, o.GetUserId()))
-	}
-	o.IsUserLoaded = true
-	o.User = m
-	return m, nil
-}
-
-func (o *WooDownloadableProductPerm) SaveRelations() error {
-
-	_, err := o.User.Save()
-	if err != nil {
-		return errors.New(fmt.Sprintf(`while saving relation User %s`, err))
-	}
-
-	return nil
-}
-
-func (m *WooDownloadableProductPerm) GetPrimaryKeyValue() int64 {
-	return m.PermissionId
-}
-func (m *WooDownloadableProductPerm) GetPrimaryKeyName() string {
-	return `permission_id`
-}
-
-func (m *WooDownloadableProductPerm) GetPermissionId() int64 {
-	return m.PermissionId
-}
-func (m *WooDownloadableProductPerm) SetPermissionId(arg int64) {
-	m.PermissionId = arg
-	m.IsPermissionIdDirty = true
-}
-
-func (m *WooDownloadableProductPerm) GetDownloadId() string {
-	return m.DownloadId
-}
-func (m *WooDownloadableProductPerm) SetDownloadId(arg string) {
-	m.DownloadId = arg
-	m.IsDownloadIdDirty = true
-}
-
-func (m *WooDownloadableProductPerm) GetProductId() int64 {
-	return m.ProductId
-}
-func (m *WooDownloadableProductPerm) SetProductId(arg int64) {
-	m.ProductId = arg
-	m.IsProductIdDirty = true
-}
-
-func (m *WooDownloadableProductPerm) GetOrderId() int64 {
-	return m.OrderId
-}
-func (m *WooDownloadableProductPerm) SetOrderId(arg int64) {
-	m.OrderId = arg
-	m.IsOrderIdDirty = true
-}
-
-func (m *WooDownloadableProductPerm) GetOrderKey() string {
-	return m.OrderKey
-}
-func (m *WooDownloadableProductPerm) SetOrderKey(arg string) {
-	m.OrderKey = arg
-	m.IsOrderKeyDirty = true
-}
-
-func (m *WooDownloadableProductPerm) GetUserEmail() string {
-	return m.UserEmail
-}
-func (m *WooDownloadableProductPerm) SetUserEmail(arg string) {
-	m.UserEmail = arg
-	m.IsUserEmailDirty = true
-}
-
-func (m *WooDownloadableProductPerm) GetUserId() int64 {
-	return m.UserId
-}
-func (m *WooDownloadableProductPerm) SetUserId(arg int64) {
-	m.UserId = arg
-	m.IsUserIdDirty = true
-}
-
-func (m *WooDownloadableProductPerm) GetDownloadsRemaining() string {
-	return m.DownloadsRemaining
-}
-func (m *WooDownloadableProductPerm) SetDownloadsRemaining(arg string) {
-	m.DownloadsRemaining = arg
-	m.IsDownloadsRemainingDirty = true
-}
-
-func (m *WooDownloadableProductPerm) GetAccessGranted() *DateTime {
-	return m.AccessGranted
-}
-func (m *WooDownloadableProductPerm) SetAccessGranted(arg *DateTime) {
-	m.AccessGranted = arg
-	m.IsAccessGrantedDirty = true
-}
-
-func (m *WooDownloadableProductPerm) GetAccessExpires() *DateTime {
-	return m.AccessExpires
-}
-func (m *WooDownloadableProductPerm) SetAccessExpires(arg *DateTime) {
-	m.AccessExpires = arg
-	m.IsAccessExpiresDirty = true
-}
-
-func (m *WooDownloadableProductPerm) GetDownloadCount() int64 {
-	return m.DownloadCount
-}
-func (m *WooDownloadableProductPerm) SetDownloadCount(arg int64) {
-	m.DownloadCount = arg
-	m.IsDownloadCountDirty = true
-}
-
-func (o *WooDownloadableProductPerm) Find(_find_by_PermissionId int64) (bool, error) {
-
-	var model_slice []*WooDownloadableProductPerm
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "permission_id", _find_by_PermissionId)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return false, o._adapter.Oops(fmt.Sprintf(`%s`, err))
-	}
-
-	for _, result := range results {
-		ro := WooDownloadableProductPerm{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return false, o._adapter.Oops(fmt.Sprintf(`%s`, err))
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return false, o._adapter.Oops(`not found`)
-	}
-	o.FromWooDownloadableProductPerm(model_slice[0])
-	return true, nil
-
-}
-func (o *WooDownloadableProductPerm) FindByDownloadId(_find_by_DownloadId string) ([]*WooDownloadableProductPerm, error) {
-
-	var model_slice []*WooDownloadableProductPerm
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "download_id", _find_by_DownloadId)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := WooDownloadableProductPerm{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *WooDownloadableProductPerm) FindByProductId(_find_by_ProductId int64) ([]*WooDownloadableProductPerm, error) {
-
-	var model_slice []*WooDownloadableProductPerm
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "product_id", _find_by_ProductId)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := WooDownloadableProductPerm{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *WooDownloadableProductPerm) FindByOrderId(_find_by_OrderId int64) ([]*WooDownloadableProductPerm, error) {
-
-	var model_slice []*WooDownloadableProductPerm
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "order_id", _find_by_OrderId)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := WooDownloadableProductPerm{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *WooDownloadableProductPerm) FindByOrderKey(_find_by_OrderKey string) ([]*WooDownloadableProductPerm, error) {
-
-	var model_slice []*WooDownloadableProductPerm
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "order_key", _find_by_OrderKey)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := WooDownloadableProductPerm{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *WooDownloadableProductPerm) FindByUserEmail(_find_by_UserEmail string) ([]*WooDownloadableProductPerm, error) {
-
-	var model_slice []*WooDownloadableProductPerm
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "user_email", _find_by_UserEmail)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := WooDownloadableProductPerm{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *WooDownloadableProductPerm) FindByUserId(_find_by_UserId int64) ([]*WooDownloadableProductPerm, error) {
-
-	var model_slice []*WooDownloadableProductPerm
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "user_id", _find_by_UserId)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := WooDownloadableProductPerm{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *WooDownloadableProductPerm) FindByDownloadsRemaining(_find_by_DownloadsRemaining string) ([]*WooDownloadableProductPerm, error) {
-
-	var model_slice []*WooDownloadableProductPerm
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "downloads_remaining", _find_by_DownloadsRemaining)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := WooDownloadableProductPerm{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *WooDownloadableProductPerm) FindByAccessGranted(_find_by_AccessGranted *DateTime) ([]*WooDownloadableProductPerm, error) {
-
-	var model_slice []*WooDownloadableProductPerm
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "access_granted", _find_by_AccessGranted)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := WooDownloadableProductPerm{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *WooDownloadableProductPerm) FindByAccessExpires(_find_by_AccessExpires *DateTime) ([]*WooDownloadableProductPerm, error) {
-
-	var model_slice []*WooDownloadableProductPerm
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "access_expires", _find_by_AccessExpires)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := WooDownloadableProductPerm{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *WooDownloadableProductPerm) FindByDownloadCount(_find_by_DownloadCount int64) ([]*WooDownloadableProductPerm, error) {
-
-	var model_slice []*WooDownloadableProductPerm
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "download_count", _find_by_DownloadCount)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := WooDownloadableProductPerm{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-
-func (o *WooDownloadableProductPerm) FromDBValueMap(m map[string]DBValue) error {
-	_PermissionId, err := m["permission_id"].AsInt64()
-	if err != nil {
-		return o._adapter.Oops(fmt.Sprintf(`%s`, err))
-	}
-	o.PermissionId = _PermissionId
-	_DownloadId, err := m["download_id"].AsString()
-	if err != nil {
-		return o._adapter.Oops(fmt.Sprintf(`%s`, err))
-	}
-	o.DownloadId = _DownloadId
-	_ProductId, err := m["product_id"].AsInt64()
-	if err != nil {
-		return o._adapter.Oops(fmt.Sprintf(`%s`, err))
-	}
-	o.ProductId = _ProductId
-	_OrderId, err := m["order_id"].AsInt64()
-	if err != nil {
-		return o._adapter.Oops(fmt.Sprintf(`%s`, err))
-	}
-	o.OrderId = _OrderId
-	_OrderKey, err := m["order_key"].AsString()
-	if err != nil {
-		return o._adapter.Oops(fmt.Sprintf(`%s`, err))
-	}
-	o.OrderKey = _OrderKey
-	_UserEmail, err := m["user_email"].AsString()
-	if err != nil {
-		return o._adapter.Oops(fmt.Sprintf(`%s`, err))
-	}
-	o.UserEmail = _UserEmail
-	_UserId, err := m["user_id"].AsInt64()
-	if err != nil {
-		return o._adapter.Oops(fmt.Sprintf(`%s`, err))
-	}
-	o.UserId = _UserId
-	_DownloadsRemaining, err := m["downloads_remaining"].AsString()
-	if err != nil {
-		return o._adapter.Oops(fmt.Sprintf(`%s`, err))
-	}
-	o.DownloadsRemaining = _DownloadsRemaining
-	_AccessGranted, err := m["access_granted"].AsDateTime()
-	if err != nil {
-		return o._adapter.Oops(fmt.Sprintf(`%s`, err))
-	}
-	o.AccessGranted = _AccessGranted
-	_AccessExpires, err := m["access_expires"].AsDateTime()
-	if err != nil {
-		return o._adapter.Oops(fmt.Sprintf(`%s`, err))
-	}
-	o.AccessExpires = _AccessExpires
-	_DownloadCount, err := m["download_count"].AsInt64()
-	if err != nil {
-		return o._adapter.Oops(fmt.Sprintf(`%s`, err))
-	}
-	o.DownloadCount = _DownloadCount
-
-	return nil
-}
-func (o *WooDownloadableProductPerm) FromWooDownloadableProductPerm(m *WooDownloadableProductPerm) {
-	o.PermissionId = m.PermissionId
-	o.DownloadId = m.DownloadId
-	o.ProductId = m.ProductId
-	o.OrderId = m.OrderId
-	o.OrderKey = m.OrderKey
-	o.UserEmail = m.UserEmail
-	o.UserId = m.UserId
-	o.DownloadsRemaining = m.DownloadsRemaining
-	o.AccessGranted = m.AccessGranted
-	o.AccessExpires = m.AccessExpires
-	o.DownloadCount = m.DownloadCount
-
-}
-
-func (o *WooDownloadableProductPerm) Save() (int64, error) {
-	if o._new == true {
-		return o.Create()
-	}
-	frmt := fmt.Sprintf("UPDATE %s SET `download_id` = '%s', `product_id` = '%d', `order_id` = '%d', `order_key` = '%s', `user_email` = '%s', `user_id` = '%d', `downloads_remaining` = '%s', `access_granted` = '%s', `access_expires` = '%s', `download_count` = '%d' WHERE %s = '%d' LIMIT 1", o._table, o.DownloadId, o.ProductId, o.OrderId, o.OrderKey, o.UserEmail, o.UserId, o.DownloadsRemaining, o.AccessGranted.ToString(), o.AccessExpires.ToString(), o.DownloadCount, o._pkey, o.PermissionId)
-	err := o._adapter.Execute(frmt)
-	if err != nil {
-		return 0, err
-	}
-
-	return o._adapter.AffectedRows(), nil
-}
-func (o *WooDownloadableProductPerm) Create() (int64, error) {
-	frmt := fmt.Sprintf("INSERT INTO %s (`download_id`, `product_id`, `order_id`, `order_key`, `user_email`, `user_id`, `downloads_remaining`, `access_granted`, `access_expires`, `download_count`) VALUES ('%s', '%d', '%d', '%s', '%s', '%d', '%s', '%s', '%s', '%d')", o._table, o.DownloadId, o.ProductId, o.OrderId, o.OrderKey, o.UserEmail, o.UserId, o.DownloadsRemaining, o.AccessGranted.ToString(), o.AccessExpires.ToString(), o.DownloadCount)
-	err := o._adapter.Execute(frmt)
-	if err != nil {
-		return 0, o._adapter.Oops(fmt.Sprintf(`%s led to %s`, frmt, err))
-	}
-	o.PermissionId = o._adapter.LastInsertedId()
-
-	return o._adapter.AffectedRows(), nil
-}
-
-func (o *WooDownloadableProductPerm) UpdateDownloadId(_upd_DownloadId string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `download_id` = '%s' WHERE `permission_id` = '%d'", o._table, _upd_DownloadId, o.DownloadId)
-	err := o._adapter.Execute(frmt)
-	if err != nil {
-		return 0, err
-	}
-	o.DownloadId = _upd_DownloadId
-	return o._adapter.AffectedRows(), nil
-}
-
-func (o *WooDownloadableProductPerm) UpdateProductId(_upd_ProductId int64) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `product_id` = '%d' WHERE `permission_id` = '%d'", o._table, _upd_ProductId, o.ProductId)
-	err := o._adapter.Execute(frmt)
-	if err != nil {
-		return 0, err
-	}
-	o.ProductId = _upd_ProductId
-	return o._adapter.AffectedRows(), nil
-}
-
-func (o *WooDownloadableProductPerm) UpdateOrderId(_upd_OrderId int64) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `order_id` = '%d' WHERE `permission_id` = '%d'", o._table, _upd_OrderId, o.OrderId)
-	err := o._adapter.Execute(frmt)
-	if err != nil {
-		return 0, err
-	}
-	o.OrderId = _upd_OrderId
-	return o._adapter.AffectedRows(), nil
-}
-
-func (o *WooDownloadableProductPerm) UpdateOrderKey(_upd_OrderKey string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `order_key` = '%s' WHERE `permission_id` = '%d'", o._table, _upd_OrderKey, o.OrderKey)
-	err := o._adapter.Execute(frmt)
-	if err != nil {
-		return 0, err
-	}
-	o.OrderKey = _upd_OrderKey
-	return o._adapter.AffectedRows(), nil
-}
-
-func (o *WooDownloadableProductPerm) UpdateUserEmail(_upd_UserEmail string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `user_email` = '%s' WHERE `permission_id` = '%d'", o._table, _upd_UserEmail, o.UserEmail)
-	err := o._adapter.Execute(frmt)
-	if err != nil {
-		return 0, err
-	}
-	o.UserEmail = _upd_UserEmail
-	return o._adapter.AffectedRows(), nil
-}
-
-func (o *WooDownloadableProductPerm) UpdateUserId(_upd_UserId int64) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `user_id` = '%d' WHERE `permission_id` = '%d'", o._table, _upd_UserId, o.UserId)
-	err := o._adapter.Execute(frmt)
-	if err != nil {
-		return 0, err
-	}
-	o.UserId = _upd_UserId
-	return o._adapter.AffectedRows(), nil
-}
-
-func (o *WooDownloadableProductPerm) UpdateDownloadsRemaining(_upd_DownloadsRemaining string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `downloads_remaining` = '%s' WHERE `permission_id` = '%d'", o._table, _upd_DownloadsRemaining, o.DownloadsRemaining)
-	err := o._adapter.Execute(frmt)
-	if err != nil {
-		return 0, err
-	}
-	o.DownloadsRemaining = _upd_DownloadsRemaining
-	return o._adapter.AffectedRows(), nil
-}
-
-func (o *WooDownloadableProductPerm) UpdateAccessGranted(_upd_AccessGranted *DateTime) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `access_granted` = '%s' WHERE `permission_id` = '%d'", o._table, _upd_AccessGranted, o.AccessGranted)
-	err := o._adapter.Execute(frmt)
-	if err != nil {
-		return 0, err
-	}
-	o.AccessGranted = _upd_AccessGranted
-	return o._adapter.AffectedRows(), nil
-}
-
-func (o *WooDownloadableProductPerm) UpdateAccessExpires(_upd_AccessExpires *DateTime) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `access_expires` = '%s' WHERE `permission_id` = '%d'", o._table, _upd_AccessExpires, o.AccessExpires)
-	err := o._adapter.Execute(frmt)
-	if err != nil {
-		return 0, err
-	}
-	o.AccessExpires = _upd_AccessExpires
-	return o._adapter.AffectedRows(), nil
-}
-
-func (o *WooDownloadableProductPerm) UpdateDownloadCount(_upd_DownloadCount int64) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `download_count` = '%d' WHERE `permission_id` = '%d'", o._table, _upd_DownloadCount, o.DownloadCount)
-	err := o._adapter.Execute(frmt)
-	if err != nil {
-		return 0, err
-	}
-	o.DownloadCount = _upd_DownloadCount
-	return o._adapter.AffectedRows(), nil
-}
-
-type WooOrderItemMeta struct {
-	_table      string
-	_adapter    Adapter
-	_pkey       string // 0 The name of the primary key in this table
-	_conds      []string
-	_new        bool
-	MetaId      int64
-	OrderItemId int64
-	MetaKey     string
-	MetaValue   string
-	// Dirty markers for smart updates
-	IsMetaIdDirty      bool
-	IsOrderItemIdDirty bool
-	IsMetaKeyDirty     bool
-	IsMetaValueDirty   bool
-	// Relationships
-}
-
-func NewWooOrderItemMeta(a Adapter) *WooOrderItemMeta {
-	var o WooOrderItemMeta
-	o._table = fmt.Sprintf("%swoocommerce_order_itemmeta", a.DatabasePrefix())
-	o._adapter = a
-	o._pkey = "meta_id"
-	o._new = false
-	return &o
-}
-
-func (m *WooOrderItemMeta) GetPrimaryKeyValue() int64 {
-	return m.MetaId
-}
-func (m *WooOrderItemMeta) GetPrimaryKeyName() string {
-	return `meta_id`
-}
-
-func (m *WooOrderItemMeta) GetMetaId() int64 {
-	return m.MetaId
-}
-func (m *WooOrderItemMeta) SetMetaId(arg int64) {
-	m.MetaId = arg
-	m.IsMetaIdDirty = true
-}
-
-func (m *WooOrderItemMeta) GetOrderItemId() int64 {
-	return m.OrderItemId
-}
-func (m *WooOrderItemMeta) SetOrderItemId(arg int64) {
-	m.OrderItemId = arg
-	m.IsOrderItemIdDirty = true
-}
-
-func (m *WooOrderItemMeta) GetMetaKey() string {
-	return m.MetaKey
-}
-func (m *WooOrderItemMeta) SetMetaKey(arg string) {
-	m.MetaKey = arg
-	m.IsMetaKeyDirty = true
-}
-
-func (m *WooOrderItemMeta) GetMetaValue() string {
-	return m.MetaValue
-}
-func (m *WooOrderItemMeta) SetMetaValue(arg string) {
-	m.MetaValue = arg
-	m.IsMetaValueDirty = true
-}
-
-func (o *WooOrderItemMeta) Find(_find_by_MetaId int64) (bool, error) {
-
-	var model_slice []*WooOrderItemMeta
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "meta_id", _find_by_MetaId)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return false, o._adapter.Oops(fmt.Sprintf(`%s`, err))
-	}
-
-	for _, result := range results {
-		ro := WooOrderItemMeta{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return false, o._adapter.Oops(fmt.Sprintf(`%s`, err))
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return false, o._adapter.Oops(`not found`)
-	}
-	o.FromWooOrderItemMeta(model_slice[0])
-	return true, nil
-
-}
-func (o *WooOrderItemMeta) FindByOrderItemId(_find_by_OrderItemId int64) ([]*WooOrderItemMeta, error) {
-
-	var model_slice []*WooOrderItemMeta
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "order_item_id", _find_by_OrderItemId)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := WooOrderItemMeta{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *WooOrderItemMeta) FindByMetaKey(_find_by_MetaKey string) ([]*WooOrderItemMeta, error) {
-
-	var model_slice []*WooOrderItemMeta
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "meta_key", _find_by_MetaKey)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := WooOrderItemMeta{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *WooOrderItemMeta) FindByMetaValue(_find_by_MetaValue string) ([]*WooOrderItemMeta, error) {
-
-	var model_slice []*WooOrderItemMeta
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "meta_value", _find_by_MetaValue)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := WooOrderItemMeta{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-
-func (o *WooOrderItemMeta) FromDBValueMap(m map[string]DBValue) error {
-	_MetaId, err := m["meta_id"].AsInt64()
-	if err != nil {
-		return o._adapter.Oops(fmt.Sprintf(`%s`, err))
-	}
-	o.MetaId = _MetaId
-	_OrderItemId, err := m["order_item_id"].AsInt64()
-	if err != nil {
-		return o._adapter.Oops(fmt.Sprintf(`%s`, err))
-	}
-	o.OrderItemId = _OrderItemId
-	_MetaKey, err := m["meta_key"].AsString()
-	if err != nil {
-		return o._adapter.Oops(fmt.Sprintf(`%s`, err))
-	}
-	o.MetaKey = _MetaKey
-	_MetaValue, err := m["meta_value"].AsString()
-	if err != nil {
-		return o._adapter.Oops(fmt.Sprintf(`%s`, err))
-	}
-	o.MetaValue = _MetaValue
-
-	return nil
-}
-func (o *WooOrderItemMeta) FromWooOrderItemMeta(m *WooOrderItemMeta) {
-	o.MetaId = m.MetaId
-	o.OrderItemId = m.OrderItemId
-	o.MetaKey = m.MetaKey
-	o.MetaValue = m.MetaValue
-
-}
-
-func (o *WooOrderItemMeta) Save() (int64, error) {
-	if o._new == true {
-		return o.Create()
-	}
-	frmt := fmt.Sprintf("UPDATE %s SET `order_item_id` = '%d', `meta_key` = '%s', `meta_value` = '%s' WHERE %s = '%d' LIMIT 1", o._table, o.OrderItemId, o.MetaKey, o.MetaValue, o._pkey, o.MetaId)
-	err := o._adapter.Execute(frmt)
-	if err != nil {
-		return 0, err
-	}
-
-	return o._adapter.AffectedRows(), nil
-}
-func (o *WooOrderItemMeta) Create() (int64, error) {
-	frmt := fmt.Sprintf("INSERT INTO %s (`order_item_id`, `meta_key`, `meta_value`) VALUES ('%d', '%s', '%s')", o._table, o.OrderItemId, o.MetaKey, o.MetaValue)
-	err := o._adapter.Execute(frmt)
-	if err != nil {
-		return 0, o._adapter.Oops(fmt.Sprintf(`%s led to %s`, frmt, err))
-	}
-	o.MetaId = o._adapter.LastInsertedId()
-
-	return o._adapter.AffectedRows(), nil
-}
-
-func (o *WooOrderItemMeta) UpdateOrderItemId(_upd_OrderItemId int64) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `order_item_id` = '%d' WHERE `meta_id` = '%d'", o._table, _upd_OrderItemId, o.OrderItemId)
-	err := o._adapter.Execute(frmt)
-	if err != nil {
-		return 0, err
-	}
-	o.OrderItemId = _upd_OrderItemId
-	return o._adapter.AffectedRows(), nil
-}
-
-func (o *WooOrderItemMeta) UpdateMetaKey(_upd_MetaKey string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `meta_key` = '%s' WHERE `meta_id` = '%d'", o._table, _upd_MetaKey, o.MetaKey)
-	err := o._adapter.Execute(frmt)
-	if err != nil {
-		return 0, err
-	}
-	o.MetaKey = _upd_MetaKey
-	return o._adapter.AffectedRows(), nil
-}
-
-func (o *WooOrderItemMeta) UpdateMetaValue(_upd_MetaValue string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `meta_value` = '%s' WHERE `meta_id` = '%d'", o._table, _upd_MetaValue, o.MetaValue)
-	err := o._adapter.Execute(frmt)
-	if err != nil {
-		return 0, err
-	}
-	o.MetaValue = _upd_MetaValue
-	return o._adapter.AffectedRows(), nil
-}
-
-type WooOrderItem struct {
-	_table        string
-	_adapter      Adapter
-	_pkey         string // 0 The name of the primary key in this table
-	_conds        []string
-	_new          bool
-	OrderItemId   int64
-	OrderItemName string
-	OrderItemType string
-	OrderId       int64
-	// Dirty markers for smart updates
-	IsOrderItemIdDirty   bool
-	IsOrderItemNameDirty bool
-	IsOrderItemTypeDirty bool
-	IsOrderIdDirty       bool
-	// Relationships
-}
-
-func NewWooOrderItem(a Adapter) *WooOrderItem {
-	var o WooOrderItem
-	o._table = fmt.Sprintf("%swoocommerce_order_items", a.DatabasePrefix())
-	o._adapter = a
-	o._pkey = "order_item_id"
-	o._new = false
-	return &o
-}
-
-func (m *WooOrderItem) GetPrimaryKeyValue() int64 {
-	return m.OrderItemId
-}
-func (m *WooOrderItem) GetPrimaryKeyName() string {
-	return `order_item_id`
-}
-
-func (m *WooOrderItem) GetOrderItemId() int64 {
-	return m.OrderItemId
-}
-func (m *WooOrderItem) SetOrderItemId(arg int64) {
-	m.OrderItemId = arg
-	m.IsOrderItemIdDirty = true
-}
-
-func (m *WooOrderItem) GetOrderItemName() string {
-	return m.OrderItemName
-}
-func (m *WooOrderItem) SetOrderItemName(arg string) {
-	m.OrderItemName = arg
-	m.IsOrderItemNameDirty = true
-}
-
-func (m *WooOrderItem) GetOrderItemType() string {
-	return m.OrderItemType
-}
-func (m *WooOrderItem) SetOrderItemType(arg string) {
-	m.OrderItemType = arg
-	m.IsOrderItemTypeDirty = true
-}
-
-func (m *WooOrderItem) GetOrderId() int64 {
-	return m.OrderId
-}
-func (m *WooOrderItem) SetOrderId(arg int64) {
-	m.OrderId = arg
-	m.IsOrderIdDirty = true
-}
-
-func (o *WooOrderItem) Find(_find_by_OrderItemId int64) (bool, error) {
-
-	var model_slice []*WooOrderItem
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "order_item_id", _find_by_OrderItemId)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return false, o._adapter.Oops(fmt.Sprintf(`%s`, err))
-	}
-
-	for _, result := range results {
-		ro := WooOrderItem{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return false, o._adapter.Oops(fmt.Sprintf(`%s`, err))
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return false, o._adapter.Oops(`not found`)
-	}
-	o.FromWooOrderItem(model_slice[0])
-	return true, nil
-
-}
-func (o *WooOrderItem) FindByOrderItemName(_find_by_OrderItemName string) ([]*WooOrderItem, error) {
-
-	var model_slice []*WooOrderItem
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "order_item_name", _find_by_OrderItemName)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := WooOrderItem{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *WooOrderItem) FindByOrderItemType(_find_by_OrderItemType string) ([]*WooOrderItem, error) {
-
-	var model_slice []*WooOrderItem
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "order_item_type", _find_by_OrderItemType)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := WooOrderItem{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *WooOrderItem) FindByOrderId(_find_by_OrderId int64) ([]*WooOrderItem, error) {
-
-	var model_slice []*WooOrderItem
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "order_id", _find_by_OrderId)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := WooOrderItem{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-
-func (o *WooOrderItem) FromDBValueMap(m map[string]DBValue) error {
-	_OrderItemId, err := m["order_item_id"].AsInt64()
-	if err != nil {
-		return o._adapter.Oops(fmt.Sprintf(`%s`, err))
-	}
-	o.OrderItemId = _OrderItemId
-	_OrderItemName, err := m["order_item_name"].AsString()
-	if err != nil {
-		return o._adapter.Oops(fmt.Sprintf(`%s`, err))
-	}
-	o.OrderItemName = _OrderItemName
-	_OrderItemType, err := m["order_item_type"].AsString()
-	if err != nil {
-		return o._adapter.Oops(fmt.Sprintf(`%s`, err))
-	}
-	o.OrderItemType = _OrderItemType
-	_OrderId, err := m["order_id"].AsInt64()
-	if err != nil {
-		return o._adapter.Oops(fmt.Sprintf(`%s`, err))
-	}
-	o.OrderId = _OrderId
-
-	return nil
-}
-func (o *WooOrderItem) FromWooOrderItem(m *WooOrderItem) {
-	o.OrderItemId = m.OrderItemId
-	o.OrderItemName = m.OrderItemName
-	o.OrderItemType = m.OrderItemType
-	o.OrderId = m.OrderId
-
-}
-
-func (o *WooOrderItem) Save() (int64, error) {
-	if o._new == true {
-		return o.Create()
-	}
-	frmt := fmt.Sprintf("UPDATE %s SET `order_item_name` = '%s', `order_item_type` = '%s', `order_id` = '%d' WHERE %s = '%d' LIMIT 1", o._table, o.OrderItemName, o.OrderItemType, o.OrderId, o._pkey, o.OrderItemId)
-	err := o._adapter.Execute(frmt)
-	if err != nil {
-		return 0, err
-	}
-
-	return o._adapter.AffectedRows(), nil
-}
-func (o *WooOrderItem) Create() (int64, error) {
-	frmt := fmt.Sprintf("INSERT INTO %s (`order_item_name`, `order_item_type`, `order_id`) VALUES ('%s', '%s', '%d')", o._table, o.OrderItemName, o.OrderItemType, o.OrderId)
-	err := o._adapter.Execute(frmt)
-	if err != nil {
-		return 0, o._adapter.Oops(fmt.Sprintf(`%s led to %s`, frmt, err))
-	}
-	o.OrderItemId = o._adapter.LastInsertedId()
-
-	return o._adapter.AffectedRows(), nil
-}
-
-func (o *WooOrderItem) UpdateOrderItemName(_upd_OrderItemName string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `order_item_name` = '%s' WHERE `order_item_id` = '%d'", o._table, _upd_OrderItemName, o.OrderItemName)
-	err := o._adapter.Execute(frmt)
-	if err != nil {
-		return 0, err
-	}
-	o.OrderItemName = _upd_OrderItemName
-	return o._adapter.AffectedRows(), nil
-}
-
-func (o *WooOrderItem) UpdateOrderItemType(_upd_OrderItemType string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `order_item_type` = '%s' WHERE `order_item_id` = '%d'", o._table, _upd_OrderItemType, o.OrderItemType)
-	err := o._adapter.Execute(frmt)
-	if err != nil {
-		return 0, err
-	}
-	o.OrderItemType = _upd_OrderItemType
-	return o._adapter.AffectedRows(), nil
-}
-
-func (o *WooOrderItem) UpdateOrderId(_upd_OrderId int64) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `order_id` = '%d' WHERE `order_item_id` = '%d'", o._table, _upd_OrderId, o.OrderId)
-	err := o._adapter.Execute(frmt)
-	if err != nil {
-		return 0, err
-	}
-	o.OrderId = _upd_OrderId
-	return o._adapter.AffectedRows(), nil
-}
-
-type WooTaxRateLocation struct {
-	_table       string
-	_adapter     Adapter
-	_pkey        string // 0 The name of the primary key in this table
-	_conds       []string
-	_new         bool
-	LocationId   int64
-	LocationCode string
-	TaxRateId    int64
-	LocationType string
-	// Dirty markers for smart updates
-	IsLocationIdDirty   bool
-	IsLocationCodeDirty bool
-	IsTaxRateIdDirty    bool
-	IsLocationTypeDirty bool
-	// Relationships
-}
-
-func NewWooTaxRateLocation(a Adapter) *WooTaxRateLocation {
-	var o WooTaxRateLocation
-	o._table = fmt.Sprintf("%swoocommerce_tax_rate_locations", a.DatabasePrefix())
-	o._adapter = a
-	o._pkey = "location_id"
-	o._new = false
-	return &o
-}
-
-func (m *WooTaxRateLocation) GetPrimaryKeyValue() int64 {
-	return m.LocationId
-}
-func (m *WooTaxRateLocation) GetPrimaryKeyName() string {
-	return `location_id`
-}
-
-func (m *WooTaxRateLocation) GetLocationId() int64 {
-	return m.LocationId
-}
-func (m *WooTaxRateLocation) SetLocationId(arg int64) {
-	m.LocationId = arg
-	m.IsLocationIdDirty = true
-}
-
-func (m *WooTaxRateLocation) GetLocationCode() string {
-	return m.LocationCode
-}
-func (m *WooTaxRateLocation) SetLocationCode(arg string) {
-	m.LocationCode = arg
-	m.IsLocationCodeDirty = true
-}
-
-func (m *WooTaxRateLocation) GetTaxRateId() int64 {
-	return m.TaxRateId
-}
-func (m *WooTaxRateLocation) SetTaxRateId(arg int64) {
-	m.TaxRateId = arg
-	m.IsTaxRateIdDirty = true
-}
-
-func (m *WooTaxRateLocation) GetLocationType() string {
-	return m.LocationType
-}
-func (m *WooTaxRateLocation) SetLocationType(arg string) {
-	m.LocationType = arg
-	m.IsLocationTypeDirty = true
-}
-
-func (o *WooTaxRateLocation) Find(_find_by_LocationId int64) (bool, error) {
-
-	var model_slice []*WooTaxRateLocation
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "location_id", _find_by_LocationId)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return false, o._adapter.Oops(fmt.Sprintf(`%s`, err))
-	}
-
-	for _, result := range results {
-		ro := WooTaxRateLocation{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return false, o._adapter.Oops(fmt.Sprintf(`%s`, err))
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return false, o._adapter.Oops(`not found`)
-	}
-	o.FromWooTaxRateLocation(model_slice[0])
-	return true, nil
-
-}
-func (o *WooTaxRateLocation) FindByLocationCode(_find_by_LocationCode string) ([]*WooTaxRateLocation, error) {
-
-	var model_slice []*WooTaxRateLocation
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "location_code", _find_by_LocationCode)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := WooTaxRateLocation{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *WooTaxRateLocation) FindByTaxRateId(_find_by_TaxRateId int64) ([]*WooTaxRateLocation, error) {
-
-	var model_slice []*WooTaxRateLocation
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "tax_rate_id", _find_by_TaxRateId)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := WooTaxRateLocation{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *WooTaxRateLocation) FindByLocationType(_find_by_LocationType string) ([]*WooTaxRateLocation, error) {
-
-	var model_slice []*WooTaxRateLocation
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "location_type", _find_by_LocationType)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := WooTaxRateLocation{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-
-func (o *WooTaxRateLocation) FromDBValueMap(m map[string]DBValue) error {
-	_LocationId, err := m["location_id"].AsInt64()
-	if err != nil {
-		return o._adapter.Oops(fmt.Sprintf(`%s`, err))
-	}
-	o.LocationId = _LocationId
-	_LocationCode, err := m["location_code"].AsString()
-	if err != nil {
-		return o._adapter.Oops(fmt.Sprintf(`%s`, err))
-	}
-	o.LocationCode = _LocationCode
-	_TaxRateId, err := m["tax_rate_id"].AsInt64()
-	if err != nil {
-		return o._adapter.Oops(fmt.Sprintf(`%s`, err))
-	}
-	o.TaxRateId = _TaxRateId
-	_LocationType, err := m["location_type"].AsString()
-	if err != nil {
-		return o._adapter.Oops(fmt.Sprintf(`%s`, err))
-	}
-	o.LocationType = _LocationType
-
-	return nil
-}
-func (o *WooTaxRateLocation) FromWooTaxRateLocation(m *WooTaxRateLocation) {
-	o.LocationId = m.LocationId
-	o.LocationCode = m.LocationCode
-	o.TaxRateId = m.TaxRateId
-	o.LocationType = m.LocationType
-
-}
-
-func (o *WooTaxRateLocation) Save() (int64, error) {
-	if o._new == true {
-		return o.Create()
-	}
-	frmt := fmt.Sprintf("UPDATE %s SET `location_code` = '%s', `tax_rate_id` = '%d', `location_type` = '%s' WHERE %s = '%d' LIMIT 1", o._table, o.LocationCode, o.TaxRateId, o.LocationType, o._pkey, o.LocationId)
-	err := o._adapter.Execute(frmt)
-	if err != nil {
-		return 0, err
-	}
-
-	return o._adapter.AffectedRows(), nil
-}
-func (o *WooTaxRateLocation) Create() (int64, error) {
-	frmt := fmt.Sprintf("INSERT INTO %s (`location_code`, `tax_rate_id`, `location_type`) VALUES ('%s', '%d', '%s')", o._table, o.LocationCode, o.TaxRateId, o.LocationType)
-	err := o._adapter.Execute(frmt)
-	if err != nil {
-		return 0, o._adapter.Oops(fmt.Sprintf(`%s led to %s`, frmt, err))
-	}
-	o.LocationId = o._adapter.LastInsertedId()
-
-	return o._adapter.AffectedRows(), nil
-}
-
-func (o *WooTaxRateLocation) UpdateLocationCode(_upd_LocationCode string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `location_code` = '%s' WHERE `location_id` = '%d'", o._table, _upd_LocationCode, o.LocationCode)
-	err := o._adapter.Execute(frmt)
-	if err != nil {
-		return 0, err
-	}
-	o.LocationCode = _upd_LocationCode
-	return o._adapter.AffectedRows(), nil
-}
-
-func (o *WooTaxRateLocation) UpdateTaxRateId(_upd_TaxRateId int64) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `tax_rate_id` = '%d' WHERE `location_id` = '%d'", o._table, _upd_TaxRateId, o.TaxRateId)
-	err := o._adapter.Execute(frmt)
-	if err != nil {
-		return 0, err
-	}
-	o.TaxRateId = _upd_TaxRateId
-	return o._adapter.AffectedRows(), nil
-}
-
-func (o *WooTaxRateLocation) UpdateLocationType(_upd_LocationType string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `location_type` = '%s' WHERE `location_id` = '%d'", o._table, _upd_LocationType, o.LocationType)
-	err := o._adapter.Execute(frmt)
-	if err != nil {
-		return 0, err
-	}
-	o.LocationType = _upd_LocationType
-	return o._adapter.AffectedRows(), nil
-}
-
-type WooTaxRate struct {
-	_table          string
-	_adapter        Adapter
-	_pkey           string // 0 The name of the primary key in this table
-	_conds          []string
-	_new            bool
-	TaxRateId       int64
-	TaxRateCountry  string
-	TaxRateState    string
-	TaxRate         string
-	TaxRateName     string
-	TaxRatePriority int64
-	TaxRateCompound int
-	TaxRateShipping int
-	TaxRateOrder    int64
-	TaxRateClass    string
-	// Dirty markers for smart updates
-	IsTaxRateIdDirty       bool
-	IsTaxRateCountryDirty  bool
-	IsTaxRateStateDirty    bool
-	IsTaxRateDirty         bool
-	IsTaxRateNameDirty     bool
-	IsTaxRatePriorityDirty bool
-	IsTaxRateCompoundDirty bool
-	IsTaxRateShippingDirty bool
-	IsTaxRateOrderDirty    bool
-	IsTaxRateClassDirty    bool
-	// Relationships
-}
-
-func NewWooTaxRate(a Adapter) *WooTaxRate {
-	var o WooTaxRate
-	o._table = fmt.Sprintf("%swoocommerce_tax_rates", a.DatabasePrefix())
-	o._adapter = a
-	o._pkey = "tax_rate_id"
-	o._new = false
-	return &o
-}
-
-func (m *WooTaxRate) GetPrimaryKeyValue() int64 {
-	return m.TaxRateId
-}
-func (m *WooTaxRate) GetPrimaryKeyName() string {
-	return `tax_rate_id`
-}
-
-func (m *WooTaxRate) GetTaxRateId() int64 {
-	return m.TaxRateId
-}
-func (m *WooTaxRate) SetTaxRateId(arg int64) {
-	m.TaxRateId = arg
-	m.IsTaxRateIdDirty = true
-}
-
-func (m *WooTaxRate) GetTaxRateCountry() string {
-	return m.TaxRateCountry
-}
-func (m *WooTaxRate) SetTaxRateCountry(arg string) {
-	m.TaxRateCountry = arg
-	m.IsTaxRateCountryDirty = true
-}
-
-func (m *WooTaxRate) GetTaxRateState() string {
-	return m.TaxRateState
-}
-func (m *WooTaxRate) SetTaxRateState(arg string) {
-	m.TaxRateState = arg
-	m.IsTaxRateStateDirty = true
-}
-
-func (m *WooTaxRate) GetTaxRate() string {
-	return m.TaxRate
-}
-func (m *WooTaxRate) SetTaxRate(arg string) {
-	m.TaxRate = arg
-	m.IsTaxRateDirty = true
-}
-
-func (m *WooTaxRate) GetTaxRateName() string {
-	return m.TaxRateName
-}
-func (m *WooTaxRate) SetTaxRateName(arg string) {
-	m.TaxRateName = arg
-	m.IsTaxRateNameDirty = true
-}
-
-func (m *WooTaxRate) GetTaxRatePriority() int64 {
-	return m.TaxRatePriority
-}
-func (m *WooTaxRate) SetTaxRatePriority(arg int64) {
-	m.TaxRatePriority = arg
-	m.IsTaxRatePriorityDirty = true
-}
-
-func (m *WooTaxRate) GetTaxRateCompound() int {
-	return m.TaxRateCompound
-}
-func (m *WooTaxRate) SetTaxRateCompound(arg int) {
-	m.TaxRateCompound = arg
-	m.IsTaxRateCompoundDirty = true
-}
-
-func (m *WooTaxRate) GetTaxRateShipping() int {
-	return m.TaxRateShipping
-}
-func (m *WooTaxRate) SetTaxRateShipping(arg int) {
-	m.TaxRateShipping = arg
-	m.IsTaxRateShippingDirty = true
-}
-
-func (m *WooTaxRate) GetTaxRateOrder() int64 {
-	return m.TaxRateOrder
-}
-func (m *WooTaxRate) SetTaxRateOrder(arg int64) {
-	m.TaxRateOrder = arg
-	m.IsTaxRateOrderDirty = true
-}
-
-func (m *WooTaxRate) GetTaxRateClass() string {
-	return m.TaxRateClass
-}
-func (m *WooTaxRate) SetTaxRateClass(arg string) {
-	m.TaxRateClass = arg
-	m.IsTaxRateClassDirty = true
-}
-
-func (o *WooTaxRate) Find(_find_by_TaxRateId int64) (bool, error) {
-
-	var model_slice []*WooTaxRate
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "tax_rate_id", _find_by_TaxRateId)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return false, o._adapter.Oops(fmt.Sprintf(`%s`, err))
-	}
-
-	for _, result := range results {
-		ro := WooTaxRate{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return false, o._adapter.Oops(fmt.Sprintf(`%s`, err))
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return false, o._adapter.Oops(`not found`)
-	}
-	o.FromWooTaxRate(model_slice[0])
-	return true, nil
-
-}
-func (o *WooTaxRate) FindByTaxRateCountry(_find_by_TaxRateCountry string) ([]*WooTaxRate, error) {
-
-	var model_slice []*WooTaxRate
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "tax_rate_country", _find_by_TaxRateCountry)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := WooTaxRate{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *WooTaxRate) FindByTaxRateState(_find_by_TaxRateState string) ([]*WooTaxRate, error) {
-
-	var model_slice []*WooTaxRate
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "tax_rate_state", _find_by_TaxRateState)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := WooTaxRate{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *WooTaxRate) FindByTaxRate(_find_by_TaxRate string) ([]*WooTaxRate, error) {
-
-	var model_slice []*WooTaxRate
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "tax_rate", _find_by_TaxRate)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := WooTaxRate{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *WooTaxRate) FindByTaxRateName(_find_by_TaxRateName string) ([]*WooTaxRate, error) {
-
-	var model_slice []*WooTaxRate
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "tax_rate_name", _find_by_TaxRateName)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := WooTaxRate{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *WooTaxRate) FindByTaxRatePriority(_find_by_TaxRatePriority int64) ([]*WooTaxRate, error) {
-
-	var model_slice []*WooTaxRate
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "tax_rate_priority", _find_by_TaxRatePriority)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := WooTaxRate{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *WooTaxRate) FindByTaxRateCompound(_find_by_TaxRateCompound int) ([]*WooTaxRate, error) {
-
-	var model_slice []*WooTaxRate
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "tax_rate_compound", _find_by_TaxRateCompound)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := WooTaxRate{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *WooTaxRate) FindByTaxRateShipping(_find_by_TaxRateShipping int) ([]*WooTaxRate, error) {
-
-	var model_slice []*WooTaxRate
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "tax_rate_shipping", _find_by_TaxRateShipping)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := WooTaxRate{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *WooTaxRate) FindByTaxRateOrder(_find_by_TaxRateOrder int64) ([]*WooTaxRate, error) {
-
-	var model_slice []*WooTaxRate
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "tax_rate_order", _find_by_TaxRateOrder)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := WooTaxRate{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *WooTaxRate) FindByTaxRateClass(_find_by_TaxRateClass string) ([]*WooTaxRate, error) {
-
-	var model_slice []*WooTaxRate
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "tax_rate_class", _find_by_TaxRateClass)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := WooTaxRate{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-
-func (o *WooTaxRate) FromDBValueMap(m map[string]DBValue) error {
-	_TaxRateId, err := m["tax_rate_id"].AsInt64()
-	if err != nil {
-		return o._adapter.Oops(fmt.Sprintf(`%s`, err))
-	}
-	o.TaxRateId = _TaxRateId
-	_TaxRateCountry, err := m["tax_rate_country"].AsString()
-	if err != nil {
-		return o._adapter.Oops(fmt.Sprintf(`%s`, err))
-	}
-	o.TaxRateCountry = _TaxRateCountry
-	_TaxRateState, err := m["tax_rate_state"].AsString()
-	if err != nil {
-		return o._adapter.Oops(fmt.Sprintf(`%s`, err))
-	}
-	o.TaxRateState = _TaxRateState
-	_TaxRate, err := m["tax_rate"].AsString()
-	if err != nil {
-		return o._adapter.Oops(fmt.Sprintf(`%s`, err))
-	}
-	o.TaxRate = _TaxRate
-	_TaxRateName, err := m["tax_rate_name"].AsString()
-	if err != nil {
-		return o._adapter.Oops(fmt.Sprintf(`%s`, err))
-	}
-	o.TaxRateName = _TaxRateName
-	_TaxRatePriority, err := m["tax_rate_priority"].AsInt64()
-	if err != nil {
-		return o._adapter.Oops(fmt.Sprintf(`%s`, err))
-	}
-	o.TaxRatePriority = _TaxRatePriority
-	_TaxRateCompound, err := m["tax_rate_compound"].AsInt()
-	if err != nil {
-		return o._adapter.Oops(fmt.Sprintf(`%s`, err))
-	}
-	o.TaxRateCompound = _TaxRateCompound
-	_TaxRateShipping, err := m["tax_rate_shipping"].AsInt()
-	if err != nil {
-		return o._adapter.Oops(fmt.Sprintf(`%s`, err))
-	}
-	o.TaxRateShipping = _TaxRateShipping
-	_TaxRateOrder, err := m["tax_rate_order"].AsInt64()
-	if err != nil {
-		return o._adapter.Oops(fmt.Sprintf(`%s`, err))
-	}
-	o.TaxRateOrder = _TaxRateOrder
-	_TaxRateClass, err := m["tax_rate_class"].AsString()
-	if err != nil {
-		return o._adapter.Oops(fmt.Sprintf(`%s`, err))
-	}
-	o.TaxRateClass = _TaxRateClass
-
-	return nil
-}
-func (o *WooTaxRate) FromWooTaxRate(m *WooTaxRate) {
-	o.TaxRateId = m.TaxRateId
-	o.TaxRateCountry = m.TaxRateCountry
-	o.TaxRateState = m.TaxRateState
-	o.TaxRate = m.TaxRate
-	o.TaxRateName = m.TaxRateName
-	o.TaxRatePriority = m.TaxRatePriority
-	o.TaxRateCompound = m.TaxRateCompound
-	o.TaxRateShipping = m.TaxRateShipping
-	o.TaxRateOrder = m.TaxRateOrder
-	o.TaxRateClass = m.TaxRateClass
-
-}
-
-func (o *WooTaxRate) Save() (int64, error) {
-	if o._new == true {
-		return o.Create()
-	}
-	frmt := fmt.Sprintf("UPDATE %s SET `tax_rate_country` = '%s', `tax_rate_state` = '%s', `tax_rate` = '%s', `tax_rate_name` = '%s', `tax_rate_priority` = '%d', `tax_rate_compound` = '%d', `tax_rate_shipping` = '%d', `tax_rate_order` = '%d', `tax_rate_class` = '%s' WHERE %s = '%d' LIMIT 1", o._table, o.TaxRateCountry, o.TaxRateState, o.TaxRate, o.TaxRateName, o.TaxRatePriority, o.TaxRateCompound, o.TaxRateShipping, o.TaxRateOrder, o.TaxRateClass, o._pkey, o.TaxRateId)
-	err := o._adapter.Execute(frmt)
-	if err != nil {
-		return 0, err
-	}
-
-	return o._adapter.AffectedRows(), nil
-}
-func (o *WooTaxRate) Create() (int64, error) {
-	frmt := fmt.Sprintf("INSERT INTO %s (`tax_rate_country`, `tax_rate_state`, `tax_rate`, `tax_rate_name`, `tax_rate_priority`, `tax_rate_compound`, `tax_rate_shipping`, `tax_rate_order`, `tax_rate_class`) VALUES ('%s', '%s', '%s', '%s', '%d', '%d', '%d', '%d', '%s')", o._table, o.TaxRateCountry, o.TaxRateState, o.TaxRate, o.TaxRateName, o.TaxRatePriority, o.TaxRateCompound, o.TaxRateShipping, o.TaxRateOrder, o.TaxRateClass)
-	err := o._adapter.Execute(frmt)
-	if err != nil {
-		return 0, o._adapter.Oops(fmt.Sprintf(`%s led to %s`, frmt, err))
-	}
-	o.TaxRateId = o._adapter.LastInsertedId()
-
-	return o._adapter.AffectedRows(), nil
-}
-
-func (o *WooTaxRate) UpdateTaxRateCountry(_upd_TaxRateCountry string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `tax_rate_country` = '%s' WHERE `tax_rate_id` = '%d'", o._table, _upd_TaxRateCountry, o.TaxRateCountry)
-	err := o._adapter.Execute(frmt)
-	if err != nil {
-		return 0, err
-	}
-	o.TaxRateCountry = _upd_TaxRateCountry
-	return o._adapter.AffectedRows(), nil
-}
-
-func (o *WooTaxRate) UpdateTaxRateState(_upd_TaxRateState string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `tax_rate_state` = '%s' WHERE `tax_rate_id` = '%d'", o._table, _upd_TaxRateState, o.TaxRateState)
-	err := o._adapter.Execute(frmt)
-	if err != nil {
-		return 0, err
-	}
-	o.TaxRateState = _upd_TaxRateState
-	return o._adapter.AffectedRows(), nil
-}
-
-func (o *WooTaxRate) UpdateTaxRate(_upd_TaxRate string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `tax_rate` = '%s' WHERE `tax_rate_id` = '%d'", o._table, _upd_TaxRate, o.TaxRate)
-	err := o._adapter.Execute(frmt)
-	if err != nil {
-		return 0, err
-	}
-	o.TaxRate = _upd_TaxRate
-	return o._adapter.AffectedRows(), nil
-}
-
-func (o *WooTaxRate) UpdateTaxRateName(_upd_TaxRateName string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `tax_rate_name` = '%s' WHERE `tax_rate_id` = '%d'", o._table, _upd_TaxRateName, o.TaxRateName)
-	err := o._adapter.Execute(frmt)
-	if err != nil {
-		return 0, err
-	}
-	o.TaxRateName = _upd_TaxRateName
-	return o._adapter.AffectedRows(), nil
-}
-
-func (o *WooTaxRate) UpdateTaxRatePriority(_upd_TaxRatePriority int64) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `tax_rate_priority` = '%d' WHERE `tax_rate_id` = '%d'", o._table, _upd_TaxRatePriority, o.TaxRatePriority)
-	err := o._adapter.Execute(frmt)
-	if err != nil {
-		return 0, err
-	}
-	o.TaxRatePriority = _upd_TaxRatePriority
-	return o._adapter.AffectedRows(), nil
-}
-
-func (o *WooTaxRate) UpdateTaxRateCompound(_upd_TaxRateCompound int) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `tax_rate_compound` = '%d' WHERE `tax_rate_id` = '%d'", o._table, _upd_TaxRateCompound, o.TaxRateCompound)
-	err := o._adapter.Execute(frmt)
-	if err != nil {
-		return 0, err
-	}
-	o.TaxRateCompound = _upd_TaxRateCompound
-	return o._adapter.AffectedRows(), nil
-}
-
-func (o *WooTaxRate) UpdateTaxRateShipping(_upd_TaxRateShipping int) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `tax_rate_shipping` = '%d' WHERE `tax_rate_id` = '%d'", o._table, _upd_TaxRateShipping, o.TaxRateShipping)
-	err := o._adapter.Execute(frmt)
-	if err != nil {
-		return 0, err
-	}
-	o.TaxRateShipping = _upd_TaxRateShipping
-	return o._adapter.AffectedRows(), nil
-}
-
-func (o *WooTaxRate) UpdateTaxRateOrder(_upd_TaxRateOrder int64) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `tax_rate_order` = '%d' WHERE `tax_rate_id` = '%d'", o._table, _upd_TaxRateOrder, o.TaxRateOrder)
-	err := o._adapter.Execute(frmt)
-	if err != nil {
-		return 0, err
-	}
-	o.TaxRateOrder = _upd_TaxRateOrder
-	return o._adapter.AffectedRows(), nil
-}
-
-func (o *WooTaxRate) UpdateTaxRateClass(_upd_TaxRateClass string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `tax_rate_class` = '%s' WHERE `tax_rate_id` = '%d'", o._table, _upd_TaxRateClass, o.TaxRateClass)
-	err := o._adapter.Execute(frmt)
-	if err != nil {
-		return 0, err
-	}
-	o.TaxRateClass = _upd_TaxRateClass
 	return o._adapter.AffectedRows(), nil
 }

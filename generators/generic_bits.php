@@ -15,6 +15,7 @@ type Adapter interface {
     SetLogs(io.Writer)
     SetLogFilter(LogFilter)
     Oops(string) error
+    SafeString(string)string
     NewDBValue() DBValue
 }
 
@@ -56,6 +57,9 @@ func NewMysqlAdapterEx(fname string) (*MysqlAdapter,error) {
 }
 func (a *MysqlAdapter) SetLogFilter(f LogFilter) {
     a._log_filter = f
+}
+func (a *MysqlAdapter) SafeString(s string) string {
+    return s
 }
 func (a *MysqlAdapter) SetInfoLog(t io.Writer) {
     a._info_log = log.New(t,`[INFO]:`,log.Ldate|log.Ltime|log.Lshortfile)

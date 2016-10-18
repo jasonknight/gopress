@@ -32,10 +32,14 @@ function convertFieldName($n) {
 $tables = array();
 $res = mysql_query("SHOW TABLES;");
 while($row = mysql_fetch_object($res)) {
+
     $t = new stdClass();
     $t->database_name = $row->Tables_in_philatelic_wp2;
     $t->dname = preg_replace("/^wp_/","",$t->database_name);
     if ( preg_match("/ign_/",$t->database_name)) {
+        continue;
+    }
+    if ( preg_match("/woocommerce_/",$t->database_name)) {
         continue;
     }
     $t->model_name = convertTableName($t->database_name);
@@ -61,6 +65,35 @@ function mysqlToGoType($t) {
         return "*DateTime";
     }
 }
+function mysqlToGoRandom($t) {
+    if (preg_match("/varchar|text/", $t) ) {
+        preg_match("/varchar\((\d+)\)/",$t,$m);
+        if (!empty($m)) {
+            $m[1] = intval($m[1]);
+            if ( $m[1] > 20 ) {
+                $m[1] = 20;
+            }
+            $m[1] -= 1;
+            $tval = "randomString({$m[1]})";
+        } else {
+            $tval = "randomString(25)";
+        }
+        return $tval;
+    }
+    if (preg_match("/bigint/", $t) ) {
+        return "int64(randomInteger())";
+    }
+    if (preg_match("/int/", $t) ) {
+        return "int(randomInteger())";
+    }
+    if ( $t == "longtext" || $t == "tinytext" || $t == "mediumtext") {
+        return "randomString(35)";
+    }
+
+    if ( $t == "datetime" ) {
+        return "randomDateTime(a)";
+    }
+}
 function mysqlToFmtType($t) {
     if (preg_match("/varchar|text/", $t) ) {
         return "%s";
@@ -79,6 +112,25 @@ function mysqlToFmtType($t) {
         return "%s";
     }
 }
+function getFieldDef($needle,$index=false) {
+    global $tables;
+    for ($i = 0; $i < count($tables); $i++ ) {
+        for ($j = 0; $j < count($tables[$i]->fields);$j++) {
+            if ( $tables[$i]->fields[$j]->Field == $needle) {
+                if ( $index ) {
+                    return array($i,$j);
+                }
+                return $tables[$i]->fields[$j];
+            }
+        }
+    }
+}
+function pluralize($s) {
+    if ($s[strlen($s)-1] == 'y') {
+        return substr($s, 0,strlen($s)-1) . "ies";
+    }
+    return $s . "s";
+} 
 function isPrimaryKey($p) {
     if ( $p->Field == "object_id" ) {
         return false;
@@ -95,46 +147,28 @@ foreach ($tables as &$t) {
     $res = mysql_query("DESCRIBE {$t->database_name};");
     while ( $row = mysql_fetch_object($res)) {
         $row->go_type = mysqlToGoType($row->Type);
+        $row->go_random = mysqlToGoRandom($row->Type);
         $row->model_field_name = convertFieldName($row->Field);
         $row->mysql_fmt_type = mysqlToFmtType($row->Type);
         $row->dirty_marker = "Is" . convertFieldName($row->Field) . "Dirty"; 
-        if (preg_match("/\w+_id/",$row->Field) &&  isPrimaryKey($row) == false) {
-            $bt = belongsTo($row);
-            
-            $bt->model_name = $t->model_name;
-            foreach ($tables as &$tt) {
-                if ( $bt->model == $tt->model_name) {
-                    // i.e. only add it if there
-                    // is a corresponding definition
-                    $bt->ftable = $t->dname;
-                    $bt->fmodel = $t->model_name;
-                    $t->belongs_to[] = $bt;
-
-                    break;
-                }
-            }
-        }
         if ( isPrimaryKey($row) ) {
             $t->pfield = $row;
         }
         $t->fields[] = $row;
     }
 }
-foreach ($tables as &$t) {
-
-    echo "Considering {$t->model_name}\n";
-    if ( !empty($t->belongs_to)) {
-        foreach ($t->belongs_to as $bt) {
-            echo "\tBelongsTo: {$bt->model}\n";
-            $i = getTableDef($bt->model,true);
-            if ( $i != -1 ) {
-                echo "\tAdding has_many: {$tables[$i]->model_name}\n";
-                $tables[$i]->has_many[] = hasMany($bt,$tables[$i]);
-            }
-            
-        }
-    }
-}
+// foreach ($tables as &$t) {
+//     foreach ($t->fields as &$field) {
+//         if (preg_match("/([\w_]+)_[idID]{2}$/",$field->Field) && isPrimaryKey($field) == false) {
+//         //if ( $field->Field == "comment_post_ID") {
+//             include "setup_habtm.php";
+//         } else {
+//            // echo "Failed for: {$field->Field}\n";
+//         }
+//     }
+// }
+// print_r($tables);
+// die("Done\n");
 function getTableDef($model_name,$index=false) {
     global $tables;
     $i = 0;
@@ -149,38 +183,7 @@ function getTableDef($model_name,$index=false) {
     }
     return -1;
 }
-function belongsTo($f) {
-    preg_match("/([\w_]+)_id/",$f->Field,$m);
-    $nf = new stdClass();
-    $nf->model = convertTableName($m[1]);
-    $nf->go_type = "*{$nf->model}";
-    $nf->model_field_name = convertFieldName($f->Field);
-    $nf->fkey = $f->Field;
-    $nf->fkey_type = $f->go_type;
-    $nf->fkey_myfmt = $f->mysql_fmt_type;
-    return $nf;
-}
 
-function hasMany($bt,$t) {
-    $f = $bt;
-     $has_name = $f->model_name . "s";
-     $has_type = "[]*{$f->model_name}";
-    // $ft = getTableDef($f->model_name);
-    // $has_fkey = $ft->pfield->Field;
-    // $has_fkey_type = $ft->pfield->go_type;
-    // $has_fkey_myfmt = $ft->pfield->mysql_fmt_type;
-
-    $hm = new stdClass();
-    $hm->model_name = $f->model_name;
-    $hm->model_field_name = convertFieldName($f->fkey);
-    $hm->name = $has_name;
-    $hm->table = $f->ftable;
-    $hm->type = $has_type;
-    $hm->fkey = $f->fkey;
-    $hm->fkey_type = $f->fkey_type;
-    $hm->fkey_myfmt = $f->fkey_myfmt;
-    return $hm;
-}
 // Now we loop over and create all the models
 foreach ($tables as $t) {
     echo "{$t->model_name}: \n";
@@ -210,6 +213,7 @@ puts('import (
     "io/ioutil"
     "bufio"
     "log"
+    "strings"
 )
 
 ');
@@ -260,7 +264,6 @@ func New{$t->model_name}(a Adapter) *{$t->model_name} {
 }
 ";
 puts($newfunc);
-include "habtm.php";
 include "getset.php";
 include "finders.php";
 include "crud.php";

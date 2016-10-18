@@ -7,6 +7,7 @@ function _save_create($t) {
     $i = 0;
     $pkeyfmt = "";
     $pkeyname = "";
+    $sets = "";
     foreach ( $t->fields as $tf) {
         if (isPrimaryKey($tf) && $t->model_name != "TermRelationship") {
             $pkeyfmt = mysqlToFmtType($tf->Type);
@@ -18,13 +19,24 @@ function _save_create($t) {
         } else {
              $go_fnames[$i] = maybeLC(convertFieldName($tf->Field));
         }
-       
+        $gfn = convertFieldName($tf->Field);
         $mysql_fnames[$i] = $tf->Field;
         $fmts[$i] = mysqlToFmtType($tf->Type);
+        if ($tf->go_type == 'string') {
+            $the_gfn = "o._adapter.SafeString(o.$gfn)";
+        } else {
+            $the_gfn = "o.$gfn";
+        }
+        $sets .= "
+    if o.Is{$gfn}Dirty == true {
+        sets = append(sets,fmt.Sprintf(`{$mysql_fnames[$i]} = '{$fmts[$i]}'`,$the_gfn))
+    }
+";
         $i++;
     }
     $fmts = array_map(function ($x) { return "'$x'";},$fmts);
     $mysql_fnames = array_map(function ($x) { return "`$x`";},$mysql_fnames);
+
     $go_fnames = array_map(function ($x) { return "o.$x";},$go_fnames);
 
     $update_entries = array();
@@ -56,27 +68,38 @@ function _save_create($t) {
         $set_primary_key_field = "";
     }
 $txt = "
-func (o *{$t->model_name}) Save() (int64,error) {
+func (o *{$t->model_name}) Save() error {
     if o._new == true {
         return o.Create()
     }
-    frmt := fmt.Sprintf(\"UPDATE %s SET $up_fmt_line WHERE $where LIMIT 1\",o._table,$up_gn_line)
+    var sets []string
+    $sets
+    frmt := fmt.Sprintf(\"UPDATE %s SET %s WHERE $where\",o._table,strings.Join(sets,`,`))
     err := o._adapter.Execute(frmt)
     if err != nil {
-        return 0,err
+        return err
     }
-
-    return o._adapter.AffectedRows(),nil
+    return nil
 }
-func (o *{$t->model_name}) Create() (int64,error) {
+func (o *{$t->model_name}) Update() error {
+    var sets []string
+    $sets
+    frmt := fmt.Sprintf(\"UPDATE %s SET %s WHERE $where\",o._table,strings.Join(sets,`,`))
+    err := o._adapter.Execute(frmt)
+    if err != nil {
+        return err
+    }
+    return nil
+}
+func (o *{$t->model_name}) Create() error {
     frmt := fmt.Sprintf(\"INSERT INTO %s ($cr_col_line) VALUES ($cr_val_line)\",o._table,$cr_gn_line)
     err := o._adapter.Execute(frmt)
     if err != nil {
-        return 0,o._adapter.Oops(fmt.Sprintf(`%s led to %s`,frmt,err))
+        return o._adapter.Oops(fmt.Sprintf(`%s led to %s`,frmt,err))
     }
     $set_primary_key_field
-
-    return o._adapter.AffectedRows(),nil
+    o._new = false
+    return nil
 }
 ";   
     return $txt; 
