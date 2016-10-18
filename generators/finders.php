@@ -82,6 +82,10 @@ if ( $fname == "Find" ) {
     puts($body);
     puts("}");
 }
+$find_line = "o.Find(o.GetPrimaryKeyValue())";
+if ($t->model_name == "TermRelationship") {
+    $find_line = "o.Find(o.TermTaxonomyId ,o.ObjectId)";
+}
 puts("
 func (o *{$t->model_name}) FromDBValueMap(m map[string]DBValue) error {
 $from_map_body
@@ -89,5 +93,9 @@ $from_map_body
 }
 func (o *{$t->model_name}) From{$t->model_name}(m *{$t->model_name}) {
 $from_model_body
+}
+func (o *{$t->model_name}) Reload() error {
+    _,err := $find_line
+    return err
 }
 ");

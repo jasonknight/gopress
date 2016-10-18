@@ -595,6 +595,10 @@ func (o *CommentMeta) FromCommentMeta(m *CommentMeta) {
 	o.MetaValue = m.MetaValue
 
 }
+func (o *CommentMeta) Reload() error {
+	_, err := o.Find(o.GetPrimaryKeyValue())
+	return err
+}
 
 func (o *CommentMeta) Save() error {
 	if o._new == true {
@@ -1333,6 +1337,10 @@ func (o *Comment) FromComment(m *Comment) {
 	o.CommentParent = m.CommentParent
 	o.UserId = m.UserId
 
+}
+func (o *Comment) Reload() error {
+	_, err := o.Find(o.GetPrimaryKeyValue())
+	return err
 }
 
 func (o *Comment) Save() error {
@@ -2189,6 +2197,10 @@ func (o *Link) FromLink(m *Link) {
 	o.LinkRss = m.LinkRss
 
 }
+func (o *Link) Reload() error {
+	_, err := o.Find(o.GetPrimaryKeyValue())
+	return err
+}
 
 func (o *Link) Save() error {
 	if o._new == true {
@@ -2639,6 +2651,10 @@ func (o *Option) FromOption(m *Option) {
 	o.Autoload = m.Autoload
 
 }
+func (o *Option) Reload() error {
+	_, err := o.Find(o.GetPrimaryKeyValue())
+	return err
+}
 
 func (o *Option) Save() error {
 	if o._new == true {
@@ -2926,6 +2942,10 @@ func (o *PostMeta) FromPostMeta(m *PostMeta) {
 	o.MetaKey = m.MetaKey
 	o.MetaValue = m.MetaValue
 
+}
+func (o *PostMeta) Reload() error {
+	_, err := o.Find(o.GetPrimaryKeyValue())
+	return err
 }
 
 func (o *PostMeta) Save() error {
@@ -3994,6 +4014,10 @@ func (o *Post) FromPost(m *Post) {
 	o.CommentCount = m.CommentCount
 
 }
+func (o *Post) Reload() error {
+	_, err := o.Find(o.GetPrimaryKeyValue())
+	return err
+}
 
 func (o *Post) Save() error {
 	if o._new == true {
@@ -4583,6 +4607,10 @@ func (o *TermRelationship) FromTermRelationship(m *TermRelationship) {
 	o.TermOrder = m.TermOrder
 
 }
+func (o *TermRelationship) Reload() error {
+	_, err := o.Find(o.TermTaxonomyId, o.ObjectId)
+	return err
+}
 
 func (o *TermRelationship) Save() error {
 	if o._new == true {
@@ -4943,6 +4971,10 @@ func (o *TermTaxonomy) FromTermTaxonomy(m *TermTaxonomy) {
 	o.Count = m.Count
 
 }
+func (o *TermTaxonomy) Reload() error {
+	_, err := o.Find(o.GetPrimaryKeyValue())
+	return err
+}
 
 func (o *TermTaxonomy) Save() error {
 	if o._new == true {
@@ -5267,6 +5299,10 @@ func (o *Term) FromTerm(m *Term) {
 	o.TermGroup = m.TermGroup
 
 }
+func (o *Term) Reload() error {
+	_, err := o.Find(o.GetPrimaryKeyValue())
+	return err
+}
 
 func (o *Term) Save() error {
 	if o._new == true {
@@ -5554,6 +5590,10 @@ func (o *UserMeta) FromUserMeta(m *UserMeta) {
 	o.MetaKey = m.MetaKey
 	o.MetaValue = m.MetaValue
 
+}
+func (o *UserMeta) Reload() error {
+	_, err := o.Find(o.GetPrimaryKeyValue())
+	return err
 }
 
 func (o *UserMeta) Save() error {
