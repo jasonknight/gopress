@@ -1,7 +1,7 @@
 # Gopress
 [![Build Status](https://travis-ci.org/jasonknight/gopress.svg?branch=master)](https://travis-ci.org/jasonknight/gopress)
 [![codecov](https://codecov.io/gh/jasonknight/gopress/branch/master/graph/badge.svg)](https://codecov.io/gh/jasonknight/gopress)
-[![Go Report Card](https://goreportcard.com/badge/github.com/jasonknight/gopress)](https://goreportcard.com/report/github.com/jasonknight/gopress)
+[![Go Report Card](https://goreportcard.com/badge/github.com/jasonknight/gopress?123)](https://goreportcard.com/report/github.com/jasonknight/gopress)
 
 
 
