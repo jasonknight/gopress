@@ -94,12 +94,14 @@ new models
 ```go
 func (o *Comment) Find(_findByCommentID int64) (bool, error)
 ```
-Find searchs against the primary key comment_ID and will return bool,error This
-method is a programatically generated finder for Comment
+Find searchs against the database table field comment_ID and will return
+bool,error This method is a programatically generated finder for Comment
 
-Note that Find returns a bool if found, not err, in the case of a return of
-true, the instance data will be filled out. a call to find ALWAYS overwrites the
-model you call Find on i.e. receiver is a pointer.
+Note that Find returns a bool of true|false if found or not, not err, in the
+case of found == true, the instance data will be filled out!
+
+A call to find ALWAYS overwrites the model you call Find on i.e. receiver is a
+pointer!
 
 ```go
 
@@ -118,8 +120,9 @@ model you call Find on i.e. receiver is a pointer.
 ```go
 func (o *Comment) FindByCommentAgent(_findByCommentAgent string) ([]*Comment, error)
 ```
-FindByCommentAgent searchs against the primary key comment_agent and will return
-[]*Comment,error This method is a programatically generated finder for Comment
+FindByCommentAgent searchs against the database table field comment_agent and
+will return []*Comment,error This method is a programatically generated finder
+for Comment
 
 ```go
 
@@ -137,9 +140,9 @@ FindByCommentAgent searchs against the primary key comment_agent and will return
 ```go
 func (o *Comment) FindByCommentApproved(_findByCommentApproved string) ([]*Comment, error)
 ```
-FindByCommentApproved searchs against the primary key comment_approved and will
-return []*Comment,error This method is a programatically generated finder for
-Comment
+FindByCommentApproved searchs against the database table field comment_approved
+and will return []*Comment,error This method is a programatically generated
+finder for Comment
 
 ```go
 
@@ -157,9 +160,9 @@ Comment
 ```go
 func (o *Comment) FindByCommentAuthor(_findByCommentAuthor string) ([]*Comment, error)
 ```
-FindByCommentAuthor searchs against the primary key comment_author and will
-return []*Comment,error This method is a programatically generated finder for
-Comment
+FindByCommentAuthor searchs against the database table field comment_author and
+will return []*Comment,error This method is a programatically generated finder
+for Comment
 
 ```go
 
@@ -177,9 +180,9 @@ Comment
 ```go
 func (o *Comment) FindByCommentAuthorEmail(_findByCommentAuthorEmail string) ([]*Comment, error)
 ```
-FindByCommentAuthorEmail searchs against the primary key comment_author_email
-and will return []*Comment,error This method is a programatically generated
-finder for Comment
+FindByCommentAuthorEmail searchs against the database table field
+comment_author_email and will return []*Comment,error This method is a
+programatically generated finder for Comment
 
 ```go
 
@@ -197,9 +200,9 @@ finder for Comment
 ```go
 func (o *Comment) FindByCommentAuthorIP(_findByCommentAuthorIP string) ([]*Comment, error)
 ```
-FindByCommentAuthorIP searchs against the primary key comment_author_IP and will
-return []*Comment,error This method is a programatically generated finder for
-Comment
+FindByCommentAuthorIP searchs against the database table field comment_author_IP
+and will return []*Comment,error This method is a programatically generated
+finder for Comment
 
 ```go
 
@@ -217,9 +220,9 @@ Comment
 ```go
 func (o *Comment) FindByCommentAuthorUrl(_findByCommentAuthorUrl string) ([]*Comment, error)
 ```
-FindByCommentAuthorUrl searchs against the primary key comment_author_url and
-will return []*Comment,error This method is a programatically generated finder
-for Comment
+FindByCommentAuthorUrl searchs against the database table field
+comment_author_url and will return []*Comment,error This method is a
+programatically generated finder for Comment
 
 ```go
 
@@ -237,9 +240,9 @@ for Comment
 ```go
 func (o *Comment) FindByCommentContent(_findByCommentContent string) ([]*Comment, error)
 ```
-FindByCommentContent searchs against the primary key comment_content and will
-return []*Comment,error This method is a programatically generated finder for
-Comment
+FindByCommentContent searchs against the database table field comment_content
+and will return []*Comment,error This method is a programatically generated
+finder for Comment
 
 ```go
 
@@ -257,8 +260,9 @@ Comment
 ```go
 func (o *Comment) FindByCommentDate(_findByCommentDate *DateTime) ([]*Comment, error)
 ```
-FindByCommentDate searchs against the primary key comment_date and will return
-[]*Comment,error This method is a programatically generated finder for Comment
+FindByCommentDate searchs against the database table field comment_date and will
+return []*Comment,error This method is a programatically generated finder for
+Comment
 
 ```go
 
@@ -276,9 +280,9 @@ FindByCommentDate searchs against the primary key comment_date and will return
 ```go
 func (o *Comment) FindByCommentDateGmt(_findByCommentDateGmt *DateTime) ([]*Comment, error)
 ```
-FindByCommentDateGmt searchs against the primary key comment_date_gmt and will
-return []*Comment,error This method is a programatically generated finder for
-Comment
+FindByCommentDateGmt searchs against the database table field comment_date_gmt
+and will return []*Comment,error This method is a programatically generated
+finder for Comment
 
 ```go
 
@@ -296,8 +300,9 @@ Comment
 ```go
 func (o *Comment) FindByCommentKarma(_findByCommentKarma int) ([]*Comment, error)
 ```
-FindByCommentKarma searchs against the primary key comment_karma and will return
-[]*Comment,error This method is a programatically generated finder for Comment
+FindByCommentKarma searchs against the database table field comment_karma and
+will return []*Comment,error This method is a programatically generated finder
+for Comment
 
 ```go
 
@@ -315,9 +320,9 @@ FindByCommentKarma searchs against the primary key comment_karma and will return
 ```go
 func (o *Comment) FindByCommentParent(_findByCommentParent int64) ([]*Comment, error)
 ```
-FindByCommentParent searchs against the primary key comment_parent and will
-return []*Comment,error This method is a programatically generated finder for
-Comment
+FindByCommentParent searchs against the database table field comment_parent and
+will return []*Comment,error This method is a programatically generated finder
+for Comment
 
 ```go
 
@@ -335,9 +340,9 @@ Comment
 ```go
 func (o *Comment) FindByCommentPostID(_findByCommentPostID int64) ([]*Comment, error)
 ```
-FindByCommentPostID searchs against the primary key comment_post_ID and will
-return []*Comment,error This method is a programatically generated finder for
-Comment
+FindByCommentPostID searchs against the database table field comment_post_ID and
+will return []*Comment,error This method is a programatically generated finder
+for Comment
 
 ```go
 
@@ -355,8 +360,9 @@ Comment
 ```go
 func (o *Comment) FindByCommentType(_findByCommentType string) ([]*Comment, error)
 ```
-FindByCommentType searchs against the primary key comment_type and will return
-[]*Comment,error This method is a programatically generated finder for Comment
+FindByCommentType searchs against the database table field comment_type and will
+return []*Comment,error This method is a programatically generated finder for
+Comment
 
 ```go
 
@@ -374,7 +380,7 @@ FindByCommentType searchs against the primary key comment_type and will return
 ```go
 func (o *Comment) FindByUserId(_findByUserId int64) ([]*Comment, error)
 ```
-FindByUserId searchs against the primary key user_id and will return
+FindByUserId searchs against the database table field user_id and will return
 []*Comment,error This method is a programatically generated finder for Comment
 
 ```go
@@ -803,12 +809,14 @@ new models
 ```go
 func (o *CommentMeta) Find(_findByMetaId int64) (bool, error)
 ```
-Find searchs against the primary key meta_id and will return bool,error This
-method is a programatically generated finder for CommentMeta
+Find searchs against the database table field meta_id and will return bool,error
+This method is a programatically generated finder for CommentMeta
 
-Note that Find returns a bool if found, not err, in the case of a return of
-true, the instance data will be filled out. a call to find ALWAYS overwrites the
-model you call Find on i.e. receiver is a pointer.
+Note that Find returns a bool of true|false if found or not, not err, in the
+case of found == true, the instance data will be filled out!
+
+A call to find ALWAYS overwrites the model you call Find on i.e. receiver is a
+pointer!
 
 ```go
 
@@ -827,9 +835,9 @@ model you call Find on i.e. receiver is a pointer.
 ```go
 func (o *CommentMeta) FindByCommentId(_findByCommentId int64) ([]*CommentMeta, error)
 ```
-FindByCommentId searchs against the primary key comment_id and will return
-[]*CommentMeta,error This method is a programatically generated finder for
-CommentMeta
+FindByCommentId searchs against the database table field comment_id and will
+return []*CommentMeta,error This method is a programatically generated finder
+for CommentMeta
 
 ```go
 
@@ -847,7 +855,7 @@ CommentMeta
 ```go
 func (o *CommentMeta) FindByMetaKey(_findByMetaKey string) ([]*CommentMeta, error)
 ```
-FindByMetaKey searchs against the primary key meta_key and will return
+FindByMetaKey searchs against the database table field meta_key and will return
 []*CommentMeta,error This method is a programatically generated finder for
 CommentMeta
 
@@ -867,9 +875,9 @@ CommentMeta
 ```go
 func (o *CommentMeta) FindByMetaValue(_findByMetaValue string) ([]*CommentMeta, error)
 ```
-FindByMetaValue searchs against the primary key meta_value and will return
-[]*CommentMeta,error This method is a programatically generated finder for
-CommentMeta
+FindByMetaValue searchs against the database table field meta_value and will
+return []*CommentMeta,error This method is a programatically generated finder
+for CommentMeta
 
 ```go
 
@@ -1138,12 +1146,14 @@ new models
 ```go
 func (o *Link) Find(_findByLinkId int64) (bool, error)
 ```
-Find searchs against the primary key link_id and will return bool,error This
-method is a programatically generated finder for Link
+Find searchs against the database table field link_id and will return bool,error
+This method is a programatically generated finder for Link
 
-Note that Find returns a bool if found, not err, in the case of a return of
-true, the instance data will be filled out. a call to find ALWAYS overwrites the
-model you call Find on i.e. receiver is a pointer.
+Note that Find returns a bool of true|false if found or not, not err, in the
+case of found == true, the instance data will be filled out!
+
+A call to find ALWAYS overwrites the model you call Find on i.e. receiver is a
+pointer!
 
 ```go
 
@@ -1162,8 +1172,9 @@ model you call Find on i.e. receiver is a pointer.
 ```go
 func (o *Link) FindByLinkDescription(_findByLinkDescription string) ([]*Link, error)
 ```
-FindByLinkDescription searchs against the primary key link_description and will
-return []*Link,error This method is a programatically generated finder for Link
+FindByLinkDescription searchs against the database table field link_description
+and will return []*Link,error This method is a programatically generated finder
+for Link
 
 ```go
 
@@ -1181,8 +1192,8 @@ return []*Link,error This method is a programatically generated finder for Link
 ```go
 func (o *Link) FindByLinkImage(_findByLinkImage string) ([]*Link, error)
 ```
-FindByLinkImage searchs against the primary key link_image and will return
-[]*Link,error This method is a programatically generated finder for Link
+FindByLinkImage searchs against the database table field link_image and will
+return []*Link,error This method is a programatically generated finder for Link
 
 ```go
 
@@ -1200,8 +1211,8 @@ FindByLinkImage searchs against the primary key link_image and will return
 ```go
 func (o *Link) FindByLinkName(_findByLinkName string) ([]*Link, error)
 ```
-FindByLinkName searchs against the primary key link_name and will return
-[]*Link,error This method is a programatically generated finder for Link
+FindByLinkName searchs against the database table field link_name and will
+return []*Link,error This method is a programatically generated finder for Link
 
 ```go
 
@@ -1219,8 +1230,8 @@ FindByLinkName searchs against the primary key link_name and will return
 ```go
 func (o *Link) FindByLinkNotes(_findByLinkNotes string) ([]*Link, error)
 ```
-FindByLinkNotes searchs against the primary key link_notes and will return
-[]*Link,error This method is a programatically generated finder for Link
+FindByLinkNotes searchs against the database table field link_notes and will
+return []*Link,error This method is a programatically generated finder for Link
 
 ```go
 
@@ -1238,8 +1249,8 @@ FindByLinkNotes searchs against the primary key link_notes and will return
 ```go
 func (o *Link) FindByLinkOwner(_findByLinkOwner int64) ([]*Link, error)
 ```
-FindByLinkOwner searchs against the primary key link_owner and will return
-[]*Link,error This method is a programatically generated finder for Link
+FindByLinkOwner searchs against the database table field link_owner and will
+return []*Link,error This method is a programatically generated finder for Link
 
 ```go
 
@@ -1257,8 +1268,8 @@ FindByLinkOwner searchs against the primary key link_owner and will return
 ```go
 func (o *Link) FindByLinkRating(_findByLinkRating int) ([]*Link, error)
 ```
-FindByLinkRating searchs against the primary key link_rating and will return
-[]*Link,error This method is a programatically generated finder for Link
+FindByLinkRating searchs against the database table field link_rating and will
+return []*Link,error This method is a programatically generated finder for Link
 
 ```go
 
@@ -1276,7 +1287,7 @@ FindByLinkRating searchs against the primary key link_rating and will return
 ```go
 func (o *Link) FindByLinkRel(_findByLinkRel string) ([]*Link, error)
 ```
-FindByLinkRel searchs against the primary key link_rel and will return
+FindByLinkRel searchs against the database table field link_rel and will return
 []*Link,error This method is a programatically generated finder for Link
 
 ```go
@@ -1295,7 +1306,7 @@ FindByLinkRel searchs against the primary key link_rel and will return
 ```go
 func (o *Link) FindByLinkRss(_findByLinkRss string) ([]*Link, error)
 ```
-FindByLinkRss searchs against the primary key link_rss and will return
+FindByLinkRss searchs against the database table field link_rss and will return
 []*Link,error This method is a programatically generated finder for Link
 
 ```go
@@ -1314,8 +1325,8 @@ FindByLinkRss searchs against the primary key link_rss and will return
 ```go
 func (o *Link) FindByLinkTarget(_findByLinkTarget string) ([]*Link, error)
 ```
-FindByLinkTarget searchs against the primary key link_target and will return
-[]*Link,error This method is a programatically generated finder for Link
+FindByLinkTarget searchs against the database table field link_target and will
+return []*Link,error This method is a programatically generated finder for Link
 
 ```go
 
@@ -1333,8 +1344,8 @@ FindByLinkTarget searchs against the primary key link_target and will return
 ```go
 func (o *Link) FindByLinkUpdated(_findByLinkUpdated *DateTime) ([]*Link, error)
 ```
-FindByLinkUpdated searchs against the primary key link_updated and will return
-[]*Link,error This method is a programatically generated finder for Link
+FindByLinkUpdated searchs against the database table field link_updated and will
+return []*Link,error This method is a programatically generated finder for Link
 
 ```go
 
@@ -1352,7 +1363,7 @@ FindByLinkUpdated searchs against the primary key link_updated and will return
 ```go
 func (o *Link) FindByLinkUrl(_findByLinkUrl string) ([]*Link, error)
 ```
-FindByLinkUrl searchs against the primary key link_url and will return
+FindByLinkUrl searchs against the database table field link_url and will return
 []*Link,error This method is a programatically generated finder for Link
 
 ```go
@@ -1371,8 +1382,8 @@ FindByLinkUrl searchs against the primary key link_url and will return
 ```go
 func (o *Link) FindByLinkVisible(_findByLinkVisible string) ([]*Link, error)
 ```
-FindByLinkVisible searchs against the primary key link_visible and will return
-[]*Link,error This method is a programatically generated finder for Link
+FindByLinkVisible searchs against the database table field link_visible and will
+return []*Link,error This method is a programatically generated finder for Link
 
 ```go
 
@@ -2025,12 +2036,14 @@ new models
 ```go
 func (o *Option) Find(_findByOptionId int64) (bool, error)
 ```
-Find searchs against the primary key option_id and will return bool,error This
-method is a programatically generated finder for Option
+Find searchs against the database table field option_id and will return
+bool,error This method is a programatically generated finder for Option
 
-Note that Find returns a bool if found, not err, in the case of a return of
-true, the instance data will be filled out. a call to find ALWAYS overwrites the
-model you call Find on i.e. receiver is a pointer.
+Note that Find returns a bool of true|false if found or not, not err, in the
+case of found == true, the instance data will be filled out!
+
+A call to find ALWAYS overwrites the model you call Find on i.e. receiver is a
+pointer!
 
 ```go
 
@@ -2049,7 +2062,7 @@ model you call Find on i.e. receiver is a pointer.
 ```go
 func (o *Option) FindByAutoload(_findByAutoload string) ([]*Option, error)
 ```
-FindByAutoload searchs against the primary key autoload and will return
+FindByAutoload searchs against the database table field autoload and will return
 []*Option,error This method is a programatically generated finder for Option
 
 ```go
@@ -2068,8 +2081,9 @@ FindByAutoload searchs against the primary key autoload and will return
 ```go
 func (o *Option) FindByOptionName(_findByOptionName string) ([]*Option, error)
 ```
-FindByOptionName searchs against the primary key option_name and will return
-[]*Option,error This method is a programatically generated finder for Option
+FindByOptionName searchs against the database table field option_name and will
+return []*Option,error This method is a programatically generated finder for
+Option
 
 ```go
 
@@ -2087,8 +2101,9 @@ FindByOptionName searchs against the primary key option_name and will return
 ```go
 func (o *Option) FindByOptionValue(_findByOptionValue string) ([]*Option, error)
 ```
-FindByOptionValue searchs against the primary key option_value and will return
-[]*Option,error This method is a programatically generated finder for Option
+FindByOptionValue searchs against the database table field option_value and will
+return []*Option,error This method is a programatically generated finder for
+Option
 
 ```go
 
@@ -2310,12 +2325,14 @@ new models
 ```go
 func (o *Post) Find(_findByID int64) (bool, error)
 ```
-Find searchs against the primary key ID and will return bool,error This method
-is a programatically generated finder for Post
+Find searchs against the database table field ID and will return bool,error This
+method is a programatically generated finder for Post
 
-Note that Find returns a bool if found, not err, in the case of a return of
-true, the instance data will be filled out. a call to find ALWAYS overwrites the
-model you call Find on i.e. receiver is a pointer.
+Note that Find returns a bool of true|false if found or not, not err, in the
+case of found == true, the instance data will be filled out!
+
+A call to find ALWAYS overwrites the model you call Find on i.e. receiver is a
+pointer!
 
 ```go
 
@@ -2334,8 +2351,9 @@ model you call Find on i.e. receiver is a pointer.
 ```go
 func (o *Post) FindByCommentCount(_findByCommentCount int64) ([]*Post, error)
 ```
-FindByCommentCount searchs against the primary key comment_count and will return
-[]*Post,error This method is a programatically generated finder for Post
+FindByCommentCount searchs against the database table field comment_count and
+will return []*Post,error This method is a programatically generated finder for
+Post
 
 ```go
 
@@ -2353,8 +2371,9 @@ FindByCommentCount searchs against the primary key comment_count and will return
 ```go
 func (o *Post) FindByCommentStatus(_findByCommentStatus string) ([]*Post, error)
 ```
-FindByCommentStatus searchs against the primary key comment_status and will
-return []*Post,error This method is a programatically generated finder for Post
+FindByCommentStatus searchs against the database table field comment_status and
+will return []*Post,error This method is a programatically generated finder for
+Post
 
 ```go
 
@@ -2372,8 +2391,8 @@ return []*Post,error This method is a programatically generated finder for Post
 ```go
 func (o *Post) FindByGuid(_findByGuid string) ([]*Post, error)
 ```
-FindByGuid searchs against the primary key guid and will return []*Post,error
-This method is a programatically generated finder for Post
+FindByGuid searchs against the database table field guid and will return
+[]*Post,error This method is a programatically generated finder for Post
 
 ```go
 
@@ -2391,8 +2410,8 @@ This method is a programatically generated finder for Post
 ```go
 func (o *Post) FindByMenuOrder(_findByMenuOrder int) ([]*Post, error)
 ```
-FindByMenuOrder searchs against the primary key menu_order and will return
-[]*Post,error This method is a programatically generated finder for Post
+FindByMenuOrder searchs against the database table field menu_order and will
+return []*Post,error This method is a programatically generated finder for Post
 
 ```go
 
@@ -2410,8 +2429,8 @@ FindByMenuOrder searchs against the primary key menu_order and will return
 ```go
 func (o *Post) FindByPingStatus(_findByPingStatus string) ([]*Post, error)
 ```
-FindByPingStatus searchs against the primary key ping_status and will return
-[]*Post,error This method is a programatically generated finder for Post
+FindByPingStatus searchs against the database table field ping_status and will
+return []*Post,error This method is a programatically generated finder for Post
 
 ```go
 
@@ -2429,7 +2448,7 @@ FindByPingStatus searchs against the primary key ping_status and will return
 ```go
 func (o *Post) FindByPinged(_findByPinged string) ([]*Post, error)
 ```
-FindByPinged searchs against the primary key pinged and will return
+FindByPinged searchs against the database table field pinged and will return
 []*Post,error This method is a programatically generated finder for Post
 
 ```go
@@ -2448,8 +2467,8 @@ FindByPinged searchs against the primary key pinged and will return
 ```go
 func (o *Post) FindByPostAuthor(_findByPostAuthor int64) ([]*Post, error)
 ```
-FindByPostAuthor searchs against the primary key post_author and will return
-[]*Post,error This method is a programatically generated finder for Post
+FindByPostAuthor searchs against the database table field post_author and will
+return []*Post,error This method is a programatically generated finder for Post
 
 ```go
 
@@ -2467,8 +2486,8 @@ FindByPostAuthor searchs against the primary key post_author and will return
 ```go
 func (o *Post) FindByPostContent(_findByPostContent string) ([]*Post, error)
 ```
-FindByPostContent searchs against the primary key post_content and will return
-[]*Post,error This method is a programatically generated finder for Post
+FindByPostContent searchs against the database table field post_content and will
+return []*Post,error This method is a programatically generated finder for Post
 
 ```go
 
@@ -2486,9 +2505,9 @@ FindByPostContent searchs against the primary key post_content and will return
 ```go
 func (o *Post) FindByPostContentFiltered(_findByPostContentFiltered string) ([]*Post, error)
 ```
-FindByPostContentFiltered searchs against the primary key post_content_filtered
-and will return []*Post,error This method is a programatically generated finder
-for Post
+FindByPostContentFiltered searchs against the database table field
+post_content_filtered and will return []*Post,error This method is a
+programatically generated finder for Post
 
 ```go
 
@@ -2506,8 +2525,8 @@ for Post
 ```go
 func (o *Post) FindByPostDate(_findByPostDate *DateTime) ([]*Post, error)
 ```
-FindByPostDate searchs against the primary key post_date and will return
-[]*Post,error This method is a programatically generated finder for Post
+FindByPostDate searchs against the database table field post_date and will
+return []*Post,error This method is a programatically generated finder for Post
 
 ```go
 
@@ -2525,8 +2544,9 @@ FindByPostDate searchs against the primary key post_date and will return
 ```go
 func (o *Post) FindByPostDateGmt(_findByPostDateGmt *DateTime) ([]*Post, error)
 ```
-FindByPostDateGmt searchs against the primary key post_date_gmt and will return
-[]*Post,error This method is a programatically generated finder for Post
+FindByPostDateGmt searchs against the database table field post_date_gmt and
+will return []*Post,error This method is a programatically generated finder for
+Post
 
 ```go
 
@@ -2544,8 +2564,8 @@ FindByPostDateGmt searchs against the primary key post_date_gmt and will return
 ```go
 func (o *Post) FindByPostExcerpt(_findByPostExcerpt string) ([]*Post, error)
 ```
-FindByPostExcerpt searchs against the primary key post_excerpt and will return
-[]*Post,error This method is a programatically generated finder for Post
+FindByPostExcerpt searchs against the database table field post_excerpt and will
+return []*Post,error This method is a programatically generated finder for Post
 
 ```go
 
@@ -2563,8 +2583,9 @@ FindByPostExcerpt searchs against the primary key post_excerpt and will return
 ```go
 func (o *Post) FindByPostMimeType(_findByPostMimeType string) ([]*Post, error)
 ```
-FindByPostMimeType searchs against the primary key post_mime_type and will
-return []*Post,error This method is a programatically generated finder for Post
+FindByPostMimeType searchs against the database table field post_mime_type and
+will return []*Post,error This method is a programatically generated finder for
+Post
 
 ```go
 
@@ -2582,8 +2603,9 @@ return []*Post,error This method is a programatically generated finder for Post
 ```go
 func (o *Post) FindByPostModified(_findByPostModified *DateTime) ([]*Post, error)
 ```
-FindByPostModified searchs against the primary key post_modified and will return
-[]*Post,error This method is a programatically generated finder for Post
+FindByPostModified searchs against the database table field post_modified and
+will return []*Post,error This method is a programatically generated finder for
+Post
 
 ```go
 
@@ -2601,8 +2623,9 @@ FindByPostModified searchs against the primary key post_modified and will return
 ```go
 func (o *Post) FindByPostModifiedGmt(_findByPostModifiedGmt *DateTime) ([]*Post, error)
 ```
-FindByPostModifiedGmt searchs against the primary key post_modified_gmt and will
-return []*Post,error This method is a programatically generated finder for Post
+FindByPostModifiedGmt searchs against the database table field post_modified_gmt
+and will return []*Post,error This method is a programatically generated finder
+for Post
 
 ```go
 
@@ -2620,8 +2643,8 @@ return []*Post,error This method is a programatically generated finder for Post
 ```go
 func (o *Post) FindByPostName(_findByPostName string) ([]*Post, error)
 ```
-FindByPostName searchs against the primary key post_name and will return
-[]*Post,error This method is a programatically generated finder for Post
+FindByPostName searchs against the database table field post_name and will
+return []*Post,error This method is a programatically generated finder for Post
 
 ```go
 
@@ -2639,8 +2662,8 @@ FindByPostName searchs against the primary key post_name and will return
 ```go
 func (o *Post) FindByPostParent(_findByPostParent int64) ([]*Post, error)
 ```
-FindByPostParent searchs against the primary key post_parent and will return
-[]*Post,error This method is a programatically generated finder for Post
+FindByPostParent searchs against the database table field post_parent and will
+return []*Post,error This method is a programatically generated finder for Post
 
 ```go
 
@@ -2658,8 +2681,9 @@ FindByPostParent searchs against the primary key post_parent and will return
 ```go
 func (o *Post) FindByPostPassword(_findByPostPassword string) ([]*Post, error)
 ```
-FindByPostPassword searchs against the primary key post_password and will return
-[]*Post,error This method is a programatically generated finder for Post
+FindByPostPassword searchs against the database table field post_password and
+will return []*Post,error This method is a programatically generated finder for
+Post
 
 ```go
 
@@ -2677,8 +2701,8 @@ FindByPostPassword searchs against the primary key post_password and will return
 ```go
 func (o *Post) FindByPostStatus(_findByPostStatus string) ([]*Post, error)
 ```
-FindByPostStatus searchs against the primary key post_status and will return
-[]*Post,error This method is a programatically generated finder for Post
+FindByPostStatus searchs against the database table field post_status and will
+return []*Post,error This method is a programatically generated finder for Post
 
 ```go
 
@@ -2696,8 +2720,8 @@ FindByPostStatus searchs against the primary key post_status and will return
 ```go
 func (o *Post) FindByPostTitle(_findByPostTitle string) ([]*Post, error)
 ```
-FindByPostTitle searchs against the primary key post_title and will return
-[]*Post,error This method is a programatically generated finder for Post
+FindByPostTitle searchs against the database table field post_title and will
+return []*Post,error This method is a programatically generated finder for Post
 
 ```go
 
@@ -2715,8 +2739,8 @@ FindByPostTitle searchs against the primary key post_title and will return
 ```go
 func (o *Post) FindByPostType(_findByPostType string) ([]*Post, error)
 ```
-FindByPostType searchs against the primary key post_type and will return
-[]*Post,error This method is a programatically generated finder for Post
+FindByPostType searchs against the database table field post_type and will
+return []*Post,error This method is a programatically generated finder for Post
 
 ```go
 
@@ -2734,7 +2758,7 @@ FindByPostType searchs against the primary key post_type and will return
 ```go
 func (o *Post) FindByToPing(_findByToPing string) ([]*Post, error)
 ```
-FindByToPing searchs against the primary key to_ping and will return
+FindByToPing searchs against the database table field to_ping and will return
 []*Post,error This method is a programatically generated finder for Post
 
 ```go
@@ -3337,12 +3361,14 @@ new models
 ```go
 func (o *PostMeta) Find(_findByMetaId int64) (bool, error)
 ```
-Find searchs against the primary key meta_id and will return bool,error This
-method is a programatically generated finder for PostMeta
+Find searchs against the database table field meta_id and will return bool,error
+This method is a programatically generated finder for PostMeta
 
-Note that Find returns a bool if found, not err, in the case of a return of
-true, the instance data will be filled out. a call to find ALWAYS overwrites the
-model you call Find on i.e. receiver is a pointer.
+Note that Find returns a bool of true|false if found or not, not err, in the
+case of found == true, the instance data will be filled out!
+
+A call to find ALWAYS overwrites the model you call Find on i.e. receiver is a
+pointer!
 
 ```go
 
@@ -3361,7 +3387,7 @@ model you call Find on i.e. receiver is a pointer.
 ```go
 func (o *PostMeta) FindByMetaKey(_findByMetaKey string) ([]*PostMeta, error)
 ```
-FindByMetaKey searchs against the primary key meta_key and will return
+FindByMetaKey searchs against the database table field meta_key and will return
 []*PostMeta,error This method is a programatically generated finder for PostMeta
 
 ```go
@@ -3380,8 +3406,9 @@ FindByMetaKey searchs against the primary key meta_key and will return
 ```go
 func (o *PostMeta) FindByMetaValue(_findByMetaValue string) ([]*PostMeta, error)
 ```
-FindByMetaValue searchs against the primary key meta_value and will return
-[]*PostMeta,error This method is a programatically generated finder for PostMeta
+FindByMetaValue searchs against the database table field meta_value and will
+return []*PostMeta,error This method is a programatically generated finder for
+PostMeta
 
 ```go
 
@@ -3399,7 +3426,7 @@ FindByMetaValue searchs against the primary key meta_value and will return
 ```go
 func (o *PostMeta) FindByPostId(_findByPostId int64) ([]*PostMeta, error)
 ```
-FindByPostId searchs against the primary key post_id and will return
+FindByPostId searchs against the database table field post_id and will return
 []*PostMeta,error This method is a programatically generated finder for PostMeta
 
 ```go
@@ -3592,12 +3619,14 @@ new models
 ```go
 func (o *Term) Find(_findByTermId int64) (bool, error)
 ```
-Find searchs against the primary key term_id and will return bool,error This
-method is a programatically generated finder for Term
+Find searchs against the database table field term_id and will return bool,error
+This method is a programatically generated finder for Term
 
-Note that Find returns a bool if found, not err, in the case of a return of
-true, the instance data will be filled out. a call to find ALWAYS overwrites the
-model you call Find on i.e. receiver is a pointer.
+Note that Find returns a bool of true|false if found or not, not err, in the
+case of found == true, the instance data will be filled out!
+
+A call to find ALWAYS overwrites the model you call Find on i.e. receiver is a
+pointer!
 
 ```go
 
@@ -3616,8 +3645,8 @@ model you call Find on i.e. receiver is a pointer.
 ```go
 func (o *Term) FindByName(_findByName string) ([]*Term, error)
 ```
-FindByName searchs against the primary key name and will return []*Term,error
-This method is a programatically generated finder for Term
+FindByName searchs against the database table field name and will return
+[]*Term,error This method is a programatically generated finder for Term
 
 ```go
 
@@ -3635,8 +3664,8 @@ This method is a programatically generated finder for Term
 ```go
 func (o *Term) FindBySlug(_findBySlug string) ([]*Term, error)
 ```
-FindBySlug searchs against the primary key slug and will return []*Term,error
-This method is a programatically generated finder for Term
+FindBySlug searchs against the database table field slug and will return
+[]*Term,error This method is a programatically generated finder for Term
 
 ```go
 
@@ -3654,8 +3683,8 @@ This method is a programatically generated finder for Term
 ```go
 func (o *Term) FindByTermGroup(_findByTermGroup int64) ([]*Term, error)
 ```
-FindByTermGroup searchs against the primary key term_group and will return
-[]*Term,error This method is a programatically generated finder for Term
+FindByTermGroup searchs against the database table field term_group and will
+return []*Term,error This method is a programatically generated finder for Term
 
 ```go
 
@@ -3844,9 +3873,9 @@ but a composite key.
 ```go
 func (o *TermRelationship) FindByObjectId(_findByObjectId int64) ([]*TermRelationship, error)
 ```
-FindByObjectId searchs against the primary key object_id and will return
-[]*TermRelationship,error This method is a programatically generated finder for
-TermRelationship
+FindByObjectId searchs against the database table field object_id and will
+return []*TermRelationship,error This method is a programatically generated
+finder for TermRelationship
 
 ```go
 
@@ -3864,9 +3893,9 @@ TermRelationship
 ```go
 func (o *TermRelationship) FindByTermOrder(_findByTermOrder int) ([]*TermRelationship, error)
 ```
-FindByTermOrder searchs against the primary key term_order and will return
-[]*TermRelationship,error This method is a programatically generated finder for
-TermRelationship
+FindByTermOrder searchs against the database table field term_order and will
+return []*TermRelationship,error This method is a programatically generated
+finder for TermRelationship
 
 ```go
 
@@ -4035,12 +4064,14 @@ new models
 ```go
 func (o *TermTaxonomy) Find(_findByTermTaxonomyId int64) (bool, error)
 ```
-Find searchs against the primary key term_taxonomy_id and will return bool,error
-This method is a programatically generated finder for TermTaxonomy
+Find searchs against the database table field term_taxonomy_id and will return
+bool,error This method is a programatically generated finder for TermTaxonomy
 
-Note that Find returns a bool if found, not err, in the case of a return of
-true, the instance data will be filled out. a call to find ALWAYS overwrites the
-model you call Find on i.e. receiver is a pointer.
+Note that Find returns a bool of true|false if found or not, not err, in the
+case of found == true, the instance data will be filled out!
+
+A call to find ALWAYS overwrites the model you call Find on i.e. receiver is a
+pointer!
 
 ```go
 
@@ -4059,7 +4090,7 @@ model you call Find on i.e. receiver is a pointer.
 ```go
 func (o *TermTaxonomy) FindByCount(_findByCount int64) ([]*TermTaxonomy, error)
 ```
-FindByCount searchs against the primary key count and will return
+FindByCount searchs against the database table field count and will return
 []*TermTaxonomy,error This method is a programatically generated finder for
 TermTaxonomy
 
@@ -4079,9 +4110,9 @@ TermTaxonomy
 ```go
 func (o *TermTaxonomy) FindByDescription(_findByDescription string) ([]*TermTaxonomy, error)
 ```
-FindByDescription searchs against the primary key description and will return
-[]*TermTaxonomy,error This method is a programatically generated finder for
-TermTaxonomy
+FindByDescription searchs against the database table field description and will
+return []*TermTaxonomy,error This method is a programatically generated finder
+for TermTaxonomy
 
 ```go
 
@@ -4099,7 +4130,7 @@ TermTaxonomy
 ```go
 func (o *TermTaxonomy) FindByParent(_findByParent int64) ([]*TermTaxonomy, error)
 ```
-FindByParent searchs against the primary key parent and will return
+FindByParent searchs against the database table field parent and will return
 []*TermTaxonomy,error This method is a programatically generated finder for
 TermTaxonomy
 
@@ -4119,7 +4150,7 @@ TermTaxonomy
 ```go
 func (o *TermTaxonomy) FindByTaxonomy(_findByTaxonomy string) ([]*TermTaxonomy, error)
 ```
-FindByTaxonomy searchs against the primary key taxonomy and will return
+FindByTaxonomy searchs against the database table field taxonomy and will return
 []*TermTaxonomy,error This method is a programatically generated finder for
 TermTaxonomy
 
@@ -4139,7 +4170,7 @@ TermTaxonomy
 ```go
 func (o *TermTaxonomy) FindByTermId(_findByTermId int64) ([]*TermTaxonomy, error)
 ```
-FindByTermId searchs against the primary key term_id and will return
+FindByTermId searchs against the database table field term_id and will return
 []*TermTaxonomy,error This method is a programatically generated finder for
 TermTaxonomy
 
@@ -4370,12 +4401,14 @@ new models
 ```go
 func (o *UserMeta) Find(_findByUMetaId int64) (bool, error)
 ```
-Find searchs against the primary key umeta_id and will return bool,error This
-method is a programatically generated finder for UserMeta
+Find searchs against the database table field umeta_id and will return
+bool,error This method is a programatically generated finder for UserMeta
 
-Note that Find returns a bool if found, not err, in the case of a return of
-true, the instance data will be filled out. a call to find ALWAYS overwrites the
-model you call Find on i.e. receiver is a pointer.
+Note that Find returns a bool of true|false if found or not, not err, in the
+case of found == true, the instance data will be filled out!
+
+A call to find ALWAYS overwrites the model you call Find on i.e. receiver is a
+pointer!
 
 ```go
 
@@ -4394,7 +4427,7 @@ model you call Find on i.e. receiver is a pointer.
 ```go
 func (o *UserMeta) FindByMetaKey(_findByMetaKey string) ([]*UserMeta, error)
 ```
-FindByMetaKey searchs against the primary key meta_key and will return
+FindByMetaKey searchs against the database table field meta_key and will return
 []*UserMeta,error This method is a programatically generated finder for UserMeta
 
 ```go
@@ -4413,8 +4446,9 @@ FindByMetaKey searchs against the primary key meta_key and will return
 ```go
 func (o *UserMeta) FindByMetaValue(_findByMetaValue string) ([]*UserMeta, error)
 ```
-FindByMetaValue searchs against the primary key meta_value and will return
-[]*UserMeta,error This method is a programatically generated finder for UserMeta
+FindByMetaValue searchs against the database table field meta_value and will
+return []*UserMeta,error This method is a programatically generated finder for
+UserMeta
 
 ```go
 
@@ -4432,7 +4466,7 @@ FindByMetaValue searchs against the primary key meta_value and will return
 ```go
 func (o *UserMeta) FindByUserId(_findByUserId int64) ([]*UserMeta, error)
 ```
-FindByUserId searchs against the primary key user_id and will return
+FindByUserId searchs against the database table field user_id and will return
 []*UserMeta,error This method is a programatically generated finder for UserMeta
 
 ```go
