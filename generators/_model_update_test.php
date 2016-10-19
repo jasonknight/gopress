@@ -61,3 +61,4 @@ foreach ($t->fields as $f) {
 
 $txt .= "
 };\n";
+puts($txt);

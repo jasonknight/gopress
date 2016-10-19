@@ -1,5 +1,6 @@
 <?php
-$txt = "
+$txt = "";
+$txt .= "
 func Test{$t->model_name}Create(t *testing.T) {
     if fileExists(`$cnf`) {
     a,err := NewMysqlAdapterEx(`$cnf`)
@@ -99,17 +100,29 @@ foreach ($fields as $f) {
 
 // now we need to test all the findBy methods
 foreach ($fields as $f) {
+    if ($t->model_name == "TermRelationship") {
+        if ($f['name'] == 'TermTaxonomyId' || $f['name'] == 'ObjectId') {
+            continue;
+        } 
+        
+    }
+    if (preg_match("/Order/",$f['name'])) {
+        continue;
+    }
+    echo "Adding in FindBys\n";
 $txt .= "
-    res{$i},err := model.FindBy{$fname}(model2.Get{$fname}())
+    res{$i},err := model.FindBy{$f['name']}(model2.Get{$f['name']}())
     if err != nil {
-        $fail(`failed model.FindBy{$fname}(model2.Get{$fname}())`)
+        $fail(`failed model.FindBy{$f['name']}(model2.Get{$f['name']}())`)
     }
     if len(res{$i}) == 0 {
         $fail(`failed to find any {$t->model_name}`)
     }
 "; 
+$i++;
 }
 
 
 $txt .= "} // end of if fileExists
 };\n";
+puts($txt);

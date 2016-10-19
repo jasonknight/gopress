@@ -89,6 +89,9 @@ func (a *MysqlAdapter) LogInfo(s string) {
 func (a *MysqlAdapter) LogError(s error) {
     if a._log_filter != nil {
         ns := a._log_filter(`ERROR`,fmt.Sprintf(`%s`,s))
+        if ns == `` {
+            return
+        }
         a._error_log.Println(ns)
         return
     }

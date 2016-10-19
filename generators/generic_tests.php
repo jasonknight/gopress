@@ -40,6 +40,12 @@ func TestAdapterFailures(t *testing.T) {
         $fail(`this should fail with wrong login info`)
         return
     }
+    // Load a silly yml file with wrong data
+    _, err = NewMysqlAdapterEx(`test_data/silly.yml`)
+    if err == nil {
+        $fail(`this should fail with wrong login info`)
+        return
+    }
 }
 
 func TestDBValue(t *testing.T) {
@@ -119,17 +125,39 @@ func TestAdapter{$ltype}Logging(t *testing.T) {
         return
     }
 }
+func TestAdapterEmpty{$ltype}Logging(t *testing.T) {
+    a := NewMysqlAdapter(`wp_`)
+    var b bytes.Buffer
+    wr := bufio.NewWriter(&b)
+    a.SetLogs(wr)
+    a.Log{$ltype}(``)
+    wr.Flush()
+    if b.String() != `` {
+        $fail(`Info should not occur in this case`)
+        return
+    }
+    a.SetLogFilter(func (tag string,val string) string {
+        return ``
+    })
+    a.Log{$ltype}(`Hello World`)
+    wr.Flush()
+    if b.String() != `` {
+        $fail(`Info should not occur due to filter in this case`)
+        return
+    }
+}
 ";
 }
 $txt .= "
 func TestAdapterErrorLogging(t *testing.T) {
     a := NewMysqlAdapter(`wp_`)
-    var b bytes.Buffer
+    
     r, err := regexp.Compile(`\\[ERROR\\]:.+Hello World`)
     if err != nil {
         $fail(`could not compile regex`)
         return
     }
+    var b bytes.Buffer
     wr := bufio.NewWriter(&b)
     a.SetLogs(wr)
     a.LogError(errors.New(`Hello World`))
@@ -138,6 +166,20 @@ func TestAdapterErrorLogging(t *testing.T) {
         $fail(`failed to match info line`)
         return
     }
+
+    var b2 bytes.Buffer
+    wr2 := bufio.NewWriter(&b2)
+    a.SetLogs(wr2)
+    a.SetLogFilter(func (tag string,val string) string {
+        return ``
+    })
+    a.LogError(errors.New(`Hello World`))
+    wr2.Flush()
+    if b2.String() != `` {
+        $fail(`Info should not occur due to filter in this case but equals %s`,b2.String())
+        return
+    }
 }
+
 ";
 puts($txt);

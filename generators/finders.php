@@ -9,20 +9,23 @@ foreach($t->fields as $f) {
     $arg = "_find_by_" . $f->model_field_name;
     $argtype = $f->go_type;
     $fmt_type = mysqlToFmtType($f->Type);
-    if (isPrimaryKey($f)) {
+    if (isPrimaryKey($f) && $t->model_name != "TermRelationship") {
 
         $fname = "Find";
         $rtype = "bool"; //i.e. we set the current model
-        if ($t->model_name == "TermRelationship") {
-            $from_map_body .= "\t_" . $f->model_field_name . ",err := m[\"{$f->Field}\"].As" . ucfirst($f->go_type). "()\n";
-            $from_map_body .= "\tif err != nil {\n \t\treturn o._adapter.Oops(fmt.Sprintf(`%s`,err))\n\t}\n";
-            $from_map_body .= "\to." . $f->model_field_name . " = _" . $f->model_field_name . "\n";
-            $from_model_body .= "\to.{$f->model_field_name} = m.{$f->model_field_name}\n";
-            include "term_relationship_finder.php";
-            continue;
-        }
+        
     } else {
         $rtype = "[]*{$t->model_name}";
+    }
+    if (isPrimaryKey($f) && $t->model_name == "TermRelationship") {
+        $fname = "Find";
+        $rtype = "bool"; //i.e. we set the current model
+        $from_map_body .= "\t_" . $f->model_field_name . ",err := m[\"{$f->Field}\"].As" . ucfirst($f->go_type). "()\n";
+        $from_map_body .= "\tif err != nil {\n \t\treturn o._adapter.Oops(fmt.Sprintf(`%s`,err))\n\t}\n";
+        $from_map_body .= "\to." . $f->model_field_name . " = _" . $f->model_field_name . "\n";
+        $from_model_body .= "\to.{$f->model_field_name} = m.{$f->model_field_name}\n";
+        include "term_relationship_finder.php";
+        continue;
     }
     $scol = $f->Field;
     // these are here just to save having to loop

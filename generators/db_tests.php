@@ -25,8 +25,10 @@ function randomInt() {
 foreach ($t->fields as $f) {
     if ( isPrimaryKey($f) && $t->model_name != "TermRelationship") {
         // skip primary key
+        echo "Skipping\n";
         continue;
     }
+
     $goname = convertFieldName($f->Field);
     $dbname = $f->Field;
     $gotype = $f->go_type;
@@ -39,7 +41,6 @@ foreach ($t->fields as $f) {
         'fmt' => $f->mysql_fmt_type
     );
 }
+
 include "_create_model_test.php";
 include "_model_update_test.php";
-
-puts($txt);
