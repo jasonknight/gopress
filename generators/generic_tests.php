@@ -22,9 +22,30 @@ func TestMysqlAdapterFromYAML(t *testing.T) {
         $fail(`did not fully apply yaml file %+v`,a)
     }
 }
+func TestAdapterFailures(t *testing.T) {
+    _,err := NewMysqlAdapterEx(`file_that_does_not_exist123323`)
+    if err == nil {
+        $fail(`Did not receive an error when file should not exist!`)
+        return
+    }
+    // Load a nonsense yaml file
+    _,err = NewMysqlAdapterEx(`test_data/nonsenseyaml.yml`)
+    if err == nil {
+        $fail(`this should fail to load a nonsense yaml file`)
+        return
+    }
+    // Load a test yaml with wrong Open
+    _, err = NewMysqlAdapterEx(`test_data/adapter.yml`)
+    if err == nil {
+        $fail(`this should fail with wrong login info`)
+        return
+    }
+}
+
 func TestDBValue(t *testing.T) {
     a := NewMysqlAdapter(`wp_`)
 ";
+
 $tbl = array(
     array(999,'int32'),
     array(666,'int'),
@@ -76,6 +97,47 @@ $txt .= "
         $fail(`restring of dvar failed %s`,dc.ToString())
     }
 
+}
+";
+foreach (array("Info","Debug") as $ltype) {
+    $ltag = strtoupper($ltype);
+$txt .= "
+func TestAdapter{$ltype}Logging(t *testing.T) {
+    a := NewMysqlAdapter(`wp_`)
+    var b bytes.Buffer
+    r, err := regexp.Compile(`\\[{$ltag}\\]:.+Hello World`)
+    if err != nil {
+        $fail(`could not compile regex`)
+        return
+    }
+    wr := bufio.NewWriter(&b)
+    a.SetLogs(wr)
+    a.Log{$ltype}(`Hello World`)
+    wr.Flush()
+    if r.MatchString(b.String()) == false {
+        $fail(`failed to match info line`)
+        return
+    }
+}
+";
+}
+$txt .= "
+func TestAdapterErrorLogging(t *testing.T) {
+    a := NewMysqlAdapter(`wp_`)
+    var b bytes.Buffer
+    r, err := regexp.Compile(`\\[ERROR\\]:.+Hello World`)
+    if err != nil {
+        $fail(`could not compile regex`)
+        return
+    }
+    wr := bufio.NewWriter(&b)
+    a.SetLogs(wr)
+    a.LogError(errors.New(`Hello World`))
+    wr.Flush()
+    if r.MatchString(b.String()) == false {
+        $fail(`failed to match info line`)
+        return
+    }
 }
 ";
 puts($txt);

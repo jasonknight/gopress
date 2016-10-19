@@ -1,8 +1,12 @@
 package gopress
 
 import (
+	"bufio"
+	"bytes"
+	"errors"
 	"math/rand"
 	"os"
+	"regexp"
 	"strconv"
 	"testing"
 	"time"
@@ -2910,6 +2914,26 @@ func TestMysqlAdapterFromYAML(t *testing.T) {
 		t.Errorf(`did not fully apply yaml file %+v`, a)
 	}
 }
+func TestAdapterFailures(t *testing.T) {
+	_, err := NewMysqlAdapterEx(`file_that_does_not_exist123323`)
+	if err == nil {
+		t.Errorf(`Did not receive an error when file should not exist!`)
+		return
+	}
+	// Load a nonsense yaml file
+	_, err = NewMysqlAdapterEx(`test_data/nonsenseyaml.yml`)
+	if err == nil {
+		t.Errorf(`this should fail to load a nonsense yaml file`)
+		return
+	}
+	// Load a test yaml with wrong Open
+	_, err = NewMysqlAdapterEx(`test_data/adapter.yml`)
+	if err == nil {
+		t.Errorf(`this should fail with wrong login info`)
+		return
+	}
+}
+
 func TestDBValue(t *testing.T) {
 	a := NewMysqlAdapter(`wp_`)
 
@@ -2993,4 +3017,58 @@ func TestDBValue(t *testing.T) {
 		t.Errorf(`restring of dvar failed %s`, dc.ToString())
 	}
 
+}
+
+func TestAdapterInfoLogging(t *testing.T) {
+	a := NewMysqlAdapter(`wp_`)
+	var b bytes.Buffer
+	r, err := regexp.Compile(`\[INFO\]:.+Hello World`)
+	if err != nil {
+		t.Errorf(`could not compile regex`)
+		return
+	}
+	wr := bufio.NewWriter(&b)
+	a.SetLogs(wr)
+	a.LogInfo(`Hello World`)
+	wr.Flush()
+	if r.MatchString(b.String()) == false {
+		t.Errorf(`failed to match info line`)
+		return
+	}
+}
+
+func TestAdapterDebugLogging(t *testing.T) {
+	a := NewMysqlAdapter(`wp_`)
+	var b bytes.Buffer
+	r, err := regexp.Compile(`\[DEBUG\]:.+Hello World`)
+	if err != nil {
+		t.Errorf(`could not compile regex`)
+		return
+	}
+	wr := bufio.NewWriter(&b)
+	a.SetLogs(wr)
+	a.LogDebug(`Hello World`)
+	wr.Flush()
+	if r.MatchString(b.String()) == false {
+		t.Errorf(`failed to match info line`)
+		return
+	}
+}
+
+func TestAdapterErrorLogging(t *testing.T) {
+	a := NewMysqlAdapter(`wp_`)
+	var b bytes.Buffer
+	r, err := regexp.Compile(`\[ERROR\]:.+Hello World`)
+	if err != nil {
+		t.Errorf(`could not compile regex`)
+		return
+	}
+	wr := bufio.NewWriter(&b)
+	a.SetLogs(wr)
+	a.LogError(errors.New(`Hello World`))
+	wr.Flush()
+	if r.MatchString(b.String()) == false {
+		t.Errorf(`failed to match info line`)
+		return
+	}
 }

@@ -131,6 +131,10 @@ func (a *MysqlAdapter) Open(h,u,p,d string) error {
         }
         a._conn_ = tc
     }
+    err := a._conn_.Ping()
+    if err != nil {
+        return err
+    }
     a._opened = true
     return nil
 

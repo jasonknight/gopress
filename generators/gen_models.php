@@ -283,6 +283,10 @@ import (
     \"math/rand\"
     \"os\"
     \"time\"
+    \"bytes\"
+    \"regexp\"
+    \"bufio\"
+    \"errors\"
 )
 var letters = []rune(\"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\")
 
