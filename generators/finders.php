@@ -44,12 +44,12 @@ foreach($t->fields as $f) {
     } else {
         $failure_return = "return _modelSlice,err";
     }
-    $sig = "// {$fname} dynamic finder for {$f->Field} -> $rtype,error
-// Generic and programatically generator finder for {$t->model_name}
+    $sig = "// {$fname} searchs against the primary key {$f->Field} and will return $rtype,error
+// This method is a programatically generated finder for {$t->model_name}
 ";
     if ($fname == "Find") {
         $sig .= "//  
-// Note that Fine returns a bool if found, not err, in the case of
+// Note that Find returns a bool if found, not err, in the case of
 // a return of true, the instance data will be filled out.
 // a call to find ALWAYS overwrites the model you call Find on
 // i.e. receiver is a pointer. 
