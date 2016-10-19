@@ -227,7 +227,11 @@ foreach ($tables as $t) {
         continue;
     }
     $seen[] = $t->model_name;
-puts("
+puts("// {$t->model_name} is a Object Relational Mapping to
+// the database table that represents it. In this case it is
+// {$t->dname}. The table name will be Sprintf'd to include
+// the prefix you define in your YAML configuration for the
+// Adapter.
 type {$t->model_name} struct {
     _table string
     _adapter Adapter

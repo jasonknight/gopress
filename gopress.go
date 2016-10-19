@@ -521,6 +521,11 @@ func fileGetContents(p string) ([]byte, error) {
 	return ioutil.ReadFile(p)
 }
 
+// CommentMeta is a Object Relational Mapping to
+// the database table that represents it. In this case it is
+// commentmeta. The table name will be Sprintf'd to include
+// the prefix you define in your YAML configuration for the
+// Adapter.
 type CommentMeta struct {
 	_table    string
 	_adapter  Adapter
@@ -869,6 +874,11 @@ func (o *CommentMeta) UpdateMetaValue(_updMetaValue string) (int64, error) {
 	return o._adapter.AffectedRows(), nil
 }
 
+// Comment is a Object Relational Mapping to
+// the database table that represents it. In this case it is
+// comments. The table name will be Sprintf'd to include
+// the prefix you define in your YAML configuration for the
+// Adapter.
 type Comment struct {
 	_table             string
 	_adapter           Adapter
@@ -1976,6 +1986,11 @@ func (o *Comment) UpdateUserId(_updUserId int64) (int64, error) {
 	return o._adapter.AffectedRows(), nil
 }
 
+// Link is a Object Relational Mapping to
+// the database table that represents it. In this case it is
+// links. The table name will be Sprintf'd to include
+// the prefix you define in your YAML configuration for the
+// Adapter.
 type Link struct {
 	_table          string
 	_adapter        Adapter
@@ -2945,6 +2960,11 @@ func (o *Link) UpdateLinkRss(_updLinkRss string) (int64, error) {
 	return o._adapter.AffectedRows(), nil
 }
 
+// Option is a Object Relational Mapping to
+// the database table that represents it. In this case it is
+// options. The table name will be Sprintf'd to include
+// the prefix you define in your YAML configuration for the
+// Adapter.
 type Option struct {
 	_table      string
 	_adapter    Adapter
@@ -3293,6 +3313,11 @@ func (o *Option) UpdateAutoload(_updAutoload string) (int64, error) {
 	return o._adapter.AffectedRows(), nil
 }
 
+// PostMeta is a Object Relational Mapping to
+// the database table that represents it. In this case it is
+// postmeta. The table name will be Sprintf'd to include
+// the prefix you define in your YAML configuration for the
+// Adapter.
 type PostMeta struct {
 	_table    string
 	_adapter  Adapter
@@ -3641,6 +3666,11 @@ func (o *PostMeta) UpdateMetaValue(_updMetaValue string) (int64, error) {
 	return o._adapter.AffectedRows(), nil
 }
 
+// Post is a Object Relational Mapping to
+// the database table that represents it. In this case it is
+// posts. The table name will be Sprintf'd to include
+// the prefix you define in your YAML configuration for the
+// Adapter.
 type Post struct {
 	_table              string
 	_adapter            Adapter
@@ -5300,6 +5330,11 @@ func (o *Post) UpdateCommentCount(_updCommentCount int64) (int64, error) {
 	return o._adapter.AffectedRows(), nil
 }
 
+// TermRelationship is a Object Relational Mapping to
+// the database table that represents it. In this case it is
+// term_relationships. The table name will be Sprintf'd to include
+// the prefix you define in your YAML configuration for the
+// Adapter.
 type TermRelationship struct {
 	_table         string
 	_adapter       Adapter
@@ -5584,6 +5619,11 @@ func (o *TermRelationship) UpdateTermOrder(_updTermOrder int) (int64, error) {
 	return o._adapter.AffectedRows(), nil
 }
 
+// TermTaxonomy is a Object Relational Mapping to
+// the database table that represents it. In this case it is
+// term_taxonomy. The table name will be Sprintf'd to include
+// the prefix you define in your YAML configuration for the
+// Adapter.
 type TermTaxonomy struct {
 	_table         string
 	_adapter       Adapter
@@ -6070,6 +6110,11 @@ func (o *TermTaxonomy) UpdateCount(_updCount int64) (int64, error) {
 	return o._adapter.AffectedRows(), nil
 }
 
+// Term is a Object Relational Mapping to
+// the database table that represents it. In this case it is
+// terms. The table name will be Sprintf'd to include
+// the prefix you define in your YAML configuration for the
+// Adapter.
 type Term struct {
 	_table    string
 	_adapter  Adapter
@@ -6418,6 +6463,11 @@ func (o *Term) UpdateTermGroup(_updTermGroup int64) (int64, error) {
 	return o._adapter.AffectedRows(), nil
 }
 
+// UserMeta is a Object Relational Mapping to
+// the database table that represents it. In this case it is
+// usermeta. The table name will be Sprintf'd to include
+// the prefix you define in your YAML configuration for the
+// Adapter.
 type UserMeta struct {
 	_table    string
 	_adapter  Adapter
