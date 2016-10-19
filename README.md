@@ -44,26 +44,7 @@ type Post struct {
     // Dirty markers for smart updates
     IsIDDirty                  bool
     IsPostAuthorDirty          bool
-    IsPostDateDirty            bool
-    IsPostDateGmtDirty         bool
-    IsPostContentDirty         bool
-    IsPostTitleDirty           bool
-    IsPostExcerptDirty         bool
-    IsPostStatusDirty          bool
-    IsCommentStatusDirty       bool
-    IsPingStatusDirty          bool
-    IsPostPasswordDirty        bool
-    IsPostNameDirty            bool
-    IsToPingDirty              bool
-    IsPingedDirty              bool
-    IsPostModifiedDirty        bool
-    IsPostModifiedGmtDirty     bool
-    IsPostContentFilteredDirty bool
-    IsPostParentDirty          bool
-    IsGuidDirty                bool
-    IsMenuOrderDirty           bool
-    IsPostTypeDirty            bool
-    IsPostMimeTypeDirty        bool
+    ...
     IsCommentCountDirty        bool
 }
 ```
@@ -149,6 +130,8 @@ programatically generator finder for Post
     }
 
 ```
+
+For more documentation of each supported type, [check out the docs](https://github.com/jasonknight/gopress/blob/master/docs.md).
 
 Each model must be provided with an adapter:
 
