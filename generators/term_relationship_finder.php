@@ -2,7 +2,10 @@
 $arg = "termId";
 $arg2 = 'objectId';
 $fname = "Find";
-$sig = "func (o *{$t->model_name}) $fname($arg $argtype,$arg2 $argtype) ($rtype,error) {";
+$sig = "// Find for the TermRelationship is a bit tricky, as it has no
+// primary key as such, but a composite key.
+";
+$sig .= "func (o *{$t->model_name}) $fname($arg $argtype,$arg2 $argtype) ($rtype,error) {";
 if ( $fname == "Find" ) {
     $failure_return = "return false,err";
 } else {

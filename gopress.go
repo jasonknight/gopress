@@ -78,7 +78,7 @@ func NewMysqlAdapter(pre string) *MysqlAdapter {
 	return &MysqlAdapter{DBPrefix: pre}
 }
 
-// NewMysqlAdapterEx
+// NewMysqlAdapterEx sets everything up based on your YAML config
 // Args: fname is a string path to a YAML config file
 // This function will attempt to Open the database
 // defined in that file. Example file:
@@ -5439,6 +5439,9 @@ func (o *TermRelationship) FindByObjectId(_findByObjectId int64) ([]*TermRelatio
 	return _modelSlice, nil
 
 }
+
+// Find for the TermRelationship is a bit tricky, as it has no
+// primary key as such, but a composite key.
 func (o *TermRelationship) Find(termId int64, objectId int64) (bool, error) {
 
 	var _modelSlice []*TermRelationship

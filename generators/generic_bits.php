@@ -57,7 +57,7 @@ type MysqlAdapter struct {
 func NewMysqlAdapter(pre string) *MysqlAdapter {
     return &MysqlAdapter{DBPrefix: pre}
 } 
-// NewMysqlAdapterEx
+// NewMysqlAdapterEx sets everything up based on your YAML config
 // Args: fname is a string path to a YAML config file
 // This function will attempt to Open the database
 // defined in that file. Example file:
