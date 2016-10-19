@@ -99,15 +99,13 @@ generator finder for Comment Note that Fine returns a bool if found, not err, in
 the case of a return of true, the instance data will be filled out. a call to
 find ALWAYS overwrites the model you call Find on i.e. receiver is a pointer.
 
-    ```go
-        m := NewComment(a)
-        found,err := m.Find(23)
-        .. handle err
-        if found == false {
-            // handle found
-        }
-        ... do what you want with m here
-    ```
+    m := NewComment(a)
+    found,err := m.Find(23)
+    .. handle err
+    if found == false {
+        // handle found
+    }
+    ... do what you want with m here
 
 #### func (*Comment) FindByCommentAgent
 
@@ -117,14 +115,12 @@ func (o *Comment) FindByCommentAgent(_findByCommentAgent string) ([]*Comment, er
 FindByCommentAgent dynamic finder for comment_agent -> []*Comment,error Generic
 and programatically generator finder for Comment
 
-    ```go
-      m := NewComment(a)
-      results,err := m.FindByCommentAgent(...)
-      // handle err
-      for i,r := results {
-        // now r is an instance of Comment
-      }
-    ```
+    m := NewComment(a)
+    results,err := m.FindByCommentAgent(...)
+    // handle err
+    for i,r := results {
+      // now r is an instance of Comment
+    }
 
 #### func (*Comment) FindByCommentApproved
 
@@ -134,14 +130,12 @@ func (o *Comment) FindByCommentApproved(_findByCommentApproved string) ([]*Comme
 FindByCommentApproved dynamic finder for comment_approved -> []*Comment,error
 Generic and programatically generator finder for Comment
 
-    ```go
-      m := NewComment(a)
-      results,err := m.FindByCommentApproved(...)
-      // handle err
-      for i,r := results {
-        // now r is an instance of Comment
-      }
-    ```
+    m := NewComment(a)
+    results,err := m.FindByCommentApproved(...)
+    // handle err
+    for i,r := results {
+      // now r is an instance of Comment
+    }
 
 #### func (*Comment) FindByCommentAuthor
 
@@ -151,14 +145,12 @@ func (o *Comment) FindByCommentAuthor(_findByCommentAuthor string) ([]*Comment, 
 FindByCommentAuthor dynamic finder for comment_author -> []*Comment,error
 Generic and programatically generator finder for Comment
 
-    ```go
-      m := NewComment(a)
-      results,err := m.FindByCommentAuthor(...)
-      // handle err
-      for i,r := results {
-        // now r is an instance of Comment
-      }
-    ```
+    m := NewComment(a)
+    results,err := m.FindByCommentAuthor(...)
+    // handle err
+    for i,r := results {
+      // now r is an instance of Comment
+    }
 
 #### func (*Comment) FindByCommentAuthorEmail
 
@@ -168,14 +160,12 @@ func (o *Comment) FindByCommentAuthorEmail(_findByCommentAuthorEmail string) ([]
 FindByCommentAuthorEmail dynamic finder for comment_author_email ->
 []*Comment,error Generic and programatically generator finder for Comment
 
-    ```go
-      m := NewComment(a)
-      results,err := m.FindByCommentAuthorEmail(...)
-      // handle err
-      for i,r := results {
-        // now r is an instance of Comment
-      }
-    ```
+    m := NewComment(a)
+    results,err := m.FindByCommentAuthorEmail(...)
+    // handle err
+    for i,r := results {
+      // now r is an instance of Comment
+    }
 
 #### func (*Comment) FindByCommentAuthorIP
 
@@ -185,14 +175,12 @@ func (o *Comment) FindByCommentAuthorIP(_findByCommentAuthorIP string) ([]*Comme
 FindByCommentAuthorIP dynamic finder for comment_author_IP -> []*Comment,error
 Generic and programatically generator finder for Comment
 
-    ```go
-      m := NewComment(a)
-      results,err := m.FindByCommentAuthorIP(...)
-      // handle err
-      for i,r := results {
-        // now r is an instance of Comment
-      }
-    ```
+    m := NewComment(a)
+    results,err := m.FindByCommentAuthorIP(...)
+    // handle err
+    for i,r := results {
+      // now r is an instance of Comment
+    }
 
 #### func (*Comment) FindByCommentAuthorUrl
 
@@ -202,14 +190,12 @@ func (o *Comment) FindByCommentAuthorUrl(_findByCommentAuthorUrl string) ([]*Com
 FindByCommentAuthorUrl dynamic finder for comment_author_url -> []*Comment,error
 Generic and programatically generator finder for Comment
 
-    ```go
-      m := NewComment(a)
-      results,err := m.FindByCommentAuthorUrl(...)
-      // handle err
-      for i,r := results {
-        // now r is an instance of Comment
-      }
-    ```
+    m := NewComment(a)
+    results,err := m.FindByCommentAuthorUrl(...)
+    // handle err
+    for i,r := results {
+      // now r is an instance of Comment
+    }
 
 #### func (*Comment) FindByCommentContent
 
@@ -219,14 +205,12 @@ func (o *Comment) FindByCommentContent(_findByCommentContent string) ([]*Comment
 FindByCommentContent dynamic finder for comment_content -> []*Comment,error
 Generic and programatically generator finder for Comment
 
-    ```go
-      m := NewComment(a)
-      results,err := m.FindByCommentContent(...)
-      // handle err
-      for i,r := results {
-        // now r is an instance of Comment
-      }
-    ```
+    m := NewComment(a)
+    results,err := m.FindByCommentContent(...)
+    // handle err
+    for i,r := results {
+      // now r is an instance of Comment
+    }
 
 #### func (*Comment) FindByCommentDate
 
@@ -236,14 +220,12 @@ func (o *Comment) FindByCommentDate(_findByCommentDate *DateTime) ([]*Comment, e
 FindByCommentDate dynamic finder for comment_date -> []*Comment,error Generic
 and programatically generator finder for Comment
 
-    ```go
-      m := NewComment(a)
-      results,err := m.FindByCommentDate(...)
-      // handle err
-      for i,r := results {
-        // now r is an instance of Comment
-      }
-    ```
+    m := NewComment(a)
+    results,err := m.FindByCommentDate(...)
+    // handle err
+    for i,r := results {
+      // now r is an instance of Comment
+    }
 
 #### func (*Comment) FindByCommentDateGmt
 
@@ -253,14 +235,12 @@ func (o *Comment) FindByCommentDateGmt(_findByCommentDateGmt *DateTime) ([]*Comm
 FindByCommentDateGmt dynamic finder for comment_date_gmt -> []*Comment,error
 Generic and programatically generator finder for Comment
 
-    ```go
-      m := NewComment(a)
-      results,err := m.FindByCommentDateGmt(...)
-      // handle err
-      for i,r := results {
-        // now r is an instance of Comment
-      }
-    ```
+    m := NewComment(a)
+    results,err := m.FindByCommentDateGmt(...)
+    // handle err
+    for i,r := results {
+      // now r is an instance of Comment
+    }
 
 #### func (*Comment) FindByCommentKarma
 
@@ -270,14 +250,12 @@ func (o *Comment) FindByCommentKarma(_findByCommentKarma int) ([]*Comment, error
 FindByCommentKarma dynamic finder for comment_karma -> []*Comment,error Generic
 and programatically generator finder for Comment
 
-    ```go
-      m := NewComment(a)
-      results,err := m.FindByCommentKarma(...)
-      // handle err
-      for i,r := results {
-        // now r is an instance of Comment
-      }
-    ```
+    m := NewComment(a)
+    results,err := m.FindByCommentKarma(...)
+    // handle err
+    for i,r := results {
+      // now r is an instance of Comment
+    }
 
 #### func (*Comment) FindByCommentParent
 
@@ -287,14 +265,12 @@ func (o *Comment) FindByCommentParent(_findByCommentParent int64) ([]*Comment, e
 FindByCommentParent dynamic finder for comment_parent -> []*Comment,error
 Generic and programatically generator finder for Comment
 
-    ```go
-      m := NewComment(a)
-      results,err := m.FindByCommentParent(...)
-      // handle err
-      for i,r := results {
-        // now r is an instance of Comment
-      }
-    ```
+    m := NewComment(a)
+    results,err := m.FindByCommentParent(...)
+    // handle err
+    for i,r := results {
+      // now r is an instance of Comment
+    }
 
 #### func (*Comment) FindByCommentPostID
 
@@ -304,14 +280,12 @@ func (o *Comment) FindByCommentPostID(_findByCommentPostID int64) ([]*Comment, e
 FindByCommentPostID dynamic finder for comment_post_ID -> []*Comment,error
 Generic and programatically generator finder for Comment
 
-    ```go
-      m := NewComment(a)
-      results,err := m.FindByCommentPostID(...)
-      // handle err
-      for i,r := results {
-        // now r is an instance of Comment
-      }
-    ```
+    m := NewComment(a)
+    results,err := m.FindByCommentPostID(...)
+    // handle err
+    for i,r := results {
+      // now r is an instance of Comment
+    }
 
 #### func (*Comment) FindByCommentType
 
@@ -321,14 +295,12 @@ func (o *Comment) FindByCommentType(_findByCommentType string) ([]*Comment, erro
 FindByCommentType dynamic finder for comment_type -> []*Comment,error Generic
 and programatically generator finder for Comment
 
-    ```go
-      m := NewComment(a)
-      results,err := m.FindByCommentType(...)
-      // handle err
-      for i,r := results {
-        // now r is an instance of Comment
-      }
-    ```
+    m := NewComment(a)
+    results,err := m.FindByCommentType(...)
+    // handle err
+    for i,r := results {
+      // now r is an instance of Comment
+    }
 
 #### func (*Comment) FindByUserId
 
@@ -338,14 +310,12 @@ func (o *Comment) FindByUserId(_findByUserId int64) ([]*Comment, error)
 FindByUserId dynamic finder for user_id -> []*Comment,error Generic and
 programatically generator finder for Comment
 
-    ```go
-      m := NewComment(a)
-      results,err := m.FindByUserId(...)
-      // handle err
-      for i,r := results {
-        // now r is an instance of Comment
-      }
-    ```
+    m := NewComment(a)
+    results,err := m.FindByUserId(...)
+    // handle err
+    for i,r := results {
+      // now r is an instance of Comment
+    }
 
 #### func (*Comment) FromComment
 
@@ -768,15 +738,13 @@ err, in the case of a return of true, the instance data will be filled out. a
 call to find ALWAYS overwrites the model you call Find on i.e. receiver is a
 pointer.
 
-    ```go
-        m := NewCommentMeta(a)
-        found,err := m.Find(23)
-        .. handle err
-        if found == false {
-            // handle found
-        }
-        ... do what you want with m here
-    ```
+    m := NewCommentMeta(a)
+    found,err := m.Find(23)
+    .. handle err
+    if found == false {
+        // handle found
+    }
+    ... do what you want with m here
 
 #### func (*CommentMeta) FindByCommentId
 
@@ -786,14 +754,12 @@ func (o *CommentMeta) FindByCommentId(_findByCommentId int64) ([]*CommentMeta, e
 FindByCommentId dynamic finder for comment_id -> []*CommentMeta,error Generic
 and programatically generator finder for CommentMeta
 
-    ```go
-      m := NewCommentMeta(a)
-      results,err := m.FindByCommentId(...)
-      // handle err
-      for i,r := results {
-        // now r is an instance of CommentMeta
-      }
-    ```
+    m := NewCommentMeta(a)
+    results,err := m.FindByCommentId(...)
+    // handle err
+    for i,r := results {
+      // now r is an instance of CommentMeta
+    }
 
 #### func (*CommentMeta) FindByMetaKey
 
@@ -803,14 +769,12 @@ func (o *CommentMeta) FindByMetaKey(_findByMetaKey string) ([]*CommentMeta, erro
 FindByMetaKey dynamic finder for meta_key -> []*CommentMeta,error Generic and
 programatically generator finder for CommentMeta
 
-    ```go
-      m := NewCommentMeta(a)
-      results,err := m.FindByMetaKey(...)
-      // handle err
-      for i,r := results {
-        // now r is an instance of CommentMeta
-      }
-    ```
+    m := NewCommentMeta(a)
+    results,err := m.FindByMetaKey(...)
+    // handle err
+    for i,r := results {
+      // now r is an instance of CommentMeta
+    }
 
 #### func (*CommentMeta) FindByMetaValue
 
@@ -820,14 +784,12 @@ func (o *CommentMeta) FindByMetaValue(_findByMetaValue string) ([]*CommentMeta, 
 FindByMetaValue dynamic finder for meta_value -> []*CommentMeta,error Generic
 and programatically generator finder for CommentMeta
 
-    ```go
-      m := NewCommentMeta(a)
-      results,err := m.FindByMetaValue(...)
-      // handle err
-      for i,r := results {
-        // now r is an instance of CommentMeta
-      }
-    ```
+    m := NewCommentMeta(a)
+    results,err := m.FindByMetaValue(...)
+    // handle err
+    for i,r := results {
+      // now r is an instance of CommentMeta
+    }
 
 #### func (*CommentMeta) FromCommentMeta
 
@@ -1090,15 +1052,13 @@ generator finder for Link Note that Fine returns a bool if found, not err, in
 the case of a return of true, the instance data will be filled out. a call to
 find ALWAYS overwrites the model you call Find on i.e. receiver is a pointer.
 
-    ```go
-        m := NewLink(a)
-        found,err := m.Find(23)
-        .. handle err
-        if found == false {
-            // handle found
-        }
-        ... do what you want with m here
-    ```
+    m := NewLink(a)
+    found,err := m.Find(23)
+    .. handle err
+    if found == false {
+        // handle found
+    }
+    ... do what you want with m here
 
 #### func (*Link) FindByLinkDescription
 
@@ -1108,14 +1068,12 @@ func (o *Link) FindByLinkDescription(_findByLinkDescription string) ([]*Link, er
 FindByLinkDescription dynamic finder for link_description -> []*Link,error
 Generic and programatically generator finder for Link
 
-    ```go
-      m := NewLink(a)
-      results,err := m.FindByLinkDescription(...)
-      // handle err
-      for i,r := results {
-        // now r is an instance of Link
-      }
-    ```
+    m := NewLink(a)
+    results,err := m.FindByLinkDescription(...)
+    // handle err
+    for i,r := results {
+      // now r is an instance of Link
+    }
 
 #### func (*Link) FindByLinkImage
 
@@ -1125,14 +1083,12 @@ func (o *Link) FindByLinkImage(_findByLinkImage string) ([]*Link, error)
 FindByLinkImage dynamic finder for link_image -> []*Link,error Generic and
 programatically generator finder for Link
 
-    ```go
-      m := NewLink(a)
-      results,err := m.FindByLinkImage(...)
-      // handle err
-      for i,r := results {
-        // now r is an instance of Link
-      }
-    ```
+    m := NewLink(a)
+    results,err := m.FindByLinkImage(...)
+    // handle err
+    for i,r := results {
+      // now r is an instance of Link
+    }
 
 #### func (*Link) FindByLinkName
 
@@ -1142,14 +1098,12 @@ func (o *Link) FindByLinkName(_findByLinkName string) ([]*Link, error)
 FindByLinkName dynamic finder for link_name -> []*Link,error Generic and
 programatically generator finder for Link
 
-    ```go
-      m := NewLink(a)
-      results,err := m.FindByLinkName(...)
-      // handle err
-      for i,r := results {
-        // now r is an instance of Link
-      }
-    ```
+    m := NewLink(a)
+    results,err := m.FindByLinkName(...)
+    // handle err
+    for i,r := results {
+      // now r is an instance of Link
+    }
 
 #### func (*Link) FindByLinkNotes
 
@@ -1159,14 +1113,12 @@ func (o *Link) FindByLinkNotes(_findByLinkNotes string) ([]*Link, error)
 FindByLinkNotes dynamic finder for link_notes -> []*Link,error Generic and
 programatically generator finder for Link
 
-    ```go
-      m := NewLink(a)
-      results,err := m.FindByLinkNotes(...)
-      // handle err
-      for i,r := results {
-        // now r is an instance of Link
-      }
-    ```
+    m := NewLink(a)
+    results,err := m.FindByLinkNotes(...)
+    // handle err
+    for i,r := results {
+      // now r is an instance of Link
+    }
 
 #### func (*Link) FindByLinkOwner
 
@@ -1176,14 +1128,12 @@ func (o *Link) FindByLinkOwner(_findByLinkOwner int64) ([]*Link, error)
 FindByLinkOwner dynamic finder for link_owner -> []*Link,error Generic and
 programatically generator finder for Link
 
-    ```go
-      m := NewLink(a)
-      results,err := m.FindByLinkOwner(...)
-      // handle err
-      for i,r := results {
-        // now r is an instance of Link
-      }
-    ```
+    m := NewLink(a)
+    results,err := m.FindByLinkOwner(...)
+    // handle err
+    for i,r := results {
+      // now r is an instance of Link
+    }
 
 #### func (*Link) FindByLinkRating
 
@@ -1193,14 +1143,12 @@ func (o *Link) FindByLinkRating(_findByLinkRating int) ([]*Link, error)
 FindByLinkRating dynamic finder for link_rating -> []*Link,error Generic and
 programatically generator finder for Link
 
-    ```go
-      m := NewLink(a)
-      results,err := m.FindByLinkRating(...)
-      // handle err
-      for i,r := results {
-        // now r is an instance of Link
-      }
-    ```
+    m := NewLink(a)
+    results,err := m.FindByLinkRating(...)
+    // handle err
+    for i,r := results {
+      // now r is an instance of Link
+    }
 
 #### func (*Link) FindByLinkRel
 
@@ -1210,14 +1158,12 @@ func (o *Link) FindByLinkRel(_findByLinkRel string) ([]*Link, error)
 FindByLinkRel dynamic finder for link_rel -> []*Link,error Generic and
 programatically generator finder for Link
 
-    ```go
-      m := NewLink(a)
-      results,err := m.FindByLinkRel(...)
-      // handle err
-      for i,r := results {
-        // now r is an instance of Link
-      }
-    ```
+    m := NewLink(a)
+    results,err := m.FindByLinkRel(...)
+    // handle err
+    for i,r := results {
+      // now r is an instance of Link
+    }
 
 #### func (*Link) FindByLinkRss
 
@@ -1227,14 +1173,12 @@ func (o *Link) FindByLinkRss(_findByLinkRss string) ([]*Link, error)
 FindByLinkRss dynamic finder for link_rss -> []*Link,error Generic and
 programatically generator finder for Link
 
-    ```go
-      m := NewLink(a)
-      results,err := m.FindByLinkRss(...)
-      // handle err
-      for i,r := results {
-        // now r is an instance of Link
-      }
-    ```
+    m := NewLink(a)
+    results,err := m.FindByLinkRss(...)
+    // handle err
+    for i,r := results {
+      // now r is an instance of Link
+    }
 
 #### func (*Link) FindByLinkTarget
 
@@ -1244,14 +1188,12 @@ func (o *Link) FindByLinkTarget(_findByLinkTarget string) ([]*Link, error)
 FindByLinkTarget dynamic finder for link_target -> []*Link,error Generic and
 programatically generator finder for Link
 
-    ```go
-      m := NewLink(a)
-      results,err := m.FindByLinkTarget(...)
-      // handle err
-      for i,r := results {
-        // now r is an instance of Link
-      }
-    ```
+    m := NewLink(a)
+    results,err := m.FindByLinkTarget(...)
+    // handle err
+    for i,r := results {
+      // now r is an instance of Link
+    }
 
 #### func (*Link) FindByLinkUpdated
 
@@ -1261,14 +1203,12 @@ func (o *Link) FindByLinkUpdated(_findByLinkUpdated *DateTime) ([]*Link, error)
 FindByLinkUpdated dynamic finder for link_updated -> []*Link,error Generic and
 programatically generator finder for Link
 
-    ```go
-      m := NewLink(a)
-      results,err := m.FindByLinkUpdated(...)
-      // handle err
-      for i,r := results {
-        // now r is an instance of Link
-      }
-    ```
+    m := NewLink(a)
+    results,err := m.FindByLinkUpdated(...)
+    // handle err
+    for i,r := results {
+      // now r is an instance of Link
+    }
 
 #### func (*Link) FindByLinkUrl
 
@@ -1278,14 +1218,12 @@ func (o *Link) FindByLinkUrl(_findByLinkUrl string) ([]*Link, error)
 FindByLinkUrl dynamic finder for link_url -> []*Link,error Generic and
 programatically generator finder for Link
 
-    ```go
-      m := NewLink(a)
-      results,err := m.FindByLinkUrl(...)
-      // handle err
-      for i,r := results {
-        // now r is an instance of Link
-      }
-    ```
+    m := NewLink(a)
+    results,err := m.FindByLinkUrl(...)
+    // handle err
+    for i,r := results {
+      // now r is an instance of Link
+    }
 
 #### func (*Link) FindByLinkVisible
 
@@ -1295,14 +1233,12 @@ func (o *Link) FindByLinkVisible(_findByLinkVisible string) ([]*Link, error)
 FindByLinkVisible dynamic finder for link_visible -> []*Link,error Generic and
 programatically generator finder for Link
 
-    ```go
-      m := NewLink(a)
-      results,err := m.FindByLinkVisible(...)
-      // handle err
-      for i,r := results {
-        // now r is an instance of Link
-      }
-    ```
+    m := NewLink(a)
+    results,err := m.FindByLinkVisible(...)
+    // handle err
+    for i,r := results {
+      // now r is an instance of Link
+    }
 
 #### func (*Link) FromDBValueMap
 
@@ -1949,15 +1885,13 @@ generator finder for Option Note that Fine returns a bool if found, not err, in
 the case of a return of true, the instance data will be filled out. a call to
 find ALWAYS overwrites the model you call Find on i.e. receiver is a pointer.
 
-    ```go
-        m := NewOption(a)
-        found,err := m.Find(23)
-        .. handle err
-        if found == false {
-            // handle found
-        }
-        ... do what you want with m here
-    ```
+    m := NewOption(a)
+    found,err := m.Find(23)
+    .. handle err
+    if found == false {
+        // handle found
+    }
+    ... do what you want with m here
 
 #### func (*Option) FindByAutoload
 
@@ -1967,14 +1901,12 @@ func (o *Option) FindByAutoload(_findByAutoload string) ([]*Option, error)
 FindByAutoload dynamic finder for autoload -> []*Option,error Generic and
 programatically generator finder for Option
 
-    ```go
-      m := NewOption(a)
-      results,err := m.FindByAutoload(...)
-      // handle err
-      for i,r := results {
-        // now r is an instance of Option
-      }
-    ```
+    m := NewOption(a)
+    results,err := m.FindByAutoload(...)
+    // handle err
+    for i,r := results {
+      // now r is an instance of Option
+    }
 
 #### func (*Option) FindByOptionName
 
@@ -1984,14 +1916,12 @@ func (o *Option) FindByOptionName(_findByOptionName string) ([]*Option, error)
 FindByOptionName dynamic finder for option_name -> []*Option,error Generic and
 programatically generator finder for Option
 
-    ```go
-      m := NewOption(a)
-      results,err := m.FindByOptionName(...)
-      // handle err
-      for i,r := results {
-        // now r is an instance of Option
-      }
-    ```
+    m := NewOption(a)
+    results,err := m.FindByOptionName(...)
+    // handle err
+    for i,r := results {
+      // now r is an instance of Option
+    }
 
 #### func (*Option) FindByOptionValue
 
@@ -2001,14 +1931,12 @@ func (o *Option) FindByOptionValue(_findByOptionValue string) ([]*Option, error)
 FindByOptionValue dynamic finder for option_value -> []*Option,error Generic and
 programatically generator finder for Option
 
-    ```go
-      m := NewOption(a)
-      results,err := m.FindByOptionValue(...)
-      // handle err
-      for i,r := results {
-        // now r is an instance of Option
-      }
-    ```
+    m := NewOption(a)
+    results,err := m.FindByOptionValue(...)
+    // handle err
+    for i,r := results {
+      // now r is an instance of Option
+    }
 
 #### func (*Option) FromDBValueMap
 
@@ -2224,15 +2152,13 @@ finder for Post Note that Fine returns a bool if found, not err, in the case of
 a return of true, the instance data will be filled out. a call to find ALWAYS
 overwrites the model you call Find on i.e. receiver is a pointer.
 
-    ```go
-        m := NewPost(a)
-        found,err := m.Find(23)
-        .. handle err
-        if found == false {
-            // handle found
-        }
-        ... do what you want with m here
-    ```
+    m := NewPost(a)
+    found,err := m.Find(23)
+    .. handle err
+    if found == false {
+        // handle found
+    }
+    ... do what you want with m here
 
 #### func (*Post) FindByCommentCount
 
@@ -2242,14 +2168,12 @@ func (o *Post) FindByCommentCount(_findByCommentCount int64) ([]*Post, error)
 FindByCommentCount dynamic finder for comment_count -> []*Post,error Generic and
 programatically generator finder for Post
 
-    ```go
-      m := NewPost(a)
-      results,err := m.FindByCommentCount(...)
-      // handle err
-      for i,r := results {
-        // now r is an instance of Post
-      }
-    ```
+    m := NewPost(a)
+    results,err := m.FindByCommentCount(...)
+    // handle err
+    for i,r := results {
+      // now r is an instance of Post
+    }
 
 #### func (*Post) FindByCommentStatus
 
@@ -2259,14 +2183,12 @@ func (o *Post) FindByCommentStatus(_findByCommentStatus string) ([]*Post, error)
 FindByCommentStatus dynamic finder for comment_status -> []*Post,error Generic
 and programatically generator finder for Post
 
-    ```go
-      m := NewPost(a)
-      results,err := m.FindByCommentStatus(...)
-      // handle err
-      for i,r := results {
-        // now r is an instance of Post
-      }
-    ```
+    m := NewPost(a)
+    results,err := m.FindByCommentStatus(...)
+    // handle err
+    for i,r := results {
+      // now r is an instance of Post
+    }
 
 #### func (*Post) FindByGuid
 
@@ -2276,14 +2198,12 @@ func (o *Post) FindByGuid(_findByGuid string) ([]*Post, error)
 FindByGuid dynamic finder for guid -> []*Post,error Generic and programatically
 generator finder for Post
 
-    ```go
-      m := NewPost(a)
-      results,err := m.FindByGuid(...)
-      // handle err
-      for i,r := results {
-        // now r is an instance of Post
-      }
-    ```
+    m := NewPost(a)
+    results,err := m.FindByGuid(...)
+    // handle err
+    for i,r := results {
+      // now r is an instance of Post
+    }
 
 #### func (*Post) FindByMenuOrder
 
@@ -2293,14 +2213,12 @@ func (o *Post) FindByMenuOrder(_findByMenuOrder int) ([]*Post, error)
 FindByMenuOrder dynamic finder for menu_order -> []*Post,error Generic and
 programatically generator finder for Post
 
-    ```go
-      m := NewPost(a)
-      results,err := m.FindByMenuOrder(...)
-      // handle err
-      for i,r := results {
-        // now r is an instance of Post
-      }
-    ```
+    m := NewPost(a)
+    results,err := m.FindByMenuOrder(...)
+    // handle err
+    for i,r := results {
+      // now r is an instance of Post
+    }
 
 #### func (*Post) FindByPingStatus
 
@@ -2310,14 +2228,12 @@ func (o *Post) FindByPingStatus(_findByPingStatus string) ([]*Post, error)
 FindByPingStatus dynamic finder for ping_status -> []*Post,error Generic and
 programatically generator finder for Post
 
-    ```go
-      m := NewPost(a)
-      results,err := m.FindByPingStatus(...)
-      // handle err
-      for i,r := results {
-        // now r is an instance of Post
-      }
-    ```
+    m := NewPost(a)
+    results,err := m.FindByPingStatus(...)
+    // handle err
+    for i,r := results {
+      // now r is an instance of Post
+    }
 
 #### func (*Post) FindByPinged
 
@@ -2327,14 +2243,12 @@ func (o *Post) FindByPinged(_findByPinged string) ([]*Post, error)
 FindByPinged dynamic finder for pinged -> []*Post,error Generic and
 programatically generator finder for Post
 
-    ```go
-      m := NewPost(a)
-      results,err := m.FindByPinged(...)
-      // handle err
-      for i,r := results {
-        // now r is an instance of Post
-      }
-    ```
+    m := NewPost(a)
+    results,err := m.FindByPinged(...)
+    // handle err
+    for i,r := results {
+      // now r is an instance of Post
+    }
 
 #### func (*Post) FindByPostAuthor
 
@@ -2344,14 +2258,12 @@ func (o *Post) FindByPostAuthor(_findByPostAuthor int64) ([]*Post, error)
 FindByPostAuthor dynamic finder for post_author -> []*Post,error Generic and
 programatically generator finder for Post
 
-    ```go
-      m := NewPost(a)
-      results,err := m.FindByPostAuthor(...)
-      // handle err
-      for i,r := results {
-        // now r is an instance of Post
-      }
-    ```
+    m := NewPost(a)
+    results,err := m.FindByPostAuthor(...)
+    // handle err
+    for i,r := results {
+      // now r is an instance of Post
+    }
 
 #### func (*Post) FindByPostContent
 
@@ -2361,14 +2273,12 @@ func (o *Post) FindByPostContent(_findByPostContent string) ([]*Post, error)
 FindByPostContent dynamic finder for post_content -> []*Post,error Generic and
 programatically generator finder for Post
 
-    ```go
-      m := NewPost(a)
-      results,err := m.FindByPostContent(...)
-      // handle err
-      for i,r := results {
-        // now r is an instance of Post
-      }
-    ```
+    m := NewPost(a)
+    results,err := m.FindByPostContent(...)
+    // handle err
+    for i,r := results {
+      // now r is an instance of Post
+    }
 
 #### func (*Post) FindByPostContentFiltered
 
@@ -2378,14 +2288,12 @@ func (o *Post) FindByPostContentFiltered(_findByPostContentFiltered string) ([]*
 FindByPostContentFiltered dynamic finder for post_content_filtered ->
 []*Post,error Generic and programatically generator finder for Post
 
-    ```go
-      m := NewPost(a)
-      results,err := m.FindByPostContentFiltered(...)
-      // handle err
-      for i,r := results {
-        // now r is an instance of Post
-      }
-    ```
+    m := NewPost(a)
+    results,err := m.FindByPostContentFiltered(...)
+    // handle err
+    for i,r := results {
+      // now r is an instance of Post
+    }
 
 #### func (*Post) FindByPostDate
 
@@ -2395,14 +2303,12 @@ func (o *Post) FindByPostDate(_findByPostDate *DateTime) ([]*Post, error)
 FindByPostDate dynamic finder for post_date -> []*Post,error Generic and
 programatically generator finder for Post
 
-    ```go
-      m := NewPost(a)
-      results,err := m.FindByPostDate(...)
-      // handle err
-      for i,r := results {
-        // now r is an instance of Post
-      }
-    ```
+    m := NewPost(a)
+    results,err := m.FindByPostDate(...)
+    // handle err
+    for i,r := results {
+      // now r is an instance of Post
+    }
 
 #### func (*Post) FindByPostDateGmt
 
@@ -2412,14 +2318,12 @@ func (o *Post) FindByPostDateGmt(_findByPostDateGmt *DateTime) ([]*Post, error)
 FindByPostDateGmt dynamic finder for post_date_gmt -> []*Post,error Generic and
 programatically generator finder for Post
 
-    ```go
-      m := NewPost(a)
-      results,err := m.FindByPostDateGmt(...)
-      // handle err
-      for i,r := results {
-        // now r is an instance of Post
-      }
-    ```
+    m := NewPost(a)
+    results,err := m.FindByPostDateGmt(...)
+    // handle err
+    for i,r := results {
+      // now r is an instance of Post
+    }
 
 #### func (*Post) FindByPostExcerpt
 
@@ -2429,14 +2333,12 @@ func (o *Post) FindByPostExcerpt(_findByPostExcerpt string) ([]*Post, error)
 FindByPostExcerpt dynamic finder for post_excerpt -> []*Post,error Generic and
 programatically generator finder for Post
 
-    ```go
-      m := NewPost(a)
-      results,err := m.FindByPostExcerpt(...)
-      // handle err
-      for i,r := results {
-        // now r is an instance of Post
-      }
-    ```
+    m := NewPost(a)
+    results,err := m.FindByPostExcerpt(...)
+    // handle err
+    for i,r := results {
+      // now r is an instance of Post
+    }
 
 #### func (*Post) FindByPostMimeType
 
@@ -2446,14 +2348,12 @@ func (o *Post) FindByPostMimeType(_findByPostMimeType string) ([]*Post, error)
 FindByPostMimeType dynamic finder for post_mime_type -> []*Post,error Generic
 and programatically generator finder for Post
 
-    ```go
-      m := NewPost(a)
-      results,err := m.FindByPostMimeType(...)
-      // handle err
-      for i,r := results {
-        // now r is an instance of Post
-      }
-    ```
+    m := NewPost(a)
+    results,err := m.FindByPostMimeType(...)
+    // handle err
+    for i,r := results {
+      // now r is an instance of Post
+    }
 
 #### func (*Post) FindByPostModified
 
@@ -2463,14 +2363,12 @@ func (o *Post) FindByPostModified(_findByPostModified *DateTime) ([]*Post, error
 FindByPostModified dynamic finder for post_modified -> []*Post,error Generic and
 programatically generator finder for Post
 
-    ```go
-      m := NewPost(a)
-      results,err := m.FindByPostModified(...)
-      // handle err
-      for i,r := results {
-        // now r is an instance of Post
-      }
-    ```
+    m := NewPost(a)
+    results,err := m.FindByPostModified(...)
+    // handle err
+    for i,r := results {
+      // now r is an instance of Post
+    }
 
 #### func (*Post) FindByPostModifiedGmt
 
@@ -2480,14 +2378,12 @@ func (o *Post) FindByPostModifiedGmt(_findByPostModifiedGmt *DateTime) ([]*Post,
 FindByPostModifiedGmt dynamic finder for post_modified_gmt -> []*Post,error
 Generic and programatically generator finder for Post
 
-    ```go
-      m := NewPost(a)
-      results,err := m.FindByPostModifiedGmt(...)
-      // handle err
-      for i,r := results {
-        // now r is an instance of Post
-      }
-    ```
+    m := NewPost(a)
+    results,err := m.FindByPostModifiedGmt(...)
+    // handle err
+    for i,r := results {
+      // now r is an instance of Post
+    }
 
 #### func (*Post) FindByPostName
 
@@ -2497,14 +2393,12 @@ func (o *Post) FindByPostName(_findByPostName string) ([]*Post, error)
 FindByPostName dynamic finder for post_name -> []*Post,error Generic and
 programatically generator finder for Post
 
-    ```go
-      m := NewPost(a)
-      results,err := m.FindByPostName(...)
-      // handle err
-      for i,r := results {
-        // now r is an instance of Post
-      }
-    ```
+    m := NewPost(a)
+    results,err := m.FindByPostName(...)
+    // handle err
+    for i,r := results {
+      // now r is an instance of Post
+    }
 
 #### func (*Post) FindByPostParent
 
@@ -2514,14 +2408,12 @@ func (o *Post) FindByPostParent(_findByPostParent int64) ([]*Post, error)
 FindByPostParent dynamic finder for post_parent -> []*Post,error Generic and
 programatically generator finder for Post
 
-    ```go
-      m := NewPost(a)
-      results,err := m.FindByPostParent(...)
-      // handle err
-      for i,r := results {
-        // now r is an instance of Post
-      }
-    ```
+    m := NewPost(a)
+    results,err := m.FindByPostParent(...)
+    // handle err
+    for i,r := results {
+      // now r is an instance of Post
+    }
 
 #### func (*Post) FindByPostPassword
 
@@ -2531,14 +2423,12 @@ func (o *Post) FindByPostPassword(_findByPostPassword string) ([]*Post, error)
 FindByPostPassword dynamic finder for post_password -> []*Post,error Generic and
 programatically generator finder for Post
 
-    ```go
-      m := NewPost(a)
-      results,err := m.FindByPostPassword(...)
-      // handle err
-      for i,r := results {
-        // now r is an instance of Post
-      }
-    ```
+    m := NewPost(a)
+    results,err := m.FindByPostPassword(...)
+    // handle err
+    for i,r := results {
+      // now r is an instance of Post
+    }
 
 #### func (*Post) FindByPostStatus
 
@@ -2548,14 +2438,12 @@ func (o *Post) FindByPostStatus(_findByPostStatus string) ([]*Post, error)
 FindByPostStatus dynamic finder for post_status -> []*Post,error Generic and
 programatically generator finder for Post
 
-    ```go
-      m := NewPost(a)
-      results,err := m.FindByPostStatus(...)
-      // handle err
-      for i,r := results {
-        // now r is an instance of Post
-      }
-    ```
+    m := NewPost(a)
+    results,err := m.FindByPostStatus(...)
+    // handle err
+    for i,r := results {
+      // now r is an instance of Post
+    }
 
 #### func (*Post) FindByPostTitle
 
@@ -2565,14 +2453,12 @@ func (o *Post) FindByPostTitle(_findByPostTitle string) ([]*Post, error)
 FindByPostTitle dynamic finder for post_title -> []*Post,error Generic and
 programatically generator finder for Post
 
-    ```go
-      m := NewPost(a)
-      results,err := m.FindByPostTitle(...)
-      // handle err
-      for i,r := results {
-        // now r is an instance of Post
-      }
-    ```
+    m := NewPost(a)
+    results,err := m.FindByPostTitle(...)
+    // handle err
+    for i,r := results {
+      // now r is an instance of Post
+    }
 
 #### func (*Post) FindByPostType
 
@@ -2582,14 +2468,12 @@ func (o *Post) FindByPostType(_findByPostType string) ([]*Post, error)
 FindByPostType dynamic finder for post_type -> []*Post,error Generic and
 programatically generator finder for Post
 
-    ```go
-      m := NewPost(a)
-      results,err := m.FindByPostType(...)
-      // handle err
-      for i,r := results {
-        // now r is an instance of Post
-      }
-    ```
+    m := NewPost(a)
+    results,err := m.FindByPostType(...)
+    // handle err
+    for i,r := results {
+      // now r is an instance of Post
+    }
 
 #### func (*Post) FindByToPing
 
@@ -2599,14 +2483,12 @@ func (o *Post) FindByToPing(_findByToPing string) ([]*Post, error)
 FindByToPing dynamic finder for to_ping -> []*Post,error Generic and
 programatically generator finder for Post
 
-    ```go
-      m := NewPost(a)
-      results,err := m.FindByToPing(...)
-      // handle err
-      for i,r := results {
-        // now r is an instance of Post
-      }
-    ```
+    m := NewPost(a)
+    results,err := m.FindByToPing(...)
+    // handle err
+    for i,r := results {
+      // now r is an instance of Post
+    }
 
 #### func (*Post) FromDBValueMap
 
@@ -3202,15 +3084,13 @@ generator finder for PostMeta Note that Fine returns a bool if found, not err,
 in the case of a return of true, the instance data will be filled out. a call to
 find ALWAYS overwrites the model you call Find on i.e. receiver is a pointer.
 
-    ```go
-        m := NewPostMeta(a)
-        found,err := m.Find(23)
-        .. handle err
-        if found == false {
-            // handle found
-        }
-        ... do what you want with m here
-    ```
+    m := NewPostMeta(a)
+    found,err := m.Find(23)
+    .. handle err
+    if found == false {
+        // handle found
+    }
+    ... do what you want with m here
 
 #### func (*PostMeta) FindByMetaKey
 
@@ -3220,14 +3100,12 @@ func (o *PostMeta) FindByMetaKey(_findByMetaKey string) ([]*PostMeta, error)
 FindByMetaKey dynamic finder for meta_key -> []*PostMeta,error Generic and
 programatically generator finder for PostMeta
 
-    ```go
-      m := NewPostMeta(a)
-      results,err := m.FindByMetaKey(...)
-      // handle err
-      for i,r := results {
-        // now r is an instance of PostMeta
-      }
-    ```
+    m := NewPostMeta(a)
+    results,err := m.FindByMetaKey(...)
+    // handle err
+    for i,r := results {
+      // now r is an instance of PostMeta
+    }
 
 #### func (*PostMeta) FindByMetaValue
 
@@ -3237,14 +3115,12 @@ func (o *PostMeta) FindByMetaValue(_findByMetaValue string) ([]*PostMeta, error)
 FindByMetaValue dynamic finder for meta_value -> []*PostMeta,error Generic and
 programatically generator finder for PostMeta
 
-    ```go
-      m := NewPostMeta(a)
-      results,err := m.FindByMetaValue(...)
-      // handle err
-      for i,r := results {
-        // now r is an instance of PostMeta
-      }
-    ```
+    m := NewPostMeta(a)
+    results,err := m.FindByMetaValue(...)
+    // handle err
+    for i,r := results {
+      // now r is an instance of PostMeta
+    }
 
 #### func (*PostMeta) FindByPostId
 
@@ -3254,14 +3130,12 @@ func (o *PostMeta) FindByPostId(_findByPostId int64) ([]*PostMeta, error)
 FindByPostId dynamic finder for post_id -> []*PostMeta,error Generic and
 programatically generator finder for PostMeta
 
-    ```go
-      m := NewPostMeta(a)
-      results,err := m.FindByPostId(...)
-      // handle err
-      for i,r := results {
-        // now r is an instance of PostMeta
-      }
-    ```
+    m := NewPostMeta(a)
+    results,err := m.FindByPostId(...)
+    // handle err
+    for i,r := results {
+      // now r is an instance of PostMeta
+    }
 
 #### func (*PostMeta) FromDBValueMap
 
@@ -3447,15 +3321,13 @@ generator finder for Term Note that Fine returns a bool if found, not err, in
 the case of a return of true, the instance data will be filled out. a call to
 find ALWAYS overwrites the model you call Find on i.e. receiver is a pointer.
 
-    ```go
-        m := NewTerm(a)
-        found,err := m.Find(23)
-        .. handle err
-        if found == false {
-            // handle found
-        }
-        ... do what you want with m here
-    ```
+    m := NewTerm(a)
+    found,err := m.Find(23)
+    .. handle err
+    if found == false {
+        // handle found
+    }
+    ... do what you want with m here
 
 #### func (*Term) FindByName
 
@@ -3465,14 +3337,12 @@ func (o *Term) FindByName(_findByName string) ([]*Term, error)
 FindByName dynamic finder for name -> []*Term,error Generic and programatically
 generator finder for Term
 
-    ```go
-      m := NewTerm(a)
-      results,err := m.FindByName(...)
-      // handle err
-      for i,r := results {
-        // now r is an instance of Term
-      }
-    ```
+    m := NewTerm(a)
+    results,err := m.FindByName(...)
+    // handle err
+    for i,r := results {
+      // now r is an instance of Term
+    }
 
 #### func (*Term) FindBySlug
 
@@ -3482,14 +3352,12 @@ func (o *Term) FindBySlug(_findBySlug string) ([]*Term, error)
 FindBySlug dynamic finder for slug -> []*Term,error Generic and programatically
 generator finder for Term
 
-    ```go
-      m := NewTerm(a)
-      results,err := m.FindBySlug(...)
-      // handle err
-      for i,r := results {
-        // now r is an instance of Term
-      }
-    ```
+    m := NewTerm(a)
+    results,err := m.FindBySlug(...)
+    // handle err
+    for i,r := results {
+      // now r is an instance of Term
+    }
 
 #### func (*Term) FindByTermGroup
 
@@ -3499,14 +3367,12 @@ func (o *Term) FindByTermGroup(_findByTermGroup int64) ([]*Term, error)
 FindByTermGroup dynamic finder for term_group -> []*Term,error Generic and
 programatically generator finder for Term
 
-    ```go
-      m := NewTerm(a)
-      results,err := m.FindByTermGroup(...)
-      // handle err
-      for i,r := results {
-        // now r is an instance of Term
-      }
-    ```
+    m := NewTerm(a)
+    results,err := m.FindByTermGroup(...)
+    // handle err
+    for i,r := results {
+      // now r is an instance of Term
+    }
 
 #### func (*Term) FromDBValueMap
 
@@ -3687,14 +3553,12 @@ func (o *TermRelationship) FindByObjectId(_findByObjectId int64) ([]*TermRelatio
 FindByObjectId dynamic finder for object_id -> []*TermRelationship,error Generic
 and programatically generator finder for TermRelationship
 
-    ```go
-      m := NewTermRelationship(a)
-      results,err := m.FindByObjectId(...)
-      // handle err
-      for i,r := results {
-        // now r is an instance of TermRelationship
-      }
-    ```
+    m := NewTermRelationship(a)
+    results,err := m.FindByObjectId(...)
+    // handle err
+    for i,r := results {
+      // now r is an instance of TermRelationship
+    }
 
 #### func (*TermRelationship) FindByTermOrder
 
@@ -3704,14 +3568,12 @@ func (o *TermRelationship) FindByTermOrder(_findByTermOrder int) ([]*TermRelatio
 FindByTermOrder dynamic finder for term_order -> []*TermRelationship,error
 Generic and programatically generator finder for TermRelationship
 
-    ```go
-      m := NewTermRelationship(a)
-      results,err := m.FindByTermOrder(...)
-      // handle err
-      for i,r := results {
-        // now r is an instance of TermRelationship
-      }
-    ```
+    m := NewTermRelationship(a)
+    results,err := m.FindByTermOrder(...)
+    // handle err
+    for i,r := results {
+      // now r is an instance of TermRelationship
+    }
 
 #### func (*TermRelationship) FromDBValueMap
 
@@ -3875,15 +3737,13 @@ if found, not err, in the case of a return of true, the instance data will be
 filled out. a call to find ALWAYS overwrites the model you call Find on i.e.
 receiver is a pointer.
 
-    ```go
-        m := NewTermTaxonomy(a)
-        found,err := m.Find(23)
-        .. handle err
-        if found == false {
-            // handle found
-        }
-        ... do what you want with m here
-    ```
+    m := NewTermTaxonomy(a)
+    found,err := m.Find(23)
+    .. handle err
+    if found == false {
+        // handle found
+    }
+    ... do what you want with m here
 
 #### func (*TermTaxonomy) FindByCount
 
@@ -3893,14 +3753,12 @@ func (o *TermTaxonomy) FindByCount(_findByCount int64) ([]*TermTaxonomy, error)
 FindByCount dynamic finder for count -> []*TermTaxonomy,error Generic and
 programatically generator finder for TermTaxonomy
 
-    ```go
-      m := NewTermTaxonomy(a)
-      results,err := m.FindByCount(...)
-      // handle err
-      for i,r := results {
-        // now r is an instance of TermTaxonomy
-      }
-    ```
+    m := NewTermTaxonomy(a)
+    results,err := m.FindByCount(...)
+    // handle err
+    for i,r := results {
+      // now r is an instance of TermTaxonomy
+    }
 
 #### func (*TermTaxonomy) FindByDescription
 
@@ -3910,14 +3768,12 @@ func (o *TermTaxonomy) FindByDescription(_findByDescription string) ([]*TermTaxo
 FindByDescription dynamic finder for description -> []*TermTaxonomy,error
 Generic and programatically generator finder for TermTaxonomy
 
-    ```go
-      m := NewTermTaxonomy(a)
-      results,err := m.FindByDescription(...)
-      // handle err
-      for i,r := results {
-        // now r is an instance of TermTaxonomy
-      }
-    ```
+    m := NewTermTaxonomy(a)
+    results,err := m.FindByDescription(...)
+    // handle err
+    for i,r := results {
+      // now r is an instance of TermTaxonomy
+    }
 
 #### func (*TermTaxonomy) FindByParent
 
@@ -3927,14 +3783,12 @@ func (o *TermTaxonomy) FindByParent(_findByParent int64) ([]*TermTaxonomy, error
 FindByParent dynamic finder for parent -> []*TermTaxonomy,error Generic and
 programatically generator finder for TermTaxonomy
 
-    ```go
-      m := NewTermTaxonomy(a)
-      results,err := m.FindByParent(...)
-      // handle err
-      for i,r := results {
-        // now r is an instance of TermTaxonomy
-      }
-    ```
+    m := NewTermTaxonomy(a)
+    results,err := m.FindByParent(...)
+    // handle err
+    for i,r := results {
+      // now r is an instance of TermTaxonomy
+    }
 
 #### func (*TermTaxonomy) FindByTaxonomy
 
@@ -3944,14 +3798,12 @@ func (o *TermTaxonomy) FindByTaxonomy(_findByTaxonomy string) ([]*TermTaxonomy, 
 FindByTaxonomy dynamic finder for taxonomy -> []*TermTaxonomy,error Generic and
 programatically generator finder for TermTaxonomy
 
-    ```go
-      m := NewTermTaxonomy(a)
-      results,err := m.FindByTaxonomy(...)
-      // handle err
-      for i,r := results {
-        // now r is an instance of TermTaxonomy
-      }
-    ```
+    m := NewTermTaxonomy(a)
+    results,err := m.FindByTaxonomy(...)
+    // handle err
+    for i,r := results {
+      // now r is an instance of TermTaxonomy
+    }
 
 #### func (*TermTaxonomy) FindByTermId
 
@@ -3961,14 +3813,12 @@ func (o *TermTaxonomy) FindByTermId(_findByTermId int64) ([]*TermTaxonomy, error
 FindByTermId dynamic finder for term_id -> []*TermTaxonomy,error Generic and
 programatically generator finder for TermTaxonomy
 
-    ```go
-      m := NewTermTaxonomy(a)
-      results,err := m.FindByTermId(...)
-      // handle err
-      for i,r := results {
-        // now r is an instance of TermTaxonomy
-      }
-    ```
+    m := NewTermTaxonomy(a)
+    results,err := m.FindByTermId(...)
+    // handle err
+    for i,r := results {
+      // now r is an instance of TermTaxonomy
+    }
 
 #### func (*TermTaxonomy) FromDBValueMap
 
@@ -4191,15 +4041,13 @@ generator finder for UserMeta Note that Fine returns a bool if found, not err,
 in the case of a return of true, the instance data will be filled out. a call to
 find ALWAYS overwrites the model you call Find on i.e. receiver is a pointer.
 
-    ```go
-        m := NewUserMeta(a)
-        found,err := m.Find(23)
-        .. handle err
-        if found == false {
-            // handle found
-        }
-        ... do what you want with m here
-    ```
+    m := NewUserMeta(a)
+    found,err := m.Find(23)
+    .. handle err
+    if found == false {
+        // handle found
+    }
+    ... do what you want with m here
 
 #### func (*UserMeta) FindByMetaKey
 
@@ -4209,14 +4057,12 @@ func (o *UserMeta) FindByMetaKey(_findByMetaKey string) ([]*UserMeta, error)
 FindByMetaKey dynamic finder for meta_key -> []*UserMeta,error Generic and
 programatically generator finder for UserMeta
 
-    ```go
-      m := NewUserMeta(a)
-      results,err := m.FindByMetaKey(...)
-      // handle err
-      for i,r := results {
-        // now r is an instance of UserMeta
-      }
-    ```
+    m := NewUserMeta(a)
+    results,err := m.FindByMetaKey(...)
+    // handle err
+    for i,r := results {
+      // now r is an instance of UserMeta
+    }
 
 #### func (*UserMeta) FindByMetaValue
 
@@ -4226,14 +4072,12 @@ func (o *UserMeta) FindByMetaValue(_findByMetaValue string) ([]*UserMeta, error)
 FindByMetaValue dynamic finder for meta_value -> []*UserMeta,error Generic and
 programatically generator finder for UserMeta
 
-    ```go
-      m := NewUserMeta(a)
-      results,err := m.FindByMetaValue(...)
-      // handle err
-      for i,r := results {
-        // now r is an instance of UserMeta
-      }
-    ```
+    m := NewUserMeta(a)
+    results,err := m.FindByMetaValue(...)
+    // handle err
+    for i,r := results {
+      // now r is an instance of UserMeta
+    }
 
 #### func (*UserMeta) FindByUserId
 
@@ -4243,14 +4087,12 @@ func (o *UserMeta) FindByUserId(_findByUserId int64) ([]*UserMeta, error)
 FindByUserId dynamic finder for user_id -> []*UserMeta,error Generic and
 programatically generator finder for UserMeta
 
-    ```go
-      m := NewUserMeta(a)
-      results,err := m.FindByUserId(...)
-      // handle err
-      for i,r := results {
-        // now r is an instance of UserMeta
-      }
-    ```
+    m := NewUserMeta(a)
+    results,err := m.FindByUserId(...)
+    // handle err
+    for i,r := results {
+      // now r is an instance of UserMeta
+    }
 
 #### func (*UserMeta) FromDBValueMap
 
