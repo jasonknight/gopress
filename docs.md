@@ -1,4 +1,4 @@
-# gopress
+# GoPress Documentation
 --
     import "github.com/jasonknight/gopress"
 
