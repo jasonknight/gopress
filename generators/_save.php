@@ -67,7 +67,7 @@ function _save_create($t) {
     if ($t->model_name == "TermRelationship") {
         $set_primary_key_field = "";
     }
-$txt = "
+$txt = "// Save is a dynamic saver 'inherited' by all models
 func (o *{$t->model_name}) Save() error {
     if o._new == true {
         return o.Create()
@@ -81,6 +81,9 @@ func (o *{$t->model_name}) Save() error {
     }
     return nil
 }
+// Update is a dynamic updater, it considers whether or not
+// a field is 'dirty' and needs to be updated. Will only work
+// if you use the Getters and Setters
 func (o *{$t->model_name}) Update() error {
     var sets []string
     $sets
@@ -91,6 +94,8 @@ func (o *{$t->model_name}) Update() error {
     }
     return nil
 }
+// Create inserts the model. Calling Save will call this function
+// automatically for new models
 func (o *{$t->model_name}) Create() error {
     frmt := fmt.Sprintf(\"INSERT INTO %s ($cr_col_line) VALUES ($cr_val_line)\",o._table,$cr_gn_line)
     err := o._adapter.Execute(frmt)

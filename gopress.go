@@ -765,6 +765,7 @@ func (o *CommentMeta) Reload() error {
 	return err
 }
 
+// Save is a dynamic saver 'inherited' by all models
 func (o *CommentMeta) Save() error {
 	if o._new == true {
 		return o.Create()
@@ -790,6 +791,10 @@ func (o *CommentMeta) Save() error {
 	}
 	return nil
 }
+
+// Update is a dynamic updater, it considers whether or not
+// a field is 'dirty' and needs to be updated. Will only work
+// if you use the Getters and Setters
 func (o *CommentMeta) Update() error {
 	var sets []string
 
@@ -812,6 +817,9 @@ func (o *CommentMeta) Update() error {
 	}
 	return nil
 }
+
+// Create inserts the model. Calling Save will call this function
+// automatically for new models
 func (o *CommentMeta) Create() error {
 	frmt := fmt.Sprintf("INSERT INTO %s (`comment_id`, `meta_key`, `meta_value`) VALUES ('%d', '%s', '%s')", o._table, o.CommentId, o.MetaKey, o.MetaValue)
 	err := o._adapter.Execute(frmt)
@@ -1642,6 +1650,7 @@ func (o *Comment) Reload() error {
 	return err
 }
 
+// Save is a dynamic saver 'inherited' by all models
 func (o *Comment) Save() error {
 	if o._new == true {
 		return o.Create()
@@ -1711,6 +1720,10 @@ func (o *Comment) Save() error {
 	}
 	return nil
 }
+
+// Update is a dynamic updater, it considers whether or not
+// a field is 'dirty' and needs to be updated. Will only work
+// if you use the Getters and Setters
 func (o *Comment) Update() error {
 	var sets []string
 
@@ -1777,6 +1790,9 @@ func (o *Comment) Update() error {
 	}
 	return nil
 }
+
+// Create inserts the model. Calling Save will call this function
+// automatically for new models
 func (o *Comment) Create() error {
 	frmt := fmt.Sprintf("INSERT INTO %s (`comment_post_ID`, `comment_author`, `comment_author_email`, `comment_author_url`, `comment_author_IP`, `comment_date`, `comment_date_gmt`, `comment_content`, `comment_karma`, `comment_approved`, `comment_agent`, `comment_type`, `comment_parent`, `user_id`) VALUES ('%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%d', '%s', '%s', '%s', '%d', '%d')", o._table, o.CommentPostID, o.CommentAuthor, o.CommentAuthorEmail, o.CommentAuthorUrl, o.CommentAuthorIP, o.CommentDate.ToString(), o.CommentDateGmt.ToString(), o.CommentContent, o.CommentKarma, o.CommentApproved, o.CommentAgent, o.CommentType, o.CommentParent, o.UserId)
 	err := o._adapter.Execute(frmt)
@@ -2641,6 +2657,7 @@ func (o *Link) Reload() error {
 	return err
 }
 
+// Save is a dynamic saver 'inherited' by all models
 func (o *Link) Save() error {
 	if o._new == true {
 		return o.Create()
@@ -2702,6 +2719,10 @@ func (o *Link) Save() error {
 	}
 	return nil
 }
+
+// Update is a dynamic updater, it considers whether or not
+// a field is 'dirty' and needs to be updated. Will only work
+// if you use the Getters and Setters
 func (o *Link) Update() error {
 	var sets []string
 
@@ -2760,6 +2781,9 @@ func (o *Link) Update() error {
 	}
 	return nil
 }
+
+// Create inserts the model. Calling Save will call this function
+// automatically for new models
 func (o *Link) Create() error {
 	frmt := fmt.Sprintf("INSERT INTO %s (`link_url`, `link_name`, `link_image`, `link_target`, `link_description`, `link_visible`, `link_owner`, `link_rating`, `link_updated`, `link_rel`, `link_notes`, `link_rss`) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%d', '%d', '%s', '%s', '%s', '%s')", o._table, o.LinkUrl, o.LinkName, o.LinkImage, o.LinkTarget, o.LinkDescription, o.LinkVisible, o.LinkOwner, o.LinkRating, o.LinkUpdated.ToString(), o.LinkRel, o.LinkNotes, o.LinkRss)
 	err := o._adapter.Execute(frmt)
@@ -3159,6 +3183,7 @@ func (o *Option) Reload() error {
 	return err
 }
 
+// Save is a dynamic saver 'inherited' by all models
 func (o *Option) Save() error {
 	if o._new == true {
 		return o.Create()
@@ -3184,6 +3209,10 @@ func (o *Option) Save() error {
 	}
 	return nil
 }
+
+// Update is a dynamic updater, it considers whether or not
+// a field is 'dirty' and needs to be updated. Will only work
+// if you use the Getters and Setters
 func (o *Option) Update() error {
 	var sets []string
 
@@ -3206,6 +3235,9 @@ func (o *Option) Update() error {
 	}
 	return nil
 }
+
+// Create inserts the model. Calling Save will call this function
+// automatically for new models
 func (o *Option) Create() error {
 	frmt := fmt.Sprintf("INSERT INTO %s (`option_name`, `option_value`, `autoload`) VALUES ('%s', '%s', '%s')", o._table, o.OptionName, o.OptionValue, o.Autoload)
 	err := o._adapter.Execute(frmt)
@@ -3497,6 +3529,7 @@ func (o *PostMeta) Reload() error {
 	return err
 }
 
+// Save is a dynamic saver 'inherited' by all models
 func (o *PostMeta) Save() error {
 	if o._new == true {
 		return o.Create()
@@ -3522,6 +3555,10 @@ func (o *PostMeta) Save() error {
 	}
 	return nil
 }
+
+// Update is a dynamic updater, it considers whether or not
+// a field is 'dirty' and needs to be updated. Will only work
+// if you use the Getters and Setters
 func (o *PostMeta) Update() error {
 	var sets []string
 
@@ -3544,6 +3581,9 @@ func (o *PostMeta) Update() error {
 	}
 	return nil
 }
+
+// Create inserts the model. Calling Save will call this function
+// automatically for new models
 func (o *PostMeta) Create() error {
 	frmt := fmt.Sprintf("INSERT INTO %s (`post_id`, `meta_key`, `meta_value`) VALUES ('%d', '%s', '%s')", o._table, o.PostId, o.MetaKey, o.MetaValue)
 	err := o._adapter.Execute(frmt)
@@ -4766,6 +4806,7 @@ func (o *Post) Reload() error {
 	return err
 }
 
+// Save is a dynamic saver 'inherited' by all models
 func (o *Post) Save() error {
 	if o._new == true {
 		return o.Create()
@@ -4867,6 +4908,10 @@ func (o *Post) Save() error {
 	}
 	return nil
 }
+
+// Update is a dynamic updater, it considers whether or not
+// a field is 'dirty' and needs to be updated. Will only work
+// if you use the Getters and Setters
 func (o *Post) Update() error {
 	var sets []string
 
@@ -4965,6 +5010,9 @@ func (o *Post) Update() error {
 	}
 	return nil
 }
+
+// Create inserts the model. Calling Save will call this function
+// automatically for new models
 func (o *Post) Create() error {
 	frmt := fmt.Sprintf("INSERT INTO %s (`post_author`, `post_date`, `post_date_gmt`, `post_content`, `post_title`, `post_excerpt`, `post_status`, `comment_status`, `ping_status`, `post_password`, `post_name`, `to_ping`, `pinged`, `post_modified`, `post_modified_gmt`, `post_content_filtered`, `post_parent`, `guid`, `menu_order`, `post_type`, `post_mime_type`, `comment_count`) VALUES ('%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%d', '%s', '%d', '%s', '%s', '%d')", o._table, o.PostAuthor, o.PostDate.ToString(), o.PostDateGmt.ToString(), o.PostContent, o.PostTitle, o.PostExcerpt, o.PostStatus, o.CommentStatus, o.PingStatus, o.PostPassword, o.PostName, o.ToPing, o.Pinged, o.PostModified.ToString(), o.PostModifiedGmt.ToString(), o.PostContentFiltered, o.PostParent, o.Guid, o.MenuOrder, o.PostType, o.PostMimeType, o.CommentCount)
 	err := o._adapter.Execute(frmt)
@@ -5432,6 +5480,7 @@ func (o *TermRelationship) Reload() error {
 	return err
 }
 
+// Save is a dynamic saver 'inherited' by all models
 func (o *TermRelationship) Save() error {
 	if o._new == true {
 		return o.Create()
@@ -5457,6 +5506,10 @@ func (o *TermRelationship) Save() error {
 	}
 	return nil
 }
+
+// Update is a dynamic updater, it considers whether or not
+// a field is 'dirty' and needs to be updated. Will only work
+// if you use the Getters and Setters
 func (o *TermRelationship) Update() error {
 	var sets []string
 
@@ -5479,6 +5532,9 @@ func (o *TermRelationship) Update() error {
 	}
 	return nil
 }
+
+// Create inserts the model. Calling Save will call this function
+// automatically for new models
 func (o *TermRelationship) Create() error {
 	frmt := fmt.Sprintf("INSERT INTO %s (`object_id`, `term_taxonomy_id`, `term_order`) VALUES ('%d', '%d', '%d')", o._table, o.ObjectId, o.TermTaxonomyId, o.TermOrder)
 	err := o._adapter.Execute(frmt)
@@ -5856,6 +5912,7 @@ func (o *TermTaxonomy) Reload() error {
 	return err
 }
 
+// Save is a dynamic saver 'inherited' by all models
 func (o *TermTaxonomy) Save() error {
 	if o._new == true {
 		return o.Create()
@@ -5889,6 +5946,10 @@ func (o *TermTaxonomy) Save() error {
 	}
 	return nil
 }
+
+// Update is a dynamic updater, it considers whether or not
+// a field is 'dirty' and needs to be updated. Will only work
+// if you use the Getters and Setters
 func (o *TermTaxonomy) Update() error {
 	var sets []string
 
@@ -5919,6 +5980,9 @@ func (o *TermTaxonomy) Update() error {
 	}
 	return nil
 }
+
+// Create inserts the model. Calling Save will call this function
+// automatically for new models
 func (o *TermTaxonomy) Create() error {
 	frmt := fmt.Sprintf("INSERT INTO %s (`term_id`, `taxonomy`, `description`, `parent`, `count`) VALUES ('%d', '%s', '%s', '%d', '%d')", o._table, o.TermId, o.Taxonomy, o.Description, o.Parent, o.Count)
 	err := o._adapter.Execute(frmt)
@@ -6234,6 +6298,7 @@ func (o *Term) Reload() error {
 	return err
 }
 
+// Save is a dynamic saver 'inherited' by all models
 func (o *Term) Save() error {
 	if o._new == true {
 		return o.Create()
@@ -6259,6 +6324,10 @@ func (o *Term) Save() error {
 	}
 	return nil
 }
+
+// Update is a dynamic updater, it considers whether or not
+// a field is 'dirty' and needs to be updated. Will only work
+// if you use the Getters and Setters
 func (o *Term) Update() error {
 	var sets []string
 
@@ -6281,6 +6350,9 @@ func (o *Term) Update() error {
 	}
 	return nil
 }
+
+// Create inserts the model. Calling Save will call this function
+// automatically for new models
 func (o *Term) Create() error {
 	frmt := fmt.Sprintf("INSERT INTO %s (`name`, `slug`, `term_group`) VALUES ('%s', '%s', '%d')", o._table, o.Name, o.Slug, o.TermGroup)
 	err := o._adapter.Execute(frmt)
@@ -6572,6 +6644,7 @@ func (o *UserMeta) Reload() error {
 	return err
 }
 
+// Save is a dynamic saver 'inherited' by all models
 func (o *UserMeta) Save() error {
 	if o._new == true {
 		return o.Create()
@@ -6597,6 +6670,10 @@ func (o *UserMeta) Save() error {
 	}
 	return nil
 }
+
+// Update is a dynamic updater, it considers whether or not
+// a field is 'dirty' and needs to be updated. Will only work
+// if you use the Getters and Setters
 func (o *UserMeta) Update() error {
 	var sets []string
 
@@ -6619,6 +6696,9 @@ func (o *UserMeta) Update() error {
 	}
 	return nil
 }
+
+// Create inserts the model. Calling Save will call this function
+// automatically for new models
 func (o *UserMeta) Create() error {
 	frmt := fmt.Sprintf("INSERT INTO %s (`user_id`, `meta_key`, `meta_value`) VALUES ('%d', '%s', '%s')", o._table, o.UserId, o.MetaKey, o.MetaValue)
 	err := o._adapter.Execute(frmt)
