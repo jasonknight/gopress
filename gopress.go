@@ -616,7 +616,7 @@ func (o *CommentMeta) SetMetaValue(arg string) {
 // Generic and programatically generator finder for CommentMeta
 func (o *CommentMeta) Find(_findByMetaId int64) (bool, error) {
 
-	var model_slice []*CommentMeta
+	var _modelSlice []*CommentMeta
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "meta_id", _findByMetaId)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -629,14 +629,14 @@ func (o *CommentMeta) Find(_findByMetaId int64) (bool, error) {
 		if err != nil {
 			return false, o._adapter.Oops(fmt.Sprintf(`%s`, err))
 		}
-		model_slice = append(model_slice, &ro)
+		_modelSlice = append(_modelSlice, &ro)
 	}
 
-	if len(model_slice) == 0 {
+	if len(_modelSlice) == 0 {
 		// there was an error!
 		return false, o._adapter.Oops(`not found`)
 	}
-	o.FromCommentMeta(model_slice[0])
+	o.FromCommentMeta(_modelSlice[0])
 	return true, nil
 
 }
@@ -645,27 +645,27 @@ func (o *CommentMeta) Find(_findByMetaId int64) (bool, error) {
 // Generic and programatically generator finder for CommentMeta
 func (o *CommentMeta) FindByCommentId(_findByCommentId int64) ([]*CommentMeta, error) {
 
-	var model_slice []*CommentMeta
+	var _modelSlice []*CommentMeta
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "comment_id", _findByCommentId)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return model_slice, err
+		return _modelSlice, err
 	}
 
 	for _, result := range results {
 		ro := CommentMeta{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return model_slice, err
+			return _modelSlice, err
 		}
-		model_slice = append(model_slice, &ro)
+		_modelSlice = append(_modelSlice, &ro)
 	}
 
-	if len(model_slice) == 0 {
+	if len(_modelSlice) == 0 {
 		// there was an error!
 		return nil, o._adapter.Oops(`no results`)
 	}
-	return model_slice, nil
+	return _modelSlice, nil
 
 }
 
@@ -673,27 +673,27 @@ func (o *CommentMeta) FindByCommentId(_findByCommentId int64) ([]*CommentMeta, e
 // Generic and programatically generator finder for CommentMeta
 func (o *CommentMeta) FindByMetaKey(_findByMetaKey string) ([]*CommentMeta, error) {
 
-	var model_slice []*CommentMeta
+	var _modelSlice []*CommentMeta
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "meta_key", _findByMetaKey)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return model_slice, err
+		return _modelSlice, err
 	}
 
 	for _, result := range results {
 		ro := CommentMeta{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return model_slice, err
+			return _modelSlice, err
 		}
-		model_slice = append(model_slice, &ro)
+		_modelSlice = append(_modelSlice, &ro)
 	}
 
-	if len(model_slice) == 0 {
+	if len(_modelSlice) == 0 {
 		// there was an error!
 		return nil, o._adapter.Oops(`no results`)
 	}
-	return model_slice, nil
+	return _modelSlice, nil
 
 }
 
@@ -701,27 +701,27 @@ func (o *CommentMeta) FindByMetaKey(_findByMetaKey string) ([]*CommentMeta, erro
 // Generic and programatically generator finder for CommentMeta
 func (o *CommentMeta) FindByMetaValue(_findByMetaValue string) ([]*CommentMeta, error) {
 
-	var model_slice []*CommentMeta
+	var _modelSlice []*CommentMeta
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "meta_value", _findByMetaValue)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return model_slice, err
+		return _modelSlice, err
 	}
 
 	for _, result := range results {
 		ro := CommentMeta{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return model_slice, err
+			return _modelSlice, err
 		}
-		model_slice = append(model_slice, &ro)
+		_modelSlice = append(_modelSlice, &ro)
 	}
 
-	if len(model_slice) == 0 {
+	if len(_modelSlice) == 0 {
 		// there was an error!
 		return nil, o._adapter.Oops(`no results`)
 	}
-	return model_slice, nil
+	return _modelSlice, nil
 
 }
 
@@ -824,6 +824,8 @@ func (o *CommentMeta) Create() error {
 	return nil
 }
 
+// UpdateCommentId an immediate DB Query to update a single column, in this
+// case comment_id
 func (o *CommentMeta) UpdateCommentId(_upd_CommentId int64) (int64, error) {
 	frmt := fmt.Sprintf("UPDATE %s SET `comment_id` = '%d' WHERE `meta_id` = '%d'", o._table, _upd_CommentId, o.MetaId)
 	err := o._adapter.Execute(frmt)
@@ -834,6 +836,8 @@ func (o *CommentMeta) UpdateCommentId(_upd_CommentId int64) (int64, error) {
 	return o._adapter.AffectedRows(), nil
 }
 
+// UpdateMetaKey an immediate DB Query to update a single column, in this
+// case meta_key
 func (o *CommentMeta) UpdateMetaKey(_upd_MetaKey string) (int64, error) {
 	frmt := fmt.Sprintf("UPDATE %s SET `meta_key` = '%s' WHERE `meta_id` = '%d'", o._table, _upd_MetaKey, o.MetaId)
 	err := o._adapter.Execute(frmt)
@@ -844,6 +848,8 @@ func (o *CommentMeta) UpdateMetaKey(_upd_MetaKey string) (int64, error) {
 	return o._adapter.AffectedRows(), nil
 }
 
+// UpdateMetaValue an immediate DB Query to update a single column, in this
+// case meta_value
 func (o *CommentMeta) UpdateMetaValue(_upd_MetaValue string) (int64, error) {
 	frmt := fmt.Sprintf("UPDATE %s SET `meta_value` = '%s' WHERE `meta_id` = '%d'", o._table, _upd_MetaValue, o.MetaId)
 	err := o._adapter.Execute(frmt)
@@ -1113,7 +1119,7 @@ func (o *Comment) SetUserId(arg int64) {
 // Generic and programatically generator finder for Comment
 func (o *Comment) Find(_findByCommentID int64) (bool, error) {
 
-	var model_slice []*Comment
+	var _modelSlice []*Comment
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "comment_ID", _findByCommentID)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -1126,14 +1132,14 @@ func (o *Comment) Find(_findByCommentID int64) (bool, error) {
 		if err != nil {
 			return false, o._adapter.Oops(fmt.Sprintf(`%s`, err))
 		}
-		model_slice = append(model_slice, &ro)
+		_modelSlice = append(_modelSlice, &ro)
 	}
 
-	if len(model_slice) == 0 {
+	if len(_modelSlice) == 0 {
 		// there was an error!
 		return false, o._adapter.Oops(`not found`)
 	}
-	o.FromComment(model_slice[0])
+	o.FromComment(_modelSlice[0])
 	return true, nil
 
 }
@@ -1142,27 +1148,27 @@ func (o *Comment) Find(_findByCommentID int64) (bool, error) {
 // Generic and programatically generator finder for Comment
 func (o *Comment) FindByCommentPostID(_findByCommentPostID int64) ([]*Comment, error) {
 
-	var model_slice []*Comment
+	var _modelSlice []*Comment
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "comment_post_ID", _findByCommentPostID)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return model_slice, err
+		return _modelSlice, err
 	}
 
 	for _, result := range results {
 		ro := Comment{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return model_slice, err
+			return _modelSlice, err
 		}
-		model_slice = append(model_slice, &ro)
+		_modelSlice = append(_modelSlice, &ro)
 	}
 
-	if len(model_slice) == 0 {
+	if len(_modelSlice) == 0 {
 		// there was an error!
 		return nil, o._adapter.Oops(`no results`)
 	}
-	return model_slice, nil
+	return _modelSlice, nil
 
 }
 
@@ -1170,27 +1176,27 @@ func (o *Comment) FindByCommentPostID(_findByCommentPostID int64) ([]*Comment, e
 // Generic and programatically generator finder for Comment
 func (o *Comment) FindByCommentAuthor(_findByCommentAuthor string) ([]*Comment, error) {
 
-	var model_slice []*Comment
+	var _modelSlice []*Comment
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "comment_author", _findByCommentAuthor)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return model_slice, err
+		return _modelSlice, err
 	}
 
 	for _, result := range results {
 		ro := Comment{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return model_slice, err
+			return _modelSlice, err
 		}
-		model_slice = append(model_slice, &ro)
+		_modelSlice = append(_modelSlice, &ro)
 	}
 
-	if len(model_slice) == 0 {
+	if len(_modelSlice) == 0 {
 		// there was an error!
 		return nil, o._adapter.Oops(`no results`)
 	}
-	return model_slice, nil
+	return _modelSlice, nil
 
 }
 
@@ -1198,27 +1204,27 @@ func (o *Comment) FindByCommentAuthor(_findByCommentAuthor string) ([]*Comment, 
 // Generic and programatically generator finder for Comment
 func (o *Comment) FindByCommentAuthorEmail(_findByCommentAuthorEmail string) ([]*Comment, error) {
 
-	var model_slice []*Comment
+	var _modelSlice []*Comment
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "comment_author_email", _findByCommentAuthorEmail)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return model_slice, err
+		return _modelSlice, err
 	}
 
 	for _, result := range results {
 		ro := Comment{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return model_slice, err
+			return _modelSlice, err
 		}
-		model_slice = append(model_slice, &ro)
+		_modelSlice = append(_modelSlice, &ro)
 	}
 
-	if len(model_slice) == 0 {
+	if len(_modelSlice) == 0 {
 		// there was an error!
 		return nil, o._adapter.Oops(`no results`)
 	}
-	return model_slice, nil
+	return _modelSlice, nil
 
 }
 
@@ -1226,27 +1232,27 @@ func (o *Comment) FindByCommentAuthorEmail(_findByCommentAuthorEmail string) ([]
 // Generic and programatically generator finder for Comment
 func (o *Comment) FindByCommentAuthorUrl(_findByCommentAuthorUrl string) ([]*Comment, error) {
 
-	var model_slice []*Comment
+	var _modelSlice []*Comment
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "comment_author_url", _findByCommentAuthorUrl)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return model_slice, err
+		return _modelSlice, err
 	}
 
 	for _, result := range results {
 		ro := Comment{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return model_slice, err
+			return _modelSlice, err
 		}
-		model_slice = append(model_slice, &ro)
+		_modelSlice = append(_modelSlice, &ro)
 	}
 
-	if len(model_slice) == 0 {
+	if len(_modelSlice) == 0 {
 		// there was an error!
 		return nil, o._adapter.Oops(`no results`)
 	}
-	return model_slice, nil
+	return _modelSlice, nil
 
 }
 
@@ -1254,27 +1260,27 @@ func (o *Comment) FindByCommentAuthorUrl(_findByCommentAuthorUrl string) ([]*Com
 // Generic and programatically generator finder for Comment
 func (o *Comment) FindByCommentAuthorIP(_findByCommentAuthorIP string) ([]*Comment, error) {
 
-	var model_slice []*Comment
+	var _modelSlice []*Comment
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "comment_author_IP", _findByCommentAuthorIP)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return model_slice, err
+		return _modelSlice, err
 	}
 
 	for _, result := range results {
 		ro := Comment{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return model_slice, err
+			return _modelSlice, err
 		}
-		model_slice = append(model_slice, &ro)
+		_modelSlice = append(_modelSlice, &ro)
 	}
 
-	if len(model_slice) == 0 {
+	if len(_modelSlice) == 0 {
 		// there was an error!
 		return nil, o._adapter.Oops(`no results`)
 	}
-	return model_slice, nil
+	return _modelSlice, nil
 
 }
 
@@ -1282,27 +1288,27 @@ func (o *Comment) FindByCommentAuthorIP(_findByCommentAuthorIP string) ([]*Comme
 // Generic and programatically generator finder for Comment
 func (o *Comment) FindByCommentDate(_findByCommentDate *DateTime) ([]*Comment, error) {
 
-	var model_slice []*Comment
+	var _modelSlice []*Comment
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "comment_date", _findByCommentDate)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return model_slice, err
+		return _modelSlice, err
 	}
 
 	for _, result := range results {
 		ro := Comment{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return model_slice, err
+			return _modelSlice, err
 		}
-		model_slice = append(model_slice, &ro)
+		_modelSlice = append(_modelSlice, &ro)
 	}
 
-	if len(model_slice) == 0 {
+	if len(_modelSlice) == 0 {
 		// there was an error!
 		return nil, o._adapter.Oops(`no results`)
 	}
-	return model_slice, nil
+	return _modelSlice, nil
 
 }
 
@@ -1310,27 +1316,27 @@ func (o *Comment) FindByCommentDate(_findByCommentDate *DateTime) ([]*Comment, e
 // Generic and programatically generator finder for Comment
 func (o *Comment) FindByCommentDateGmt(_findByCommentDateGmt *DateTime) ([]*Comment, error) {
 
-	var model_slice []*Comment
+	var _modelSlice []*Comment
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "comment_date_gmt", _findByCommentDateGmt)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return model_slice, err
+		return _modelSlice, err
 	}
 
 	for _, result := range results {
 		ro := Comment{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return model_slice, err
+			return _modelSlice, err
 		}
-		model_slice = append(model_slice, &ro)
+		_modelSlice = append(_modelSlice, &ro)
 	}
 
-	if len(model_slice) == 0 {
+	if len(_modelSlice) == 0 {
 		// there was an error!
 		return nil, o._adapter.Oops(`no results`)
 	}
-	return model_slice, nil
+	return _modelSlice, nil
 
 }
 
@@ -1338,27 +1344,27 @@ func (o *Comment) FindByCommentDateGmt(_findByCommentDateGmt *DateTime) ([]*Comm
 // Generic and programatically generator finder for Comment
 func (o *Comment) FindByCommentContent(_findByCommentContent string) ([]*Comment, error) {
 
-	var model_slice []*Comment
+	var _modelSlice []*Comment
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "comment_content", _findByCommentContent)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return model_slice, err
+		return _modelSlice, err
 	}
 
 	for _, result := range results {
 		ro := Comment{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return model_slice, err
+			return _modelSlice, err
 		}
-		model_slice = append(model_slice, &ro)
+		_modelSlice = append(_modelSlice, &ro)
 	}
 
-	if len(model_slice) == 0 {
+	if len(_modelSlice) == 0 {
 		// there was an error!
 		return nil, o._adapter.Oops(`no results`)
 	}
-	return model_slice, nil
+	return _modelSlice, nil
 
 }
 
@@ -1366,27 +1372,27 @@ func (o *Comment) FindByCommentContent(_findByCommentContent string) ([]*Comment
 // Generic and programatically generator finder for Comment
 func (o *Comment) FindByCommentKarma(_findByCommentKarma int) ([]*Comment, error) {
 
-	var model_slice []*Comment
+	var _modelSlice []*Comment
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "comment_karma", _findByCommentKarma)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return model_slice, err
+		return _modelSlice, err
 	}
 
 	for _, result := range results {
 		ro := Comment{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return model_slice, err
+			return _modelSlice, err
 		}
-		model_slice = append(model_slice, &ro)
+		_modelSlice = append(_modelSlice, &ro)
 	}
 
-	if len(model_slice) == 0 {
+	if len(_modelSlice) == 0 {
 		// there was an error!
 		return nil, o._adapter.Oops(`no results`)
 	}
-	return model_slice, nil
+	return _modelSlice, nil
 
 }
 
@@ -1394,27 +1400,27 @@ func (o *Comment) FindByCommentKarma(_findByCommentKarma int) ([]*Comment, error
 // Generic and programatically generator finder for Comment
 func (o *Comment) FindByCommentApproved(_findByCommentApproved string) ([]*Comment, error) {
 
-	var model_slice []*Comment
+	var _modelSlice []*Comment
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "comment_approved", _findByCommentApproved)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return model_slice, err
+		return _modelSlice, err
 	}
 
 	for _, result := range results {
 		ro := Comment{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return model_slice, err
+			return _modelSlice, err
 		}
-		model_slice = append(model_slice, &ro)
+		_modelSlice = append(_modelSlice, &ro)
 	}
 
-	if len(model_slice) == 0 {
+	if len(_modelSlice) == 0 {
 		// there was an error!
 		return nil, o._adapter.Oops(`no results`)
 	}
-	return model_slice, nil
+	return _modelSlice, nil
 
 }
 
@@ -1422,27 +1428,27 @@ func (o *Comment) FindByCommentApproved(_findByCommentApproved string) ([]*Comme
 // Generic and programatically generator finder for Comment
 func (o *Comment) FindByCommentAgent(_findByCommentAgent string) ([]*Comment, error) {
 
-	var model_slice []*Comment
+	var _modelSlice []*Comment
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "comment_agent", _findByCommentAgent)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return model_slice, err
+		return _modelSlice, err
 	}
 
 	for _, result := range results {
 		ro := Comment{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return model_slice, err
+			return _modelSlice, err
 		}
-		model_slice = append(model_slice, &ro)
+		_modelSlice = append(_modelSlice, &ro)
 	}
 
-	if len(model_slice) == 0 {
+	if len(_modelSlice) == 0 {
 		// there was an error!
 		return nil, o._adapter.Oops(`no results`)
 	}
-	return model_slice, nil
+	return _modelSlice, nil
 
 }
 
@@ -1450,27 +1456,27 @@ func (o *Comment) FindByCommentAgent(_findByCommentAgent string) ([]*Comment, er
 // Generic and programatically generator finder for Comment
 func (o *Comment) FindByCommentType(_findByCommentType string) ([]*Comment, error) {
 
-	var model_slice []*Comment
+	var _modelSlice []*Comment
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "comment_type", _findByCommentType)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return model_slice, err
+		return _modelSlice, err
 	}
 
 	for _, result := range results {
 		ro := Comment{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return model_slice, err
+			return _modelSlice, err
 		}
-		model_slice = append(model_slice, &ro)
+		_modelSlice = append(_modelSlice, &ro)
 	}
 
-	if len(model_slice) == 0 {
+	if len(_modelSlice) == 0 {
 		// there was an error!
 		return nil, o._adapter.Oops(`no results`)
 	}
-	return model_slice, nil
+	return _modelSlice, nil
 
 }
 
@@ -1478,27 +1484,27 @@ func (o *Comment) FindByCommentType(_findByCommentType string) ([]*Comment, erro
 // Generic and programatically generator finder for Comment
 func (o *Comment) FindByCommentParent(_findByCommentParent int64) ([]*Comment, error) {
 
-	var model_slice []*Comment
+	var _modelSlice []*Comment
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "comment_parent", _findByCommentParent)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return model_slice, err
+		return _modelSlice, err
 	}
 
 	for _, result := range results {
 		ro := Comment{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return model_slice, err
+			return _modelSlice, err
 		}
-		model_slice = append(model_slice, &ro)
+		_modelSlice = append(_modelSlice, &ro)
 	}
 
-	if len(model_slice) == 0 {
+	if len(_modelSlice) == 0 {
 		// there was an error!
 		return nil, o._adapter.Oops(`no results`)
 	}
-	return model_slice, nil
+	return _modelSlice, nil
 
 }
 
@@ -1506,27 +1512,27 @@ func (o *Comment) FindByCommentParent(_findByCommentParent int64) ([]*Comment, e
 // Generic and programatically generator finder for Comment
 func (o *Comment) FindByUserId(_findByUserId int64) ([]*Comment, error) {
 
-	var model_slice []*Comment
+	var _modelSlice []*Comment
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "user_id", _findByUserId)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return model_slice, err
+		return _modelSlice, err
 	}
 
 	for _, result := range results {
 		ro := Comment{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return model_slice, err
+			return _modelSlice, err
 		}
-		model_slice = append(model_slice, &ro)
+		_modelSlice = append(_modelSlice, &ro)
 	}
 
-	if len(model_slice) == 0 {
+	if len(_modelSlice) == 0 {
 		// there was an error!
 		return nil, o._adapter.Oops(`no results`)
 	}
-	return model_slice, nil
+	return _modelSlice, nil
 
 }
 
@@ -1783,6 +1789,8 @@ func (o *Comment) Create() error {
 	return nil
 }
 
+// UpdateCommentPostID an immediate DB Query to update a single column, in this
+// case comment_post_ID
 func (o *Comment) UpdateCommentPostID(_upd_CommentPostID int64) (int64, error) {
 	frmt := fmt.Sprintf("UPDATE %s SET `comment_post_ID` = '%d' WHERE `comment_ID` = '%d'", o._table, _upd_CommentPostID, o.CommentID)
 	err := o._adapter.Execute(frmt)
@@ -1793,6 +1801,8 @@ func (o *Comment) UpdateCommentPostID(_upd_CommentPostID int64) (int64, error) {
 	return o._adapter.AffectedRows(), nil
 }
 
+// UpdateCommentAuthor an immediate DB Query to update a single column, in this
+// case comment_author
 func (o *Comment) UpdateCommentAuthor(_upd_CommentAuthor string) (int64, error) {
 	frmt := fmt.Sprintf("UPDATE %s SET `comment_author` = '%s' WHERE `comment_ID` = '%d'", o._table, _upd_CommentAuthor, o.CommentID)
 	err := o._adapter.Execute(frmt)
@@ -1803,6 +1813,8 @@ func (o *Comment) UpdateCommentAuthor(_upd_CommentAuthor string) (int64, error) 
 	return o._adapter.AffectedRows(), nil
 }
 
+// UpdateCommentAuthorEmail an immediate DB Query to update a single column, in this
+// case comment_author_email
 func (o *Comment) UpdateCommentAuthorEmail(_upd_CommentAuthorEmail string) (int64, error) {
 	frmt := fmt.Sprintf("UPDATE %s SET `comment_author_email` = '%s' WHERE `comment_ID` = '%d'", o._table, _upd_CommentAuthorEmail, o.CommentID)
 	err := o._adapter.Execute(frmt)
@@ -1813,6 +1825,8 @@ func (o *Comment) UpdateCommentAuthorEmail(_upd_CommentAuthorEmail string) (int6
 	return o._adapter.AffectedRows(), nil
 }
 
+// UpdateCommentAuthorUrl an immediate DB Query to update a single column, in this
+// case comment_author_url
 func (o *Comment) UpdateCommentAuthorUrl(_upd_CommentAuthorUrl string) (int64, error) {
 	frmt := fmt.Sprintf("UPDATE %s SET `comment_author_url` = '%s' WHERE `comment_ID` = '%d'", o._table, _upd_CommentAuthorUrl, o.CommentID)
 	err := o._adapter.Execute(frmt)
@@ -1823,6 +1837,8 @@ func (o *Comment) UpdateCommentAuthorUrl(_upd_CommentAuthorUrl string) (int64, e
 	return o._adapter.AffectedRows(), nil
 }
 
+// UpdateCommentAuthorIP an immediate DB Query to update a single column, in this
+// case comment_author_IP
 func (o *Comment) UpdateCommentAuthorIP(_upd_CommentAuthorIP string) (int64, error) {
 	frmt := fmt.Sprintf("UPDATE %s SET `comment_author_IP` = '%s' WHERE `comment_ID` = '%d'", o._table, _upd_CommentAuthorIP, o.CommentID)
 	err := o._adapter.Execute(frmt)
@@ -1833,6 +1849,8 @@ func (o *Comment) UpdateCommentAuthorIP(_upd_CommentAuthorIP string) (int64, err
 	return o._adapter.AffectedRows(), nil
 }
 
+// UpdateCommentDate an immediate DB Query to update a single column, in this
+// case comment_date
 func (o *Comment) UpdateCommentDate(_upd_CommentDate *DateTime) (int64, error) {
 	frmt := fmt.Sprintf("UPDATE %s SET `comment_date` = '%s' WHERE `comment_ID` = '%d'", o._table, _upd_CommentDate, o.CommentID)
 	err := o._adapter.Execute(frmt)
@@ -1843,6 +1861,8 @@ func (o *Comment) UpdateCommentDate(_upd_CommentDate *DateTime) (int64, error) {
 	return o._adapter.AffectedRows(), nil
 }
 
+// UpdateCommentDateGmt an immediate DB Query to update a single column, in this
+// case comment_date_gmt
 func (o *Comment) UpdateCommentDateGmt(_upd_CommentDateGmt *DateTime) (int64, error) {
 	frmt := fmt.Sprintf("UPDATE %s SET `comment_date_gmt` = '%s' WHERE `comment_ID` = '%d'", o._table, _upd_CommentDateGmt, o.CommentID)
 	err := o._adapter.Execute(frmt)
@@ -1853,6 +1873,8 @@ func (o *Comment) UpdateCommentDateGmt(_upd_CommentDateGmt *DateTime) (int64, er
 	return o._adapter.AffectedRows(), nil
 }
 
+// UpdateCommentContent an immediate DB Query to update a single column, in this
+// case comment_content
 func (o *Comment) UpdateCommentContent(_upd_CommentContent string) (int64, error) {
 	frmt := fmt.Sprintf("UPDATE %s SET `comment_content` = '%s' WHERE `comment_ID` = '%d'", o._table, _upd_CommentContent, o.CommentID)
 	err := o._adapter.Execute(frmt)
@@ -1863,6 +1885,8 @@ func (o *Comment) UpdateCommentContent(_upd_CommentContent string) (int64, error
 	return o._adapter.AffectedRows(), nil
 }
 
+// UpdateCommentKarma an immediate DB Query to update a single column, in this
+// case comment_karma
 func (o *Comment) UpdateCommentKarma(_upd_CommentKarma int) (int64, error) {
 	frmt := fmt.Sprintf("UPDATE %s SET `comment_karma` = '%d' WHERE `comment_ID` = '%d'", o._table, _upd_CommentKarma, o.CommentID)
 	err := o._adapter.Execute(frmt)
@@ -1873,6 +1897,8 @@ func (o *Comment) UpdateCommentKarma(_upd_CommentKarma int) (int64, error) {
 	return o._adapter.AffectedRows(), nil
 }
 
+// UpdateCommentApproved an immediate DB Query to update a single column, in this
+// case comment_approved
 func (o *Comment) UpdateCommentApproved(_upd_CommentApproved string) (int64, error) {
 	frmt := fmt.Sprintf("UPDATE %s SET `comment_approved` = '%s' WHERE `comment_ID` = '%d'", o._table, _upd_CommentApproved, o.CommentID)
 	err := o._adapter.Execute(frmt)
@@ -1883,6 +1909,8 @@ func (o *Comment) UpdateCommentApproved(_upd_CommentApproved string) (int64, err
 	return o._adapter.AffectedRows(), nil
 }
 
+// UpdateCommentAgent an immediate DB Query to update a single column, in this
+// case comment_agent
 func (o *Comment) UpdateCommentAgent(_upd_CommentAgent string) (int64, error) {
 	frmt := fmt.Sprintf("UPDATE %s SET `comment_agent` = '%s' WHERE `comment_ID` = '%d'", o._table, _upd_CommentAgent, o.CommentID)
 	err := o._adapter.Execute(frmt)
@@ -1893,6 +1921,8 @@ func (o *Comment) UpdateCommentAgent(_upd_CommentAgent string) (int64, error) {
 	return o._adapter.AffectedRows(), nil
 }
 
+// UpdateCommentType an immediate DB Query to update a single column, in this
+// case comment_type
 func (o *Comment) UpdateCommentType(_upd_CommentType string) (int64, error) {
 	frmt := fmt.Sprintf("UPDATE %s SET `comment_type` = '%s' WHERE `comment_ID` = '%d'", o._table, _upd_CommentType, o.CommentID)
 	err := o._adapter.Execute(frmt)
@@ -1903,6 +1933,8 @@ func (o *Comment) UpdateCommentType(_upd_CommentType string) (int64, error) {
 	return o._adapter.AffectedRows(), nil
 }
 
+// UpdateCommentParent an immediate DB Query to update a single column, in this
+// case comment_parent
 func (o *Comment) UpdateCommentParent(_upd_CommentParent int64) (int64, error) {
 	frmt := fmt.Sprintf("UPDATE %s SET `comment_parent` = '%d' WHERE `comment_ID` = '%d'", o._table, _upd_CommentParent, o.CommentID)
 	err := o._adapter.Execute(frmt)
@@ -1913,6 +1945,8 @@ func (o *Comment) UpdateCommentParent(_upd_CommentParent int64) (int64, error) {
 	return o._adapter.AffectedRows(), nil
 }
 
+// UpdateUserId an immediate DB Query to update a single column, in this
+// case user_id
 func (o *Comment) UpdateUserId(_upd_UserId int64) (int64, error) {
 	frmt := fmt.Sprintf("UPDATE %s SET `user_id` = '%d' WHERE `comment_ID` = '%d'", o._table, _upd_UserId, o.CommentID)
 	err := o._adapter.Execute(frmt)
@@ -2152,7 +2186,7 @@ func (o *Link) SetLinkRss(arg string) {
 // Generic and programatically generator finder for Link
 func (o *Link) Find(_findByLinkId int64) (bool, error) {
 
-	var model_slice []*Link
+	var _modelSlice []*Link
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "link_id", _findByLinkId)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -2165,14 +2199,14 @@ func (o *Link) Find(_findByLinkId int64) (bool, error) {
 		if err != nil {
 			return false, o._adapter.Oops(fmt.Sprintf(`%s`, err))
 		}
-		model_slice = append(model_slice, &ro)
+		_modelSlice = append(_modelSlice, &ro)
 	}
 
-	if len(model_slice) == 0 {
+	if len(_modelSlice) == 0 {
 		// there was an error!
 		return false, o._adapter.Oops(`not found`)
 	}
-	o.FromLink(model_slice[0])
+	o.FromLink(_modelSlice[0])
 	return true, nil
 
 }
@@ -2181,27 +2215,27 @@ func (o *Link) Find(_findByLinkId int64) (bool, error) {
 // Generic and programatically generator finder for Link
 func (o *Link) FindByLinkUrl(_findByLinkUrl string) ([]*Link, error) {
 
-	var model_slice []*Link
+	var _modelSlice []*Link
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "link_url", _findByLinkUrl)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return model_slice, err
+		return _modelSlice, err
 	}
 
 	for _, result := range results {
 		ro := Link{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return model_slice, err
+			return _modelSlice, err
 		}
-		model_slice = append(model_slice, &ro)
+		_modelSlice = append(_modelSlice, &ro)
 	}
 
-	if len(model_slice) == 0 {
+	if len(_modelSlice) == 0 {
 		// there was an error!
 		return nil, o._adapter.Oops(`no results`)
 	}
-	return model_slice, nil
+	return _modelSlice, nil
 
 }
 
@@ -2209,27 +2243,27 @@ func (o *Link) FindByLinkUrl(_findByLinkUrl string) ([]*Link, error) {
 // Generic and programatically generator finder for Link
 func (o *Link) FindByLinkName(_findByLinkName string) ([]*Link, error) {
 
-	var model_slice []*Link
+	var _modelSlice []*Link
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "link_name", _findByLinkName)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return model_slice, err
+		return _modelSlice, err
 	}
 
 	for _, result := range results {
 		ro := Link{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return model_slice, err
+			return _modelSlice, err
 		}
-		model_slice = append(model_slice, &ro)
+		_modelSlice = append(_modelSlice, &ro)
 	}
 
-	if len(model_slice) == 0 {
+	if len(_modelSlice) == 0 {
 		// there was an error!
 		return nil, o._adapter.Oops(`no results`)
 	}
-	return model_slice, nil
+	return _modelSlice, nil
 
 }
 
@@ -2237,27 +2271,27 @@ func (o *Link) FindByLinkName(_findByLinkName string) ([]*Link, error) {
 // Generic and programatically generator finder for Link
 func (o *Link) FindByLinkImage(_findByLinkImage string) ([]*Link, error) {
 
-	var model_slice []*Link
+	var _modelSlice []*Link
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "link_image", _findByLinkImage)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return model_slice, err
+		return _modelSlice, err
 	}
 
 	for _, result := range results {
 		ro := Link{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return model_slice, err
+			return _modelSlice, err
 		}
-		model_slice = append(model_slice, &ro)
+		_modelSlice = append(_modelSlice, &ro)
 	}
 
-	if len(model_slice) == 0 {
+	if len(_modelSlice) == 0 {
 		// there was an error!
 		return nil, o._adapter.Oops(`no results`)
 	}
-	return model_slice, nil
+	return _modelSlice, nil
 
 }
 
@@ -2265,27 +2299,27 @@ func (o *Link) FindByLinkImage(_findByLinkImage string) ([]*Link, error) {
 // Generic and programatically generator finder for Link
 func (o *Link) FindByLinkTarget(_findByLinkTarget string) ([]*Link, error) {
 
-	var model_slice []*Link
+	var _modelSlice []*Link
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "link_target", _findByLinkTarget)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return model_slice, err
+		return _modelSlice, err
 	}
 
 	for _, result := range results {
 		ro := Link{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return model_slice, err
+			return _modelSlice, err
 		}
-		model_slice = append(model_slice, &ro)
+		_modelSlice = append(_modelSlice, &ro)
 	}
 
-	if len(model_slice) == 0 {
+	if len(_modelSlice) == 0 {
 		// there was an error!
 		return nil, o._adapter.Oops(`no results`)
 	}
-	return model_slice, nil
+	return _modelSlice, nil
 
 }
 
@@ -2293,27 +2327,27 @@ func (o *Link) FindByLinkTarget(_findByLinkTarget string) ([]*Link, error) {
 // Generic and programatically generator finder for Link
 func (o *Link) FindByLinkDescription(_findByLinkDescription string) ([]*Link, error) {
 
-	var model_slice []*Link
+	var _modelSlice []*Link
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "link_description", _findByLinkDescription)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return model_slice, err
+		return _modelSlice, err
 	}
 
 	for _, result := range results {
 		ro := Link{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return model_slice, err
+			return _modelSlice, err
 		}
-		model_slice = append(model_slice, &ro)
+		_modelSlice = append(_modelSlice, &ro)
 	}
 
-	if len(model_slice) == 0 {
+	if len(_modelSlice) == 0 {
 		// there was an error!
 		return nil, o._adapter.Oops(`no results`)
 	}
-	return model_slice, nil
+	return _modelSlice, nil
 
 }
 
@@ -2321,27 +2355,27 @@ func (o *Link) FindByLinkDescription(_findByLinkDescription string) ([]*Link, er
 // Generic and programatically generator finder for Link
 func (o *Link) FindByLinkVisible(_findByLinkVisible string) ([]*Link, error) {
 
-	var model_slice []*Link
+	var _modelSlice []*Link
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "link_visible", _findByLinkVisible)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return model_slice, err
+		return _modelSlice, err
 	}
 
 	for _, result := range results {
 		ro := Link{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return model_slice, err
+			return _modelSlice, err
 		}
-		model_slice = append(model_slice, &ro)
+		_modelSlice = append(_modelSlice, &ro)
 	}
 
-	if len(model_slice) == 0 {
+	if len(_modelSlice) == 0 {
 		// there was an error!
 		return nil, o._adapter.Oops(`no results`)
 	}
-	return model_slice, nil
+	return _modelSlice, nil
 
 }
 
@@ -2349,27 +2383,27 @@ func (o *Link) FindByLinkVisible(_findByLinkVisible string) ([]*Link, error) {
 // Generic and programatically generator finder for Link
 func (o *Link) FindByLinkOwner(_findByLinkOwner int64) ([]*Link, error) {
 
-	var model_slice []*Link
+	var _modelSlice []*Link
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "link_owner", _findByLinkOwner)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return model_slice, err
+		return _modelSlice, err
 	}
 
 	for _, result := range results {
 		ro := Link{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return model_slice, err
+			return _modelSlice, err
 		}
-		model_slice = append(model_slice, &ro)
+		_modelSlice = append(_modelSlice, &ro)
 	}
 
-	if len(model_slice) == 0 {
+	if len(_modelSlice) == 0 {
 		// there was an error!
 		return nil, o._adapter.Oops(`no results`)
 	}
-	return model_slice, nil
+	return _modelSlice, nil
 
 }
 
@@ -2377,27 +2411,27 @@ func (o *Link) FindByLinkOwner(_findByLinkOwner int64) ([]*Link, error) {
 // Generic and programatically generator finder for Link
 func (o *Link) FindByLinkRating(_findByLinkRating int) ([]*Link, error) {
 
-	var model_slice []*Link
+	var _modelSlice []*Link
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "link_rating", _findByLinkRating)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return model_slice, err
+		return _modelSlice, err
 	}
 
 	for _, result := range results {
 		ro := Link{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return model_slice, err
+			return _modelSlice, err
 		}
-		model_slice = append(model_slice, &ro)
+		_modelSlice = append(_modelSlice, &ro)
 	}
 
-	if len(model_slice) == 0 {
+	if len(_modelSlice) == 0 {
 		// there was an error!
 		return nil, o._adapter.Oops(`no results`)
 	}
-	return model_slice, nil
+	return _modelSlice, nil
 
 }
 
@@ -2405,27 +2439,27 @@ func (o *Link) FindByLinkRating(_findByLinkRating int) ([]*Link, error) {
 // Generic and programatically generator finder for Link
 func (o *Link) FindByLinkUpdated(_findByLinkUpdated *DateTime) ([]*Link, error) {
 
-	var model_slice []*Link
+	var _modelSlice []*Link
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "link_updated", _findByLinkUpdated)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return model_slice, err
+		return _modelSlice, err
 	}
 
 	for _, result := range results {
 		ro := Link{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return model_slice, err
+			return _modelSlice, err
 		}
-		model_slice = append(model_slice, &ro)
+		_modelSlice = append(_modelSlice, &ro)
 	}
 
-	if len(model_slice) == 0 {
+	if len(_modelSlice) == 0 {
 		// there was an error!
 		return nil, o._adapter.Oops(`no results`)
 	}
-	return model_slice, nil
+	return _modelSlice, nil
 
 }
 
@@ -2433,27 +2467,27 @@ func (o *Link) FindByLinkUpdated(_findByLinkUpdated *DateTime) ([]*Link, error) 
 // Generic and programatically generator finder for Link
 func (o *Link) FindByLinkRel(_findByLinkRel string) ([]*Link, error) {
 
-	var model_slice []*Link
+	var _modelSlice []*Link
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "link_rel", _findByLinkRel)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return model_slice, err
+		return _modelSlice, err
 	}
 
 	for _, result := range results {
 		ro := Link{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return model_slice, err
+			return _modelSlice, err
 		}
-		model_slice = append(model_slice, &ro)
+		_modelSlice = append(_modelSlice, &ro)
 	}
 
-	if len(model_slice) == 0 {
+	if len(_modelSlice) == 0 {
 		// there was an error!
 		return nil, o._adapter.Oops(`no results`)
 	}
-	return model_slice, nil
+	return _modelSlice, nil
 
 }
 
@@ -2461,27 +2495,27 @@ func (o *Link) FindByLinkRel(_findByLinkRel string) ([]*Link, error) {
 // Generic and programatically generator finder for Link
 func (o *Link) FindByLinkNotes(_findByLinkNotes string) ([]*Link, error) {
 
-	var model_slice []*Link
+	var _modelSlice []*Link
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "link_notes", _findByLinkNotes)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return model_slice, err
+		return _modelSlice, err
 	}
 
 	for _, result := range results {
 		ro := Link{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return model_slice, err
+			return _modelSlice, err
 		}
-		model_slice = append(model_slice, &ro)
+		_modelSlice = append(_modelSlice, &ro)
 	}
 
-	if len(model_slice) == 0 {
+	if len(_modelSlice) == 0 {
 		// there was an error!
 		return nil, o._adapter.Oops(`no results`)
 	}
-	return model_slice, nil
+	return _modelSlice, nil
 
 }
 
@@ -2489,27 +2523,27 @@ func (o *Link) FindByLinkNotes(_findByLinkNotes string) ([]*Link, error) {
 // Generic and programatically generator finder for Link
 func (o *Link) FindByLinkRss(_findByLinkRss string) ([]*Link, error) {
 
-	var model_slice []*Link
+	var _modelSlice []*Link
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "link_rss", _findByLinkRss)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return model_slice, err
+		return _modelSlice, err
 	}
 
 	for _, result := range results {
 		ro := Link{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return model_slice, err
+			return _modelSlice, err
 		}
-		model_slice = append(model_slice, &ro)
+		_modelSlice = append(_modelSlice, &ro)
 	}
 
-	if len(model_slice) == 0 {
+	if len(_modelSlice) == 0 {
 		// there was an error!
 		return nil, o._adapter.Oops(`no results`)
 	}
-	return model_slice, nil
+	return _modelSlice, nil
 
 }
 
@@ -2738,6 +2772,8 @@ func (o *Link) Create() error {
 	return nil
 }
 
+// UpdateLinkUrl an immediate DB Query to update a single column, in this
+// case link_url
 func (o *Link) UpdateLinkUrl(_upd_LinkUrl string) (int64, error) {
 	frmt := fmt.Sprintf("UPDATE %s SET `link_url` = '%s' WHERE `link_id` = '%d'", o._table, _upd_LinkUrl, o.LinkId)
 	err := o._adapter.Execute(frmt)
@@ -2748,6 +2784,8 @@ func (o *Link) UpdateLinkUrl(_upd_LinkUrl string) (int64, error) {
 	return o._adapter.AffectedRows(), nil
 }
 
+// UpdateLinkName an immediate DB Query to update a single column, in this
+// case link_name
 func (o *Link) UpdateLinkName(_upd_LinkName string) (int64, error) {
 	frmt := fmt.Sprintf("UPDATE %s SET `link_name` = '%s' WHERE `link_id` = '%d'", o._table, _upd_LinkName, o.LinkId)
 	err := o._adapter.Execute(frmt)
@@ -2758,6 +2796,8 @@ func (o *Link) UpdateLinkName(_upd_LinkName string) (int64, error) {
 	return o._adapter.AffectedRows(), nil
 }
 
+// UpdateLinkImage an immediate DB Query to update a single column, in this
+// case link_image
 func (o *Link) UpdateLinkImage(_upd_LinkImage string) (int64, error) {
 	frmt := fmt.Sprintf("UPDATE %s SET `link_image` = '%s' WHERE `link_id` = '%d'", o._table, _upd_LinkImage, o.LinkId)
 	err := o._adapter.Execute(frmt)
@@ -2768,6 +2808,8 @@ func (o *Link) UpdateLinkImage(_upd_LinkImage string) (int64, error) {
 	return o._adapter.AffectedRows(), nil
 }
 
+// UpdateLinkTarget an immediate DB Query to update a single column, in this
+// case link_target
 func (o *Link) UpdateLinkTarget(_upd_LinkTarget string) (int64, error) {
 	frmt := fmt.Sprintf("UPDATE %s SET `link_target` = '%s' WHERE `link_id` = '%d'", o._table, _upd_LinkTarget, o.LinkId)
 	err := o._adapter.Execute(frmt)
@@ -2778,6 +2820,8 @@ func (o *Link) UpdateLinkTarget(_upd_LinkTarget string) (int64, error) {
 	return o._adapter.AffectedRows(), nil
 }
 
+// UpdateLinkDescription an immediate DB Query to update a single column, in this
+// case link_description
 func (o *Link) UpdateLinkDescription(_upd_LinkDescription string) (int64, error) {
 	frmt := fmt.Sprintf("UPDATE %s SET `link_description` = '%s' WHERE `link_id` = '%d'", o._table, _upd_LinkDescription, o.LinkId)
 	err := o._adapter.Execute(frmt)
@@ -2788,6 +2832,8 @@ func (o *Link) UpdateLinkDescription(_upd_LinkDescription string) (int64, error)
 	return o._adapter.AffectedRows(), nil
 }
 
+// UpdateLinkVisible an immediate DB Query to update a single column, in this
+// case link_visible
 func (o *Link) UpdateLinkVisible(_upd_LinkVisible string) (int64, error) {
 	frmt := fmt.Sprintf("UPDATE %s SET `link_visible` = '%s' WHERE `link_id` = '%d'", o._table, _upd_LinkVisible, o.LinkId)
 	err := o._adapter.Execute(frmt)
@@ -2798,6 +2844,8 @@ func (o *Link) UpdateLinkVisible(_upd_LinkVisible string) (int64, error) {
 	return o._adapter.AffectedRows(), nil
 }
 
+// UpdateLinkOwner an immediate DB Query to update a single column, in this
+// case link_owner
 func (o *Link) UpdateLinkOwner(_upd_LinkOwner int64) (int64, error) {
 	frmt := fmt.Sprintf("UPDATE %s SET `link_owner` = '%d' WHERE `link_id` = '%d'", o._table, _upd_LinkOwner, o.LinkId)
 	err := o._adapter.Execute(frmt)
@@ -2808,6 +2856,8 @@ func (o *Link) UpdateLinkOwner(_upd_LinkOwner int64) (int64, error) {
 	return o._adapter.AffectedRows(), nil
 }
 
+// UpdateLinkRating an immediate DB Query to update a single column, in this
+// case link_rating
 func (o *Link) UpdateLinkRating(_upd_LinkRating int) (int64, error) {
 	frmt := fmt.Sprintf("UPDATE %s SET `link_rating` = '%d' WHERE `link_id` = '%d'", o._table, _upd_LinkRating, o.LinkId)
 	err := o._adapter.Execute(frmt)
@@ -2818,6 +2868,8 @@ func (o *Link) UpdateLinkRating(_upd_LinkRating int) (int64, error) {
 	return o._adapter.AffectedRows(), nil
 }
 
+// UpdateLinkUpdated an immediate DB Query to update a single column, in this
+// case link_updated
 func (o *Link) UpdateLinkUpdated(_upd_LinkUpdated *DateTime) (int64, error) {
 	frmt := fmt.Sprintf("UPDATE %s SET `link_updated` = '%s' WHERE `link_id` = '%d'", o._table, _upd_LinkUpdated, o.LinkId)
 	err := o._adapter.Execute(frmt)
@@ -2828,6 +2880,8 @@ func (o *Link) UpdateLinkUpdated(_upd_LinkUpdated *DateTime) (int64, error) {
 	return o._adapter.AffectedRows(), nil
 }
 
+// UpdateLinkRel an immediate DB Query to update a single column, in this
+// case link_rel
 func (o *Link) UpdateLinkRel(_upd_LinkRel string) (int64, error) {
 	frmt := fmt.Sprintf("UPDATE %s SET `link_rel` = '%s' WHERE `link_id` = '%d'", o._table, _upd_LinkRel, o.LinkId)
 	err := o._adapter.Execute(frmt)
@@ -2838,6 +2892,8 @@ func (o *Link) UpdateLinkRel(_upd_LinkRel string) (int64, error) {
 	return o._adapter.AffectedRows(), nil
 }
 
+// UpdateLinkNotes an immediate DB Query to update a single column, in this
+// case link_notes
 func (o *Link) UpdateLinkNotes(_upd_LinkNotes string) (int64, error) {
 	frmt := fmt.Sprintf("UPDATE %s SET `link_notes` = '%s' WHERE `link_id` = '%d'", o._table, _upd_LinkNotes, o.LinkId)
 	err := o._adapter.Execute(frmt)
@@ -2848,6 +2904,8 @@ func (o *Link) UpdateLinkNotes(_upd_LinkNotes string) (int64, error) {
 	return o._adapter.AffectedRows(), nil
 }
 
+// UpdateLinkRss an immediate DB Query to update a single column, in this
+// case link_rss
 func (o *Link) UpdateLinkRss(_upd_LinkRss string) (int64, error) {
 	frmt := fmt.Sprintf("UPDATE %s SET `link_rss` = '%s' WHERE `link_id` = '%d'", o._table, _upd_LinkRss, o.LinkId)
 	err := o._adapter.Execute(frmt)
@@ -2952,7 +3010,7 @@ func (o *Option) SetAutoload(arg string) {
 // Generic and programatically generator finder for Option
 func (o *Option) Find(_findByOptionId int64) (bool, error) {
 
-	var model_slice []*Option
+	var _modelSlice []*Option
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "option_id", _findByOptionId)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -2965,14 +3023,14 @@ func (o *Option) Find(_findByOptionId int64) (bool, error) {
 		if err != nil {
 			return false, o._adapter.Oops(fmt.Sprintf(`%s`, err))
 		}
-		model_slice = append(model_slice, &ro)
+		_modelSlice = append(_modelSlice, &ro)
 	}
 
-	if len(model_slice) == 0 {
+	if len(_modelSlice) == 0 {
 		// there was an error!
 		return false, o._adapter.Oops(`not found`)
 	}
-	o.FromOption(model_slice[0])
+	o.FromOption(_modelSlice[0])
 	return true, nil
 
 }
@@ -2981,27 +3039,27 @@ func (o *Option) Find(_findByOptionId int64) (bool, error) {
 // Generic and programatically generator finder for Option
 func (o *Option) FindByOptionName(_findByOptionName string) ([]*Option, error) {
 
-	var model_slice []*Option
+	var _modelSlice []*Option
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "option_name", _findByOptionName)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return model_slice, err
+		return _modelSlice, err
 	}
 
 	for _, result := range results {
 		ro := Option{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return model_slice, err
+			return _modelSlice, err
 		}
-		model_slice = append(model_slice, &ro)
+		_modelSlice = append(_modelSlice, &ro)
 	}
 
-	if len(model_slice) == 0 {
+	if len(_modelSlice) == 0 {
 		// there was an error!
 		return nil, o._adapter.Oops(`no results`)
 	}
-	return model_slice, nil
+	return _modelSlice, nil
 
 }
 
@@ -3009,27 +3067,27 @@ func (o *Option) FindByOptionName(_findByOptionName string) ([]*Option, error) {
 // Generic and programatically generator finder for Option
 func (o *Option) FindByOptionValue(_findByOptionValue string) ([]*Option, error) {
 
-	var model_slice []*Option
+	var _modelSlice []*Option
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "option_value", _findByOptionValue)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return model_slice, err
+		return _modelSlice, err
 	}
 
 	for _, result := range results {
 		ro := Option{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return model_slice, err
+			return _modelSlice, err
 		}
-		model_slice = append(model_slice, &ro)
+		_modelSlice = append(_modelSlice, &ro)
 	}
 
-	if len(model_slice) == 0 {
+	if len(_modelSlice) == 0 {
 		// there was an error!
 		return nil, o._adapter.Oops(`no results`)
 	}
-	return model_slice, nil
+	return _modelSlice, nil
 
 }
 
@@ -3037,27 +3095,27 @@ func (o *Option) FindByOptionValue(_findByOptionValue string) ([]*Option, error)
 // Generic and programatically generator finder for Option
 func (o *Option) FindByAutoload(_findByAutoload string) ([]*Option, error) {
 
-	var model_slice []*Option
+	var _modelSlice []*Option
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "autoload", _findByAutoload)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return model_slice, err
+		return _modelSlice, err
 	}
 
 	for _, result := range results {
 		ro := Option{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return model_slice, err
+			return _modelSlice, err
 		}
-		model_slice = append(model_slice, &ro)
+		_modelSlice = append(_modelSlice, &ro)
 	}
 
-	if len(model_slice) == 0 {
+	if len(_modelSlice) == 0 {
 		// there was an error!
 		return nil, o._adapter.Oops(`no results`)
 	}
-	return model_slice, nil
+	return _modelSlice, nil
 
 }
 
@@ -3160,6 +3218,8 @@ func (o *Option) Create() error {
 	return nil
 }
 
+// UpdateOptionName an immediate DB Query to update a single column, in this
+// case option_name
 func (o *Option) UpdateOptionName(_upd_OptionName string) (int64, error) {
 	frmt := fmt.Sprintf("UPDATE %s SET `option_name` = '%s' WHERE `option_id` = '%d'", o._table, _upd_OptionName, o.OptionId)
 	err := o._adapter.Execute(frmt)
@@ -3170,6 +3230,8 @@ func (o *Option) UpdateOptionName(_upd_OptionName string) (int64, error) {
 	return o._adapter.AffectedRows(), nil
 }
 
+// UpdateOptionValue an immediate DB Query to update a single column, in this
+// case option_value
 func (o *Option) UpdateOptionValue(_upd_OptionValue string) (int64, error) {
 	frmt := fmt.Sprintf("UPDATE %s SET `option_value` = '%s' WHERE `option_id` = '%d'", o._table, _upd_OptionValue, o.OptionId)
 	err := o._adapter.Execute(frmt)
@@ -3180,6 +3242,8 @@ func (o *Option) UpdateOptionValue(_upd_OptionValue string) (int64, error) {
 	return o._adapter.AffectedRows(), nil
 }
 
+// UpdateAutoload an immediate DB Query to update a single column, in this
+// case autoload
 func (o *Option) UpdateAutoload(_upd_Autoload string) (int64, error) {
 	frmt := fmt.Sprintf("UPDATE %s SET `autoload` = '%s' WHERE `option_id` = '%d'", o._table, _upd_Autoload, o.OptionId)
 	err := o._adapter.Execute(frmt)
@@ -3284,7 +3348,7 @@ func (o *PostMeta) SetMetaValue(arg string) {
 // Generic and programatically generator finder for PostMeta
 func (o *PostMeta) Find(_findByMetaId int64) (bool, error) {
 
-	var model_slice []*PostMeta
+	var _modelSlice []*PostMeta
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "meta_id", _findByMetaId)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -3297,14 +3361,14 @@ func (o *PostMeta) Find(_findByMetaId int64) (bool, error) {
 		if err != nil {
 			return false, o._adapter.Oops(fmt.Sprintf(`%s`, err))
 		}
-		model_slice = append(model_slice, &ro)
+		_modelSlice = append(_modelSlice, &ro)
 	}
 
-	if len(model_slice) == 0 {
+	if len(_modelSlice) == 0 {
 		// there was an error!
 		return false, o._adapter.Oops(`not found`)
 	}
-	o.FromPostMeta(model_slice[0])
+	o.FromPostMeta(_modelSlice[0])
 	return true, nil
 
 }
@@ -3313,27 +3377,27 @@ func (o *PostMeta) Find(_findByMetaId int64) (bool, error) {
 // Generic and programatically generator finder for PostMeta
 func (o *PostMeta) FindByPostId(_findByPostId int64) ([]*PostMeta, error) {
 
-	var model_slice []*PostMeta
+	var _modelSlice []*PostMeta
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "post_id", _findByPostId)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return model_slice, err
+		return _modelSlice, err
 	}
 
 	for _, result := range results {
 		ro := PostMeta{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return model_slice, err
+			return _modelSlice, err
 		}
-		model_slice = append(model_slice, &ro)
+		_modelSlice = append(_modelSlice, &ro)
 	}
 
-	if len(model_slice) == 0 {
+	if len(_modelSlice) == 0 {
 		// there was an error!
 		return nil, o._adapter.Oops(`no results`)
 	}
-	return model_slice, nil
+	return _modelSlice, nil
 
 }
 
@@ -3341,27 +3405,27 @@ func (o *PostMeta) FindByPostId(_findByPostId int64) ([]*PostMeta, error) {
 // Generic and programatically generator finder for PostMeta
 func (o *PostMeta) FindByMetaKey(_findByMetaKey string) ([]*PostMeta, error) {
 
-	var model_slice []*PostMeta
+	var _modelSlice []*PostMeta
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "meta_key", _findByMetaKey)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return model_slice, err
+		return _modelSlice, err
 	}
 
 	for _, result := range results {
 		ro := PostMeta{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return model_slice, err
+			return _modelSlice, err
 		}
-		model_slice = append(model_slice, &ro)
+		_modelSlice = append(_modelSlice, &ro)
 	}
 
-	if len(model_slice) == 0 {
+	if len(_modelSlice) == 0 {
 		// there was an error!
 		return nil, o._adapter.Oops(`no results`)
 	}
-	return model_slice, nil
+	return _modelSlice, nil
 
 }
 
@@ -3369,27 +3433,27 @@ func (o *PostMeta) FindByMetaKey(_findByMetaKey string) ([]*PostMeta, error) {
 // Generic and programatically generator finder for PostMeta
 func (o *PostMeta) FindByMetaValue(_findByMetaValue string) ([]*PostMeta, error) {
 
-	var model_slice []*PostMeta
+	var _modelSlice []*PostMeta
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "meta_value", _findByMetaValue)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return model_slice, err
+		return _modelSlice, err
 	}
 
 	for _, result := range results {
 		ro := PostMeta{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return model_slice, err
+			return _modelSlice, err
 		}
-		model_slice = append(model_slice, &ro)
+		_modelSlice = append(_modelSlice, &ro)
 	}
 
-	if len(model_slice) == 0 {
+	if len(_modelSlice) == 0 {
 		// there was an error!
 		return nil, o._adapter.Oops(`no results`)
 	}
-	return model_slice, nil
+	return _modelSlice, nil
 
 }
 
@@ -3492,6 +3556,8 @@ func (o *PostMeta) Create() error {
 	return nil
 }
 
+// UpdatePostId an immediate DB Query to update a single column, in this
+// case post_id
 func (o *PostMeta) UpdatePostId(_upd_PostId int64) (int64, error) {
 	frmt := fmt.Sprintf("UPDATE %s SET `post_id` = '%d' WHERE `meta_id` = '%d'", o._table, _upd_PostId, o.MetaId)
 	err := o._adapter.Execute(frmt)
@@ -3502,6 +3568,8 @@ func (o *PostMeta) UpdatePostId(_upd_PostId int64) (int64, error) {
 	return o._adapter.AffectedRows(), nil
 }
 
+// UpdateMetaKey an immediate DB Query to update a single column, in this
+// case meta_key
 func (o *PostMeta) UpdateMetaKey(_upd_MetaKey string) (int64, error) {
 	frmt := fmt.Sprintf("UPDATE %s SET `meta_key` = '%s' WHERE `meta_id` = '%d'", o._table, _upd_MetaKey, o.MetaId)
 	err := o._adapter.Execute(frmt)
@@ -3512,6 +3580,8 @@ func (o *PostMeta) UpdateMetaKey(_upd_MetaKey string) (int64, error) {
 	return o._adapter.AffectedRows(), nil
 }
 
+// UpdateMetaValue an immediate DB Query to update a single column, in this
+// case meta_value
 func (o *PostMeta) UpdateMetaValue(_upd_MetaValue string) (int64, error) {
 	frmt := fmt.Sprintf("UPDATE %s SET `meta_value` = '%s' WHERE `meta_id` = '%d'", o._table, _upd_MetaValue, o.MetaId)
 	err := o._adapter.Execute(frmt)
@@ -3901,7 +3971,7 @@ func (o *Post) SetCommentCount(arg int64) {
 // Generic and programatically generator finder for Post
 func (o *Post) Find(_findByID int64) (bool, error) {
 
-	var model_slice []*Post
+	var _modelSlice []*Post
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "ID", _findByID)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -3914,14 +3984,14 @@ func (o *Post) Find(_findByID int64) (bool, error) {
 		if err != nil {
 			return false, o._adapter.Oops(fmt.Sprintf(`%s`, err))
 		}
-		model_slice = append(model_slice, &ro)
+		_modelSlice = append(_modelSlice, &ro)
 	}
 
-	if len(model_slice) == 0 {
+	if len(_modelSlice) == 0 {
 		// there was an error!
 		return false, o._adapter.Oops(`not found`)
 	}
-	o.FromPost(model_slice[0])
+	o.FromPost(_modelSlice[0])
 	return true, nil
 
 }
@@ -3930,27 +4000,27 @@ func (o *Post) Find(_findByID int64) (bool, error) {
 // Generic and programatically generator finder for Post
 func (o *Post) FindByPostAuthor(_findByPostAuthor int64) ([]*Post, error) {
 
-	var model_slice []*Post
+	var _modelSlice []*Post
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "post_author", _findByPostAuthor)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return model_slice, err
+		return _modelSlice, err
 	}
 
 	for _, result := range results {
 		ro := Post{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return model_slice, err
+			return _modelSlice, err
 		}
-		model_slice = append(model_slice, &ro)
+		_modelSlice = append(_modelSlice, &ro)
 	}
 
-	if len(model_slice) == 0 {
+	if len(_modelSlice) == 0 {
 		// there was an error!
 		return nil, o._adapter.Oops(`no results`)
 	}
-	return model_slice, nil
+	return _modelSlice, nil
 
 }
 
@@ -3958,27 +4028,27 @@ func (o *Post) FindByPostAuthor(_findByPostAuthor int64) ([]*Post, error) {
 // Generic and programatically generator finder for Post
 func (o *Post) FindByPostDate(_findByPostDate *DateTime) ([]*Post, error) {
 
-	var model_slice []*Post
+	var _modelSlice []*Post
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_date", _findByPostDate)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return model_slice, err
+		return _modelSlice, err
 	}
 
 	for _, result := range results {
 		ro := Post{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return model_slice, err
+			return _modelSlice, err
 		}
-		model_slice = append(model_slice, &ro)
+		_modelSlice = append(_modelSlice, &ro)
 	}
 
-	if len(model_slice) == 0 {
+	if len(_modelSlice) == 0 {
 		// there was an error!
 		return nil, o._adapter.Oops(`no results`)
 	}
-	return model_slice, nil
+	return _modelSlice, nil
 
 }
 
@@ -3986,27 +4056,27 @@ func (o *Post) FindByPostDate(_findByPostDate *DateTime) ([]*Post, error) {
 // Generic and programatically generator finder for Post
 func (o *Post) FindByPostDateGmt(_findByPostDateGmt *DateTime) ([]*Post, error) {
 
-	var model_slice []*Post
+	var _modelSlice []*Post
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_date_gmt", _findByPostDateGmt)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return model_slice, err
+		return _modelSlice, err
 	}
 
 	for _, result := range results {
 		ro := Post{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return model_slice, err
+			return _modelSlice, err
 		}
-		model_slice = append(model_slice, &ro)
+		_modelSlice = append(_modelSlice, &ro)
 	}
 
-	if len(model_slice) == 0 {
+	if len(_modelSlice) == 0 {
 		// there was an error!
 		return nil, o._adapter.Oops(`no results`)
 	}
-	return model_slice, nil
+	return _modelSlice, nil
 
 }
 
@@ -4014,27 +4084,27 @@ func (o *Post) FindByPostDateGmt(_findByPostDateGmt *DateTime) ([]*Post, error) 
 // Generic and programatically generator finder for Post
 func (o *Post) FindByPostContent(_findByPostContent string) ([]*Post, error) {
 
-	var model_slice []*Post
+	var _modelSlice []*Post
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_content", _findByPostContent)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return model_slice, err
+		return _modelSlice, err
 	}
 
 	for _, result := range results {
 		ro := Post{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return model_slice, err
+			return _modelSlice, err
 		}
-		model_slice = append(model_slice, &ro)
+		_modelSlice = append(_modelSlice, &ro)
 	}
 
-	if len(model_slice) == 0 {
+	if len(_modelSlice) == 0 {
 		// there was an error!
 		return nil, o._adapter.Oops(`no results`)
 	}
-	return model_slice, nil
+	return _modelSlice, nil
 
 }
 
@@ -4042,27 +4112,27 @@ func (o *Post) FindByPostContent(_findByPostContent string) ([]*Post, error) {
 // Generic and programatically generator finder for Post
 func (o *Post) FindByPostTitle(_findByPostTitle string) ([]*Post, error) {
 
-	var model_slice []*Post
+	var _modelSlice []*Post
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_title", _findByPostTitle)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return model_slice, err
+		return _modelSlice, err
 	}
 
 	for _, result := range results {
 		ro := Post{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return model_slice, err
+			return _modelSlice, err
 		}
-		model_slice = append(model_slice, &ro)
+		_modelSlice = append(_modelSlice, &ro)
 	}
 
-	if len(model_slice) == 0 {
+	if len(_modelSlice) == 0 {
 		// there was an error!
 		return nil, o._adapter.Oops(`no results`)
 	}
-	return model_slice, nil
+	return _modelSlice, nil
 
 }
 
@@ -4070,27 +4140,27 @@ func (o *Post) FindByPostTitle(_findByPostTitle string) ([]*Post, error) {
 // Generic and programatically generator finder for Post
 func (o *Post) FindByPostExcerpt(_findByPostExcerpt string) ([]*Post, error) {
 
-	var model_slice []*Post
+	var _modelSlice []*Post
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_excerpt", _findByPostExcerpt)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return model_slice, err
+		return _modelSlice, err
 	}
 
 	for _, result := range results {
 		ro := Post{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return model_slice, err
+			return _modelSlice, err
 		}
-		model_slice = append(model_slice, &ro)
+		_modelSlice = append(_modelSlice, &ro)
 	}
 
-	if len(model_slice) == 0 {
+	if len(_modelSlice) == 0 {
 		// there was an error!
 		return nil, o._adapter.Oops(`no results`)
 	}
-	return model_slice, nil
+	return _modelSlice, nil
 
 }
 
@@ -4098,27 +4168,27 @@ func (o *Post) FindByPostExcerpt(_findByPostExcerpt string) ([]*Post, error) {
 // Generic and programatically generator finder for Post
 func (o *Post) FindByPostStatus(_findByPostStatus string) ([]*Post, error) {
 
-	var model_slice []*Post
+	var _modelSlice []*Post
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_status", _findByPostStatus)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return model_slice, err
+		return _modelSlice, err
 	}
 
 	for _, result := range results {
 		ro := Post{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return model_slice, err
+			return _modelSlice, err
 		}
-		model_slice = append(model_slice, &ro)
+		_modelSlice = append(_modelSlice, &ro)
 	}
 
-	if len(model_slice) == 0 {
+	if len(_modelSlice) == 0 {
 		// there was an error!
 		return nil, o._adapter.Oops(`no results`)
 	}
-	return model_slice, nil
+	return _modelSlice, nil
 
 }
 
@@ -4126,27 +4196,27 @@ func (o *Post) FindByPostStatus(_findByPostStatus string) ([]*Post, error) {
 // Generic and programatically generator finder for Post
 func (o *Post) FindByCommentStatus(_findByCommentStatus string) ([]*Post, error) {
 
-	var model_slice []*Post
+	var _modelSlice []*Post
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "comment_status", _findByCommentStatus)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return model_slice, err
+		return _modelSlice, err
 	}
 
 	for _, result := range results {
 		ro := Post{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return model_slice, err
+			return _modelSlice, err
 		}
-		model_slice = append(model_slice, &ro)
+		_modelSlice = append(_modelSlice, &ro)
 	}
 
-	if len(model_slice) == 0 {
+	if len(_modelSlice) == 0 {
 		// there was an error!
 		return nil, o._adapter.Oops(`no results`)
 	}
-	return model_slice, nil
+	return _modelSlice, nil
 
 }
 
@@ -4154,27 +4224,27 @@ func (o *Post) FindByCommentStatus(_findByCommentStatus string) ([]*Post, error)
 // Generic and programatically generator finder for Post
 func (o *Post) FindByPingStatus(_findByPingStatus string) ([]*Post, error) {
 
-	var model_slice []*Post
+	var _modelSlice []*Post
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "ping_status", _findByPingStatus)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return model_slice, err
+		return _modelSlice, err
 	}
 
 	for _, result := range results {
 		ro := Post{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return model_slice, err
+			return _modelSlice, err
 		}
-		model_slice = append(model_slice, &ro)
+		_modelSlice = append(_modelSlice, &ro)
 	}
 
-	if len(model_slice) == 0 {
+	if len(_modelSlice) == 0 {
 		// there was an error!
 		return nil, o._adapter.Oops(`no results`)
 	}
-	return model_slice, nil
+	return _modelSlice, nil
 
 }
 
@@ -4182,27 +4252,27 @@ func (o *Post) FindByPingStatus(_findByPingStatus string) ([]*Post, error) {
 // Generic and programatically generator finder for Post
 func (o *Post) FindByPostPassword(_findByPostPassword string) ([]*Post, error) {
 
-	var model_slice []*Post
+	var _modelSlice []*Post
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_password", _findByPostPassword)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return model_slice, err
+		return _modelSlice, err
 	}
 
 	for _, result := range results {
 		ro := Post{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return model_slice, err
+			return _modelSlice, err
 		}
-		model_slice = append(model_slice, &ro)
+		_modelSlice = append(_modelSlice, &ro)
 	}
 
-	if len(model_slice) == 0 {
+	if len(_modelSlice) == 0 {
 		// there was an error!
 		return nil, o._adapter.Oops(`no results`)
 	}
-	return model_slice, nil
+	return _modelSlice, nil
 
 }
 
@@ -4210,27 +4280,27 @@ func (o *Post) FindByPostPassword(_findByPostPassword string) ([]*Post, error) {
 // Generic and programatically generator finder for Post
 func (o *Post) FindByPostName(_findByPostName string) ([]*Post, error) {
 
-	var model_slice []*Post
+	var _modelSlice []*Post
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_name", _findByPostName)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return model_slice, err
+		return _modelSlice, err
 	}
 
 	for _, result := range results {
 		ro := Post{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return model_slice, err
+			return _modelSlice, err
 		}
-		model_slice = append(model_slice, &ro)
+		_modelSlice = append(_modelSlice, &ro)
 	}
 
-	if len(model_slice) == 0 {
+	if len(_modelSlice) == 0 {
 		// there was an error!
 		return nil, o._adapter.Oops(`no results`)
 	}
-	return model_slice, nil
+	return _modelSlice, nil
 
 }
 
@@ -4238,27 +4308,27 @@ func (o *Post) FindByPostName(_findByPostName string) ([]*Post, error) {
 // Generic and programatically generator finder for Post
 func (o *Post) FindByToPing(_findByToPing string) ([]*Post, error) {
 
-	var model_slice []*Post
+	var _modelSlice []*Post
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "to_ping", _findByToPing)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return model_slice, err
+		return _modelSlice, err
 	}
 
 	for _, result := range results {
 		ro := Post{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return model_slice, err
+			return _modelSlice, err
 		}
-		model_slice = append(model_slice, &ro)
+		_modelSlice = append(_modelSlice, &ro)
 	}
 
-	if len(model_slice) == 0 {
+	if len(_modelSlice) == 0 {
 		// there was an error!
 		return nil, o._adapter.Oops(`no results`)
 	}
-	return model_slice, nil
+	return _modelSlice, nil
 
 }
 
@@ -4266,27 +4336,27 @@ func (o *Post) FindByToPing(_findByToPing string) ([]*Post, error) {
 // Generic and programatically generator finder for Post
 func (o *Post) FindByPinged(_findByPinged string) ([]*Post, error) {
 
-	var model_slice []*Post
+	var _modelSlice []*Post
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "pinged", _findByPinged)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return model_slice, err
+		return _modelSlice, err
 	}
 
 	for _, result := range results {
 		ro := Post{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return model_slice, err
+			return _modelSlice, err
 		}
-		model_slice = append(model_slice, &ro)
+		_modelSlice = append(_modelSlice, &ro)
 	}
 
-	if len(model_slice) == 0 {
+	if len(_modelSlice) == 0 {
 		// there was an error!
 		return nil, o._adapter.Oops(`no results`)
 	}
-	return model_slice, nil
+	return _modelSlice, nil
 
 }
 
@@ -4294,27 +4364,27 @@ func (o *Post) FindByPinged(_findByPinged string) ([]*Post, error) {
 // Generic and programatically generator finder for Post
 func (o *Post) FindByPostModified(_findByPostModified *DateTime) ([]*Post, error) {
 
-	var model_slice []*Post
+	var _modelSlice []*Post
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_modified", _findByPostModified)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return model_slice, err
+		return _modelSlice, err
 	}
 
 	for _, result := range results {
 		ro := Post{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return model_slice, err
+			return _modelSlice, err
 		}
-		model_slice = append(model_slice, &ro)
+		_modelSlice = append(_modelSlice, &ro)
 	}
 
-	if len(model_slice) == 0 {
+	if len(_modelSlice) == 0 {
 		// there was an error!
 		return nil, o._adapter.Oops(`no results`)
 	}
-	return model_slice, nil
+	return _modelSlice, nil
 
 }
 
@@ -4322,27 +4392,27 @@ func (o *Post) FindByPostModified(_findByPostModified *DateTime) ([]*Post, error
 // Generic and programatically generator finder for Post
 func (o *Post) FindByPostModifiedGmt(_findByPostModifiedGmt *DateTime) ([]*Post, error) {
 
-	var model_slice []*Post
+	var _modelSlice []*Post
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_modified_gmt", _findByPostModifiedGmt)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return model_slice, err
+		return _modelSlice, err
 	}
 
 	for _, result := range results {
 		ro := Post{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return model_slice, err
+			return _modelSlice, err
 		}
-		model_slice = append(model_slice, &ro)
+		_modelSlice = append(_modelSlice, &ro)
 	}
 
-	if len(model_slice) == 0 {
+	if len(_modelSlice) == 0 {
 		// there was an error!
 		return nil, o._adapter.Oops(`no results`)
 	}
-	return model_slice, nil
+	return _modelSlice, nil
 
 }
 
@@ -4350,27 +4420,27 @@ func (o *Post) FindByPostModifiedGmt(_findByPostModifiedGmt *DateTime) ([]*Post,
 // Generic and programatically generator finder for Post
 func (o *Post) FindByPostContentFiltered(_findByPostContentFiltered string) ([]*Post, error) {
 
-	var model_slice []*Post
+	var _modelSlice []*Post
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_content_filtered", _findByPostContentFiltered)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return model_slice, err
+		return _modelSlice, err
 	}
 
 	for _, result := range results {
 		ro := Post{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return model_slice, err
+			return _modelSlice, err
 		}
-		model_slice = append(model_slice, &ro)
+		_modelSlice = append(_modelSlice, &ro)
 	}
 
-	if len(model_slice) == 0 {
+	if len(_modelSlice) == 0 {
 		// there was an error!
 		return nil, o._adapter.Oops(`no results`)
 	}
-	return model_slice, nil
+	return _modelSlice, nil
 
 }
 
@@ -4378,27 +4448,27 @@ func (o *Post) FindByPostContentFiltered(_findByPostContentFiltered string) ([]*
 // Generic and programatically generator finder for Post
 func (o *Post) FindByPostParent(_findByPostParent int64) ([]*Post, error) {
 
-	var model_slice []*Post
+	var _modelSlice []*Post
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "post_parent", _findByPostParent)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return model_slice, err
+		return _modelSlice, err
 	}
 
 	for _, result := range results {
 		ro := Post{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return model_slice, err
+			return _modelSlice, err
 		}
-		model_slice = append(model_slice, &ro)
+		_modelSlice = append(_modelSlice, &ro)
 	}
 
-	if len(model_slice) == 0 {
+	if len(_modelSlice) == 0 {
 		// there was an error!
 		return nil, o._adapter.Oops(`no results`)
 	}
-	return model_slice, nil
+	return _modelSlice, nil
 
 }
 
@@ -4406,27 +4476,27 @@ func (o *Post) FindByPostParent(_findByPostParent int64) ([]*Post, error) {
 // Generic and programatically generator finder for Post
 func (o *Post) FindByGuid(_findByGuid string) ([]*Post, error) {
 
-	var model_slice []*Post
+	var _modelSlice []*Post
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "guid", _findByGuid)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return model_slice, err
+		return _modelSlice, err
 	}
 
 	for _, result := range results {
 		ro := Post{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return model_slice, err
+			return _modelSlice, err
 		}
-		model_slice = append(model_slice, &ro)
+		_modelSlice = append(_modelSlice, &ro)
 	}
 
-	if len(model_slice) == 0 {
+	if len(_modelSlice) == 0 {
 		// there was an error!
 		return nil, o._adapter.Oops(`no results`)
 	}
-	return model_slice, nil
+	return _modelSlice, nil
 
 }
 
@@ -4434,27 +4504,27 @@ func (o *Post) FindByGuid(_findByGuid string) ([]*Post, error) {
 // Generic and programatically generator finder for Post
 func (o *Post) FindByMenuOrder(_findByMenuOrder int) ([]*Post, error) {
 
-	var model_slice []*Post
+	var _modelSlice []*Post
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "menu_order", _findByMenuOrder)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return model_slice, err
+		return _modelSlice, err
 	}
 
 	for _, result := range results {
 		ro := Post{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return model_slice, err
+			return _modelSlice, err
 		}
-		model_slice = append(model_slice, &ro)
+		_modelSlice = append(_modelSlice, &ro)
 	}
 
-	if len(model_slice) == 0 {
+	if len(_modelSlice) == 0 {
 		// there was an error!
 		return nil, o._adapter.Oops(`no results`)
 	}
-	return model_slice, nil
+	return _modelSlice, nil
 
 }
 
@@ -4462,27 +4532,27 @@ func (o *Post) FindByMenuOrder(_findByMenuOrder int) ([]*Post, error) {
 // Generic and programatically generator finder for Post
 func (o *Post) FindByPostType(_findByPostType string) ([]*Post, error) {
 
-	var model_slice []*Post
+	var _modelSlice []*Post
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_type", _findByPostType)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return model_slice, err
+		return _modelSlice, err
 	}
 
 	for _, result := range results {
 		ro := Post{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return model_slice, err
+			return _modelSlice, err
 		}
-		model_slice = append(model_slice, &ro)
+		_modelSlice = append(_modelSlice, &ro)
 	}
 
-	if len(model_slice) == 0 {
+	if len(_modelSlice) == 0 {
 		// there was an error!
 		return nil, o._adapter.Oops(`no results`)
 	}
-	return model_slice, nil
+	return _modelSlice, nil
 
 }
 
@@ -4490,27 +4560,27 @@ func (o *Post) FindByPostType(_findByPostType string) ([]*Post, error) {
 // Generic and programatically generator finder for Post
 func (o *Post) FindByPostMimeType(_findByPostMimeType string) ([]*Post, error) {
 
-	var model_slice []*Post
+	var _modelSlice []*Post
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_mime_type", _findByPostMimeType)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return model_slice, err
+		return _modelSlice, err
 	}
 
 	for _, result := range results {
 		ro := Post{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return model_slice, err
+			return _modelSlice, err
 		}
-		model_slice = append(model_slice, &ro)
+		_modelSlice = append(_modelSlice, &ro)
 	}
 
-	if len(model_slice) == 0 {
+	if len(_modelSlice) == 0 {
 		// there was an error!
 		return nil, o._adapter.Oops(`no results`)
 	}
-	return model_slice, nil
+	return _modelSlice, nil
 
 }
 
@@ -4518,27 +4588,27 @@ func (o *Post) FindByPostMimeType(_findByPostMimeType string) ([]*Post, error) {
 // Generic and programatically generator finder for Post
 func (o *Post) FindByCommentCount(_findByCommentCount int64) ([]*Post, error) {
 
-	var model_slice []*Post
+	var _modelSlice []*Post
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "comment_count", _findByCommentCount)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return model_slice, err
+		return _modelSlice, err
 	}
 
 	for _, result := range results {
 		ro := Post{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return model_slice, err
+			return _modelSlice, err
 		}
-		model_slice = append(model_slice, &ro)
+		_modelSlice = append(_modelSlice, &ro)
 	}
 
-	if len(model_slice) == 0 {
+	if len(_modelSlice) == 0 {
 		// there was an error!
 		return nil, o._adapter.Oops(`no results`)
 	}
-	return model_slice, nil
+	return _modelSlice, nil
 
 }
 
@@ -4907,6 +4977,8 @@ func (o *Post) Create() error {
 	return nil
 }
 
+// UpdatePostAuthor an immediate DB Query to update a single column, in this
+// case post_author
 func (o *Post) UpdatePostAuthor(_upd_PostAuthor int64) (int64, error) {
 	frmt := fmt.Sprintf("UPDATE %s SET `post_author` = '%d' WHERE `ID` = '%d'", o._table, _upd_PostAuthor, o.ID)
 	err := o._adapter.Execute(frmt)
@@ -4917,6 +4989,8 @@ func (o *Post) UpdatePostAuthor(_upd_PostAuthor int64) (int64, error) {
 	return o._adapter.AffectedRows(), nil
 }
 
+// UpdatePostDate an immediate DB Query to update a single column, in this
+// case post_date
 func (o *Post) UpdatePostDate(_upd_PostDate *DateTime) (int64, error) {
 	frmt := fmt.Sprintf("UPDATE %s SET `post_date` = '%s' WHERE `ID` = '%d'", o._table, _upd_PostDate, o.ID)
 	err := o._adapter.Execute(frmt)
@@ -4927,6 +5001,8 @@ func (o *Post) UpdatePostDate(_upd_PostDate *DateTime) (int64, error) {
 	return o._adapter.AffectedRows(), nil
 }
 
+// UpdatePostDateGmt an immediate DB Query to update a single column, in this
+// case post_date_gmt
 func (o *Post) UpdatePostDateGmt(_upd_PostDateGmt *DateTime) (int64, error) {
 	frmt := fmt.Sprintf("UPDATE %s SET `post_date_gmt` = '%s' WHERE `ID` = '%d'", o._table, _upd_PostDateGmt, o.ID)
 	err := o._adapter.Execute(frmt)
@@ -4937,6 +5013,8 @@ func (o *Post) UpdatePostDateGmt(_upd_PostDateGmt *DateTime) (int64, error) {
 	return o._adapter.AffectedRows(), nil
 }
 
+// UpdatePostContent an immediate DB Query to update a single column, in this
+// case post_content
 func (o *Post) UpdatePostContent(_upd_PostContent string) (int64, error) {
 	frmt := fmt.Sprintf("UPDATE %s SET `post_content` = '%s' WHERE `ID` = '%d'", o._table, _upd_PostContent, o.ID)
 	err := o._adapter.Execute(frmt)
@@ -4947,6 +5025,8 @@ func (o *Post) UpdatePostContent(_upd_PostContent string) (int64, error) {
 	return o._adapter.AffectedRows(), nil
 }
 
+// UpdatePostTitle an immediate DB Query to update a single column, in this
+// case post_title
 func (o *Post) UpdatePostTitle(_upd_PostTitle string) (int64, error) {
 	frmt := fmt.Sprintf("UPDATE %s SET `post_title` = '%s' WHERE `ID` = '%d'", o._table, _upd_PostTitle, o.ID)
 	err := o._adapter.Execute(frmt)
@@ -4957,6 +5037,8 @@ func (o *Post) UpdatePostTitle(_upd_PostTitle string) (int64, error) {
 	return o._adapter.AffectedRows(), nil
 }
 
+// UpdatePostExcerpt an immediate DB Query to update a single column, in this
+// case post_excerpt
 func (o *Post) UpdatePostExcerpt(_upd_PostExcerpt string) (int64, error) {
 	frmt := fmt.Sprintf("UPDATE %s SET `post_excerpt` = '%s' WHERE `ID` = '%d'", o._table, _upd_PostExcerpt, o.ID)
 	err := o._adapter.Execute(frmt)
@@ -4967,6 +5049,8 @@ func (o *Post) UpdatePostExcerpt(_upd_PostExcerpt string) (int64, error) {
 	return o._adapter.AffectedRows(), nil
 }
 
+// UpdatePostStatus an immediate DB Query to update a single column, in this
+// case post_status
 func (o *Post) UpdatePostStatus(_upd_PostStatus string) (int64, error) {
 	frmt := fmt.Sprintf("UPDATE %s SET `post_status` = '%s' WHERE `ID` = '%d'", o._table, _upd_PostStatus, o.ID)
 	err := o._adapter.Execute(frmt)
@@ -4977,6 +5061,8 @@ func (o *Post) UpdatePostStatus(_upd_PostStatus string) (int64, error) {
 	return o._adapter.AffectedRows(), nil
 }
 
+// UpdateCommentStatus an immediate DB Query to update a single column, in this
+// case comment_status
 func (o *Post) UpdateCommentStatus(_upd_CommentStatus string) (int64, error) {
 	frmt := fmt.Sprintf("UPDATE %s SET `comment_status` = '%s' WHERE `ID` = '%d'", o._table, _upd_CommentStatus, o.ID)
 	err := o._adapter.Execute(frmt)
@@ -4987,6 +5073,8 @@ func (o *Post) UpdateCommentStatus(_upd_CommentStatus string) (int64, error) {
 	return o._adapter.AffectedRows(), nil
 }
 
+// UpdatePingStatus an immediate DB Query to update a single column, in this
+// case ping_status
 func (o *Post) UpdatePingStatus(_upd_PingStatus string) (int64, error) {
 	frmt := fmt.Sprintf("UPDATE %s SET `ping_status` = '%s' WHERE `ID` = '%d'", o._table, _upd_PingStatus, o.ID)
 	err := o._adapter.Execute(frmt)
@@ -4997,6 +5085,8 @@ func (o *Post) UpdatePingStatus(_upd_PingStatus string) (int64, error) {
 	return o._adapter.AffectedRows(), nil
 }
 
+// UpdatePostPassword an immediate DB Query to update a single column, in this
+// case post_password
 func (o *Post) UpdatePostPassword(_upd_PostPassword string) (int64, error) {
 	frmt := fmt.Sprintf("UPDATE %s SET `post_password` = '%s' WHERE `ID` = '%d'", o._table, _upd_PostPassword, o.ID)
 	err := o._adapter.Execute(frmt)
@@ -5007,6 +5097,8 @@ func (o *Post) UpdatePostPassword(_upd_PostPassword string) (int64, error) {
 	return o._adapter.AffectedRows(), nil
 }
 
+// UpdatePostName an immediate DB Query to update a single column, in this
+// case post_name
 func (o *Post) UpdatePostName(_upd_PostName string) (int64, error) {
 	frmt := fmt.Sprintf("UPDATE %s SET `post_name` = '%s' WHERE `ID` = '%d'", o._table, _upd_PostName, o.ID)
 	err := o._adapter.Execute(frmt)
@@ -5017,6 +5109,8 @@ func (o *Post) UpdatePostName(_upd_PostName string) (int64, error) {
 	return o._adapter.AffectedRows(), nil
 }
 
+// UpdateToPing an immediate DB Query to update a single column, in this
+// case to_ping
 func (o *Post) UpdateToPing(_upd_ToPing string) (int64, error) {
 	frmt := fmt.Sprintf("UPDATE %s SET `to_ping` = '%s' WHERE `ID` = '%d'", o._table, _upd_ToPing, o.ID)
 	err := o._adapter.Execute(frmt)
@@ -5027,6 +5121,8 @@ func (o *Post) UpdateToPing(_upd_ToPing string) (int64, error) {
 	return o._adapter.AffectedRows(), nil
 }
 
+// UpdatePinged an immediate DB Query to update a single column, in this
+// case pinged
 func (o *Post) UpdatePinged(_upd_Pinged string) (int64, error) {
 	frmt := fmt.Sprintf("UPDATE %s SET `pinged` = '%s' WHERE `ID` = '%d'", o._table, _upd_Pinged, o.ID)
 	err := o._adapter.Execute(frmt)
@@ -5037,6 +5133,8 @@ func (o *Post) UpdatePinged(_upd_Pinged string) (int64, error) {
 	return o._adapter.AffectedRows(), nil
 }
 
+// UpdatePostModified an immediate DB Query to update a single column, in this
+// case post_modified
 func (o *Post) UpdatePostModified(_upd_PostModified *DateTime) (int64, error) {
 	frmt := fmt.Sprintf("UPDATE %s SET `post_modified` = '%s' WHERE `ID` = '%d'", o._table, _upd_PostModified, o.ID)
 	err := o._adapter.Execute(frmt)
@@ -5047,6 +5145,8 @@ func (o *Post) UpdatePostModified(_upd_PostModified *DateTime) (int64, error) {
 	return o._adapter.AffectedRows(), nil
 }
 
+// UpdatePostModifiedGmt an immediate DB Query to update a single column, in this
+// case post_modified_gmt
 func (o *Post) UpdatePostModifiedGmt(_upd_PostModifiedGmt *DateTime) (int64, error) {
 	frmt := fmt.Sprintf("UPDATE %s SET `post_modified_gmt` = '%s' WHERE `ID` = '%d'", o._table, _upd_PostModifiedGmt, o.ID)
 	err := o._adapter.Execute(frmt)
@@ -5057,6 +5157,8 @@ func (o *Post) UpdatePostModifiedGmt(_upd_PostModifiedGmt *DateTime) (int64, err
 	return o._adapter.AffectedRows(), nil
 }
 
+// UpdatePostContentFiltered an immediate DB Query to update a single column, in this
+// case post_content_filtered
 func (o *Post) UpdatePostContentFiltered(_upd_PostContentFiltered string) (int64, error) {
 	frmt := fmt.Sprintf("UPDATE %s SET `post_content_filtered` = '%s' WHERE `ID` = '%d'", o._table, _upd_PostContentFiltered, o.ID)
 	err := o._adapter.Execute(frmt)
@@ -5067,6 +5169,8 @@ func (o *Post) UpdatePostContentFiltered(_upd_PostContentFiltered string) (int64
 	return o._adapter.AffectedRows(), nil
 }
 
+// UpdatePostParent an immediate DB Query to update a single column, in this
+// case post_parent
 func (o *Post) UpdatePostParent(_upd_PostParent int64) (int64, error) {
 	frmt := fmt.Sprintf("UPDATE %s SET `post_parent` = '%d' WHERE `ID` = '%d'", o._table, _upd_PostParent, o.ID)
 	err := o._adapter.Execute(frmt)
@@ -5077,6 +5181,8 @@ func (o *Post) UpdatePostParent(_upd_PostParent int64) (int64, error) {
 	return o._adapter.AffectedRows(), nil
 }
 
+// UpdateGuid an immediate DB Query to update a single column, in this
+// case guid
 func (o *Post) UpdateGuid(_upd_Guid string) (int64, error) {
 	frmt := fmt.Sprintf("UPDATE %s SET `guid` = '%s' WHERE `ID` = '%d'", o._table, _upd_Guid, o.ID)
 	err := o._adapter.Execute(frmt)
@@ -5087,6 +5193,8 @@ func (o *Post) UpdateGuid(_upd_Guid string) (int64, error) {
 	return o._adapter.AffectedRows(), nil
 }
 
+// UpdateMenuOrder an immediate DB Query to update a single column, in this
+// case menu_order
 func (o *Post) UpdateMenuOrder(_upd_MenuOrder int) (int64, error) {
 	frmt := fmt.Sprintf("UPDATE %s SET `menu_order` = '%d' WHERE `ID` = '%d'", o._table, _upd_MenuOrder, o.ID)
 	err := o._adapter.Execute(frmt)
@@ -5097,6 +5205,8 @@ func (o *Post) UpdateMenuOrder(_upd_MenuOrder int) (int64, error) {
 	return o._adapter.AffectedRows(), nil
 }
 
+// UpdatePostType an immediate DB Query to update a single column, in this
+// case post_type
 func (o *Post) UpdatePostType(_upd_PostType string) (int64, error) {
 	frmt := fmt.Sprintf("UPDATE %s SET `post_type` = '%s' WHERE `ID` = '%d'", o._table, _upd_PostType, o.ID)
 	err := o._adapter.Execute(frmt)
@@ -5107,6 +5217,8 @@ func (o *Post) UpdatePostType(_upd_PostType string) (int64, error) {
 	return o._adapter.AffectedRows(), nil
 }
 
+// UpdatePostMimeType an immediate DB Query to update a single column, in this
+// case post_mime_type
 func (o *Post) UpdatePostMimeType(_upd_PostMimeType string) (int64, error) {
 	frmt := fmt.Sprintf("UPDATE %s SET `post_mime_type` = '%s' WHERE `ID` = '%d'", o._table, _upd_PostMimeType, o.ID)
 	err := o._adapter.Execute(frmt)
@@ -5117,6 +5229,8 @@ func (o *Post) UpdatePostMimeType(_upd_PostMimeType string) (int64, error) {
 	return o._adapter.AffectedRows(), nil
 }
 
+// UpdateCommentCount an immediate DB Query to update a single column, in this
+// case comment_count
 func (o *Post) UpdateCommentCount(_upd_CommentCount int64) (int64, error) {
 	frmt := fmt.Sprintf("UPDATE %s SET `comment_count` = '%d' WHERE `ID` = '%d'", o._table, _upd_CommentCount, o.ID)
 	err := o._adapter.Execute(frmt)
@@ -5206,32 +5320,32 @@ func (o *TermRelationship) SetTermOrder(arg int) {
 // Generic and programatically generator finder for TermRelationship
 func (o *TermRelationship) FindByObjectId(_findByObjectId int64) ([]*TermRelationship, error) {
 
-	var model_slice []*TermRelationship
+	var _modelSlice []*TermRelationship
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "object_id", _findByObjectId)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return model_slice, err
+		return _modelSlice, err
 	}
 
 	for _, result := range results {
 		ro := TermRelationship{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return model_slice, err
+			return _modelSlice, err
 		}
-		model_slice = append(model_slice, &ro)
+		_modelSlice = append(_modelSlice, &ro)
 	}
 
-	if len(model_slice) == 0 {
+	if len(_modelSlice) == 0 {
 		// there was an error!
 		return nil, o._adapter.Oops(`no results`)
 	}
-	return model_slice, nil
+	return _modelSlice, nil
 
 }
 func (o *TermRelationship) Find(termId int64, objectId int64) (bool, error) {
 
-	var model_slice []*TermRelationship
+	var _modelSlice []*TermRelationship
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `term_taxonomy_id` = '%d' AND `object_id` = '%d'", o._table, termId, objectId)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -5244,14 +5358,14 @@ func (o *TermRelationship) Find(termId int64, objectId int64) (bool, error) {
 		if err != nil {
 			return false, err
 		}
-		model_slice = append(model_slice, &ro)
+		_modelSlice = append(_modelSlice, &ro)
 	}
 
-	if len(model_slice) == 0 {
+	if len(_modelSlice) == 0 {
 		// there was an error!
 		return false, errors.New("not found")
 	}
-	o.FromTermRelationship(model_slice[0])
+	o.FromTermRelationship(_modelSlice[0])
 	return true, nil
 
 }
@@ -5260,27 +5374,27 @@ func (o *TermRelationship) Find(termId int64, objectId int64) (bool, error) {
 // Generic and programatically generator finder for TermRelationship
 func (o *TermRelationship) FindByTermOrder(_findByTermOrder int) ([]*TermRelationship, error) {
 
-	var model_slice []*TermRelationship
+	var _modelSlice []*TermRelationship
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "term_order", _findByTermOrder)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return model_slice, err
+		return _modelSlice, err
 	}
 
 	for _, result := range results {
 		ro := TermRelationship{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return model_slice, err
+			return _modelSlice, err
 		}
-		model_slice = append(model_slice, &ro)
+		_modelSlice = append(_modelSlice, &ro)
 	}
 
-	if len(model_slice) == 0 {
+	if len(_modelSlice) == 0 {
 		// there was an error!
 		return nil, o._adapter.Oops(`no results`)
 	}
-	return model_slice, nil
+	return _modelSlice, nil
 
 }
 
@@ -5377,6 +5491,8 @@ func (o *TermRelationship) Create() error {
 	return nil
 }
 
+// UpdateObjectId an immediate DB Query to update a single column, in this
+// case object_id
 func (o *TermRelationship) UpdateObjectId(_upd_ObjectId int64) (int64, error) {
 	frmt := fmt.Sprintf("UPDATE %s SET `object_id` = '%d' WHERE term_taxonomy_id = '%d' AND object_id = '%d'", o._table, _upd_ObjectId, o.TermTaxonomyId, o.ObjectId)
 	err := o._adapter.Execute(frmt)
@@ -5387,6 +5503,8 @@ func (o *TermRelationship) UpdateObjectId(_upd_ObjectId int64) (int64, error) {
 	return o._adapter.AffectedRows(), nil
 }
 
+// UpdateTermOrder an immediate DB Query to update a single column, in this
+// case term_order
 func (o *TermRelationship) UpdateTermOrder(_upd_TermOrder int) (int64, error) {
 	frmt := fmt.Sprintf("UPDATE %s SET `term_order` = '%d' WHERE term_taxonomy_id = '%d' AND object_id = '%d'", o._table, _upd_TermOrder, o.TermTaxonomyId, o.ObjectId)
 	err := o._adapter.Execute(frmt)
@@ -5521,7 +5639,7 @@ func (o *TermTaxonomy) SetCount(arg int64) {
 // Generic and programatically generator finder for TermTaxonomy
 func (o *TermTaxonomy) Find(_findByTermTaxonomyId int64) (bool, error) {
 
-	var model_slice []*TermTaxonomy
+	var _modelSlice []*TermTaxonomy
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "term_taxonomy_id", _findByTermTaxonomyId)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -5534,14 +5652,14 @@ func (o *TermTaxonomy) Find(_findByTermTaxonomyId int64) (bool, error) {
 		if err != nil {
 			return false, o._adapter.Oops(fmt.Sprintf(`%s`, err))
 		}
-		model_slice = append(model_slice, &ro)
+		_modelSlice = append(_modelSlice, &ro)
 	}
 
-	if len(model_slice) == 0 {
+	if len(_modelSlice) == 0 {
 		// there was an error!
 		return false, o._adapter.Oops(`not found`)
 	}
-	o.FromTermTaxonomy(model_slice[0])
+	o.FromTermTaxonomy(_modelSlice[0])
 	return true, nil
 
 }
@@ -5550,27 +5668,27 @@ func (o *TermTaxonomy) Find(_findByTermTaxonomyId int64) (bool, error) {
 // Generic and programatically generator finder for TermTaxonomy
 func (o *TermTaxonomy) FindByTermId(_findByTermId int64) ([]*TermTaxonomy, error) {
 
-	var model_slice []*TermTaxonomy
+	var _modelSlice []*TermTaxonomy
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "term_id", _findByTermId)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return model_slice, err
+		return _modelSlice, err
 	}
 
 	for _, result := range results {
 		ro := TermTaxonomy{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return model_slice, err
+			return _modelSlice, err
 		}
-		model_slice = append(model_slice, &ro)
+		_modelSlice = append(_modelSlice, &ro)
 	}
 
-	if len(model_slice) == 0 {
+	if len(_modelSlice) == 0 {
 		// there was an error!
 		return nil, o._adapter.Oops(`no results`)
 	}
-	return model_slice, nil
+	return _modelSlice, nil
 
 }
 
@@ -5578,27 +5696,27 @@ func (o *TermTaxonomy) FindByTermId(_findByTermId int64) ([]*TermTaxonomy, error
 // Generic and programatically generator finder for TermTaxonomy
 func (o *TermTaxonomy) FindByTaxonomy(_findByTaxonomy string) ([]*TermTaxonomy, error) {
 
-	var model_slice []*TermTaxonomy
+	var _modelSlice []*TermTaxonomy
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "taxonomy", _findByTaxonomy)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return model_slice, err
+		return _modelSlice, err
 	}
 
 	for _, result := range results {
 		ro := TermTaxonomy{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return model_slice, err
+			return _modelSlice, err
 		}
-		model_slice = append(model_slice, &ro)
+		_modelSlice = append(_modelSlice, &ro)
 	}
 
-	if len(model_slice) == 0 {
+	if len(_modelSlice) == 0 {
 		// there was an error!
 		return nil, o._adapter.Oops(`no results`)
 	}
-	return model_slice, nil
+	return _modelSlice, nil
 
 }
 
@@ -5606,27 +5724,27 @@ func (o *TermTaxonomy) FindByTaxonomy(_findByTaxonomy string) ([]*TermTaxonomy, 
 // Generic and programatically generator finder for TermTaxonomy
 func (o *TermTaxonomy) FindByDescription(_findByDescription string) ([]*TermTaxonomy, error) {
 
-	var model_slice []*TermTaxonomy
+	var _modelSlice []*TermTaxonomy
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "description", _findByDescription)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return model_slice, err
+		return _modelSlice, err
 	}
 
 	for _, result := range results {
 		ro := TermTaxonomy{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return model_slice, err
+			return _modelSlice, err
 		}
-		model_slice = append(model_slice, &ro)
+		_modelSlice = append(_modelSlice, &ro)
 	}
 
-	if len(model_slice) == 0 {
+	if len(_modelSlice) == 0 {
 		// there was an error!
 		return nil, o._adapter.Oops(`no results`)
 	}
-	return model_slice, nil
+	return _modelSlice, nil
 
 }
 
@@ -5634,27 +5752,27 @@ func (o *TermTaxonomy) FindByDescription(_findByDescription string) ([]*TermTaxo
 // Generic and programatically generator finder for TermTaxonomy
 func (o *TermTaxonomy) FindByParent(_findByParent int64) ([]*TermTaxonomy, error) {
 
-	var model_slice []*TermTaxonomy
+	var _modelSlice []*TermTaxonomy
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "parent", _findByParent)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return model_slice, err
+		return _modelSlice, err
 	}
 
 	for _, result := range results {
 		ro := TermTaxonomy{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return model_slice, err
+			return _modelSlice, err
 		}
-		model_slice = append(model_slice, &ro)
+		_modelSlice = append(_modelSlice, &ro)
 	}
 
-	if len(model_slice) == 0 {
+	if len(_modelSlice) == 0 {
 		// there was an error!
 		return nil, o._adapter.Oops(`no results`)
 	}
-	return model_slice, nil
+	return _modelSlice, nil
 
 }
 
@@ -5662,27 +5780,27 @@ func (o *TermTaxonomy) FindByParent(_findByParent int64) ([]*TermTaxonomy, error
 // Generic and programatically generator finder for TermTaxonomy
 func (o *TermTaxonomy) FindByCount(_findByCount int64) ([]*TermTaxonomy, error) {
 
-	var model_slice []*TermTaxonomy
+	var _modelSlice []*TermTaxonomy
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "count", _findByCount)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return model_slice, err
+		return _modelSlice, err
 	}
 
 	for _, result := range results {
 		ro := TermTaxonomy{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return model_slice, err
+			return _modelSlice, err
 		}
-		model_slice = append(model_slice, &ro)
+		_modelSlice = append(_modelSlice, &ro)
 	}
 
-	if len(model_slice) == 0 {
+	if len(_modelSlice) == 0 {
 		// there was an error!
 		return nil, o._adapter.Oops(`no results`)
 	}
-	return model_slice, nil
+	return _modelSlice, nil
 
 }
 
@@ -5813,6 +5931,8 @@ func (o *TermTaxonomy) Create() error {
 	return nil
 }
 
+// UpdateTermId an immediate DB Query to update a single column, in this
+// case term_id
 func (o *TermTaxonomy) UpdateTermId(_upd_TermId int64) (int64, error) {
 	frmt := fmt.Sprintf("UPDATE %s SET `term_id` = '%d' WHERE `term_taxonomy_id` = '%d'", o._table, _upd_TermId, o.TermTaxonomyId)
 	err := o._adapter.Execute(frmt)
@@ -5823,6 +5943,8 @@ func (o *TermTaxonomy) UpdateTermId(_upd_TermId int64) (int64, error) {
 	return o._adapter.AffectedRows(), nil
 }
 
+// UpdateTaxonomy an immediate DB Query to update a single column, in this
+// case taxonomy
 func (o *TermTaxonomy) UpdateTaxonomy(_upd_Taxonomy string) (int64, error) {
 	frmt := fmt.Sprintf("UPDATE %s SET `taxonomy` = '%s' WHERE `term_taxonomy_id` = '%d'", o._table, _upd_Taxonomy, o.TermTaxonomyId)
 	err := o._adapter.Execute(frmt)
@@ -5833,6 +5955,8 @@ func (o *TermTaxonomy) UpdateTaxonomy(_upd_Taxonomy string) (int64, error) {
 	return o._adapter.AffectedRows(), nil
 }
 
+// UpdateDescription an immediate DB Query to update a single column, in this
+// case description
 func (o *TermTaxonomy) UpdateDescription(_upd_Description string) (int64, error) {
 	frmt := fmt.Sprintf("UPDATE %s SET `description` = '%s' WHERE `term_taxonomy_id` = '%d'", o._table, _upd_Description, o.TermTaxonomyId)
 	err := o._adapter.Execute(frmt)
@@ -5843,6 +5967,8 @@ func (o *TermTaxonomy) UpdateDescription(_upd_Description string) (int64, error)
 	return o._adapter.AffectedRows(), nil
 }
 
+// UpdateParent an immediate DB Query to update a single column, in this
+// case parent
 func (o *TermTaxonomy) UpdateParent(_upd_Parent int64) (int64, error) {
 	frmt := fmt.Sprintf("UPDATE %s SET `parent` = '%d' WHERE `term_taxonomy_id` = '%d'", o._table, _upd_Parent, o.TermTaxonomyId)
 	err := o._adapter.Execute(frmt)
@@ -5853,6 +5979,8 @@ func (o *TermTaxonomy) UpdateParent(_upd_Parent int64) (int64, error) {
 	return o._adapter.AffectedRows(), nil
 }
 
+// UpdateCount an immediate DB Query to update a single column, in this
+// case count
 func (o *TermTaxonomy) UpdateCount(_upd_Count int64) (int64, error) {
 	frmt := fmt.Sprintf("UPDATE %s SET `count` = '%d' WHERE `term_taxonomy_id` = '%d'", o._table, _upd_Count, o.TermTaxonomyId)
 	err := o._adapter.Execute(frmt)
@@ -5957,7 +6085,7 @@ func (o *Term) SetTermGroup(arg int64) {
 // Generic and programatically generator finder for Term
 func (o *Term) Find(_findByTermId int64) (bool, error) {
 
-	var model_slice []*Term
+	var _modelSlice []*Term
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "term_id", _findByTermId)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -5970,14 +6098,14 @@ func (o *Term) Find(_findByTermId int64) (bool, error) {
 		if err != nil {
 			return false, o._adapter.Oops(fmt.Sprintf(`%s`, err))
 		}
-		model_slice = append(model_slice, &ro)
+		_modelSlice = append(_modelSlice, &ro)
 	}
 
-	if len(model_slice) == 0 {
+	if len(_modelSlice) == 0 {
 		// there was an error!
 		return false, o._adapter.Oops(`not found`)
 	}
-	o.FromTerm(model_slice[0])
+	o.FromTerm(_modelSlice[0])
 	return true, nil
 
 }
@@ -5986,27 +6114,27 @@ func (o *Term) Find(_findByTermId int64) (bool, error) {
 // Generic and programatically generator finder for Term
 func (o *Term) FindByName(_findByName string) ([]*Term, error) {
 
-	var model_slice []*Term
+	var _modelSlice []*Term
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "name", _findByName)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return model_slice, err
+		return _modelSlice, err
 	}
 
 	for _, result := range results {
 		ro := Term{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return model_slice, err
+			return _modelSlice, err
 		}
-		model_slice = append(model_slice, &ro)
+		_modelSlice = append(_modelSlice, &ro)
 	}
 
-	if len(model_slice) == 0 {
+	if len(_modelSlice) == 0 {
 		// there was an error!
 		return nil, o._adapter.Oops(`no results`)
 	}
-	return model_slice, nil
+	return _modelSlice, nil
 
 }
 
@@ -6014,27 +6142,27 @@ func (o *Term) FindByName(_findByName string) ([]*Term, error) {
 // Generic and programatically generator finder for Term
 func (o *Term) FindBySlug(_findBySlug string) ([]*Term, error) {
 
-	var model_slice []*Term
+	var _modelSlice []*Term
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "slug", _findBySlug)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return model_slice, err
+		return _modelSlice, err
 	}
 
 	for _, result := range results {
 		ro := Term{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return model_slice, err
+			return _modelSlice, err
 		}
-		model_slice = append(model_slice, &ro)
+		_modelSlice = append(_modelSlice, &ro)
 	}
 
-	if len(model_slice) == 0 {
+	if len(_modelSlice) == 0 {
 		// there was an error!
 		return nil, o._adapter.Oops(`no results`)
 	}
-	return model_slice, nil
+	return _modelSlice, nil
 
 }
 
@@ -6042,27 +6170,27 @@ func (o *Term) FindBySlug(_findBySlug string) ([]*Term, error) {
 // Generic and programatically generator finder for Term
 func (o *Term) FindByTermGroup(_findByTermGroup int64) ([]*Term, error) {
 
-	var model_slice []*Term
+	var _modelSlice []*Term
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "term_group", _findByTermGroup)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return model_slice, err
+		return _modelSlice, err
 	}
 
 	for _, result := range results {
 		ro := Term{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return model_slice, err
+			return _modelSlice, err
 		}
-		model_slice = append(model_slice, &ro)
+		_modelSlice = append(_modelSlice, &ro)
 	}
 
-	if len(model_slice) == 0 {
+	if len(_modelSlice) == 0 {
 		// there was an error!
 		return nil, o._adapter.Oops(`no results`)
 	}
-	return model_slice, nil
+	return _modelSlice, nil
 
 }
 
@@ -6165,6 +6293,8 @@ func (o *Term) Create() error {
 	return nil
 }
 
+// UpdateName an immediate DB Query to update a single column, in this
+// case name
 func (o *Term) UpdateName(_upd_Name string) (int64, error) {
 	frmt := fmt.Sprintf("UPDATE %s SET `name` = '%s' WHERE `term_id` = '%d'", o._table, _upd_Name, o.TermId)
 	err := o._adapter.Execute(frmt)
@@ -6175,6 +6305,8 @@ func (o *Term) UpdateName(_upd_Name string) (int64, error) {
 	return o._adapter.AffectedRows(), nil
 }
 
+// UpdateSlug an immediate DB Query to update a single column, in this
+// case slug
 func (o *Term) UpdateSlug(_upd_Slug string) (int64, error) {
 	frmt := fmt.Sprintf("UPDATE %s SET `slug` = '%s' WHERE `term_id` = '%d'", o._table, _upd_Slug, o.TermId)
 	err := o._adapter.Execute(frmt)
@@ -6185,6 +6317,8 @@ func (o *Term) UpdateSlug(_upd_Slug string) (int64, error) {
 	return o._adapter.AffectedRows(), nil
 }
 
+// UpdateTermGroup an immediate DB Query to update a single column, in this
+// case term_group
 func (o *Term) UpdateTermGroup(_upd_TermGroup int64) (int64, error) {
 	frmt := fmt.Sprintf("UPDATE %s SET `term_group` = '%d' WHERE `term_id` = '%d'", o._table, _upd_TermGroup, o.TermId)
 	err := o._adapter.Execute(frmt)
@@ -6289,7 +6423,7 @@ func (o *UserMeta) SetMetaValue(arg string) {
 // Generic and programatically generator finder for UserMeta
 func (o *UserMeta) Find(_findByUMetaId int64) (bool, error) {
 
-	var model_slice []*UserMeta
+	var _modelSlice []*UserMeta
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "umeta_id", _findByUMetaId)
 	results, err := o._adapter.Query(q)
 	if err != nil {
@@ -6302,14 +6436,14 @@ func (o *UserMeta) Find(_findByUMetaId int64) (bool, error) {
 		if err != nil {
 			return false, o._adapter.Oops(fmt.Sprintf(`%s`, err))
 		}
-		model_slice = append(model_slice, &ro)
+		_modelSlice = append(_modelSlice, &ro)
 	}
 
-	if len(model_slice) == 0 {
+	if len(_modelSlice) == 0 {
 		// there was an error!
 		return false, o._adapter.Oops(`not found`)
 	}
-	o.FromUserMeta(model_slice[0])
+	o.FromUserMeta(_modelSlice[0])
 	return true, nil
 
 }
@@ -6318,27 +6452,27 @@ func (o *UserMeta) Find(_findByUMetaId int64) (bool, error) {
 // Generic and programatically generator finder for UserMeta
 func (o *UserMeta) FindByUserId(_findByUserId int64) ([]*UserMeta, error) {
 
-	var model_slice []*UserMeta
+	var _modelSlice []*UserMeta
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "user_id", _findByUserId)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return model_slice, err
+		return _modelSlice, err
 	}
 
 	for _, result := range results {
 		ro := UserMeta{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return model_slice, err
+			return _modelSlice, err
 		}
-		model_slice = append(model_slice, &ro)
+		_modelSlice = append(_modelSlice, &ro)
 	}
 
-	if len(model_slice) == 0 {
+	if len(_modelSlice) == 0 {
 		// there was an error!
 		return nil, o._adapter.Oops(`no results`)
 	}
-	return model_slice, nil
+	return _modelSlice, nil
 
 }
 
@@ -6346,27 +6480,27 @@ func (o *UserMeta) FindByUserId(_findByUserId int64) ([]*UserMeta, error) {
 // Generic and programatically generator finder for UserMeta
 func (o *UserMeta) FindByMetaKey(_findByMetaKey string) ([]*UserMeta, error) {
 
-	var model_slice []*UserMeta
+	var _modelSlice []*UserMeta
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "meta_key", _findByMetaKey)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return model_slice, err
+		return _modelSlice, err
 	}
 
 	for _, result := range results {
 		ro := UserMeta{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return model_slice, err
+			return _modelSlice, err
 		}
-		model_slice = append(model_slice, &ro)
+		_modelSlice = append(_modelSlice, &ro)
 	}
 
-	if len(model_slice) == 0 {
+	if len(_modelSlice) == 0 {
 		// there was an error!
 		return nil, o._adapter.Oops(`no results`)
 	}
-	return model_slice, nil
+	return _modelSlice, nil
 
 }
 
@@ -6374,27 +6508,27 @@ func (o *UserMeta) FindByMetaKey(_findByMetaKey string) ([]*UserMeta, error) {
 // Generic and programatically generator finder for UserMeta
 func (o *UserMeta) FindByMetaValue(_findByMetaValue string) ([]*UserMeta, error) {
 
-	var model_slice []*UserMeta
+	var _modelSlice []*UserMeta
 	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "meta_value", _findByMetaValue)
 	results, err := o._adapter.Query(q)
 	if err != nil {
-		return model_slice, err
+		return _modelSlice, err
 	}
 
 	for _, result := range results {
 		ro := UserMeta{}
 		err = ro.FromDBValueMap(result)
 		if err != nil {
-			return model_slice, err
+			return _modelSlice, err
 		}
-		model_slice = append(model_slice, &ro)
+		_modelSlice = append(_modelSlice, &ro)
 	}
 
-	if len(model_slice) == 0 {
+	if len(_modelSlice) == 0 {
 		// there was an error!
 		return nil, o._adapter.Oops(`no results`)
 	}
-	return model_slice, nil
+	return _modelSlice, nil
 
 }
 
@@ -6497,6 +6631,8 @@ func (o *UserMeta) Create() error {
 	return nil
 }
 
+// UpdateUserId an immediate DB Query to update a single column, in this
+// case user_id
 func (o *UserMeta) UpdateUserId(_upd_UserId int64) (int64, error) {
 	frmt := fmt.Sprintf("UPDATE %s SET `user_id` = '%d' WHERE `umeta_id` = '%d'", o._table, _upd_UserId, o.UMetaId)
 	err := o._adapter.Execute(frmt)
@@ -6507,6 +6643,8 @@ func (o *UserMeta) UpdateUserId(_upd_UserId int64) (int64, error) {
 	return o._adapter.AffectedRows(), nil
 }
 
+// UpdateMetaKey an immediate DB Query to update a single column, in this
+// case meta_key
 func (o *UserMeta) UpdateMetaKey(_upd_MetaKey string) (int64, error) {
 	frmt := fmt.Sprintf("UPDATE %s SET `meta_key` = '%s' WHERE `umeta_id` = '%d'", o._table, _upd_MetaKey, o.UMetaId)
 	err := o._adapter.Execute(frmt)
@@ -6517,6 +6655,8 @@ func (o *UserMeta) UpdateMetaKey(_upd_MetaKey string) (int64, error) {
 	return o._adapter.AffectedRows(), nil
 }
 
+// UpdateMetaValue an immediate DB Query to update a single column, in this
+// case meta_value
 func (o *UserMeta) UpdateMetaValue(_upd_MetaValue string) (int64, error) {
 	frmt := fmt.Sprintf("UPDATE %s SET `meta_value` = '%s' WHERE `umeta_id` = '%d'", o._table, _upd_MetaValue, o.UMetaId)
 	err := o._adapter.Execute(frmt)

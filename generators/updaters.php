@@ -21,6 +21,8 @@ function gen_updaters($t) {
            $update_line = "\"UPDATE %s SET `{$f->Field}` = '$fmt_type' WHERE term_taxonomy_id = '%d' AND object_id = '%d'\",o._table,$arg,o.TermTaxonomyId,o.ObjectId"; 
         }
 $txt .= "
+// Update{$fname} an immediate DB Query to update a single column, in this
+// case {$f->Field}
 func (o *{$t->model_name}) Update{$fname}($arg $argtype) (int64,error) {
     frmt := fmt.Sprintf($update_line)
     err := o._adapter.Execute(frmt)
