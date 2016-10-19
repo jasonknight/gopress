@@ -581,7 +581,7 @@ func (o *CommentMeta) SetMetaValue(arg string) {
 // a return of true, the instance data will be filled out.
 // a call to find ALWAYS overwrites the model you call Find on
 // i.e. receiver is a pointer. 
-// 
+//```go
 //      m := NewCommentMeta(a)
 //      found,err := m.Find(23)
 //      .. handle err
@@ -589,7 +589,7 @@ func (o *CommentMeta) SetMetaValue(arg string) {
 //          // handle found
 //      }
 //      ... do what you want with m here
-//  
+//```
         func (o *CommentMeta) Find(_findByMetaId int64) (bool,error) {
 
     var _modelSlice []*CommentMeta
@@ -618,14 +618,14 @@ func (o *CommentMeta) SetMetaValue(arg string) {
 }
 // FindByCommentId dynamic finder for comment_id -> []*CommentMeta,error
 // Generic and programatically generator finder for CommentMeta
-//  
+//```go  
 //    m := NewCommentMeta(a)
 //    results,err := m.FindByCommentId(...)
 //    // handle err
 //    for i,r := results {
 //      // now r is an instance of CommentMeta
 //    }
-//  
+//```  
         func (o *CommentMeta) FindByCommentId(_findByCommentId int64) ([]*CommentMeta,error) {
 
     var _modelSlice []*CommentMeta
@@ -653,14 +653,14 @@ func (o *CommentMeta) SetMetaValue(arg string) {
 }
 // FindByMetaKey dynamic finder for meta_key -> []*CommentMeta,error
 // Generic and programatically generator finder for CommentMeta
-//  
+//```go  
 //    m := NewCommentMeta(a)
 //    results,err := m.FindByMetaKey(...)
 //    // handle err
 //    for i,r := results {
 //      // now r is an instance of CommentMeta
 //    }
-//  
+//```  
         func (o *CommentMeta) FindByMetaKey(_findByMetaKey string) ([]*CommentMeta,error) {
 
     var _modelSlice []*CommentMeta
@@ -688,14 +688,14 @@ func (o *CommentMeta) SetMetaValue(arg string) {
 }
 // FindByMetaValue dynamic finder for meta_value -> []*CommentMeta,error
 // Generic and programatically generator finder for CommentMeta
-//  
+//```go  
 //    m := NewCommentMeta(a)
 //    results,err := m.FindByMetaValue(...)
 //    // handle err
 //    for i,r := results {
 //      // now r is an instance of CommentMeta
 //    }
-//  
+//```  
         func (o *CommentMeta) FindByMetaValue(_findByMetaValue string) ([]*CommentMeta,error) {
 
     var _modelSlice []*CommentMeta
@@ -1115,7 +1115,7 @@ func (o *Comment) SetUserId(arg int64) {
 // a return of true, the instance data will be filled out.
 // a call to find ALWAYS overwrites the model you call Find on
 // i.e. receiver is a pointer. 
-// 
+//```go
 //      m := NewComment(a)
 //      found,err := m.Find(23)
 //      .. handle err
@@ -1123,7 +1123,7 @@ func (o *Comment) SetUserId(arg int64) {
 //          // handle found
 //      }
 //      ... do what you want with m here
-//  
+//```
         func (o *Comment) Find(_findByCommentID int64) (bool,error) {
 
     var _modelSlice []*Comment
@@ -1152,14 +1152,14 @@ func (o *Comment) SetUserId(arg int64) {
 }
 // FindByCommentPostID dynamic finder for comment_post_ID -> []*Comment,error
 // Generic and programatically generator finder for Comment
-//  
+//```go  
 //    m := NewComment(a)
 //    results,err := m.FindByCommentPostID(...)
 //    // handle err
 //    for i,r := results {
 //      // now r is an instance of Comment
 //    }
-//  
+//```  
         func (o *Comment) FindByCommentPostID(_findByCommentPostID int64) ([]*Comment,error) {
 
     var _modelSlice []*Comment
@@ -1187,14 +1187,14 @@ func (o *Comment) SetUserId(arg int64) {
 }
 // FindByCommentAuthor dynamic finder for comment_author -> []*Comment,error
 // Generic and programatically generator finder for Comment
-//  
+//```go  
 //    m := NewComment(a)
 //    results,err := m.FindByCommentAuthor(...)
 //    // handle err
 //    for i,r := results {
 //      // now r is an instance of Comment
 //    }
-//  
+//```  
         func (o *Comment) FindByCommentAuthor(_findByCommentAuthor string) ([]*Comment,error) {
 
     var _modelSlice []*Comment
@@ -1222,14 +1222,14 @@ func (o *Comment) SetUserId(arg int64) {
 }
 // FindByCommentAuthorEmail dynamic finder for comment_author_email -> []*Comment,error
 // Generic and programatically generator finder for Comment
-//  
+//```go  
 //    m := NewComment(a)
 //    results,err := m.FindByCommentAuthorEmail(...)
 //    // handle err
 //    for i,r := results {
 //      // now r is an instance of Comment
 //    }
-//  
+//```  
         func (o *Comment) FindByCommentAuthorEmail(_findByCommentAuthorEmail string) ([]*Comment,error) {
 
     var _modelSlice []*Comment
@@ -1257,14 +1257,14 @@ func (o *Comment) SetUserId(arg int64) {
 }
 // FindByCommentAuthorUrl dynamic finder for comment_author_url -> []*Comment,error
 // Generic and programatically generator finder for Comment
-//  
+//```go  
 //    m := NewComment(a)
 //    results,err := m.FindByCommentAuthorUrl(...)
 //    // handle err
 //    for i,r := results {
 //      // now r is an instance of Comment
 //    }
-//  
+//```  
         func (o *Comment) FindByCommentAuthorUrl(_findByCommentAuthorUrl string) ([]*Comment,error) {
 
     var _modelSlice []*Comment
@@ -1292,14 +1292,14 @@ func (o *Comment) SetUserId(arg int64) {
 }
 // FindByCommentAuthorIP dynamic finder for comment_author_IP -> []*Comment,error
 // Generic and programatically generator finder for Comment
-//  
+//```go  
 //    m := NewComment(a)
 //    results,err := m.FindByCommentAuthorIP(...)
 //    // handle err
 //    for i,r := results {
 //      // now r is an instance of Comment
 //    }
-//  
+//```  
         func (o *Comment) FindByCommentAuthorIP(_findByCommentAuthorIP string) ([]*Comment,error) {
 
     var _modelSlice []*Comment
@@ -1327,14 +1327,14 @@ func (o *Comment) SetUserId(arg int64) {
 }
 // FindByCommentDate dynamic finder for comment_date -> []*Comment,error
 // Generic and programatically generator finder for Comment
-//  
+//```go  
 //    m := NewComment(a)
 //    results,err := m.FindByCommentDate(...)
 //    // handle err
 //    for i,r := results {
 //      // now r is an instance of Comment
 //    }
-//  
+//```  
         func (o *Comment) FindByCommentDate(_findByCommentDate *DateTime) ([]*Comment,error) {
 
     var _modelSlice []*Comment
@@ -1362,14 +1362,14 @@ func (o *Comment) SetUserId(arg int64) {
 }
 // FindByCommentDateGmt dynamic finder for comment_date_gmt -> []*Comment,error
 // Generic and programatically generator finder for Comment
-//  
+//```go  
 //    m := NewComment(a)
 //    results,err := m.FindByCommentDateGmt(...)
 //    // handle err
 //    for i,r := results {
 //      // now r is an instance of Comment
 //    }
-//  
+//```  
         func (o *Comment) FindByCommentDateGmt(_findByCommentDateGmt *DateTime) ([]*Comment,error) {
 
     var _modelSlice []*Comment
@@ -1397,14 +1397,14 @@ func (o *Comment) SetUserId(arg int64) {
 }
 // FindByCommentContent dynamic finder for comment_content -> []*Comment,error
 // Generic and programatically generator finder for Comment
-//  
+//```go  
 //    m := NewComment(a)
 //    results,err := m.FindByCommentContent(...)
 //    // handle err
 //    for i,r := results {
 //      // now r is an instance of Comment
 //    }
-//  
+//```  
         func (o *Comment) FindByCommentContent(_findByCommentContent string) ([]*Comment,error) {
 
     var _modelSlice []*Comment
@@ -1432,14 +1432,14 @@ func (o *Comment) SetUserId(arg int64) {
 }
 // FindByCommentKarma dynamic finder for comment_karma -> []*Comment,error
 // Generic and programatically generator finder for Comment
-//  
+//```go  
 //    m := NewComment(a)
 //    results,err := m.FindByCommentKarma(...)
 //    // handle err
 //    for i,r := results {
 //      // now r is an instance of Comment
 //    }
-//  
+//```  
         func (o *Comment) FindByCommentKarma(_findByCommentKarma int) ([]*Comment,error) {
 
     var _modelSlice []*Comment
@@ -1467,14 +1467,14 @@ func (o *Comment) SetUserId(arg int64) {
 }
 // FindByCommentApproved dynamic finder for comment_approved -> []*Comment,error
 // Generic and programatically generator finder for Comment
-//  
+//```go  
 //    m := NewComment(a)
 //    results,err := m.FindByCommentApproved(...)
 //    // handle err
 //    for i,r := results {
 //      // now r is an instance of Comment
 //    }
-//  
+//```  
         func (o *Comment) FindByCommentApproved(_findByCommentApproved string) ([]*Comment,error) {
 
     var _modelSlice []*Comment
@@ -1502,14 +1502,14 @@ func (o *Comment) SetUserId(arg int64) {
 }
 // FindByCommentAgent dynamic finder for comment_agent -> []*Comment,error
 // Generic and programatically generator finder for Comment
-//  
+//```go  
 //    m := NewComment(a)
 //    results,err := m.FindByCommentAgent(...)
 //    // handle err
 //    for i,r := results {
 //      // now r is an instance of Comment
 //    }
-//  
+//```  
         func (o *Comment) FindByCommentAgent(_findByCommentAgent string) ([]*Comment,error) {
 
     var _modelSlice []*Comment
@@ -1537,14 +1537,14 @@ func (o *Comment) SetUserId(arg int64) {
 }
 // FindByCommentType dynamic finder for comment_type -> []*Comment,error
 // Generic and programatically generator finder for Comment
-//  
+//```go  
 //    m := NewComment(a)
 //    results,err := m.FindByCommentType(...)
 //    // handle err
 //    for i,r := results {
 //      // now r is an instance of Comment
 //    }
-//  
+//```  
         func (o *Comment) FindByCommentType(_findByCommentType string) ([]*Comment,error) {
 
     var _modelSlice []*Comment
@@ -1572,14 +1572,14 @@ func (o *Comment) SetUserId(arg int64) {
 }
 // FindByCommentParent dynamic finder for comment_parent -> []*Comment,error
 // Generic and programatically generator finder for Comment
-//  
+//```go  
 //    m := NewComment(a)
 //    results,err := m.FindByCommentParent(...)
 //    // handle err
 //    for i,r := results {
 //      // now r is an instance of Comment
 //    }
-//  
+//```  
         func (o *Comment) FindByCommentParent(_findByCommentParent int64) ([]*Comment,error) {
 
     var _modelSlice []*Comment
@@ -1607,14 +1607,14 @@ func (o *Comment) SetUserId(arg int64) {
 }
 // FindByUserId dynamic finder for user_id -> []*Comment,error
 // Generic and programatically generator finder for Comment
-//  
+//```go  
 //    m := NewComment(a)
 //    results,err := m.FindByUserId(...)
 //    // handle err
 //    for i,r := results {
 //      // now r is an instance of Comment
 //    }
-//  
+//```  
         func (o *Comment) FindByUserId(_findByUserId int64) ([]*Comment,error) {
 
     var _modelSlice []*Comment
@@ -2292,7 +2292,7 @@ func (o *Link) SetLinkRss(arg string) {
 // a return of true, the instance data will be filled out.
 // a call to find ALWAYS overwrites the model you call Find on
 // i.e. receiver is a pointer. 
-// 
+//```go
 //      m := NewLink(a)
 //      found,err := m.Find(23)
 //      .. handle err
@@ -2300,7 +2300,7 @@ func (o *Link) SetLinkRss(arg string) {
 //          // handle found
 //      }
 //      ... do what you want with m here
-//  
+//```
         func (o *Link) Find(_findByLinkId int64) (bool,error) {
 
     var _modelSlice []*Link
@@ -2329,14 +2329,14 @@ func (o *Link) SetLinkRss(arg string) {
 }
 // FindByLinkUrl dynamic finder for link_url -> []*Link,error
 // Generic and programatically generator finder for Link
-//  
+//```go  
 //    m := NewLink(a)
 //    results,err := m.FindByLinkUrl(...)
 //    // handle err
 //    for i,r := results {
 //      // now r is an instance of Link
 //    }
-//  
+//```  
         func (o *Link) FindByLinkUrl(_findByLinkUrl string) ([]*Link,error) {
 
     var _modelSlice []*Link
@@ -2364,14 +2364,14 @@ func (o *Link) SetLinkRss(arg string) {
 }
 // FindByLinkName dynamic finder for link_name -> []*Link,error
 // Generic and programatically generator finder for Link
-//  
+//```go  
 //    m := NewLink(a)
 //    results,err := m.FindByLinkName(...)
 //    // handle err
 //    for i,r := results {
 //      // now r is an instance of Link
 //    }
-//  
+//```  
         func (o *Link) FindByLinkName(_findByLinkName string) ([]*Link,error) {
 
     var _modelSlice []*Link
@@ -2399,14 +2399,14 @@ func (o *Link) SetLinkRss(arg string) {
 }
 // FindByLinkImage dynamic finder for link_image -> []*Link,error
 // Generic and programatically generator finder for Link
-//  
+//```go  
 //    m := NewLink(a)
 //    results,err := m.FindByLinkImage(...)
 //    // handle err
 //    for i,r := results {
 //      // now r is an instance of Link
 //    }
-//  
+//```  
         func (o *Link) FindByLinkImage(_findByLinkImage string) ([]*Link,error) {
 
     var _modelSlice []*Link
@@ -2434,14 +2434,14 @@ func (o *Link) SetLinkRss(arg string) {
 }
 // FindByLinkTarget dynamic finder for link_target -> []*Link,error
 // Generic and programatically generator finder for Link
-//  
+//```go  
 //    m := NewLink(a)
 //    results,err := m.FindByLinkTarget(...)
 //    // handle err
 //    for i,r := results {
 //      // now r is an instance of Link
 //    }
-//  
+//```  
         func (o *Link) FindByLinkTarget(_findByLinkTarget string) ([]*Link,error) {
 
     var _modelSlice []*Link
@@ -2469,14 +2469,14 @@ func (o *Link) SetLinkRss(arg string) {
 }
 // FindByLinkDescription dynamic finder for link_description -> []*Link,error
 // Generic and programatically generator finder for Link
-//  
+//```go  
 //    m := NewLink(a)
 //    results,err := m.FindByLinkDescription(...)
 //    // handle err
 //    for i,r := results {
 //      // now r is an instance of Link
 //    }
-//  
+//```  
         func (o *Link) FindByLinkDescription(_findByLinkDescription string) ([]*Link,error) {
 
     var _modelSlice []*Link
@@ -2504,14 +2504,14 @@ func (o *Link) SetLinkRss(arg string) {
 }
 // FindByLinkVisible dynamic finder for link_visible -> []*Link,error
 // Generic and programatically generator finder for Link
-//  
+//```go  
 //    m := NewLink(a)
 //    results,err := m.FindByLinkVisible(...)
 //    // handle err
 //    for i,r := results {
 //      // now r is an instance of Link
 //    }
-//  
+//```  
         func (o *Link) FindByLinkVisible(_findByLinkVisible string) ([]*Link,error) {
 
     var _modelSlice []*Link
@@ -2539,14 +2539,14 @@ func (o *Link) SetLinkRss(arg string) {
 }
 // FindByLinkOwner dynamic finder for link_owner -> []*Link,error
 // Generic and programatically generator finder for Link
-//  
+//```go  
 //    m := NewLink(a)
 //    results,err := m.FindByLinkOwner(...)
 //    // handle err
 //    for i,r := results {
 //      // now r is an instance of Link
 //    }
-//  
+//```  
         func (o *Link) FindByLinkOwner(_findByLinkOwner int64) ([]*Link,error) {
 
     var _modelSlice []*Link
@@ -2574,14 +2574,14 @@ func (o *Link) SetLinkRss(arg string) {
 }
 // FindByLinkRating dynamic finder for link_rating -> []*Link,error
 // Generic and programatically generator finder for Link
-//  
+//```go  
 //    m := NewLink(a)
 //    results,err := m.FindByLinkRating(...)
 //    // handle err
 //    for i,r := results {
 //      // now r is an instance of Link
 //    }
-//  
+//```  
         func (o *Link) FindByLinkRating(_findByLinkRating int) ([]*Link,error) {
 
     var _modelSlice []*Link
@@ -2609,14 +2609,14 @@ func (o *Link) SetLinkRss(arg string) {
 }
 // FindByLinkUpdated dynamic finder for link_updated -> []*Link,error
 // Generic and programatically generator finder for Link
-//  
+//```go  
 //    m := NewLink(a)
 //    results,err := m.FindByLinkUpdated(...)
 //    // handle err
 //    for i,r := results {
 //      // now r is an instance of Link
 //    }
-//  
+//```  
         func (o *Link) FindByLinkUpdated(_findByLinkUpdated *DateTime) ([]*Link,error) {
 
     var _modelSlice []*Link
@@ -2644,14 +2644,14 @@ func (o *Link) SetLinkRss(arg string) {
 }
 // FindByLinkRel dynamic finder for link_rel -> []*Link,error
 // Generic and programatically generator finder for Link
-//  
+//```go  
 //    m := NewLink(a)
 //    results,err := m.FindByLinkRel(...)
 //    // handle err
 //    for i,r := results {
 //      // now r is an instance of Link
 //    }
-//  
+//```  
         func (o *Link) FindByLinkRel(_findByLinkRel string) ([]*Link,error) {
 
     var _modelSlice []*Link
@@ -2679,14 +2679,14 @@ func (o *Link) SetLinkRss(arg string) {
 }
 // FindByLinkNotes dynamic finder for link_notes -> []*Link,error
 // Generic and programatically generator finder for Link
-//  
+//```go  
 //    m := NewLink(a)
 //    results,err := m.FindByLinkNotes(...)
 //    // handle err
 //    for i,r := results {
 //      // now r is an instance of Link
 //    }
-//  
+//```  
         func (o *Link) FindByLinkNotes(_findByLinkNotes string) ([]*Link,error) {
 
     var _modelSlice []*Link
@@ -2714,14 +2714,14 @@ func (o *Link) SetLinkRss(arg string) {
 }
 // FindByLinkRss dynamic finder for link_rss -> []*Link,error
 // Generic and programatically generator finder for Link
-//  
+//```go  
 //    m := NewLink(a)
 //    results,err := m.FindByLinkRss(...)
 //    // handle err
 //    for i,r := results {
 //      // now r is an instance of Link
 //    }
-//  
+//```  
         func (o *Link) FindByLinkRss(_findByLinkRss string) ([]*Link,error) {
 
     var _modelSlice []*Link
@@ -3221,7 +3221,7 @@ func (o *Option) SetAutoload(arg string) {
 // a return of true, the instance data will be filled out.
 // a call to find ALWAYS overwrites the model you call Find on
 // i.e. receiver is a pointer. 
-// 
+//```go
 //      m := NewOption(a)
 //      found,err := m.Find(23)
 //      .. handle err
@@ -3229,7 +3229,7 @@ func (o *Option) SetAutoload(arg string) {
 //          // handle found
 //      }
 //      ... do what you want with m here
-//  
+//```
         func (o *Option) Find(_findByOptionId int64) (bool,error) {
 
     var _modelSlice []*Option
@@ -3258,14 +3258,14 @@ func (o *Option) SetAutoload(arg string) {
 }
 // FindByOptionName dynamic finder for option_name -> []*Option,error
 // Generic and programatically generator finder for Option
-//  
+//```go  
 //    m := NewOption(a)
 //    results,err := m.FindByOptionName(...)
 //    // handle err
 //    for i,r := results {
 //      // now r is an instance of Option
 //    }
-//  
+//```  
         func (o *Option) FindByOptionName(_findByOptionName string) ([]*Option,error) {
 
     var _modelSlice []*Option
@@ -3293,14 +3293,14 @@ func (o *Option) SetAutoload(arg string) {
 }
 // FindByOptionValue dynamic finder for option_value -> []*Option,error
 // Generic and programatically generator finder for Option
-//  
+//```go  
 //    m := NewOption(a)
 //    results,err := m.FindByOptionValue(...)
 //    // handle err
 //    for i,r := results {
 //      // now r is an instance of Option
 //    }
-//  
+//```  
         func (o *Option) FindByOptionValue(_findByOptionValue string) ([]*Option,error) {
 
     var _modelSlice []*Option
@@ -3328,14 +3328,14 @@ func (o *Option) SetAutoload(arg string) {
 }
 // FindByAutoload dynamic finder for autoload -> []*Option,error
 // Generic and programatically generator finder for Option
-//  
+//```go  
 //    m := NewOption(a)
 //    results,err := m.FindByAutoload(...)
 //    // handle err
 //    for i,r := results {
 //      // now r is an instance of Option
 //    }
-//  
+//```  
         func (o *Option) FindByAutoload(_findByAutoload string) ([]*Option,error) {
 
     var _modelSlice []*Option
@@ -3601,7 +3601,7 @@ func (o *PostMeta) SetMetaValue(arg string) {
 // a return of true, the instance data will be filled out.
 // a call to find ALWAYS overwrites the model you call Find on
 // i.e. receiver is a pointer. 
-// 
+//```go
 //      m := NewPostMeta(a)
 //      found,err := m.Find(23)
 //      .. handle err
@@ -3609,7 +3609,7 @@ func (o *PostMeta) SetMetaValue(arg string) {
 //          // handle found
 //      }
 //      ... do what you want with m here
-//  
+//```
         func (o *PostMeta) Find(_findByMetaId int64) (bool,error) {
 
     var _modelSlice []*PostMeta
@@ -3638,14 +3638,14 @@ func (o *PostMeta) SetMetaValue(arg string) {
 }
 // FindByPostId dynamic finder for post_id -> []*PostMeta,error
 // Generic and programatically generator finder for PostMeta
-//  
+//```go  
 //    m := NewPostMeta(a)
 //    results,err := m.FindByPostId(...)
 //    // handle err
 //    for i,r := results {
 //      // now r is an instance of PostMeta
 //    }
-//  
+//```  
         func (o *PostMeta) FindByPostId(_findByPostId int64) ([]*PostMeta,error) {
 
     var _modelSlice []*PostMeta
@@ -3673,14 +3673,14 @@ func (o *PostMeta) SetMetaValue(arg string) {
 }
 // FindByMetaKey dynamic finder for meta_key -> []*PostMeta,error
 // Generic and programatically generator finder for PostMeta
-//  
+//```go  
 //    m := NewPostMeta(a)
 //    results,err := m.FindByMetaKey(...)
 //    // handle err
 //    for i,r := results {
 //      // now r is an instance of PostMeta
 //    }
-//  
+//```  
         func (o *PostMeta) FindByMetaKey(_findByMetaKey string) ([]*PostMeta,error) {
 
     var _modelSlice []*PostMeta
@@ -3708,14 +3708,14 @@ func (o *PostMeta) SetMetaValue(arg string) {
 }
 // FindByMetaValue dynamic finder for meta_value -> []*PostMeta,error
 // Generic and programatically generator finder for PostMeta
-//  
+//```go  
 //    m := NewPostMeta(a)
 //    results,err := m.FindByMetaValue(...)
 //    // handle err
 //    for i,r := results {
 //      // now r is an instance of PostMeta
 //    }
-//  
+//```  
         func (o *PostMeta) FindByMetaValue(_findByMetaValue string) ([]*PostMeta,error) {
 
     var _modelSlice []*PostMeta
@@ -4247,7 +4247,7 @@ func (o *Post) SetCommentCount(arg int64) {
 // a return of true, the instance data will be filled out.
 // a call to find ALWAYS overwrites the model you call Find on
 // i.e. receiver is a pointer. 
-// 
+//```go
 //      m := NewPost(a)
 //      found,err := m.Find(23)
 //      .. handle err
@@ -4255,7 +4255,7 @@ func (o *Post) SetCommentCount(arg int64) {
 //          // handle found
 //      }
 //      ... do what you want with m here
-//  
+//```
         func (o *Post) Find(_findByID int64) (bool,error) {
 
     var _modelSlice []*Post
@@ -4284,14 +4284,14 @@ func (o *Post) SetCommentCount(arg int64) {
 }
 // FindByPostAuthor dynamic finder for post_author -> []*Post,error
 // Generic and programatically generator finder for Post
-//  
+//```go  
 //    m := NewPost(a)
 //    results,err := m.FindByPostAuthor(...)
 //    // handle err
 //    for i,r := results {
 //      // now r is an instance of Post
 //    }
-//  
+//```  
         func (o *Post) FindByPostAuthor(_findByPostAuthor int64) ([]*Post,error) {
 
     var _modelSlice []*Post
@@ -4319,14 +4319,14 @@ func (o *Post) SetCommentCount(arg int64) {
 }
 // FindByPostDate dynamic finder for post_date -> []*Post,error
 // Generic and programatically generator finder for Post
-//  
+//```go  
 //    m := NewPost(a)
 //    results,err := m.FindByPostDate(...)
 //    // handle err
 //    for i,r := results {
 //      // now r is an instance of Post
 //    }
-//  
+//```  
         func (o *Post) FindByPostDate(_findByPostDate *DateTime) ([]*Post,error) {
 
     var _modelSlice []*Post
@@ -4354,14 +4354,14 @@ func (o *Post) SetCommentCount(arg int64) {
 }
 // FindByPostDateGmt dynamic finder for post_date_gmt -> []*Post,error
 // Generic and programatically generator finder for Post
-//  
+//```go  
 //    m := NewPost(a)
 //    results,err := m.FindByPostDateGmt(...)
 //    // handle err
 //    for i,r := results {
 //      // now r is an instance of Post
 //    }
-//  
+//```  
         func (o *Post) FindByPostDateGmt(_findByPostDateGmt *DateTime) ([]*Post,error) {
 
     var _modelSlice []*Post
@@ -4389,14 +4389,14 @@ func (o *Post) SetCommentCount(arg int64) {
 }
 // FindByPostContent dynamic finder for post_content -> []*Post,error
 // Generic and programatically generator finder for Post
-//  
+//```go  
 //    m := NewPost(a)
 //    results,err := m.FindByPostContent(...)
 //    // handle err
 //    for i,r := results {
 //      // now r is an instance of Post
 //    }
-//  
+//```  
         func (o *Post) FindByPostContent(_findByPostContent string) ([]*Post,error) {
 
     var _modelSlice []*Post
@@ -4424,14 +4424,14 @@ func (o *Post) SetCommentCount(arg int64) {
 }
 // FindByPostTitle dynamic finder for post_title -> []*Post,error
 // Generic and programatically generator finder for Post
-//  
+//```go  
 //    m := NewPost(a)
 //    results,err := m.FindByPostTitle(...)
 //    // handle err
 //    for i,r := results {
 //      // now r is an instance of Post
 //    }
-//  
+//```  
         func (o *Post) FindByPostTitle(_findByPostTitle string) ([]*Post,error) {
 
     var _modelSlice []*Post
@@ -4459,14 +4459,14 @@ func (o *Post) SetCommentCount(arg int64) {
 }
 // FindByPostExcerpt dynamic finder for post_excerpt -> []*Post,error
 // Generic and programatically generator finder for Post
-//  
+//```go  
 //    m := NewPost(a)
 //    results,err := m.FindByPostExcerpt(...)
 //    // handle err
 //    for i,r := results {
 //      // now r is an instance of Post
 //    }
-//  
+//```  
         func (o *Post) FindByPostExcerpt(_findByPostExcerpt string) ([]*Post,error) {
 
     var _modelSlice []*Post
@@ -4494,14 +4494,14 @@ func (o *Post) SetCommentCount(arg int64) {
 }
 // FindByPostStatus dynamic finder for post_status -> []*Post,error
 // Generic and programatically generator finder for Post
-//  
+//```go  
 //    m := NewPost(a)
 //    results,err := m.FindByPostStatus(...)
 //    // handle err
 //    for i,r := results {
 //      // now r is an instance of Post
 //    }
-//  
+//```  
         func (o *Post) FindByPostStatus(_findByPostStatus string) ([]*Post,error) {
 
     var _modelSlice []*Post
@@ -4529,14 +4529,14 @@ func (o *Post) SetCommentCount(arg int64) {
 }
 // FindByCommentStatus dynamic finder for comment_status -> []*Post,error
 // Generic and programatically generator finder for Post
-//  
+//```go  
 //    m := NewPost(a)
 //    results,err := m.FindByCommentStatus(...)
 //    // handle err
 //    for i,r := results {
 //      // now r is an instance of Post
 //    }
-//  
+//```  
         func (o *Post) FindByCommentStatus(_findByCommentStatus string) ([]*Post,error) {
 
     var _modelSlice []*Post
@@ -4564,14 +4564,14 @@ func (o *Post) SetCommentCount(arg int64) {
 }
 // FindByPingStatus dynamic finder for ping_status -> []*Post,error
 // Generic and programatically generator finder for Post
-//  
+//```go  
 //    m := NewPost(a)
 //    results,err := m.FindByPingStatus(...)
 //    // handle err
 //    for i,r := results {
 //      // now r is an instance of Post
 //    }
-//  
+//```  
         func (o *Post) FindByPingStatus(_findByPingStatus string) ([]*Post,error) {
 
     var _modelSlice []*Post
@@ -4599,14 +4599,14 @@ func (o *Post) SetCommentCount(arg int64) {
 }
 // FindByPostPassword dynamic finder for post_password -> []*Post,error
 // Generic and programatically generator finder for Post
-//  
+//```go  
 //    m := NewPost(a)
 //    results,err := m.FindByPostPassword(...)
 //    // handle err
 //    for i,r := results {
 //      // now r is an instance of Post
 //    }
-//  
+//```  
         func (o *Post) FindByPostPassword(_findByPostPassword string) ([]*Post,error) {
 
     var _modelSlice []*Post
@@ -4634,14 +4634,14 @@ func (o *Post) SetCommentCount(arg int64) {
 }
 // FindByPostName dynamic finder for post_name -> []*Post,error
 // Generic and programatically generator finder for Post
-//  
+//```go  
 //    m := NewPost(a)
 //    results,err := m.FindByPostName(...)
 //    // handle err
 //    for i,r := results {
 //      // now r is an instance of Post
 //    }
-//  
+//```  
         func (o *Post) FindByPostName(_findByPostName string) ([]*Post,error) {
 
     var _modelSlice []*Post
@@ -4669,14 +4669,14 @@ func (o *Post) SetCommentCount(arg int64) {
 }
 // FindByToPing dynamic finder for to_ping -> []*Post,error
 // Generic and programatically generator finder for Post
-//  
+//```go  
 //    m := NewPost(a)
 //    results,err := m.FindByToPing(...)
 //    // handle err
 //    for i,r := results {
 //      // now r is an instance of Post
 //    }
-//  
+//```  
         func (o *Post) FindByToPing(_findByToPing string) ([]*Post,error) {
 
     var _modelSlice []*Post
@@ -4704,14 +4704,14 @@ func (o *Post) SetCommentCount(arg int64) {
 }
 // FindByPinged dynamic finder for pinged -> []*Post,error
 // Generic and programatically generator finder for Post
-//  
+//```go  
 //    m := NewPost(a)
 //    results,err := m.FindByPinged(...)
 //    // handle err
 //    for i,r := results {
 //      // now r is an instance of Post
 //    }
-//  
+//```  
         func (o *Post) FindByPinged(_findByPinged string) ([]*Post,error) {
 
     var _modelSlice []*Post
@@ -4739,14 +4739,14 @@ func (o *Post) SetCommentCount(arg int64) {
 }
 // FindByPostModified dynamic finder for post_modified -> []*Post,error
 // Generic and programatically generator finder for Post
-//  
+//```go  
 //    m := NewPost(a)
 //    results,err := m.FindByPostModified(...)
 //    // handle err
 //    for i,r := results {
 //      // now r is an instance of Post
 //    }
-//  
+//```  
         func (o *Post) FindByPostModified(_findByPostModified *DateTime) ([]*Post,error) {
 
     var _modelSlice []*Post
@@ -4774,14 +4774,14 @@ func (o *Post) SetCommentCount(arg int64) {
 }
 // FindByPostModifiedGmt dynamic finder for post_modified_gmt -> []*Post,error
 // Generic and programatically generator finder for Post
-//  
+//```go  
 //    m := NewPost(a)
 //    results,err := m.FindByPostModifiedGmt(...)
 //    // handle err
 //    for i,r := results {
 //      // now r is an instance of Post
 //    }
-//  
+//```  
         func (o *Post) FindByPostModifiedGmt(_findByPostModifiedGmt *DateTime) ([]*Post,error) {
 
     var _modelSlice []*Post
@@ -4809,14 +4809,14 @@ func (o *Post) SetCommentCount(arg int64) {
 }
 // FindByPostContentFiltered dynamic finder for post_content_filtered -> []*Post,error
 // Generic and programatically generator finder for Post
-//  
+//```go  
 //    m := NewPost(a)
 //    results,err := m.FindByPostContentFiltered(...)
 //    // handle err
 //    for i,r := results {
 //      // now r is an instance of Post
 //    }
-//  
+//```  
         func (o *Post) FindByPostContentFiltered(_findByPostContentFiltered string) ([]*Post,error) {
 
     var _modelSlice []*Post
@@ -4844,14 +4844,14 @@ func (o *Post) SetCommentCount(arg int64) {
 }
 // FindByPostParent dynamic finder for post_parent -> []*Post,error
 // Generic and programatically generator finder for Post
-//  
+//```go  
 //    m := NewPost(a)
 //    results,err := m.FindByPostParent(...)
 //    // handle err
 //    for i,r := results {
 //      // now r is an instance of Post
 //    }
-//  
+//```  
         func (o *Post) FindByPostParent(_findByPostParent int64) ([]*Post,error) {
 
     var _modelSlice []*Post
@@ -4879,14 +4879,14 @@ func (o *Post) SetCommentCount(arg int64) {
 }
 // FindByGuid dynamic finder for guid -> []*Post,error
 // Generic and programatically generator finder for Post
-//  
+//```go  
 //    m := NewPost(a)
 //    results,err := m.FindByGuid(...)
 //    // handle err
 //    for i,r := results {
 //      // now r is an instance of Post
 //    }
-//  
+//```  
         func (o *Post) FindByGuid(_findByGuid string) ([]*Post,error) {
 
     var _modelSlice []*Post
@@ -4914,14 +4914,14 @@ func (o *Post) SetCommentCount(arg int64) {
 }
 // FindByMenuOrder dynamic finder for menu_order -> []*Post,error
 // Generic and programatically generator finder for Post
-//  
+//```go  
 //    m := NewPost(a)
 //    results,err := m.FindByMenuOrder(...)
 //    // handle err
 //    for i,r := results {
 //      // now r is an instance of Post
 //    }
-//  
+//```  
         func (o *Post) FindByMenuOrder(_findByMenuOrder int) ([]*Post,error) {
 
     var _modelSlice []*Post
@@ -4949,14 +4949,14 @@ func (o *Post) SetCommentCount(arg int64) {
 }
 // FindByPostType dynamic finder for post_type -> []*Post,error
 // Generic and programatically generator finder for Post
-//  
+//```go  
 //    m := NewPost(a)
 //    results,err := m.FindByPostType(...)
 //    // handle err
 //    for i,r := results {
 //      // now r is an instance of Post
 //    }
-//  
+//```  
         func (o *Post) FindByPostType(_findByPostType string) ([]*Post,error) {
 
     var _modelSlice []*Post
@@ -4984,14 +4984,14 @@ func (o *Post) SetCommentCount(arg int64) {
 }
 // FindByPostMimeType dynamic finder for post_mime_type -> []*Post,error
 // Generic and programatically generator finder for Post
-//  
+//```go  
 //    m := NewPost(a)
 //    results,err := m.FindByPostMimeType(...)
 //    // handle err
 //    for i,r := results {
 //      // now r is an instance of Post
 //    }
-//  
+//```  
         func (o *Post) FindByPostMimeType(_findByPostMimeType string) ([]*Post,error) {
 
     var _modelSlice []*Post
@@ -5019,14 +5019,14 @@ func (o *Post) SetCommentCount(arg int64) {
 }
 // FindByCommentCount dynamic finder for comment_count -> []*Post,error
 // Generic and programatically generator finder for Post
-//  
+//```go  
 //    m := NewPost(a)
 //    results,err := m.FindByCommentCount(...)
 //    // handle err
 //    for i,r := results {
 //      // now r is an instance of Post
 //    }
-//  
+//```  
         func (o *Post) FindByCommentCount(_findByCommentCount int64) ([]*Post,error) {
 
     var _modelSlice []*Post
@@ -5768,14 +5768,14 @@ func (o *TermRelationship) SetTermOrder(arg int) {
 
 // FindByObjectId dynamic finder for object_id -> []*TermRelationship,error
 // Generic and programatically generator finder for TermRelationship
-//  
+//```go  
 //    m := NewTermRelationship(a)
 //    results,err := m.FindByObjectId(...)
 //    // handle err
 //    for i,r := results {
 //      // now r is an instance of TermRelationship
 //    }
-//  
+//```  
         func (o *TermRelationship) FindByObjectId(_findByObjectId int64) ([]*TermRelationship,error) {
 
     var _modelSlice []*TermRelationship
@@ -5831,14 +5831,14 @@ func (o *TermRelationship) Find(termId int64,objectId int64) (bool,error) {
 }
 // FindByTermOrder dynamic finder for term_order -> []*TermRelationship,error
 // Generic and programatically generator finder for TermRelationship
-//  
+//```go  
 //    m := NewTermRelationship(a)
 //    results,err := m.FindByTermOrder(...)
 //    // handle err
 //    for i,r := results {
 //      // now r is an instance of TermRelationship
 //    }
-//  
+//```  
         func (o *TermRelationship) FindByTermOrder(_findByTermOrder int) ([]*TermRelationship,error) {
 
     var _modelSlice []*TermRelationship
@@ -6114,7 +6114,7 @@ func (o *TermTaxonomy) SetCount(arg int64) {
 // a return of true, the instance data will be filled out.
 // a call to find ALWAYS overwrites the model you call Find on
 // i.e. receiver is a pointer. 
-// 
+//```go
 //      m := NewTermTaxonomy(a)
 //      found,err := m.Find(23)
 //      .. handle err
@@ -6122,7 +6122,7 @@ func (o *TermTaxonomy) SetCount(arg int64) {
 //          // handle found
 //      }
 //      ... do what you want with m here
-//  
+//```
         func (o *TermTaxonomy) Find(_findByTermTaxonomyId int64) (bool,error) {
 
     var _modelSlice []*TermTaxonomy
@@ -6151,14 +6151,14 @@ func (o *TermTaxonomy) SetCount(arg int64) {
 }
 // FindByTermId dynamic finder for term_id -> []*TermTaxonomy,error
 // Generic and programatically generator finder for TermTaxonomy
-//  
+//```go  
 //    m := NewTermTaxonomy(a)
 //    results,err := m.FindByTermId(...)
 //    // handle err
 //    for i,r := results {
 //      // now r is an instance of TermTaxonomy
 //    }
-//  
+//```  
         func (o *TermTaxonomy) FindByTermId(_findByTermId int64) ([]*TermTaxonomy,error) {
 
     var _modelSlice []*TermTaxonomy
@@ -6186,14 +6186,14 @@ func (o *TermTaxonomy) SetCount(arg int64) {
 }
 // FindByTaxonomy dynamic finder for taxonomy -> []*TermTaxonomy,error
 // Generic and programatically generator finder for TermTaxonomy
-//  
+//```go  
 //    m := NewTermTaxonomy(a)
 //    results,err := m.FindByTaxonomy(...)
 //    // handle err
 //    for i,r := results {
 //      // now r is an instance of TermTaxonomy
 //    }
-//  
+//```  
         func (o *TermTaxonomy) FindByTaxonomy(_findByTaxonomy string) ([]*TermTaxonomy,error) {
 
     var _modelSlice []*TermTaxonomy
@@ -6221,14 +6221,14 @@ func (o *TermTaxonomy) SetCount(arg int64) {
 }
 // FindByDescription dynamic finder for description -> []*TermTaxonomy,error
 // Generic and programatically generator finder for TermTaxonomy
-//  
+//```go  
 //    m := NewTermTaxonomy(a)
 //    results,err := m.FindByDescription(...)
 //    // handle err
 //    for i,r := results {
 //      // now r is an instance of TermTaxonomy
 //    }
-//  
+//```  
         func (o *TermTaxonomy) FindByDescription(_findByDescription string) ([]*TermTaxonomy,error) {
 
     var _modelSlice []*TermTaxonomy
@@ -6256,14 +6256,14 @@ func (o *TermTaxonomy) SetCount(arg int64) {
 }
 // FindByParent dynamic finder for parent -> []*TermTaxonomy,error
 // Generic and programatically generator finder for TermTaxonomy
-//  
+//```go  
 //    m := NewTermTaxonomy(a)
 //    results,err := m.FindByParent(...)
 //    // handle err
 //    for i,r := results {
 //      // now r is an instance of TermTaxonomy
 //    }
-//  
+//```  
         func (o *TermTaxonomy) FindByParent(_findByParent int64) ([]*TermTaxonomy,error) {
 
     var _modelSlice []*TermTaxonomy
@@ -6291,14 +6291,14 @@ func (o *TermTaxonomy) SetCount(arg int64) {
 }
 // FindByCount dynamic finder for count -> []*TermTaxonomy,error
 // Generic and programatically generator finder for TermTaxonomy
-//  
+//```go  
 //    m := NewTermTaxonomy(a)
 //    results,err := m.FindByCount(...)
 //    // handle err
 //    for i,r := results {
 //      // now r is an instance of TermTaxonomy
 //    }
-//  
+//```  
         func (o *TermTaxonomy) FindByCount(_findByCount int64) ([]*TermTaxonomy,error) {
 
     var _modelSlice []*TermTaxonomy
@@ -6616,7 +6616,7 @@ func (o *Term) SetTermGroup(arg int64) {
 // a return of true, the instance data will be filled out.
 // a call to find ALWAYS overwrites the model you call Find on
 // i.e. receiver is a pointer. 
-// 
+//```go
 //      m := NewTerm(a)
 //      found,err := m.Find(23)
 //      .. handle err
@@ -6624,7 +6624,7 @@ func (o *Term) SetTermGroup(arg int64) {
 //          // handle found
 //      }
 //      ... do what you want with m here
-//  
+//```
         func (o *Term) Find(_findByTermId int64) (bool,error) {
 
     var _modelSlice []*Term
@@ -6653,14 +6653,14 @@ func (o *Term) SetTermGroup(arg int64) {
 }
 // FindByName dynamic finder for name -> []*Term,error
 // Generic and programatically generator finder for Term
-//  
+//```go  
 //    m := NewTerm(a)
 //    results,err := m.FindByName(...)
 //    // handle err
 //    for i,r := results {
 //      // now r is an instance of Term
 //    }
-//  
+//```  
         func (o *Term) FindByName(_findByName string) ([]*Term,error) {
 
     var _modelSlice []*Term
@@ -6688,14 +6688,14 @@ func (o *Term) SetTermGroup(arg int64) {
 }
 // FindBySlug dynamic finder for slug -> []*Term,error
 // Generic and programatically generator finder for Term
-//  
+//```go  
 //    m := NewTerm(a)
 //    results,err := m.FindBySlug(...)
 //    // handle err
 //    for i,r := results {
 //      // now r is an instance of Term
 //    }
-//  
+//```  
         func (o *Term) FindBySlug(_findBySlug string) ([]*Term,error) {
 
     var _modelSlice []*Term
@@ -6723,14 +6723,14 @@ func (o *Term) SetTermGroup(arg int64) {
 }
 // FindByTermGroup dynamic finder for term_group -> []*Term,error
 // Generic and programatically generator finder for Term
-//  
+//```go  
 //    m := NewTerm(a)
 //    results,err := m.FindByTermGroup(...)
 //    // handle err
 //    for i,r := results {
 //      // now r is an instance of Term
 //    }
-//  
+//```  
         func (o *Term) FindByTermGroup(_findByTermGroup int64) ([]*Term,error) {
 
     var _modelSlice []*Term
@@ -6996,7 +6996,7 @@ func (o *UserMeta) SetMetaValue(arg string) {
 // a return of true, the instance data will be filled out.
 // a call to find ALWAYS overwrites the model you call Find on
 // i.e. receiver is a pointer. 
-// 
+//```go
 //      m := NewUserMeta(a)
 //      found,err := m.Find(23)
 //      .. handle err
@@ -7004,7 +7004,7 @@ func (o *UserMeta) SetMetaValue(arg string) {
 //          // handle found
 //      }
 //      ... do what you want with m here
-//  
+//```
         func (o *UserMeta) Find(_findByUMetaId int64) (bool,error) {
 
     var _modelSlice []*UserMeta
@@ -7033,14 +7033,14 @@ func (o *UserMeta) SetMetaValue(arg string) {
 }
 // FindByUserId dynamic finder for user_id -> []*UserMeta,error
 // Generic and programatically generator finder for UserMeta
-//  
+//```go  
 //    m := NewUserMeta(a)
 //    results,err := m.FindByUserId(...)
 //    // handle err
 //    for i,r := results {
 //      // now r is an instance of UserMeta
 //    }
-//  
+//```  
         func (o *UserMeta) FindByUserId(_findByUserId int64) ([]*UserMeta,error) {
 
     var _modelSlice []*UserMeta
@@ -7068,14 +7068,14 @@ func (o *UserMeta) SetMetaValue(arg string) {
 }
 // FindByMetaKey dynamic finder for meta_key -> []*UserMeta,error
 // Generic and programatically generator finder for UserMeta
-//  
+//```go  
 //    m := NewUserMeta(a)
 //    results,err := m.FindByMetaKey(...)
 //    // handle err
 //    for i,r := results {
 //      // now r is an instance of UserMeta
 //    }
-//  
+//```  
         func (o *UserMeta) FindByMetaKey(_findByMetaKey string) ([]*UserMeta,error) {
 
     var _modelSlice []*UserMeta
@@ -7103,14 +7103,14 @@ func (o *UserMeta) SetMetaValue(arg string) {
 }
 // FindByMetaValue dynamic finder for meta_value -> []*UserMeta,error
 // Generic and programatically generator finder for UserMeta
-//  
+//```go  
 //    m := NewUserMeta(a)
 //    results,err := m.FindByMetaValue(...)
 //    // handle err
 //    for i,r := results {
 //      // now r is an instance of UserMeta
 //    }
-//  
+//```  
         func (o *UserMeta) FindByMetaValue(_findByMetaValue string) ([]*UserMeta,error) {
 
     var _modelSlice []*UserMeta
