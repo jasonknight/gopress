@@ -45,21 +45,35 @@ foreach($t->fields as $f) {
         $failure_return = "return _modelSlice,err";
     }
     $sig = "// {$fname} dynamic finder for {$f->Field} -> $rtype,error
-    // Generic and programatically generator finder for {$t->model_name}
-    // Note that Fine returns a bool if found, not err, in the case of
-    // a return of true, the instance data will be filled out.
-    // a call to find ALWAYS overwrites the model you call Find on
-    // i.e. receiver is a pointer. 
-    // ```go
-    //     m := New{$t->model_name}(a)
-    //     found,err := m.Find(23)
-    //     .. handle err
-    //     if found == false {
-    //         // handle found
-    //     }
-    //     ... do what you want with m here
-    // ```
-    ";
+// Generic and programatically generator finder for {$t->model_name}";
+    if ($fname == "Find") {
+        $sig .= "
+// Note that Fine returns a bool if found, not err, in the case of
+// a return of true, the instance data will be filled out.
+// a call to find ALWAYS overwrites the model you call Find on
+// i.e. receiver is a pointer. 
+//  ```go
+//      m := New{$t->model_name}(a)
+//      found,err := m.Find(23)
+//      .. handle err
+//      if found == false {
+//          // handle found
+//      }
+//      ... do what you want with m here
+//  ```
+        ";
+    } else {
+        $sig .= "
+//  ```go
+//    m := New{$t->model_name}(a)
+//    results,err := m.{$fname}(...)
+//    // handle err
+//    for i,r := results {
+//      // now r is an instance of {$t->model_name}
+//    }
+//  ```
+        ";
+    }
     $sig .= "func (o *{$t->model_name}) $fname($arg $argtype) ($rtype,error) {";
 $body = "
     var _modelSlice []*{$t->model_name}

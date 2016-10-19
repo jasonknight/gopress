@@ -98,17 +98,16 @@ Find dynamic finder for comment_ID -> bool,error Generic and programatically
 generator finder for Comment Note that Fine returns a bool if found, not err, in
 the case of a return of true, the instance data will be filled out. a call to
 find ALWAYS overwrites the model you call Find on i.e. receiver is a pointer.
-```go
 
-    m := NewComment(a)
-    found,err := m.Find(23)
-    .. handle err
-    if found == false {
-        // handle found
-    }
-    ... do what you want with m here
-
-```
+    ```go
+        m := NewComment(a)
+        found,err := m.Find(23)
+        .. handle err
+        if found == false {
+            // handle found
+        }
+        ... do what you want with m here
+    ```
 
 #### func (*Comment) FindByCommentAgent
 
@@ -116,20 +115,16 @@ find ALWAYS overwrites the model you call Find on i.e. receiver is a pointer.
 func (o *Comment) FindByCommentAgent(_findByCommentAgent string) ([]*Comment, error)
 ```
 FindByCommentAgent dynamic finder for comment_agent -> []*Comment,error Generic
-and programatically generator finder for Comment Note that Fine returns a bool
-if found, not err, in the case of a return of true, the instance data will be
-filled out. a call to find ALWAYS overwrites the model you call Find on i.e.
-receiver is a pointer. ```go
+and programatically generator finder for Comment
 
-    m := NewComment(a)
-    found,err := m.Find(23)
-    .. handle err
-    if found == false {
-        // handle found
-    }
-    ... do what you want with m here
-
-```
+    ```go
+      m := NewComment(a)
+      results,err := m.FindByCommentAgent(...)
+      // handle err
+      for i,r := results {
+        // now r is an instance of Comment
+      }
+    ```
 
 #### func (*Comment) FindByCommentApproved
 
@@ -137,20 +132,16 @@ receiver is a pointer. ```go
 func (o *Comment) FindByCommentApproved(_findByCommentApproved string) ([]*Comment, error)
 ```
 FindByCommentApproved dynamic finder for comment_approved -> []*Comment,error
-Generic and programatically generator finder for Comment Note that Fine returns
-a bool if found, not err, in the case of a return of true, the instance data
-will be filled out. a call to find ALWAYS overwrites the model you call Find on
-i.e. receiver is a pointer. ```go
+Generic and programatically generator finder for Comment
 
-    m := NewComment(a)
-    found,err := m.Find(23)
-    .. handle err
-    if found == false {
-        // handle found
-    }
-    ... do what you want with m here
-
-```
+    ```go
+      m := NewComment(a)
+      results,err := m.FindByCommentApproved(...)
+      // handle err
+      for i,r := results {
+        // now r is an instance of Comment
+      }
+    ```
 
 #### func (*Comment) FindByCommentAuthor
 
@@ -158,20 +149,16 @@ i.e. receiver is a pointer. ```go
 func (o *Comment) FindByCommentAuthor(_findByCommentAuthor string) ([]*Comment, error)
 ```
 FindByCommentAuthor dynamic finder for comment_author -> []*Comment,error
-Generic and programatically generator finder for Comment Note that Fine returns
-a bool if found, not err, in the case of a return of true, the instance data
-will be filled out. a call to find ALWAYS overwrites the model you call Find on
-i.e. receiver is a pointer. ```go
+Generic and programatically generator finder for Comment
 
-    m := NewComment(a)
-    found,err := m.Find(23)
-    .. handle err
-    if found == false {
-        // handle found
-    }
-    ... do what you want with m here
-
-```
+    ```go
+      m := NewComment(a)
+      results,err := m.FindByCommentAuthor(...)
+      // handle err
+      for i,r := results {
+        // now r is an instance of Comment
+      }
+    ```
 
 #### func (*Comment) FindByCommentAuthorEmail
 
@@ -179,20 +166,16 @@ i.e. receiver is a pointer. ```go
 func (o *Comment) FindByCommentAuthorEmail(_findByCommentAuthorEmail string) ([]*Comment, error)
 ```
 FindByCommentAuthorEmail dynamic finder for comment_author_email ->
-[]*Comment,error Generic and programatically generator finder for Comment Note
-that Fine returns a bool if found, not err, in the case of a return of true, the
-instance data will be filled out. a call to find ALWAYS overwrites the model you
-call Find on i.e. receiver is a pointer. ```go
+[]*Comment,error Generic and programatically generator finder for Comment
 
-    m := NewComment(a)
-    found,err := m.Find(23)
-    .. handle err
-    if found == false {
-        // handle found
-    }
-    ... do what you want with m here
-
-```
+    ```go
+      m := NewComment(a)
+      results,err := m.FindByCommentAuthorEmail(...)
+      // handle err
+      for i,r := results {
+        // now r is an instance of Comment
+      }
+    ```
 
 #### func (*Comment) FindByCommentAuthorIP
 
@@ -200,20 +183,16 @@ call Find on i.e. receiver is a pointer. ```go
 func (o *Comment) FindByCommentAuthorIP(_findByCommentAuthorIP string) ([]*Comment, error)
 ```
 FindByCommentAuthorIP dynamic finder for comment_author_IP -> []*Comment,error
-Generic and programatically generator finder for Comment Note that Fine returns
-a bool if found, not err, in the case of a return of true, the instance data
-will be filled out. a call to find ALWAYS overwrites the model you call Find on
-i.e. receiver is a pointer. ```go
+Generic and programatically generator finder for Comment
 
-    m := NewComment(a)
-    found,err := m.Find(23)
-    .. handle err
-    if found == false {
-        // handle found
-    }
-    ... do what you want with m here
-
-```
+    ```go
+      m := NewComment(a)
+      results,err := m.FindByCommentAuthorIP(...)
+      // handle err
+      for i,r := results {
+        // now r is an instance of Comment
+      }
+    ```
 
 #### func (*Comment) FindByCommentAuthorUrl
 
@@ -221,20 +200,16 @@ i.e. receiver is a pointer. ```go
 func (o *Comment) FindByCommentAuthorUrl(_findByCommentAuthorUrl string) ([]*Comment, error)
 ```
 FindByCommentAuthorUrl dynamic finder for comment_author_url -> []*Comment,error
-Generic and programatically generator finder for Comment Note that Fine returns
-a bool if found, not err, in the case of a return of true, the instance data
-will be filled out. a call to find ALWAYS overwrites the model you call Find on
-i.e. receiver is a pointer. ```go
+Generic and programatically generator finder for Comment
 
-    m := NewComment(a)
-    found,err := m.Find(23)
-    .. handle err
-    if found == false {
-        // handle found
-    }
-    ... do what you want with m here
-
-```
+    ```go
+      m := NewComment(a)
+      results,err := m.FindByCommentAuthorUrl(...)
+      // handle err
+      for i,r := results {
+        // now r is an instance of Comment
+      }
+    ```
 
 #### func (*Comment) FindByCommentContent
 
@@ -242,20 +217,16 @@ i.e. receiver is a pointer. ```go
 func (o *Comment) FindByCommentContent(_findByCommentContent string) ([]*Comment, error)
 ```
 FindByCommentContent dynamic finder for comment_content -> []*Comment,error
-Generic and programatically generator finder for Comment Note that Fine returns
-a bool if found, not err, in the case of a return of true, the instance data
-will be filled out. a call to find ALWAYS overwrites the model you call Find on
-i.e. receiver is a pointer. ```go
+Generic and programatically generator finder for Comment
 
-    m := NewComment(a)
-    found,err := m.Find(23)
-    .. handle err
-    if found == false {
-        // handle found
-    }
-    ... do what you want with m here
-
-```
+    ```go
+      m := NewComment(a)
+      results,err := m.FindByCommentContent(...)
+      // handle err
+      for i,r := results {
+        // now r is an instance of Comment
+      }
+    ```
 
 #### func (*Comment) FindByCommentDate
 
@@ -263,20 +234,16 @@ i.e. receiver is a pointer. ```go
 func (o *Comment) FindByCommentDate(_findByCommentDate *DateTime) ([]*Comment, error)
 ```
 FindByCommentDate dynamic finder for comment_date -> []*Comment,error Generic
-and programatically generator finder for Comment Note that Fine returns a bool
-if found, not err, in the case of a return of true, the instance data will be
-filled out. a call to find ALWAYS overwrites the model you call Find on i.e.
-receiver is a pointer. ```go
+and programatically generator finder for Comment
 
-    m := NewComment(a)
-    found,err := m.Find(23)
-    .. handle err
-    if found == false {
-        // handle found
-    }
-    ... do what you want with m here
-
-```
+    ```go
+      m := NewComment(a)
+      results,err := m.FindByCommentDate(...)
+      // handle err
+      for i,r := results {
+        // now r is an instance of Comment
+      }
+    ```
 
 #### func (*Comment) FindByCommentDateGmt
 
@@ -284,20 +251,16 @@ receiver is a pointer. ```go
 func (o *Comment) FindByCommentDateGmt(_findByCommentDateGmt *DateTime) ([]*Comment, error)
 ```
 FindByCommentDateGmt dynamic finder for comment_date_gmt -> []*Comment,error
-Generic and programatically generator finder for Comment Note that Fine returns
-a bool if found, not err, in the case of a return of true, the instance data
-will be filled out. a call to find ALWAYS overwrites the model you call Find on
-i.e. receiver is a pointer. ```go
+Generic and programatically generator finder for Comment
 
-    m := NewComment(a)
-    found,err := m.Find(23)
-    .. handle err
-    if found == false {
-        // handle found
-    }
-    ... do what you want with m here
-
-```
+    ```go
+      m := NewComment(a)
+      results,err := m.FindByCommentDateGmt(...)
+      // handle err
+      for i,r := results {
+        // now r is an instance of Comment
+      }
+    ```
 
 #### func (*Comment) FindByCommentKarma
 
@@ -305,20 +268,16 @@ i.e. receiver is a pointer. ```go
 func (o *Comment) FindByCommentKarma(_findByCommentKarma int) ([]*Comment, error)
 ```
 FindByCommentKarma dynamic finder for comment_karma -> []*Comment,error Generic
-and programatically generator finder for Comment Note that Fine returns a bool
-if found, not err, in the case of a return of true, the instance data will be
-filled out. a call to find ALWAYS overwrites the model you call Find on i.e.
-receiver is a pointer. ```go
+and programatically generator finder for Comment
 
-    m := NewComment(a)
-    found,err := m.Find(23)
-    .. handle err
-    if found == false {
-        // handle found
-    }
-    ... do what you want with m here
-
-```
+    ```go
+      m := NewComment(a)
+      results,err := m.FindByCommentKarma(...)
+      // handle err
+      for i,r := results {
+        // now r is an instance of Comment
+      }
+    ```
 
 #### func (*Comment) FindByCommentParent
 
@@ -326,20 +285,16 @@ receiver is a pointer. ```go
 func (o *Comment) FindByCommentParent(_findByCommentParent int64) ([]*Comment, error)
 ```
 FindByCommentParent dynamic finder for comment_parent -> []*Comment,error
-Generic and programatically generator finder for Comment Note that Fine returns
-a bool if found, not err, in the case of a return of true, the instance data
-will be filled out. a call to find ALWAYS overwrites the model you call Find on
-i.e. receiver is a pointer. ```go
+Generic and programatically generator finder for Comment
 
-    m := NewComment(a)
-    found,err := m.Find(23)
-    .. handle err
-    if found == false {
-        // handle found
-    }
-    ... do what you want with m here
-
-```
+    ```go
+      m := NewComment(a)
+      results,err := m.FindByCommentParent(...)
+      // handle err
+      for i,r := results {
+        // now r is an instance of Comment
+      }
+    ```
 
 #### func (*Comment) FindByCommentPostID
 
@@ -347,20 +302,16 @@ i.e. receiver is a pointer. ```go
 func (o *Comment) FindByCommentPostID(_findByCommentPostID int64) ([]*Comment, error)
 ```
 FindByCommentPostID dynamic finder for comment_post_ID -> []*Comment,error
-Generic and programatically generator finder for Comment Note that Fine returns
-a bool if found, not err, in the case of a return of true, the instance data
-will be filled out. a call to find ALWAYS overwrites the model you call Find on
-i.e. receiver is a pointer. ```go
+Generic and programatically generator finder for Comment
 
-    m := NewComment(a)
-    found,err := m.Find(23)
-    .. handle err
-    if found == false {
-        // handle found
-    }
-    ... do what you want with m here
-
-```
+    ```go
+      m := NewComment(a)
+      results,err := m.FindByCommentPostID(...)
+      // handle err
+      for i,r := results {
+        // now r is an instance of Comment
+      }
+    ```
 
 #### func (*Comment) FindByCommentType
 
@@ -368,20 +319,16 @@ i.e. receiver is a pointer. ```go
 func (o *Comment) FindByCommentType(_findByCommentType string) ([]*Comment, error)
 ```
 FindByCommentType dynamic finder for comment_type -> []*Comment,error Generic
-and programatically generator finder for Comment Note that Fine returns a bool
-if found, not err, in the case of a return of true, the instance data will be
-filled out. a call to find ALWAYS overwrites the model you call Find on i.e.
-receiver is a pointer. ```go
+and programatically generator finder for Comment
 
-    m := NewComment(a)
-    found,err := m.Find(23)
-    .. handle err
-    if found == false {
-        // handle found
-    }
-    ... do what you want with m here
-
-```
+    ```go
+      m := NewComment(a)
+      results,err := m.FindByCommentType(...)
+      // handle err
+      for i,r := results {
+        // now r is an instance of Comment
+      }
+    ```
 
 #### func (*Comment) FindByUserId
 
@@ -389,20 +336,16 @@ receiver is a pointer. ```go
 func (o *Comment) FindByUserId(_findByUserId int64) ([]*Comment, error)
 ```
 FindByUserId dynamic finder for user_id -> []*Comment,error Generic and
-programatically generator finder for Comment Note that Fine returns a bool if
-found, not err, in the case of a return of true, the instance data will be
-filled out. a call to find ALWAYS overwrites the model you call Find on i.e.
-receiver is a pointer. ```go
+programatically generator finder for Comment
 
-    m := NewComment(a)
-    found,err := m.Find(23)
-    .. handle err
-    if found == false {
-        // handle found
-    }
-    ... do what you want with m here
-
-```
+    ```go
+      m := NewComment(a)
+      results,err := m.FindByUserId(...)
+      // handle err
+      for i,r := results {
+        // now r is an instance of Comment
+      }
+    ```
 
 #### func (*Comment) FromComment
 
@@ -823,17 +766,17 @@ Find dynamic finder for meta_id -> bool,error Generic and programatically
 generator finder for CommentMeta Note that Fine returns a bool if found, not
 err, in the case of a return of true, the instance data will be filled out. a
 call to find ALWAYS overwrites the model you call Find on i.e. receiver is a
-pointer. ```go
+pointer.
 
-    m := NewCommentMeta(a)
-    found,err := m.Find(23)
-    .. handle err
-    if found == false {
-        // handle found
-    }
-    ... do what you want with m here
-
-```
+    ```go
+        m := NewCommentMeta(a)
+        found,err := m.Find(23)
+        .. handle err
+        if found == false {
+            // handle found
+        }
+        ... do what you want with m here
+    ```
 
 #### func (*CommentMeta) FindByCommentId
 
@@ -841,20 +784,16 @@ pointer. ```go
 func (o *CommentMeta) FindByCommentId(_findByCommentId int64) ([]*CommentMeta, error)
 ```
 FindByCommentId dynamic finder for comment_id -> []*CommentMeta,error Generic
-and programatically generator finder for CommentMeta Note that Fine returns a
-bool if found, not err, in the case of a return of true, the instance data will
-be filled out. a call to find ALWAYS overwrites the model you call Find on i.e.
-receiver is a pointer. ```go
+and programatically generator finder for CommentMeta
 
-    m := NewCommentMeta(a)
-    found,err := m.Find(23)
-    .. handle err
-    if found == false {
-        // handle found
-    }
-    ... do what you want with m here
-
-```
+    ```go
+      m := NewCommentMeta(a)
+      results,err := m.FindByCommentId(...)
+      // handle err
+      for i,r := results {
+        // now r is an instance of CommentMeta
+      }
+    ```
 
 #### func (*CommentMeta) FindByMetaKey
 
@@ -862,20 +801,16 @@ receiver is a pointer. ```go
 func (o *CommentMeta) FindByMetaKey(_findByMetaKey string) ([]*CommentMeta, error)
 ```
 FindByMetaKey dynamic finder for meta_key -> []*CommentMeta,error Generic and
-programatically generator finder for CommentMeta Note that Fine returns a bool
-if found, not err, in the case of a return of true, the instance data will be
-filled out. a call to find ALWAYS overwrites the model you call Find on i.e.
-receiver is a pointer. ```go
+programatically generator finder for CommentMeta
 
-    m := NewCommentMeta(a)
-    found,err := m.Find(23)
-    .. handle err
-    if found == false {
-        // handle found
-    }
-    ... do what you want with m here
-
-```
+    ```go
+      m := NewCommentMeta(a)
+      results,err := m.FindByMetaKey(...)
+      // handle err
+      for i,r := results {
+        // now r is an instance of CommentMeta
+      }
+    ```
 
 #### func (*CommentMeta) FindByMetaValue
 
@@ -883,20 +818,16 @@ receiver is a pointer. ```go
 func (o *CommentMeta) FindByMetaValue(_findByMetaValue string) ([]*CommentMeta, error)
 ```
 FindByMetaValue dynamic finder for meta_value -> []*CommentMeta,error Generic
-and programatically generator finder for CommentMeta Note that Fine returns a
-bool if found, not err, in the case of a return of true, the instance data will
-be filled out. a call to find ALWAYS overwrites the model you call Find on i.e.
-receiver is a pointer. ```go
+and programatically generator finder for CommentMeta
 
-    m := NewCommentMeta(a)
-    found,err := m.Find(23)
-    .. handle err
-    if found == false {
-        // handle found
-    }
-    ... do what you want with m here
-
-```
+    ```go
+      m := NewCommentMeta(a)
+      results,err := m.FindByMetaValue(...)
+      // handle err
+      for i,r := results {
+        // now r is an instance of CommentMeta
+      }
+    ```
 
 #### func (*CommentMeta) FromCommentMeta
 
@@ -1158,17 +1089,16 @@ Find dynamic finder for link_id -> bool,error Generic and programatically
 generator finder for Link Note that Fine returns a bool if found, not err, in
 the case of a return of true, the instance data will be filled out. a call to
 find ALWAYS overwrites the model you call Find on i.e. receiver is a pointer.
-```go
 
-    m := NewLink(a)
-    found,err := m.Find(23)
-    .. handle err
-    if found == false {
-        // handle found
-    }
-    ... do what you want with m here
-
-```
+    ```go
+        m := NewLink(a)
+        found,err := m.Find(23)
+        .. handle err
+        if found == false {
+            // handle found
+        }
+        ... do what you want with m here
+    ```
 
 #### func (*Link) FindByLinkDescription
 
@@ -1176,20 +1106,16 @@ find ALWAYS overwrites the model you call Find on i.e. receiver is a pointer.
 func (o *Link) FindByLinkDescription(_findByLinkDescription string) ([]*Link, error)
 ```
 FindByLinkDescription dynamic finder for link_description -> []*Link,error
-Generic and programatically generator finder for Link Note that Fine returns a
-bool if found, not err, in the case of a return of true, the instance data will
-be filled out. a call to find ALWAYS overwrites the model you call Find on i.e.
-receiver is a pointer. ```go
+Generic and programatically generator finder for Link
 
-    m := NewLink(a)
-    found,err := m.Find(23)
-    .. handle err
-    if found == false {
-        // handle found
-    }
-    ... do what you want with m here
-
-```
+    ```go
+      m := NewLink(a)
+      results,err := m.FindByLinkDescription(...)
+      // handle err
+      for i,r := results {
+        // now r is an instance of Link
+      }
+    ```
 
 #### func (*Link) FindByLinkImage
 
@@ -1197,20 +1123,16 @@ receiver is a pointer. ```go
 func (o *Link) FindByLinkImage(_findByLinkImage string) ([]*Link, error)
 ```
 FindByLinkImage dynamic finder for link_image -> []*Link,error Generic and
-programatically generator finder for Link Note that Fine returns a bool if
-found, not err, in the case of a return of true, the instance data will be
-filled out. a call to find ALWAYS overwrites the model you call Find on i.e.
-receiver is a pointer. ```go
+programatically generator finder for Link
 
-    m := NewLink(a)
-    found,err := m.Find(23)
-    .. handle err
-    if found == false {
-        // handle found
-    }
-    ... do what you want with m here
-
-```
+    ```go
+      m := NewLink(a)
+      results,err := m.FindByLinkImage(...)
+      // handle err
+      for i,r := results {
+        // now r is an instance of Link
+      }
+    ```
 
 #### func (*Link) FindByLinkName
 
@@ -1218,20 +1140,16 @@ receiver is a pointer. ```go
 func (o *Link) FindByLinkName(_findByLinkName string) ([]*Link, error)
 ```
 FindByLinkName dynamic finder for link_name -> []*Link,error Generic and
-programatically generator finder for Link Note that Fine returns a bool if
-found, not err, in the case of a return of true, the instance data will be
-filled out. a call to find ALWAYS overwrites the model you call Find on i.e.
-receiver is a pointer. ```go
+programatically generator finder for Link
 
-    m := NewLink(a)
-    found,err := m.Find(23)
-    .. handle err
-    if found == false {
-        // handle found
-    }
-    ... do what you want with m here
-
-```
+    ```go
+      m := NewLink(a)
+      results,err := m.FindByLinkName(...)
+      // handle err
+      for i,r := results {
+        // now r is an instance of Link
+      }
+    ```
 
 #### func (*Link) FindByLinkNotes
 
@@ -1239,20 +1157,16 @@ receiver is a pointer. ```go
 func (o *Link) FindByLinkNotes(_findByLinkNotes string) ([]*Link, error)
 ```
 FindByLinkNotes dynamic finder for link_notes -> []*Link,error Generic and
-programatically generator finder for Link Note that Fine returns a bool if
-found, not err, in the case of a return of true, the instance data will be
-filled out. a call to find ALWAYS overwrites the model you call Find on i.e.
-receiver is a pointer. ```go
+programatically generator finder for Link
 
-    m := NewLink(a)
-    found,err := m.Find(23)
-    .. handle err
-    if found == false {
-        // handle found
-    }
-    ... do what you want with m here
-
-```
+    ```go
+      m := NewLink(a)
+      results,err := m.FindByLinkNotes(...)
+      // handle err
+      for i,r := results {
+        // now r is an instance of Link
+      }
+    ```
 
 #### func (*Link) FindByLinkOwner
 
@@ -1260,20 +1174,16 @@ receiver is a pointer. ```go
 func (o *Link) FindByLinkOwner(_findByLinkOwner int64) ([]*Link, error)
 ```
 FindByLinkOwner dynamic finder for link_owner -> []*Link,error Generic and
-programatically generator finder for Link Note that Fine returns a bool if
-found, not err, in the case of a return of true, the instance data will be
-filled out. a call to find ALWAYS overwrites the model you call Find on i.e.
-receiver is a pointer. ```go
+programatically generator finder for Link
 
-    m := NewLink(a)
-    found,err := m.Find(23)
-    .. handle err
-    if found == false {
-        // handle found
-    }
-    ... do what you want with m here
-
-```
+    ```go
+      m := NewLink(a)
+      results,err := m.FindByLinkOwner(...)
+      // handle err
+      for i,r := results {
+        // now r is an instance of Link
+      }
+    ```
 
 #### func (*Link) FindByLinkRating
 
@@ -1281,20 +1191,16 @@ receiver is a pointer. ```go
 func (o *Link) FindByLinkRating(_findByLinkRating int) ([]*Link, error)
 ```
 FindByLinkRating dynamic finder for link_rating -> []*Link,error Generic and
-programatically generator finder for Link Note that Fine returns a bool if
-found, not err, in the case of a return of true, the instance data will be
-filled out. a call to find ALWAYS overwrites the model you call Find on i.e.
-receiver is a pointer. ```go
+programatically generator finder for Link
 
-    m := NewLink(a)
-    found,err := m.Find(23)
-    .. handle err
-    if found == false {
-        // handle found
-    }
-    ... do what you want with m here
-
-```
+    ```go
+      m := NewLink(a)
+      results,err := m.FindByLinkRating(...)
+      // handle err
+      for i,r := results {
+        // now r is an instance of Link
+      }
+    ```
 
 #### func (*Link) FindByLinkRel
 
@@ -1302,20 +1208,16 @@ receiver is a pointer. ```go
 func (o *Link) FindByLinkRel(_findByLinkRel string) ([]*Link, error)
 ```
 FindByLinkRel dynamic finder for link_rel -> []*Link,error Generic and
-programatically generator finder for Link Note that Fine returns a bool if
-found, not err, in the case of a return of true, the instance data will be
-filled out. a call to find ALWAYS overwrites the model you call Find on i.e.
-receiver is a pointer. ```go
+programatically generator finder for Link
 
-    m := NewLink(a)
-    found,err := m.Find(23)
-    .. handle err
-    if found == false {
-        // handle found
-    }
-    ... do what you want with m here
-
-```
+    ```go
+      m := NewLink(a)
+      results,err := m.FindByLinkRel(...)
+      // handle err
+      for i,r := results {
+        // now r is an instance of Link
+      }
+    ```
 
 #### func (*Link) FindByLinkRss
 
@@ -1323,20 +1225,16 @@ receiver is a pointer. ```go
 func (o *Link) FindByLinkRss(_findByLinkRss string) ([]*Link, error)
 ```
 FindByLinkRss dynamic finder for link_rss -> []*Link,error Generic and
-programatically generator finder for Link Note that Fine returns a bool if
-found, not err, in the case of a return of true, the instance data will be
-filled out. a call to find ALWAYS overwrites the model you call Find on i.e.
-receiver is a pointer. ```go
+programatically generator finder for Link
 
-    m := NewLink(a)
-    found,err := m.Find(23)
-    .. handle err
-    if found == false {
-        // handle found
-    }
-    ... do what you want with m here
-
-```
+    ```go
+      m := NewLink(a)
+      results,err := m.FindByLinkRss(...)
+      // handle err
+      for i,r := results {
+        // now r is an instance of Link
+      }
+    ```
 
 #### func (*Link) FindByLinkTarget
 
@@ -1344,20 +1242,16 @@ receiver is a pointer. ```go
 func (o *Link) FindByLinkTarget(_findByLinkTarget string) ([]*Link, error)
 ```
 FindByLinkTarget dynamic finder for link_target -> []*Link,error Generic and
-programatically generator finder for Link Note that Fine returns a bool if
-found, not err, in the case of a return of true, the instance data will be
-filled out. a call to find ALWAYS overwrites the model you call Find on i.e.
-receiver is a pointer. ```go
+programatically generator finder for Link
 
-    m := NewLink(a)
-    found,err := m.Find(23)
-    .. handle err
-    if found == false {
-        // handle found
-    }
-    ... do what you want with m here
-
-```
+    ```go
+      m := NewLink(a)
+      results,err := m.FindByLinkTarget(...)
+      // handle err
+      for i,r := results {
+        // now r is an instance of Link
+      }
+    ```
 
 #### func (*Link) FindByLinkUpdated
 
@@ -1365,20 +1259,16 @@ receiver is a pointer. ```go
 func (o *Link) FindByLinkUpdated(_findByLinkUpdated *DateTime) ([]*Link, error)
 ```
 FindByLinkUpdated dynamic finder for link_updated -> []*Link,error Generic and
-programatically generator finder for Link Note that Fine returns a bool if
-found, not err, in the case of a return of true, the instance data will be
-filled out. a call to find ALWAYS overwrites the model you call Find on i.e.
-receiver is a pointer. ```go
+programatically generator finder for Link
 
-    m := NewLink(a)
-    found,err := m.Find(23)
-    .. handle err
-    if found == false {
-        // handle found
-    }
-    ... do what you want with m here
-
-```
+    ```go
+      m := NewLink(a)
+      results,err := m.FindByLinkUpdated(...)
+      // handle err
+      for i,r := results {
+        // now r is an instance of Link
+      }
+    ```
 
 #### func (*Link) FindByLinkUrl
 
@@ -1386,20 +1276,16 @@ receiver is a pointer. ```go
 func (o *Link) FindByLinkUrl(_findByLinkUrl string) ([]*Link, error)
 ```
 FindByLinkUrl dynamic finder for link_url -> []*Link,error Generic and
-programatically generator finder for Link Note that Fine returns a bool if
-found, not err, in the case of a return of true, the instance data will be
-filled out. a call to find ALWAYS overwrites the model you call Find on i.e.
-receiver is a pointer. ```go
+programatically generator finder for Link
 
-    m := NewLink(a)
-    found,err := m.Find(23)
-    .. handle err
-    if found == false {
-        // handle found
-    }
-    ... do what you want with m here
-
-```
+    ```go
+      m := NewLink(a)
+      results,err := m.FindByLinkUrl(...)
+      // handle err
+      for i,r := results {
+        // now r is an instance of Link
+      }
+    ```
 
 #### func (*Link) FindByLinkVisible
 
@@ -1407,20 +1293,16 @@ receiver is a pointer. ```go
 func (o *Link) FindByLinkVisible(_findByLinkVisible string) ([]*Link, error)
 ```
 FindByLinkVisible dynamic finder for link_visible -> []*Link,error Generic and
-programatically generator finder for Link Note that Fine returns a bool if
-found, not err, in the case of a return of true, the instance data will be
-filled out. a call to find ALWAYS overwrites the model you call Find on i.e.
-receiver is a pointer. ```go
+programatically generator finder for Link
 
-    m := NewLink(a)
-    found,err := m.Find(23)
-    .. handle err
-    if found == false {
-        // handle found
-    }
-    ... do what you want with m here
-
-```
+    ```go
+      m := NewLink(a)
+      results,err := m.FindByLinkVisible(...)
+      // handle err
+      for i,r := results {
+        // now r is an instance of Link
+      }
+    ```
 
 #### func (*Link) FromDBValueMap
 
@@ -2066,17 +1948,16 @@ Find dynamic finder for option_id -> bool,error Generic and programatically
 generator finder for Option Note that Fine returns a bool if found, not err, in
 the case of a return of true, the instance data will be filled out. a call to
 find ALWAYS overwrites the model you call Find on i.e. receiver is a pointer.
-```go
 
-    m := NewOption(a)
-    found,err := m.Find(23)
-    .. handle err
-    if found == false {
-        // handle found
-    }
-    ... do what you want with m here
-
-```
+    ```go
+        m := NewOption(a)
+        found,err := m.Find(23)
+        .. handle err
+        if found == false {
+            // handle found
+        }
+        ... do what you want with m here
+    ```
 
 #### func (*Option) FindByAutoload
 
@@ -2084,20 +1965,16 @@ find ALWAYS overwrites the model you call Find on i.e. receiver is a pointer.
 func (o *Option) FindByAutoload(_findByAutoload string) ([]*Option, error)
 ```
 FindByAutoload dynamic finder for autoload -> []*Option,error Generic and
-programatically generator finder for Option Note that Fine returns a bool if
-found, not err, in the case of a return of true, the instance data will be
-filled out. a call to find ALWAYS overwrites the model you call Find on i.e.
-receiver is a pointer. ```go
+programatically generator finder for Option
 
-    m := NewOption(a)
-    found,err := m.Find(23)
-    .. handle err
-    if found == false {
-        // handle found
-    }
-    ... do what you want with m here
-
-```
+    ```go
+      m := NewOption(a)
+      results,err := m.FindByAutoload(...)
+      // handle err
+      for i,r := results {
+        // now r is an instance of Option
+      }
+    ```
 
 #### func (*Option) FindByOptionName
 
@@ -2105,20 +1982,16 @@ receiver is a pointer. ```go
 func (o *Option) FindByOptionName(_findByOptionName string) ([]*Option, error)
 ```
 FindByOptionName dynamic finder for option_name -> []*Option,error Generic and
-programatically generator finder for Option Note that Fine returns a bool if
-found, not err, in the case of a return of true, the instance data will be
-filled out. a call to find ALWAYS overwrites the model you call Find on i.e.
-receiver is a pointer. ```go
+programatically generator finder for Option
 
-    m := NewOption(a)
-    found,err := m.Find(23)
-    .. handle err
-    if found == false {
-        // handle found
-    }
-    ... do what you want with m here
-
-```
+    ```go
+      m := NewOption(a)
+      results,err := m.FindByOptionName(...)
+      // handle err
+      for i,r := results {
+        // now r is an instance of Option
+      }
+    ```
 
 #### func (*Option) FindByOptionValue
 
@@ -2126,20 +1999,16 @@ receiver is a pointer. ```go
 func (o *Option) FindByOptionValue(_findByOptionValue string) ([]*Option, error)
 ```
 FindByOptionValue dynamic finder for option_value -> []*Option,error Generic and
-programatically generator finder for Option Note that Fine returns a bool if
-found, not err, in the case of a return of true, the instance data will be
-filled out. a call to find ALWAYS overwrites the model you call Find on i.e.
-receiver is a pointer. ```go
+programatically generator finder for Option
 
-    m := NewOption(a)
-    found,err := m.Find(23)
-    .. handle err
-    if found == false {
-        // handle found
-    }
-    ... do what you want with m here
-
-```
+    ```go
+      m := NewOption(a)
+      results,err := m.FindByOptionValue(...)
+      // handle err
+      for i,r := results {
+        // now r is an instance of Option
+      }
+    ```
 
 #### func (*Option) FromDBValueMap
 
@@ -2353,17 +2222,17 @@ func (o *Post) Find(_findByID int64) (bool, error)
 Find dynamic finder for ID -> bool,error Generic and programatically generator
 finder for Post Note that Fine returns a bool if found, not err, in the case of
 a return of true, the instance data will be filled out. a call to find ALWAYS
-overwrites the model you call Find on i.e. receiver is a pointer. ```go
+overwrites the model you call Find on i.e. receiver is a pointer.
 
-    m := NewPost(a)
-    found,err := m.Find(23)
-    .. handle err
-    if found == false {
-        // handle found
-    }
-    ... do what you want with m here
-
-```
+    ```go
+        m := NewPost(a)
+        found,err := m.Find(23)
+        .. handle err
+        if found == false {
+            // handle found
+        }
+        ... do what you want with m here
+    ```
 
 #### func (*Post) FindByCommentCount
 
@@ -2371,20 +2240,16 @@ overwrites the model you call Find on i.e. receiver is a pointer. ```go
 func (o *Post) FindByCommentCount(_findByCommentCount int64) ([]*Post, error)
 ```
 FindByCommentCount dynamic finder for comment_count -> []*Post,error Generic and
-programatically generator finder for Post Note that Fine returns a bool if
-found, not err, in the case of a return of true, the instance data will be
-filled out. a call to find ALWAYS overwrites the model you call Find on i.e.
-receiver is a pointer. ```go
+programatically generator finder for Post
 
-    m := NewPost(a)
-    found,err := m.Find(23)
-    .. handle err
-    if found == false {
-        // handle found
-    }
-    ... do what you want with m here
-
-```
+    ```go
+      m := NewPost(a)
+      results,err := m.FindByCommentCount(...)
+      // handle err
+      for i,r := results {
+        // now r is an instance of Post
+      }
+    ```
 
 #### func (*Post) FindByCommentStatus
 
@@ -2392,20 +2257,16 @@ receiver is a pointer. ```go
 func (o *Post) FindByCommentStatus(_findByCommentStatus string) ([]*Post, error)
 ```
 FindByCommentStatus dynamic finder for comment_status -> []*Post,error Generic
-and programatically generator finder for Post Note that Fine returns a bool if
-found, not err, in the case of a return of true, the instance data will be
-filled out. a call to find ALWAYS overwrites the model you call Find on i.e.
-receiver is a pointer. ```go
+and programatically generator finder for Post
 
-    m := NewPost(a)
-    found,err := m.Find(23)
-    .. handle err
-    if found == false {
-        // handle found
-    }
-    ... do what you want with m here
-
-```
+    ```go
+      m := NewPost(a)
+      results,err := m.FindByCommentStatus(...)
+      // handle err
+      for i,r := results {
+        // now r is an instance of Post
+      }
+    ```
 
 #### func (*Post) FindByGuid
 
@@ -2413,20 +2274,16 @@ receiver is a pointer. ```go
 func (o *Post) FindByGuid(_findByGuid string) ([]*Post, error)
 ```
 FindByGuid dynamic finder for guid -> []*Post,error Generic and programatically
-generator finder for Post Note that Fine returns a bool if found, not err, in
-the case of a return of true, the instance data will be filled out. a call to
-find ALWAYS overwrites the model you call Find on i.e. receiver is a pointer.
-```go
+generator finder for Post
 
-    m := NewPost(a)
-    found,err := m.Find(23)
-    .. handle err
-    if found == false {
-        // handle found
-    }
-    ... do what you want with m here
-
-```
+    ```go
+      m := NewPost(a)
+      results,err := m.FindByGuid(...)
+      // handle err
+      for i,r := results {
+        // now r is an instance of Post
+      }
+    ```
 
 #### func (*Post) FindByMenuOrder
 
@@ -2434,20 +2291,16 @@ find ALWAYS overwrites the model you call Find on i.e. receiver is a pointer.
 func (o *Post) FindByMenuOrder(_findByMenuOrder int) ([]*Post, error)
 ```
 FindByMenuOrder dynamic finder for menu_order -> []*Post,error Generic and
-programatically generator finder for Post Note that Fine returns a bool if
-found, not err, in the case of a return of true, the instance data will be
-filled out. a call to find ALWAYS overwrites the model you call Find on i.e.
-receiver is a pointer. ```go
+programatically generator finder for Post
 
-    m := NewPost(a)
-    found,err := m.Find(23)
-    .. handle err
-    if found == false {
-        // handle found
-    }
-    ... do what you want with m here
-
-```
+    ```go
+      m := NewPost(a)
+      results,err := m.FindByMenuOrder(...)
+      // handle err
+      for i,r := results {
+        // now r is an instance of Post
+      }
+    ```
 
 #### func (*Post) FindByPingStatus
 
@@ -2455,20 +2308,16 @@ receiver is a pointer. ```go
 func (o *Post) FindByPingStatus(_findByPingStatus string) ([]*Post, error)
 ```
 FindByPingStatus dynamic finder for ping_status -> []*Post,error Generic and
-programatically generator finder for Post Note that Fine returns a bool if
-found, not err, in the case of a return of true, the instance data will be
-filled out. a call to find ALWAYS overwrites the model you call Find on i.e.
-receiver is a pointer. ```go
+programatically generator finder for Post
 
-    m := NewPost(a)
-    found,err := m.Find(23)
-    .. handle err
-    if found == false {
-        // handle found
-    }
-    ... do what you want with m here
-
-```
+    ```go
+      m := NewPost(a)
+      results,err := m.FindByPingStatus(...)
+      // handle err
+      for i,r := results {
+        // now r is an instance of Post
+      }
+    ```
 
 #### func (*Post) FindByPinged
 
@@ -2476,20 +2325,16 @@ receiver is a pointer. ```go
 func (o *Post) FindByPinged(_findByPinged string) ([]*Post, error)
 ```
 FindByPinged dynamic finder for pinged -> []*Post,error Generic and
-programatically generator finder for Post Note that Fine returns a bool if
-found, not err, in the case of a return of true, the instance data will be
-filled out. a call to find ALWAYS overwrites the model you call Find on i.e.
-receiver is a pointer. ```go
+programatically generator finder for Post
 
-    m := NewPost(a)
-    found,err := m.Find(23)
-    .. handle err
-    if found == false {
-        // handle found
-    }
-    ... do what you want with m here
-
-```
+    ```go
+      m := NewPost(a)
+      results,err := m.FindByPinged(...)
+      // handle err
+      for i,r := results {
+        // now r is an instance of Post
+      }
+    ```
 
 #### func (*Post) FindByPostAuthor
 
@@ -2497,20 +2342,16 @@ receiver is a pointer. ```go
 func (o *Post) FindByPostAuthor(_findByPostAuthor int64) ([]*Post, error)
 ```
 FindByPostAuthor dynamic finder for post_author -> []*Post,error Generic and
-programatically generator finder for Post Note that Fine returns a bool if
-found, not err, in the case of a return of true, the instance data will be
-filled out. a call to find ALWAYS overwrites the model you call Find on i.e.
-receiver is a pointer. ```go
+programatically generator finder for Post
 
-    m := NewPost(a)
-    found,err := m.Find(23)
-    .. handle err
-    if found == false {
-        // handle found
-    }
-    ... do what you want with m here
-
-```
+    ```go
+      m := NewPost(a)
+      results,err := m.FindByPostAuthor(...)
+      // handle err
+      for i,r := results {
+        // now r is an instance of Post
+      }
+    ```
 
 #### func (*Post) FindByPostContent
 
@@ -2518,20 +2359,16 @@ receiver is a pointer. ```go
 func (o *Post) FindByPostContent(_findByPostContent string) ([]*Post, error)
 ```
 FindByPostContent dynamic finder for post_content -> []*Post,error Generic and
-programatically generator finder for Post Note that Fine returns a bool if
-found, not err, in the case of a return of true, the instance data will be
-filled out. a call to find ALWAYS overwrites the model you call Find on i.e.
-receiver is a pointer. ```go
+programatically generator finder for Post
 
-    m := NewPost(a)
-    found,err := m.Find(23)
-    .. handle err
-    if found == false {
-        // handle found
-    }
-    ... do what you want with m here
-
-```
+    ```go
+      m := NewPost(a)
+      results,err := m.FindByPostContent(...)
+      // handle err
+      for i,r := results {
+        // now r is an instance of Post
+      }
+    ```
 
 #### func (*Post) FindByPostContentFiltered
 
@@ -2539,20 +2376,16 @@ receiver is a pointer. ```go
 func (o *Post) FindByPostContentFiltered(_findByPostContentFiltered string) ([]*Post, error)
 ```
 FindByPostContentFiltered dynamic finder for post_content_filtered ->
-[]*Post,error Generic and programatically generator finder for Post Note that
-Fine returns a bool if found, not err, in the case of a return of true, the
-instance data will be filled out. a call to find ALWAYS overwrites the model you
-call Find on i.e. receiver is a pointer. ```go
+[]*Post,error Generic and programatically generator finder for Post
 
-    m := NewPost(a)
-    found,err := m.Find(23)
-    .. handle err
-    if found == false {
-        // handle found
-    }
-    ... do what you want with m here
-
-```
+    ```go
+      m := NewPost(a)
+      results,err := m.FindByPostContentFiltered(...)
+      // handle err
+      for i,r := results {
+        // now r is an instance of Post
+      }
+    ```
 
 #### func (*Post) FindByPostDate
 
@@ -2560,20 +2393,16 @@ call Find on i.e. receiver is a pointer. ```go
 func (o *Post) FindByPostDate(_findByPostDate *DateTime) ([]*Post, error)
 ```
 FindByPostDate dynamic finder for post_date -> []*Post,error Generic and
-programatically generator finder for Post Note that Fine returns a bool if
-found, not err, in the case of a return of true, the instance data will be
-filled out. a call to find ALWAYS overwrites the model you call Find on i.e.
-receiver is a pointer. ```go
+programatically generator finder for Post
 
-    m := NewPost(a)
-    found,err := m.Find(23)
-    .. handle err
-    if found == false {
-        // handle found
-    }
-    ... do what you want with m here
-
-```
+    ```go
+      m := NewPost(a)
+      results,err := m.FindByPostDate(...)
+      // handle err
+      for i,r := results {
+        // now r is an instance of Post
+      }
+    ```
 
 #### func (*Post) FindByPostDateGmt
 
@@ -2581,20 +2410,16 @@ receiver is a pointer. ```go
 func (o *Post) FindByPostDateGmt(_findByPostDateGmt *DateTime) ([]*Post, error)
 ```
 FindByPostDateGmt dynamic finder for post_date_gmt -> []*Post,error Generic and
-programatically generator finder for Post Note that Fine returns a bool if
-found, not err, in the case of a return of true, the instance data will be
-filled out. a call to find ALWAYS overwrites the model you call Find on i.e.
-receiver is a pointer. ```go
+programatically generator finder for Post
 
-    m := NewPost(a)
-    found,err := m.Find(23)
-    .. handle err
-    if found == false {
-        // handle found
-    }
-    ... do what you want with m here
-
-```
+    ```go
+      m := NewPost(a)
+      results,err := m.FindByPostDateGmt(...)
+      // handle err
+      for i,r := results {
+        // now r is an instance of Post
+      }
+    ```
 
 #### func (*Post) FindByPostExcerpt
 
@@ -2602,20 +2427,16 @@ receiver is a pointer. ```go
 func (o *Post) FindByPostExcerpt(_findByPostExcerpt string) ([]*Post, error)
 ```
 FindByPostExcerpt dynamic finder for post_excerpt -> []*Post,error Generic and
-programatically generator finder for Post Note that Fine returns a bool if
-found, not err, in the case of a return of true, the instance data will be
-filled out. a call to find ALWAYS overwrites the model you call Find on i.e.
-receiver is a pointer. ```go
+programatically generator finder for Post
 
-    m := NewPost(a)
-    found,err := m.Find(23)
-    .. handle err
-    if found == false {
-        // handle found
-    }
-    ... do what you want with m here
-
-```
+    ```go
+      m := NewPost(a)
+      results,err := m.FindByPostExcerpt(...)
+      // handle err
+      for i,r := results {
+        // now r is an instance of Post
+      }
+    ```
 
 #### func (*Post) FindByPostMimeType
 
@@ -2623,20 +2444,16 @@ receiver is a pointer. ```go
 func (o *Post) FindByPostMimeType(_findByPostMimeType string) ([]*Post, error)
 ```
 FindByPostMimeType dynamic finder for post_mime_type -> []*Post,error Generic
-and programatically generator finder for Post Note that Fine returns a bool if
-found, not err, in the case of a return of true, the instance data will be
-filled out. a call to find ALWAYS overwrites the model you call Find on i.e.
-receiver is a pointer. ```go
+and programatically generator finder for Post
 
-    m := NewPost(a)
-    found,err := m.Find(23)
-    .. handle err
-    if found == false {
-        // handle found
-    }
-    ... do what you want with m here
-
-```
+    ```go
+      m := NewPost(a)
+      results,err := m.FindByPostMimeType(...)
+      // handle err
+      for i,r := results {
+        // now r is an instance of Post
+      }
+    ```
 
 #### func (*Post) FindByPostModified
 
@@ -2644,20 +2461,16 @@ receiver is a pointer. ```go
 func (o *Post) FindByPostModified(_findByPostModified *DateTime) ([]*Post, error)
 ```
 FindByPostModified dynamic finder for post_modified -> []*Post,error Generic and
-programatically generator finder for Post Note that Fine returns a bool if
-found, not err, in the case of a return of true, the instance data will be
-filled out. a call to find ALWAYS overwrites the model you call Find on i.e.
-receiver is a pointer. ```go
+programatically generator finder for Post
 
-    m := NewPost(a)
-    found,err := m.Find(23)
-    .. handle err
-    if found == false {
-        // handle found
-    }
-    ... do what you want with m here
-
-```
+    ```go
+      m := NewPost(a)
+      results,err := m.FindByPostModified(...)
+      // handle err
+      for i,r := results {
+        // now r is an instance of Post
+      }
+    ```
 
 #### func (*Post) FindByPostModifiedGmt
 
@@ -2665,20 +2478,16 @@ receiver is a pointer. ```go
 func (o *Post) FindByPostModifiedGmt(_findByPostModifiedGmt *DateTime) ([]*Post, error)
 ```
 FindByPostModifiedGmt dynamic finder for post_modified_gmt -> []*Post,error
-Generic and programatically generator finder for Post Note that Fine returns a
-bool if found, not err, in the case of a return of true, the instance data will
-be filled out. a call to find ALWAYS overwrites the model you call Find on i.e.
-receiver is a pointer. ```go
+Generic and programatically generator finder for Post
 
-    m := NewPost(a)
-    found,err := m.Find(23)
-    .. handle err
-    if found == false {
-        // handle found
-    }
-    ... do what you want with m here
-
-```
+    ```go
+      m := NewPost(a)
+      results,err := m.FindByPostModifiedGmt(...)
+      // handle err
+      for i,r := results {
+        // now r is an instance of Post
+      }
+    ```
 
 #### func (*Post) FindByPostName
 
@@ -2686,20 +2495,16 @@ receiver is a pointer. ```go
 func (o *Post) FindByPostName(_findByPostName string) ([]*Post, error)
 ```
 FindByPostName dynamic finder for post_name -> []*Post,error Generic and
-programatically generator finder for Post Note that Fine returns a bool if
-found, not err, in the case of a return of true, the instance data will be
-filled out. a call to find ALWAYS overwrites the model you call Find on i.e.
-receiver is a pointer. ```go
+programatically generator finder for Post
 
-    m := NewPost(a)
-    found,err := m.Find(23)
-    .. handle err
-    if found == false {
-        // handle found
-    }
-    ... do what you want with m here
-
-```
+    ```go
+      m := NewPost(a)
+      results,err := m.FindByPostName(...)
+      // handle err
+      for i,r := results {
+        // now r is an instance of Post
+      }
+    ```
 
 #### func (*Post) FindByPostParent
 
@@ -2707,20 +2512,16 @@ receiver is a pointer. ```go
 func (o *Post) FindByPostParent(_findByPostParent int64) ([]*Post, error)
 ```
 FindByPostParent dynamic finder for post_parent -> []*Post,error Generic and
-programatically generator finder for Post Note that Fine returns a bool if
-found, not err, in the case of a return of true, the instance data will be
-filled out. a call to find ALWAYS overwrites the model you call Find on i.e.
-receiver is a pointer. ```go
+programatically generator finder for Post
 
-    m := NewPost(a)
-    found,err := m.Find(23)
-    .. handle err
-    if found == false {
-        // handle found
-    }
-    ... do what you want with m here
-
-```
+    ```go
+      m := NewPost(a)
+      results,err := m.FindByPostParent(...)
+      // handle err
+      for i,r := results {
+        // now r is an instance of Post
+      }
+    ```
 
 #### func (*Post) FindByPostPassword
 
@@ -2728,20 +2529,16 @@ receiver is a pointer. ```go
 func (o *Post) FindByPostPassword(_findByPostPassword string) ([]*Post, error)
 ```
 FindByPostPassword dynamic finder for post_password -> []*Post,error Generic and
-programatically generator finder for Post Note that Fine returns a bool if
-found, not err, in the case of a return of true, the instance data will be
-filled out. a call to find ALWAYS overwrites the model you call Find on i.e.
-receiver is a pointer. ```go
+programatically generator finder for Post
 
-    m := NewPost(a)
-    found,err := m.Find(23)
-    .. handle err
-    if found == false {
-        // handle found
-    }
-    ... do what you want with m here
-
-```
+    ```go
+      m := NewPost(a)
+      results,err := m.FindByPostPassword(...)
+      // handle err
+      for i,r := results {
+        // now r is an instance of Post
+      }
+    ```
 
 #### func (*Post) FindByPostStatus
 
@@ -2749,20 +2546,16 @@ receiver is a pointer. ```go
 func (o *Post) FindByPostStatus(_findByPostStatus string) ([]*Post, error)
 ```
 FindByPostStatus dynamic finder for post_status -> []*Post,error Generic and
-programatically generator finder for Post Note that Fine returns a bool if
-found, not err, in the case of a return of true, the instance data will be
-filled out. a call to find ALWAYS overwrites the model you call Find on i.e.
-receiver is a pointer. ```go
+programatically generator finder for Post
 
-    m := NewPost(a)
-    found,err := m.Find(23)
-    .. handle err
-    if found == false {
-        // handle found
-    }
-    ... do what you want with m here
-
-```
+    ```go
+      m := NewPost(a)
+      results,err := m.FindByPostStatus(...)
+      // handle err
+      for i,r := results {
+        // now r is an instance of Post
+      }
+    ```
 
 #### func (*Post) FindByPostTitle
 
@@ -2770,20 +2563,16 @@ receiver is a pointer. ```go
 func (o *Post) FindByPostTitle(_findByPostTitle string) ([]*Post, error)
 ```
 FindByPostTitle dynamic finder for post_title -> []*Post,error Generic and
-programatically generator finder for Post Note that Fine returns a bool if
-found, not err, in the case of a return of true, the instance data will be
-filled out. a call to find ALWAYS overwrites the model you call Find on i.e.
-receiver is a pointer. ```go
+programatically generator finder for Post
 
-    m := NewPost(a)
-    found,err := m.Find(23)
-    .. handle err
-    if found == false {
-        // handle found
-    }
-    ... do what you want with m here
-
-```
+    ```go
+      m := NewPost(a)
+      results,err := m.FindByPostTitle(...)
+      // handle err
+      for i,r := results {
+        // now r is an instance of Post
+      }
+    ```
 
 #### func (*Post) FindByPostType
 
@@ -2791,20 +2580,16 @@ receiver is a pointer. ```go
 func (o *Post) FindByPostType(_findByPostType string) ([]*Post, error)
 ```
 FindByPostType dynamic finder for post_type -> []*Post,error Generic and
-programatically generator finder for Post Note that Fine returns a bool if
-found, not err, in the case of a return of true, the instance data will be
-filled out. a call to find ALWAYS overwrites the model you call Find on i.e.
-receiver is a pointer. ```go
+programatically generator finder for Post
 
-    m := NewPost(a)
-    found,err := m.Find(23)
-    .. handle err
-    if found == false {
-        // handle found
-    }
-    ... do what you want with m here
-
-```
+    ```go
+      m := NewPost(a)
+      results,err := m.FindByPostType(...)
+      // handle err
+      for i,r := results {
+        // now r is an instance of Post
+      }
+    ```
 
 #### func (*Post) FindByToPing
 
@@ -2812,20 +2597,16 @@ receiver is a pointer. ```go
 func (o *Post) FindByToPing(_findByToPing string) ([]*Post, error)
 ```
 FindByToPing dynamic finder for to_ping -> []*Post,error Generic and
-programatically generator finder for Post Note that Fine returns a bool if
-found, not err, in the case of a return of true, the instance data will be
-filled out. a call to find ALWAYS overwrites the model you call Find on i.e.
-receiver is a pointer. ```go
+programatically generator finder for Post
 
-    m := NewPost(a)
-    found,err := m.Find(23)
-    .. handle err
-    if found == false {
-        // handle found
-    }
-    ... do what you want with m here
-
-```
+    ```go
+      m := NewPost(a)
+      results,err := m.FindByToPing(...)
+      // handle err
+      for i,r := results {
+        // now r is an instance of Post
+      }
+    ```
 
 #### func (*Post) FromDBValueMap
 
@@ -3420,17 +3201,16 @@ Find dynamic finder for meta_id -> bool,error Generic and programatically
 generator finder for PostMeta Note that Fine returns a bool if found, not err,
 in the case of a return of true, the instance data will be filled out. a call to
 find ALWAYS overwrites the model you call Find on i.e. receiver is a pointer.
-```go
 
-    m := NewPostMeta(a)
-    found,err := m.Find(23)
-    .. handle err
-    if found == false {
-        // handle found
-    }
-    ... do what you want with m here
-
-```
+    ```go
+        m := NewPostMeta(a)
+        found,err := m.Find(23)
+        .. handle err
+        if found == false {
+            // handle found
+        }
+        ... do what you want with m here
+    ```
 
 #### func (*PostMeta) FindByMetaKey
 
@@ -3438,20 +3218,16 @@ find ALWAYS overwrites the model you call Find on i.e. receiver is a pointer.
 func (o *PostMeta) FindByMetaKey(_findByMetaKey string) ([]*PostMeta, error)
 ```
 FindByMetaKey dynamic finder for meta_key -> []*PostMeta,error Generic and
-programatically generator finder for PostMeta Note that Fine returns a bool if
-found, not err, in the case of a return of true, the instance data will be
-filled out. a call to find ALWAYS overwrites the model you call Find on i.e.
-receiver is a pointer. ```go
+programatically generator finder for PostMeta
 
-    m := NewPostMeta(a)
-    found,err := m.Find(23)
-    .. handle err
-    if found == false {
-        // handle found
-    }
-    ... do what you want with m here
-
-```
+    ```go
+      m := NewPostMeta(a)
+      results,err := m.FindByMetaKey(...)
+      // handle err
+      for i,r := results {
+        // now r is an instance of PostMeta
+      }
+    ```
 
 #### func (*PostMeta) FindByMetaValue
 
@@ -3459,20 +3235,16 @@ receiver is a pointer. ```go
 func (o *PostMeta) FindByMetaValue(_findByMetaValue string) ([]*PostMeta, error)
 ```
 FindByMetaValue dynamic finder for meta_value -> []*PostMeta,error Generic and
-programatically generator finder for PostMeta Note that Fine returns a bool if
-found, not err, in the case of a return of true, the instance data will be
-filled out. a call to find ALWAYS overwrites the model you call Find on i.e.
-receiver is a pointer. ```go
+programatically generator finder for PostMeta
 
-    m := NewPostMeta(a)
-    found,err := m.Find(23)
-    .. handle err
-    if found == false {
-        // handle found
-    }
-    ... do what you want with m here
-
-```
+    ```go
+      m := NewPostMeta(a)
+      results,err := m.FindByMetaValue(...)
+      // handle err
+      for i,r := results {
+        // now r is an instance of PostMeta
+      }
+    ```
 
 #### func (*PostMeta) FindByPostId
 
@@ -3480,20 +3252,16 @@ receiver is a pointer. ```go
 func (o *PostMeta) FindByPostId(_findByPostId int64) ([]*PostMeta, error)
 ```
 FindByPostId dynamic finder for post_id -> []*PostMeta,error Generic and
-programatically generator finder for PostMeta Note that Fine returns a bool if
-found, not err, in the case of a return of true, the instance data will be
-filled out. a call to find ALWAYS overwrites the model you call Find on i.e.
-receiver is a pointer. ```go
+programatically generator finder for PostMeta
 
-    m := NewPostMeta(a)
-    found,err := m.Find(23)
-    .. handle err
-    if found == false {
-        // handle found
-    }
-    ... do what you want with m here
-
-```
+    ```go
+      m := NewPostMeta(a)
+      results,err := m.FindByPostId(...)
+      // handle err
+      for i,r := results {
+        // now r is an instance of PostMeta
+      }
+    ```
 
 #### func (*PostMeta) FromDBValueMap
 
@@ -3678,17 +3446,16 @@ Find dynamic finder for term_id -> bool,error Generic and programatically
 generator finder for Term Note that Fine returns a bool if found, not err, in
 the case of a return of true, the instance data will be filled out. a call to
 find ALWAYS overwrites the model you call Find on i.e. receiver is a pointer.
-```go
 
-    m := NewTerm(a)
-    found,err := m.Find(23)
-    .. handle err
-    if found == false {
-        // handle found
-    }
-    ... do what you want with m here
-
-```
+    ```go
+        m := NewTerm(a)
+        found,err := m.Find(23)
+        .. handle err
+        if found == false {
+            // handle found
+        }
+        ... do what you want with m here
+    ```
 
 #### func (*Term) FindByName
 
@@ -3696,20 +3463,16 @@ find ALWAYS overwrites the model you call Find on i.e. receiver is a pointer.
 func (o *Term) FindByName(_findByName string) ([]*Term, error)
 ```
 FindByName dynamic finder for name -> []*Term,error Generic and programatically
-generator finder for Term Note that Fine returns a bool if found, not err, in
-the case of a return of true, the instance data will be filled out. a call to
-find ALWAYS overwrites the model you call Find on i.e. receiver is a pointer.
-```go
+generator finder for Term
 
-    m := NewTerm(a)
-    found,err := m.Find(23)
-    .. handle err
-    if found == false {
-        // handle found
-    }
-    ... do what you want with m here
-
-```
+    ```go
+      m := NewTerm(a)
+      results,err := m.FindByName(...)
+      // handle err
+      for i,r := results {
+        // now r is an instance of Term
+      }
+    ```
 
 #### func (*Term) FindBySlug
 
@@ -3717,20 +3480,16 @@ find ALWAYS overwrites the model you call Find on i.e. receiver is a pointer.
 func (o *Term) FindBySlug(_findBySlug string) ([]*Term, error)
 ```
 FindBySlug dynamic finder for slug -> []*Term,error Generic and programatically
-generator finder for Term Note that Fine returns a bool if found, not err, in
-the case of a return of true, the instance data will be filled out. a call to
-find ALWAYS overwrites the model you call Find on i.e. receiver is a pointer.
-```go
+generator finder for Term
 
-    m := NewTerm(a)
-    found,err := m.Find(23)
-    .. handle err
-    if found == false {
-        // handle found
-    }
-    ... do what you want with m here
-
-```
+    ```go
+      m := NewTerm(a)
+      results,err := m.FindBySlug(...)
+      // handle err
+      for i,r := results {
+        // now r is an instance of Term
+      }
+    ```
 
 #### func (*Term) FindByTermGroup
 
@@ -3738,20 +3497,16 @@ find ALWAYS overwrites the model you call Find on i.e. receiver is a pointer.
 func (o *Term) FindByTermGroup(_findByTermGroup int64) ([]*Term, error)
 ```
 FindByTermGroup dynamic finder for term_group -> []*Term,error Generic and
-programatically generator finder for Term Note that Fine returns a bool if
-found, not err, in the case of a return of true, the instance data will be
-filled out. a call to find ALWAYS overwrites the model you call Find on i.e.
-receiver is a pointer. ```go
+programatically generator finder for Term
 
-    m := NewTerm(a)
-    found,err := m.Find(23)
-    .. handle err
-    if found == false {
-        // handle found
-    }
-    ... do what you want with m here
-
-```
+    ```go
+      m := NewTerm(a)
+      results,err := m.FindByTermGroup(...)
+      // handle err
+      for i,r := results {
+        // now r is an instance of Term
+      }
+    ```
 
 #### func (*Term) FromDBValueMap
 
@@ -3930,20 +3685,16 @@ but a composite key.
 func (o *TermRelationship) FindByObjectId(_findByObjectId int64) ([]*TermRelationship, error)
 ```
 FindByObjectId dynamic finder for object_id -> []*TermRelationship,error Generic
-and programatically generator finder for TermRelationship Note that Fine returns
-a bool if found, not err, in the case of a return of true, the instance data
-will be filled out. a call to find ALWAYS overwrites the model you call Find on
-i.e. receiver is a pointer. ```go
+and programatically generator finder for TermRelationship
 
-    m := NewTermRelationship(a)
-    found,err := m.Find(23)
-    .. handle err
-    if found == false {
-        // handle found
-    }
-    ... do what you want with m here
-
-```
+    ```go
+      m := NewTermRelationship(a)
+      results,err := m.FindByObjectId(...)
+      // handle err
+      for i,r := results {
+        // now r is an instance of TermRelationship
+      }
+    ```
 
 #### func (*TermRelationship) FindByTermOrder
 
@@ -3951,20 +3702,16 @@ i.e. receiver is a pointer. ```go
 func (o *TermRelationship) FindByTermOrder(_findByTermOrder int) ([]*TermRelationship, error)
 ```
 FindByTermOrder dynamic finder for term_order -> []*TermRelationship,error
-Generic and programatically generator finder for TermRelationship Note that Fine
-returns a bool if found, not err, in the case of a return of true, the instance
-data will be filled out. a call to find ALWAYS overwrites the model you call
-Find on i.e. receiver is a pointer. ```go
+Generic and programatically generator finder for TermRelationship
 
-    m := NewTermRelationship(a)
-    found,err := m.Find(23)
-    .. handle err
-    if found == false {
-        // handle found
-    }
-    ... do what you want with m here
-
-```
+    ```go
+      m := NewTermRelationship(a)
+      results,err := m.FindByTermOrder(...)
+      // handle err
+      for i,r := results {
+        // now r is an instance of TermRelationship
+      }
+    ```
 
 #### func (*TermRelationship) FromDBValueMap
 
@@ -4126,17 +3873,17 @@ Find dynamic finder for term_taxonomy_id -> bool,error Generic and
 programatically generator finder for TermTaxonomy Note that Fine returns a bool
 if found, not err, in the case of a return of true, the instance data will be
 filled out. a call to find ALWAYS overwrites the model you call Find on i.e.
-receiver is a pointer. ```go
+receiver is a pointer.
 
-    m := NewTermTaxonomy(a)
-    found,err := m.Find(23)
-    .. handle err
-    if found == false {
-        // handle found
-    }
-    ... do what you want with m here
-
-```
+    ```go
+        m := NewTermTaxonomy(a)
+        found,err := m.Find(23)
+        .. handle err
+        if found == false {
+            // handle found
+        }
+        ... do what you want with m here
+    ```
 
 #### func (*TermTaxonomy) FindByCount
 
@@ -4144,20 +3891,16 @@ receiver is a pointer. ```go
 func (o *TermTaxonomy) FindByCount(_findByCount int64) ([]*TermTaxonomy, error)
 ```
 FindByCount dynamic finder for count -> []*TermTaxonomy,error Generic and
-programatically generator finder for TermTaxonomy Note that Fine returns a bool
-if found, not err, in the case of a return of true, the instance data will be
-filled out. a call to find ALWAYS overwrites the model you call Find on i.e.
-receiver is a pointer. ```go
+programatically generator finder for TermTaxonomy
 
-    m := NewTermTaxonomy(a)
-    found,err := m.Find(23)
-    .. handle err
-    if found == false {
-        // handle found
-    }
-    ... do what you want with m here
-
-```
+    ```go
+      m := NewTermTaxonomy(a)
+      results,err := m.FindByCount(...)
+      // handle err
+      for i,r := results {
+        // now r is an instance of TermTaxonomy
+      }
+    ```
 
 #### func (*TermTaxonomy) FindByDescription
 
@@ -4165,20 +3908,16 @@ receiver is a pointer. ```go
 func (o *TermTaxonomy) FindByDescription(_findByDescription string) ([]*TermTaxonomy, error)
 ```
 FindByDescription dynamic finder for description -> []*TermTaxonomy,error
-Generic and programatically generator finder for TermTaxonomy Note that Fine
-returns a bool if found, not err, in the case of a return of true, the instance
-data will be filled out. a call to find ALWAYS overwrites the model you call
-Find on i.e. receiver is a pointer. ```go
+Generic and programatically generator finder for TermTaxonomy
 
-    m := NewTermTaxonomy(a)
-    found,err := m.Find(23)
-    .. handle err
-    if found == false {
-        // handle found
-    }
-    ... do what you want with m here
-
-```
+    ```go
+      m := NewTermTaxonomy(a)
+      results,err := m.FindByDescription(...)
+      // handle err
+      for i,r := results {
+        // now r is an instance of TermTaxonomy
+      }
+    ```
 
 #### func (*TermTaxonomy) FindByParent
 
@@ -4186,20 +3925,16 @@ Find on i.e. receiver is a pointer. ```go
 func (o *TermTaxonomy) FindByParent(_findByParent int64) ([]*TermTaxonomy, error)
 ```
 FindByParent dynamic finder for parent -> []*TermTaxonomy,error Generic and
-programatically generator finder for TermTaxonomy Note that Fine returns a bool
-if found, not err, in the case of a return of true, the instance data will be
-filled out. a call to find ALWAYS overwrites the model you call Find on i.e.
-receiver is a pointer. ```go
+programatically generator finder for TermTaxonomy
 
-    m := NewTermTaxonomy(a)
-    found,err := m.Find(23)
-    .. handle err
-    if found == false {
-        // handle found
-    }
-    ... do what you want with m here
-
-```
+    ```go
+      m := NewTermTaxonomy(a)
+      results,err := m.FindByParent(...)
+      // handle err
+      for i,r := results {
+        // now r is an instance of TermTaxonomy
+      }
+    ```
 
 #### func (*TermTaxonomy) FindByTaxonomy
 
@@ -4207,20 +3942,16 @@ receiver is a pointer. ```go
 func (o *TermTaxonomy) FindByTaxonomy(_findByTaxonomy string) ([]*TermTaxonomy, error)
 ```
 FindByTaxonomy dynamic finder for taxonomy -> []*TermTaxonomy,error Generic and
-programatically generator finder for TermTaxonomy Note that Fine returns a bool
-if found, not err, in the case of a return of true, the instance data will be
-filled out. a call to find ALWAYS overwrites the model you call Find on i.e.
-receiver is a pointer. ```go
+programatically generator finder for TermTaxonomy
 
-    m := NewTermTaxonomy(a)
-    found,err := m.Find(23)
-    .. handle err
-    if found == false {
-        // handle found
-    }
-    ... do what you want with m here
-
-```
+    ```go
+      m := NewTermTaxonomy(a)
+      results,err := m.FindByTaxonomy(...)
+      // handle err
+      for i,r := results {
+        // now r is an instance of TermTaxonomy
+      }
+    ```
 
 #### func (*TermTaxonomy) FindByTermId
 
@@ -4228,20 +3959,16 @@ receiver is a pointer. ```go
 func (o *TermTaxonomy) FindByTermId(_findByTermId int64) ([]*TermTaxonomy, error)
 ```
 FindByTermId dynamic finder for term_id -> []*TermTaxonomy,error Generic and
-programatically generator finder for TermTaxonomy Note that Fine returns a bool
-if found, not err, in the case of a return of true, the instance data will be
-filled out. a call to find ALWAYS overwrites the model you call Find on i.e.
-receiver is a pointer. ```go
+programatically generator finder for TermTaxonomy
 
-    m := NewTermTaxonomy(a)
-    found,err := m.Find(23)
-    .. handle err
-    if found == false {
-        // handle found
-    }
-    ... do what you want with m here
-
-```
+    ```go
+      m := NewTermTaxonomy(a)
+      results,err := m.FindByTermId(...)
+      // handle err
+      for i,r := results {
+        // now r is an instance of TermTaxonomy
+      }
+    ```
 
 #### func (*TermTaxonomy) FromDBValueMap
 
@@ -4463,17 +4190,16 @@ Find dynamic finder for umeta_id -> bool,error Generic and programatically
 generator finder for UserMeta Note that Fine returns a bool if found, not err,
 in the case of a return of true, the instance data will be filled out. a call to
 find ALWAYS overwrites the model you call Find on i.e. receiver is a pointer.
-```go
 
-    m := NewUserMeta(a)
-    found,err := m.Find(23)
-    .. handle err
-    if found == false {
-        // handle found
-    }
-    ... do what you want with m here
-
-```
+    ```go
+        m := NewUserMeta(a)
+        found,err := m.Find(23)
+        .. handle err
+        if found == false {
+            // handle found
+        }
+        ... do what you want with m here
+    ```
 
 #### func (*UserMeta) FindByMetaKey
 
@@ -4481,20 +4207,16 @@ find ALWAYS overwrites the model you call Find on i.e. receiver is a pointer.
 func (o *UserMeta) FindByMetaKey(_findByMetaKey string) ([]*UserMeta, error)
 ```
 FindByMetaKey dynamic finder for meta_key -> []*UserMeta,error Generic and
-programatically generator finder for UserMeta Note that Fine returns a bool if
-found, not err, in the case of a return of true, the instance data will be
-filled out. a call to find ALWAYS overwrites the model you call Find on i.e.
-receiver is a pointer. ```go
+programatically generator finder for UserMeta
 
-    m := NewUserMeta(a)
-    found,err := m.Find(23)
-    .. handle err
-    if found == false {
-        // handle found
-    }
-    ... do what you want with m here
-
-```
+    ```go
+      m := NewUserMeta(a)
+      results,err := m.FindByMetaKey(...)
+      // handle err
+      for i,r := results {
+        // now r is an instance of UserMeta
+      }
+    ```
 
 #### func (*UserMeta) FindByMetaValue
 
@@ -4502,20 +4224,16 @@ receiver is a pointer. ```go
 func (o *UserMeta) FindByMetaValue(_findByMetaValue string) ([]*UserMeta, error)
 ```
 FindByMetaValue dynamic finder for meta_value -> []*UserMeta,error Generic and
-programatically generator finder for UserMeta Note that Fine returns a bool if
-found, not err, in the case of a return of true, the instance data will be
-filled out. a call to find ALWAYS overwrites the model you call Find on i.e.
-receiver is a pointer. ```go
+programatically generator finder for UserMeta
 
-    m := NewUserMeta(a)
-    found,err := m.Find(23)
-    .. handle err
-    if found == false {
-        // handle found
-    }
-    ... do what you want with m here
-
-```
+    ```go
+      m := NewUserMeta(a)
+      results,err := m.FindByMetaValue(...)
+      // handle err
+      for i,r := results {
+        // now r is an instance of UserMeta
+      }
+    ```
 
 #### func (*UserMeta) FindByUserId
 
@@ -4523,20 +4241,16 @@ receiver is a pointer. ```go
 func (o *UserMeta) FindByUserId(_findByUserId int64) ([]*UserMeta, error)
 ```
 FindByUserId dynamic finder for user_id -> []*UserMeta,error Generic and
-programatically generator finder for UserMeta Note that Fine returns a bool if
-found, not err, in the case of a return of true, the instance data will be
-filled out. a call to find ALWAYS overwrites the model you call Find on i.e.
-receiver is a pointer. ```go
+programatically generator finder for UserMeta
 
-    m := NewUserMeta(a)
-    found,err := m.Find(23)
-    .. handle err
-    if found == false {
-        // handle found
-    }
-    ... do what you want with m here
-
-```
+    ```go
+      m := NewUserMeta(a)
+      results,err := m.FindByUserId(...)
+      // handle err
+      for i,r := results {
+        // now r is an instance of UserMeta
+      }
+    ```
 
 #### func (*UserMeta) FromDBValueMap
 
