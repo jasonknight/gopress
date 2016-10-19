@@ -12,9 +12,12 @@ improvement - and I'll continue to work on that.
 
 [Please see the wiki for details and examples](https://github.com/jasonknight/gopress/wiki), or look in the testing file. [Check out the docs](https://github.com/jasonknight/gopress/blob/master/docs.md).
 
+The library implements basic CRUD functions (Create/Read(Find)/Update/Delete) and provides structs as "models". 
+
+#### type Post
+
 ```go
 type Post struct {
-    ...
     ID                  int64
     PostAuthor          int64
     PostDate            *DateTime
@@ -39,16 +42,113 @@ type Post struct {
     PostMimeType        string
     CommentCount        int64
     // Dirty markers for smart updates
-    ...
+    IsIDDirty                  bool
+    IsPostAuthorDirty          bool
+    IsPostDateDirty            bool
+    IsPostDateGmtDirty         bool
+    IsPostContentDirty         bool
+    IsPostTitleDirty           bool
+    IsPostExcerptDirty         bool
+    IsPostStatusDirty          bool
     IsCommentStatusDirty       bool
     IsPingStatusDirty          bool
     IsPostPasswordDirty        bool
     IsPostNameDirty            bool
-    ...
+    IsToPingDirty              bool
+    IsPingedDirty              bool
+    IsPostModifiedDirty        bool
+    IsPostModifiedGmtDirty     bool
+    IsPostContentFilteredDirty bool
+    IsPostParentDirty          bool
+    IsGuidDirty                bool
+    IsMenuOrderDirty           bool
+    IsPostTypeDirty            bool
+    IsPostMimeTypeDirty        bool
+    IsCommentCountDirty        bool
 }
 ```
 
-The library implements basic CRUD functions (Create/Read(Find)/Update/Delete) and provides structs as "models". 
+Post is a Object Relational Mapping to the database table that represents it. In
+this case it is posts. The table name will be Sprintf'd to include the prefix
+you define in your YAML configuration for the Adapter.
+
+#### func  NewPost
+
+```go
+func NewPost(a Adapter) *Post
+```
+NewPost binds an Adapter to a new instance of Post and sets up the _table and
+primary keys
+
+#### func (*Post) Create
+
+```go
+func (o *Post) Create() error
+```
+Create inserts the model. Calling Save will call this function automatically for
+new models
+
+#### func (*Post) Find
+
+```go
+func (o *Post) Find(_findByID int64) (bool, error)
+```
+Find dynamic finder for ID -> bool,error Generic and programatically generator
+finder for Post
+
+Note that Fine returns a bool if found, not err, in the case of a return of
+true, the instance data will be filled out. a call to find ALWAYS overwrites the
+model you call Find on i.e. receiver is a pointer.
+
+```go
+
+    m := NewPost(a)
+    found,err := m.Find(23)
+    .. handle err
+    if found == false {
+        // handle found
+    }
+    ... do what you want with m here
+
+```
+
+#### func (*Post) FindByGuid
+
+```go
+func (o *Post) FindByGuid(_findByGuid string) ([]*Post, error)
+```
+FindByGuid dynamic finder for guid -> []*Post,error Generic and programatically
+generator finder for Post
+
+```go
+
+    m := NewPost(a)
+    results,err := m.FindByGuid(...)
+    // handle err
+    for i,r := results {
+      // now r is an instance of Post
+    }
+
+```
+
+#### func (*Post) FindByPostAuthor
+
+```go
+func (o *Post) FindByPostAuthor(_findByPostAuthor int64) ([]*Post, error)
+```
+FindByPostAuthor dynamic finder for post_author -> []*Post,error Generic and
+programatically generator finder for Post
+
+```go
+
+    m := NewPost(a)
+    results,err := m.FindByPostAuthor(...)
+    // handle err
+    for i,r := results {
+      // now r is an instance of Post
+    }
+
+```
 
 Each model must be provided with an adapter:
 
