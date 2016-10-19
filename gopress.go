@@ -1,10 +1,11 @@
 package gopress
 
 import (
-	"bufio"
 	"database/sql"
-	"errors"
 	"fmt"
+	// This is standard for this library.
+	"bufio"
+	"errors"
 	_ "github.com/go-sql-driver/mysql"
 	"gopkg.in/yaml.v2"
 	"io"
@@ -73,11 +74,12 @@ type MysqlAdapter struct {
 	_safeStringFilter SafeStringFilter
 }
 
-// Simply returns a pointer to MysqlAdapter
+// NewMysqlAdapter returns a pointer to MysqlAdapter
 func NewMysqlAdapter(pre string) *MysqlAdapter {
 	return &MysqlAdapter{DBPrefix: pre}
 }
 
+// NewMysqlAdapterEx
 // Args: fname is a string path to a YAML config file
 // This function will attempt to Open the database
 // defined in that file. Example file:
@@ -104,37 +106,37 @@ func NewMysqlAdapterEx(fname string) (*MysqlAdapter, error) {
 	return a, nil
 }
 
-// Set the LogFilter to a function. This is only
+// SetLogFilter sets the LogFilter to a function. This is only
 // useful if you are debugging, or you want to
 // reformat the log data.
 func (a *MysqlAdapter) SetLogFilter(f LogFilter) {
 	a._logFilter = f
 }
 
-// Not implemented yet, but soon.
+// SafeString Not implemented yet, but soon.
 func (a *MysqlAdapter) SafeString(s string) string {
 	return s
 }
 
-// Sets the _infoLog to the io.Writer, use ioutil.Discard if you
+// SetInfoLog Sets the _infoLog to the io.Writer, use ioutil.Discard if you
 // don't want this one at all.
 func (a *MysqlAdapter) SetInfoLog(t io.Writer) {
 	a._infoLog = log.New(t, `[INFO]:`, log.Ldate|log.Ltime|log.Lshortfile)
 }
 
-// Sets the _errorLog to the io.Writer, use ioutil.Discard if you
+// SetErrorLog Sets the _errorLog to the io.Writer, use ioutil.Discard if you
 // don't want this one at all.
 func (a *MysqlAdapter) SetErrorLog(t io.Writer) {
 	a._errorLog = log.New(t, `[ERROR]:`, log.Ldate|log.Ltime|log.Lshortfile)
 }
 
-// Sets the _debugLog to the io.Writer, use ioutil.Discard if you
+// SetDebugLog Sets the _debugLog to the io.Writer, use ioutil.Discard if you
 // don't want this one at all.
 func (a *MysqlAdapter) SetDebugLog(t io.Writer) {
 	a._debugLog = log.New(t, `[DEBUG]:`, log.Ldate|log.Ltime|log.Lshortfile)
 }
 
-// Sets ALL logs to the io.Writer, use ioutil.Discard if you
+// SetLogs Sets ALL logs to the io.Writer, use ioutil.Discard if you
 // don't want this one at all.
 func (a *MysqlAdapter) SetLogs(t io.Writer) {
 	a.SetInfoLog(t)
@@ -142,7 +144,7 @@ func (a *MysqlAdapter) SetLogs(t io.Writer) {
 	a.SetDebugLog(t)
 }
 
-// Tags the string with INFO and puts it into _infoLog.
+// LogInfo Tags the string with INFO and puts it into _infoLog.
 func (a *MysqlAdapter) LogInfo(s string) {
 	if a._logFilter != nil {
 		s = a._logFilter(`INFO`, s)
@@ -153,7 +155,7 @@ func (a *MysqlAdapter) LogInfo(s string) {
 	a._infoLog.Println(s)
 }
 
-// Tags the string with ERROR and puts it into _errorLog.
+// LogError Tags the string with ERROR and puts it into _errorLog.
 func (a *MysqlAdapter) LogError(s error) {
 	if a._logFilter != nil {
 		ns := a._logFilter(`ERROR`, fmt.Sprintf(`%s`, s))
@@ -166,7 +168,7 @@ func (a *MysqlAdapter) LogError(s error) {
 	a._errorLog.Println(s)
 }
 
-// Tags the string with DEBUG and puts it into _debugLog.
+// LogDebug Tags the string with DEBUG and puts it into _debugLog.
 func (a *MysqlAdapter) LogDebug(s string) {
 	if a._logFilter != nil {
 		s = a._logFilter(`DEBUG`, s)
@@ -177,23 +179,23 @@ func (a *MysqlAdapter) LogDebug(s string) {
 	a._debugLog.Println(s)
 }
 
-// Creates a new DBValue, mostly used internally, but
+// NewDBValue Creates a new DBValue, mostly used internally, but
 // you may wish to use it in special circumstances.
 func (a *MysqlAdapter) NewDBValue() DBValue {
 	return NewMysqlValue(a)
 }
 
-// Get the DatabasePrefix from the Adapter
+// DatabasePrefix Get the DatabasePrefix from the Adapter
 func (a *MysqlAdapter) DatabasePrefix() string {
 	return a.DBPrefix
 }
 
-// Set the Adapter's members from a YAML file
+// FromYAML Set the Adapter's members from a YAML file
 func (a *MysqlAdapter) FromYAML(b []byte) error {
 	return yaml.Unmarshal(b, a)
 }
 
-// Opens the database connection. Be sure to use
+// Open Opens the database connection. Be sure to use
 // a.Close() as closing is NOT handled for you.
 func (a *MysqlAdapter) Open(h, u, p, d string) error {
 	if h != "localhost" {
@@ -220,13 +222,13 @@ func (a *MysqlAdapter) Open(h, u, p, d string) error {
 
 }
 
-// This should be called in your application with a defer a.Close()
+// Close This should be called in your application with a defer a.Close()
 // or something similar. Closing is not automatic!
 func (a *MysqlAdapter) Close() {
 	a._conn.Close()
 }
 
-// The generay Query function, i.e. SQL that returns results, as
+// Query The generay Query function, i.e. SQL that returns results, as
 // opposed to an INSERT or UPDATE which uses Execute.
 func (a *MysqlAdapter) Query(q string) ([]map[string]DBValue, error) {
 	if a._opened != true {
@@ -264,7 +266,7 @@ func (a *MysqlAdapter) Query(q string) ([]map[string]DBValue, error) {
 	return *results, nil
 }
 
-// A function for catching errors generated by
+// Oops A function for catching errors generated by
 // the library and funneling them to the log files
 func (a *MysqlAdapter) Oops(s string) error {
 	e := errors.New(s)
@@ -272,7 +274,7 @@ func (a *MysqlAdapter) Oops(s string) error {
 	return e
 }
 
-// For UPDATE and INSERT calls, i.e. nothing that
+// Execute For UPDATE and INSERT calls, i.e. nothing that
 // returns a result set.
 func (a *MysqlAdapter) Execute(q string) error {
 	if a._opened != true {
@@ -309,17 +311,17 @@ func (a *MysqlAdapter) Execute(q string) error {
 	return nil
 }
 
-// Grab the last auto_incremented id
+// LastInsertedId Grab the last auto_incremented id
 func (a *MysqlAdapter) LastInsertedId() int64 {
 	return a._lid
 }
 
-// Grab the number of AffectedRows
+// AffectedRows Grab the number of AffectedRows
 func (a *MysqlAdapter) AffectedRows() int64 {
 	return a._cnt
 }
 
-// Provides a tidy way to convert string
+// DBValue Provides a tidy way to convert string
 // values from the DB into go values
 type DBValue interface {
 	AsInt() (int, error)
@@ -332,7 +334,7 @@ type DBValue interface {
 	SetInternalValue(string, string)
 }
 
-// Implements DBValue for MySQL, you'll generally
+// MysqlValue Implements DBValue for MySQL, you'll generally
 // not interact directly with this type, but it
 // is there for special cases.
 type MysqlValue struct {
@@ -341,7 +343,7 @@ type MysqlValue struct {
 	_adapter Adapter
 }
 
-// Sets the internal value of the DBValue to the string
+// SetInternalValue Sets the internal value of the DBValue to the string
 // provided. key isn't really used, but it may be.
 func (v *MysqlValue) SetInternalValue(key, value string) {
 	v._v = value
@@ -349,30 +351,30 @@ func (v *MysqlValue) SetInternalValue(key, value string) {
 
 }
 
-// Simply returns the internal string representation.
+// AsString Simply returns the internal string representation.
 func (v *MysqlValue) AsString() (string, error) {
 	return v._v, nil
 }
 
-// Attempts to convert the internal string to an Int
+// AsInt Attempts to convert the internal string to an Int
 func (v *MysqlValue) AsInt() (int, error) {
 	i, err := strconv.ParseInt(v._v, 10, 32)
 	return int(i), err
 }
 
-// Tries to convert the internal string to an int32
+// AsInt32 Tries to convert the internal string to an int32
 func (v *MysqlValue) AsInt32() (int32, error) {
 	i, err := strconv.ParseInt(v._v, 10, 32)
 	return int32(i), err
 }
 
-// Tries to convert the internal string to an int64 (i.e. BIGINT)
+// AsInt64 Tries to convert the internal string to an int64 (i.e. BIGINT)
 func (v *MysqlValue) AsInt64() (int64, error) {
 	i, err := strconv.ParseInt(v._v, 10, 64)
 	return i, err
 }
 
-// Tries to convert the internal string to a float32
+// AsFloat32 Tries to convert the internal string to a float32
 func (v *MysqlValue) AsFloat32() (float32, error) {
 	i, err := strconv.ParseFloat(v._v, 32)
 	if err != nil {
@@ -381,7 +383,7 @@ func (v *MysqlValue) AsFloat32() (float32, error) {
 	return float32(i), err
 }
 
-// Tries to convert the internal string to a float64
+// AsFloat64 Tries to convert the internal string to a float64
 func (v *MysqlValue) AsFloat64() (float64, error) {
 	i, err := strconv.ParseFloat(v._v, 64)
 	if err != nil {
@@ -390,7 +392,7 @@ func (v *MysqlValue) AsFloat64() (float64, error) {
 	return i, err
 }
 
-// Tries to convert the string to a DateTime,
+// AsDateTime Tries to convert the string to a DateTime,
 // parsing may fail.
 func (v *MysqlValue) AsDateTime() (*DateTime, error) {
 	dt := NewDateTime(v._adapter)
@@ -401,7 +403,7 @@ func (v *MysqlValue) AsDateTime() (*DateTime, error) {
 	return dt, nil
 }
 
-// A function for largely internal use, but
+// NewMysqlValue A function for largely internal use, but
 // basically in order to use a DBValue, it
 // needs to have its Adapter setup, this is
 // because some values have Adapter specific
@@ -411,7 +413,7 @@ func NewMysqlValue(a Adapter) *MysqlValue {
 	return &MysqlValue{_adapter: a}
 }
 
-// A simple struct to represent DateTime fields
+// DateTime A simple struct to represent DateTime fields
 type DateTime struct {
 	// The day as an int
 	Day int
@@ -428,7 +430,7 @@ type DateTime struct {
 	_adapter Adapter
 }
 
-// Converts a string like 0000-00-00 00:00:00 into a DateTime
+// FromString Converts a string like 0000-00-00 00:00:00 into a DateTime
 func (d *DateTime) FromString(s string) error {
 	es := s
 	re := regexp.MustCompile("(?P<year>[\\d]{4})-(?P<month>[\\d]{2})-(?P<day>[\\d]{2}) (?P<hours>[\\d]{2}):(?P<minutes>[\\d]{2}):(?P<seconds>[\\d]{2})")
@@ -485,17 +487,17 @@ func (d *DateTime) FromString(s string) error {
 	return nil
 }
 
-// For backwards compat...
+// ToString For backwards compat... Never use this, use String() instead.
 func (d *DateTime) ToString() string {
 	return fmt.Sprintf("%d-%02d-%02d %02d:%02d:%02d", d.Year, d.Month, d.Day, d.Hours, d.Minutes, d.Seconds)
 }
 
-// The Stringer for DateTime to avoid having to call ToString all the time.
+// String The Stringer for DateTime to avoid having to call ToString all the time.
 func (d *DateTime) String() string {
 	return d.ToString()
 }
 
-// Returns a basic DateTime value
+// NewDateTime Returns a basic DateTime value
 func NewDateTime(a Adapter) *DateTime {
 	d := &DateTime{_adapter: a}
 	return d
@@ -547,46 +549,70 @@ func NewCommentMeta(a Adapter) *CommentMeta {
 	return &o
 }
 
+// GetPrimaryKeyValue returns the value, usually int64 of
+// the PrimaryKey
 func (o *CommentMeta) GetPrimaryKeyValue() int64 {
 	return o.MetaId
 }
+
+// GetPrimaryKeyName returns the DB field name
 func (o *CommentMeta) GetPrimaryKeyName() string {
 	return `meta_id`
 }
 
+// GetMetaId returns the value of
+// CommentMeta.MetaId
 func (o *CommentMeta) GetMetaId() int64 {
 	return o.MetaId
 }
+
+// SetMetaId sets and marks as dirty the value of
+// CommentMeta.MetaId
 func (o *CommentMeta) SetMetaId(arg int64) {
 	o.MetaId = arg
 	o.IsMetaIdDirty = true
 }
 
+// GetCommentId returns the value of
+// CommentMeta.CommentId
 func (o *CommentMeta) GetCommentId() int64 {
 	return o.CommentId
 }
+
+// SetCommentId sets and marks as dirty the value of
+// CommentMeta.CommentId
 func (o *CommentMeta) SetCommentId(arg int64) {
 	o.CommentId = arg
 	o.IsCommentIdDirty = true
 }
 
+// GetMetaKey returns the value of
+// CommentMeta.MetaKey
 func (o *CommentMeta) GetMetaKey() string {
 	return o.MetaKey
 }
+
+// SetMetaKey sets and marks as dirty the value of
+// CommentMeta.MetaKey
 func (o *CommentMeta) SetMetaKey(arg string) {
 	o.MetaKey = arg
 	o.IsMetaKeyDirty = true
 }
 
+// GetMetaValue returns the value of
+// CommentMeta.MetaValue
 func (o *CommentMeta) GetMetaValue() string {
 	return o.MetaValue
 }
+
+// SetMetaValue sets and marks as dirty the value of
+// CommentMeta.MetaValue
 func (o *CommentMeta) SetMetaValue(arg string) {
 	o.MetaValue = arg
 	o.IsMetaValueDirty = true
 }
 
-// CommentMetaFind(_findByMetaId int64) -> bool,error
+// Find(_findByMetaId int64) -> bool,error
 // Generic and programatically generator finder for CommentMeta
 func (o *CommentMeta) Find(_findByMetaId int64) (bool, error) {
 
@@ -615,7 +641,7 @@ func (o *CommentMeta) Find(_findByMetaId int64) (bool, error) {
 
 }
 
-// CommentMetaFindByCommentId(_findByCommentId int64) -> []*CommentMeta,error
+// FindByCommentId(_findByCommentId int64) -> []*CommentMeta,error
 // Generic and programatically generator finder for CommentMeta
 func (o *CommentMeta) FindByCommentId(_findByCommentId int64) ([]*CommentMeta, error) {
 
@@ -643,7 +669,7 @@ func (o *CommentMeta) FindByCommentId(_findByCommentId int64) ([]*CommentMeta, e
 
 }
 
-// CommentMetaFindByMetaKey(_findByMetaKey string) -> []*CommentMeta,error
+// FindByMetaKey(_findByMetaKey string) -> []*CommentMeta,error
 // Generic and programatically generator finder for CommentMeta
 func (o *CommentMeta) FindByMetaKey(_findByMetaKey string) ([]*CommentMeta, error) {
 
@@ -671,7 +697,7 @@ func (o *CommentMeta) FindByMetaKey(_findByMetaKey string) ([]*CommentMeta, erro
 
 }
 
-// CommentMetaFindByMetaValue(_findByMetaValue string) -> []*CommentMeta,error
+// FindByMetaValue(_findByMetaValue string) -> []*CommentMeta,error
 // Generic and programatically generator finder for CommentMeta
 func (o *CommentMeta) FindByMetaValue(_findByMetaValue string) ([]*CommentMeta, error) {
 
@@ -699,7 +725,7 @@ func (o *CommentMeta) FindByMetaValue(_findByMetaValue string) ([]*CommentMeta, 
 
 }
 
-// Converts a DBValueMap returned from Adapter.Query to a CommentMeta
+// FromDBValueMap Converts a DBValueMap returned from Adapter.Query to a CommentMeta
 func (o *CommentMeta) FromDBValueMap(m map[string]DBValue) error {
 	_MetaId, err := m["meta_id"].AsInt64()
 	if err != nil {
@@ -725,7 +751,7 @@ func (o *CommentMeta) FromDBValueMap(m map[string]DBValue) error {
 	return nil
 }
 
-// A kind of Clone function for CommentMeta
+// FromCommentMeta A kind of Clone function for CommentMeta
 func (o *CommentMeta) FromCommentMeta(m *CommentMeta) {
 	o.MetaId = m.MetaId
 	o.CommentId = m.CommentId
@@ -734,7 +760,7 @@ func (o *CommentMeta) FromCommentMeta(m *CommentMeta) {
 
 }
 
-// A function to forcibly reload CommentMeta
+// Reload A function to forcibly reload CommentMeta
 func (o *CommentMeta) Reload() error {
 	_, err := o.Find(o.GetPrimaryKeyValue())
 	return err
@@ -877,134 +903,213 @@ func NewComment(a Adapter) *Comment {
 	return &o
 }
 
+// GetPrimaryKeyValue returns the value, usually int64 of
+// the PrimaryKey
 func (o *Comment) GetPrimaryKeyValue() int64 {
 	return o.CommentID
 }
+
+// GetPrimaryKeyName returns the DB field name
 func (o *Comment) GetPrimaryKeyName() string {
 	return `comment_ID`
 }
 
+// GetCommentID returns the value of
+// Comment.CommentID
 func (o *Comment) GetCommentID() int64 {
 	return o.CommentID
 }
+
+// SetCommentID sets and marks as dirty the value of
+// Comment.CommentID
 func (o *Comment) SetCommentID(arg int64) {
 	o.CommentID = arg
 	o.IsCommentIDDirty = true
 }
 
+// GetCommentPostID returns the value of
+// Comment.CommentPostID
 func (o *Comment) GetCommentPostID() int64 {
 	return o.CommentPostID
 }
+
+// SetCommentPostID sets and marks as dirty the value of
+// Comment.CommentPostID
 func (o *Comment) SetCommentPostID(arg int64) {
 	o.CommentPostID = arg
 	o.IsCommentPostIDDirty = true
 }
 
+// GetCommentAuthor returns the value of
+// Comment.CommentAuthor
 func (o *Comment) GetCommentAuthor() string {
 	return o.CommentAuthor
 }
+
+// SetCommentAuthor sets and marks as dirty the value of
+// Comment.CommentAuthor
 func (o *Comment) SetCommentAuthor(arg string) {
 	o.CommentAuthor = arg
 	o.IsCommentAuthorDirty = true
 }
 
+// GetCommentAuthorEmail returns the value of
+// Comment.CommentAuthorEmail
 func (o *Comment) GetCommentAuthorEmail() string {
 	return o.CommentAuthorEmail
 }
+
+// SetCommentAuthorEmail sets and marks as dirty the value of
+// Comment.CommentAuthorEmail
 func (o *Comment) SetCommentAuthorEmail(arg string) {
 	o.CommentAuthorEmail = arg
 	o.IsCommentAuthorEmailDirty = true
 }
 
+// GetCommentAuthorUrl returns the value of
+// Comment.CommentAuthorUrl
 func (o *Comment) GetCommentAuthorUrl() string {
 	return o.CommentAuthorUrl
 }
+
+// SetCommentAuthorUrl sets and marks as dirty the value of
+// Comment.CommentAuthorUrl
 func (o *Comment) SetCommentAuthorUrl(arg string) {
 	o.CommentAuthorUrl = arg
 	o.IsCommentAuthorUrlDirty = true
 }
 
+// GetCommentAuthorIP returns the value of
+// Comment.CommentAuthorIP
 func (o *Comment) GetCommentAuthorIP() string {
 	return o.CommentAuthorIP
 }
+
+// SetCommentAuthorIP sets and marks as dirty the value of
+// Comment.CommentAuthorIP
 func (o *Comment) SetCommentAuthorIP(arg string) {
 	o.CommentAuthorIP = arg
 	o.IsCommentAuthorIPDirty = true
 }
 
+// GetCommentDate returns the value of
+// Comment.CommentDate
 func (o *Comment) GetCommentDate() *DateTime {
 	return o.CommentDate
 }
+
+// SetCommentDate sets and marks as dirty the value of
+// Comment.CommentDate
 func (o *Comment) SetCommentDate(arg *DateTime) {
 	o.CommentDate = arg
 	o.IsCommentDateDirty = true
 }
 
+// GetCommentDateGmt returns the value of
+// Comment.CommentDateGmt
 func (o *Comment) GetCommentDateGmt() *DateTime {
 	return o.CommentDateGmt
 }
+
+// SetCommentDateGmt sets and marks as dirty the value of
+// Comment.CommentDateGmt
 func (o *Comment) SetCommentDateGmt(arg *DateTime) {
 	o.CommentDateGmt = arg
 	o.IsCommentDateGmtDirty = true
 }
 
+// GetCommentContent returns the value of
+// Comment.CommentContent
 func (o *Comment) GetCommentContent() string {
 	return o.CommentContent
 }
+
+// SetCommentContent sets and marks as dirty the value of
+// Comment.CommentContent
 func (o *Comment) SetCommentContent(arg string) {
 	o.CommentContent = arg
 	o.IsCommentContentDirty = true
 }
 
+// GetCommentKarma returns the value of
+// Comment.CommentKarma
 func (o *Comment) GetCommentKarma() int {
 	return o.CommentKarma
 }
+
+// SetCommentKarma sets and marks as dirty the value of
+// Comment.CommentKarma
 func (o *Comment) SetCommentKarma(arg int) {
 	o.CommentKarma = arg
 	o.IsCommentKarmaDirty = true
 }
 
+// GetCommentApproved returns the value of
+// Comment.CommentApproved
 func (o *Comment) GetCommentApproved() string {
 	return o.CommentApproved
 }
+
+// SetCommentApproved sets and marks as dirty the value of
+// Comment.CommentApproved
 func (o *Comment) SetCommentApproved(arg string) {
 	o.CommentApproved = arg
 	o.IsCommentApprovedDirty = true
 }
 
+// GetCommentAgent returns the value of
+// Comment.CommentAgent
 func (o *Comment) GetCommentAgent() string {
 	return o.CommentAgent
 }
+
+// SetCommentAgent sets and marks as dirty the value of
+// Comment.CommentAgent
 func (o *Comment) SetCommentAgent(arg string) {
 	o.CommentAgent = arg
 	o.IsCommentAgentDirty = true
 }
 
+// GetCommentType returns the value of
+// Comment.CommentType
 func (o *Comment) GetCommentType() string {
 	return o.CommentType
 }
+
+// SetCommentType sets and marks as dirty the value of
+// Comment.CommentType
 func (o *Comment) SetCommentType(arg string) {
 	o.CommentType = arg
 	o.IsCommentTypeDirty = true
 }
 
+// GetCommentParent returns the value of
+// Comment.CommentParent
 func (o *Comment) GetCommentParent() int64 {
 	return o.CommentParent
 }
+
+// SetCommentParent sets and marks as dirty the value of
+// Comment.CommentParent
 func (o *Comment) SetCommentParent(arg int64) {
 	o.CommentParent = arg
 	o.IsCommentParentDirty = true
 }
 
+// GetUserId returns the value of
+// Comment.UserId
 func (o *Comment) GetUserId() int64 {
 	return o.UserId
 }
+
+// SetUserId sets and marks as dirty the value of
+// Comment.UserId
 func (o *Comment) SetUserId(arg int64) {
 	o.UserId = arg
 	o.IsUserIdDirty = true
 }
 
-// CommentFind(_findByCommentID int64) -> bool,error
+// Find(_findByCommentID int64) -> bool,error
 // Generic and programatically generator finder for Comment
 func (o *Comment) Find(_findByCommentID int64) (bool, error) {
 
@@ -1033,7 +1138,7 @@ func (o *Comment) Find(_findByCommentID int64) (bool, error) {
 
 }
 
-// CommentFindByCommentPostID(_findByCommentPostID int64) -> []*Comment,error
+// FindByCommentPostID(_findByCommentPostID int64) -> []*Comment,error
 // Generic and programatically generator finder for Comment
 func (o *Comment) FindByCommentPostID(_findByCommentPostID int64) ([]*Comment, error) {
 
@@ -1061,7 +1166,7 @@ func (o *Comment) FindByCommentPostID(_findByCommentPostID int64) ([]*Comment, e
 
 }
 
-// CommentFindByCommentAuthor(_findByCommentAuthor string) -> []*Comment,error
+// FindByCommentAuthor(_findByCommentAuthor string) -> []*Comment,error
 // Generic and programatically generator finder for Comment
 func (o *Comment) FindByCommentAuthor(_findByCommentAuthor string) ([]*Comment, error) {
 
@@ -1089,7 +1194,7 @@ func (o *Comment) FindByCommentAuthor(_findByCommentAuthor string) ([]*Comment, 
 
 }
 
-// CommentFindByCommentAuthorEmail(_findByCommentAuthorEmail string) -> []*Comment,error
+// FindByCommentAuthorEmail(_findByCommentAuthorEmail string) -> []*Comment,error
 // Generic and programatically generator finder for Comment
 func (o *Comment) FindByCommentAuthorEmail(_findByCommentAuthorEmail string) ([]*Comment, error) {
 
@@ -1117,7 +1222,7 @@ func (o *Comment) FindByCommentAuthorEmail(_findByCommentAuthorEmail string) ([]
 
 }
 
-// CommentFindByCommentAuthorUrl(_findByCommentAuthorUrl string) -> []*Comment,error
+// FindByCommentAuthorUrl(_findByCommentAuthorUrl string) -> []*Comment,error
 // Generic and programatically generator finder for Comment
 func (o *Comment) FindByCommentAuthorUrl(_findByCommentAuthorUrl string) ([]*Comment, error) {
 
@@ -1145,7 +1250,7 @@ func (o *Comment) FindByCommentAuthorUrl(_findByCommentAuthorUrl string) ([]*Com
 
 }
 
-// CommentFindByCommentAuthorIP(_findByCommentAuthorIP string) -> []*Comment,error
+// FindByCommentAuthorIP(_findByCommentAuthorIP string) -> []*Comment,error
 // Generic and programatically generator finder for Comment
 func (o *Comment) FindByCommentAuthorIP(_findByCommentAuthorIP string) ([]*Comment, error) {
 
@@ -1173,7 +1278,7 @@ func (o *Comment) FindByCommentAuthorIP(_findByCommentAuthorIP string) ([]*Comme
 
 }
 
-// CommentFindByCommentDate(_findByCommentDate *DateTime) -> []*Comment,error
+// FindByCommentDate(_findByCommentDate *DateTime) -> []*Comment,error
 // Generic and programatically generator finder for Comment
 func (o *Comment) FindByCommentDate(_findByCommentDate *DateTime) ([]*Comment, error) {
 
@@ -1201,7 +1306,7 @@ func (o *Comment) FindByCommentDate(_findByCommentDate *DateTime) ([]*Comment, e
 
 }
 
-// CommentFindByCommentDateGmt(_findByCommentDateGmt *DateTime) -> []*Comment,error
+// FindByCommentDateGmt(_findByCommentDateGmt *DateTime) -> []*Comment,error
 // Generic and programatically generator finder for Comment
 func (o *Comment) FindByCommentDateGmt(_findByCommentDateGmt *DateTime) ([]*Comment, error) {
 
@@ -1229,7 +1334,7 @@ func (o *Comment) FindByCommentDateGmt(_findByCommentDateGmt *DateTime) ([]*Comm
 
 }
 
-// CommentFindByCommentContent(_findByCommentContent string) -> []*Comment,error
+// FindByCommentContent(_findByCommentContent string) -> []*Comment,error
 // Generic and programatically generator finder for Comment
 func (o *Comment) FindByCommentContent(_findByCommentContent string) ([]*Comment, error) {
 
@@ -1257,7 +1362,7 @@ func (o *Comment) FindByCommentContent(_findByCommentContent string) ([]*Comment
 
 }
 
-// CommentFindByCommentKarma(_findByCommentKarma int) -> []*Comment,error
+// FindByCommentKarma(_findByCommentKarma int) -> []*Comment,error
 // Generic and programatically generator finder for Comment
 func (o *Comment) FindByCommentKarma(_findByCommentKarma int) ([]*Comment, error) {
 
@@ -1285,7 +1390,7 @@ func (o *Comment) FindByCommentKarma(_findByCommentKarma int) ([]*Comment, error
 
 }
 
-// CommentFindByCommentApproved(_findByCommentApproved string) -> []*Comment,error
+// FindByCommentApproved(_findByCommentApproved string) -> []*Comment,error
 // Generic and programatically generator finder for Comment
 func (o *Comment) FindByCommentApproved(_findByCommentApproved string) ([]*Comment, error) {
 
@@ -1313,7 +1418,7 @@ func (o *Comment) FindByCommentApproved(_findByCommentApproved string) ([]*Comme
 
 }
 
-// CommentFindByCommentAgent(_findByCommentAgent string) -> []*Comment,error
+// FindByCommentAgent(_findByCommentAgent string) -> []*Comment,error
 // Generic and programatically generator finder for Comment
 func (o *Comment) FindByCommentAgent(_findByCommentAgent string) ([]*Comment, error) {
 
@@ -1341,7 +1446,7 @@ func (o *Comment) FindByCommentAgent(_findByCommentAgent string) ([]*Comment, er
 
 }
 
-// CommentFindByCommentType(_findByCommentType string) -> []*Comment,error
+// FindByCommentType(_findByCommentType string) -> []*Comment,error
 // Generic and programatically generator finder for Comment
 func (o *Comment) FindByCommentType(_findByCommentType string) ([]*Comment, error) {
 
@@ -1369,7 +1474,7 @@ func (o *Comment) FindByCommentType(_findByCommentType string) ([]*Comment, erro
 
 }
 
-// CommentFindByCommentParent(_findByCommentParent int64) -> []*Comment,error
+// FindByCommentParent(_findByCommentParent int64) -> []*Comment,error
 // Generic and programatically generator finder for Comment
 func (o *Comment) FindByCommentParent(_findByCommentParent int64) ([]*Comment, error) {
 
@@ -1397,7 +1502,7 @@ func (o *Comment) FindByCommentParent(_findByCommentParent int64) ([]*Comment, e
 
 }
 
-// CommentFindByUserId(_findByUserId int64) -> []*Comment,error
+// FindByUserId(_findByUserId int64) -> []*Comment,error
 // Generic and programatically generator finder for Comment
 func (o *Comment) FindByUserId(_findByUserId int64) ([]*Comment, error) {
 
@@ -1425,7 +1530,7 @@ func (o *Comment) FindByUserId(_findByUserId int64) ([]*Comment, error) {
 
 }
 
-// Converts a DBValueMap returned from Adapter.Query to a Comment
+// FromDBValueMap Converts a DBValueMap returned from Adapter.Query to a Comment
 func (o *Comment) FromDBValueMap(m map[string]DBValue) error {
 	_CommentID, err := m["comment_ID"].AsInt64()
 	if err != nil {
@@ -1506,7 +1611,7 @@ func (o *Comment) FromDBValueMap(m map[string]DBValue) error {
 	return nil
 }
 
-// A kind of Clone function for Comment
+// FromComment A kind of Clone function for Comment
 func (o *Comment) FromComment(m *Comment) {
 	o.CommentID = m.CommentID
 	o.CommentPostID = m.CommentPostID
@@ -1526,7 +1631,7 @@ func (o *Comment) FromComment(m *Comment) {
 
 }
 
-// A function to forcibly reload Comment
+// Reload A function to forcibly reload Comment
 func (o *Comment) Reload() error {
 	_, err := o.Find(o.GetPrimaryKeyValue())
 	return err
@@ -1863,118 +1968,187 @@ func NewLink(a Adapter) *Link {
 	return &o
 }
 
+// GetPrimaryKeyValue returns the value, usually int64 of
+// the PrimaryKey
 func (o *Link) GetPrimaryKeyValue() int64 {
 	return o.LinkId
 }
+
+// GetPrimaryKeyName returns the DB field name
 func (o *Link) GetPrimaryKeyName() string {
 	return `link_id`
 }
 
+// GetLinkId returns the value of
+// Link.LinkId
 func (o *Link) GetLinkId() int64 {
 	return o.LinkId
 }
+
+// SetLinkId sets and marks as dirty the value of
+// Link.LinkId
 func (o *Link) SetLinkId(arg int64) {
 	o.LinkId = arg
 	o.IsLinkIdDirty = true
 }
 
+// GetLinkUrl returns the value of
+// Link.LinkUrl
 func (o *Link) GetLinkUrl() string {
 	return o.LinkUrl
 }
+
+// SetLinkUrl sets and marks as dirty the value of
+// Link.LinkUrl
 func (o *Link) SetLinkUrl(arg string) {
 	o.LinkUrl = arg
 	o.IsLinkUrlDirty = true
 }
 
+// GetLinkName returns the value of
+// Link.LinkName
 func (o *Link) GetLinkName() string {
 	return o.LinkName
 }
+
+// SetLinkName sets and marks as dirty the value of
+// Link.LinkName
 func (o *Link) SetLinkName(arg string) {
 	o.LinkName = arg
 	o.IsLinkNameDirty = true
 }
 
+// GetLinkImage returns the value of
+// Link.LinkImage
 func (o *Link) GetLinkImage() string {
 	return o.LinkImage
 }
+
+// SetLinkImage sets and marks as dirty the value of
+// Link.LinkImage
 func (o *Link) SetLinkImage(arg string) {
 	o.LinkImage = arg
 	o.IsLinkImageDirty = true
 }
 
+// GetLinkTarget returns the value of
+// Link.LinkTarget
 func (o *Link) GetLinkTarget() string {
 	return o.LinkTarget
 }
+
+// SetLinkTarget sets and marks as dirty the value of
+// Link.LinkTarget
 func (o *Link) SetLinkTarget(arg string) {
 	o.LinkTarget = arg
 	o.IsLinkTargetDirty = true
 }
 
+// GetLinkDescription returns the value of
+// Link.LinkDescription
 func (o *Link) GetLinkDescription() string {
 	return o.LinkDescription
 }
+
+// SetLinkDescription sets and marks as dirty the value of
+// Link.LinkDescription
 func (o *Link) SetLinkDescription(arg string) {
 	o.LinkDescription = arg
 	o.IsLinkDescriptionDirty = true
 }
 
+// GetLinkVisible returns the value of
+// Link.LinkVisible
 func (o *Link) GetLinkVisible() string {
 	return o.LinkVisible
 }
+
+// SetLinkVisible sets and marks as dirty the value of
+// Link.LinkVisible
 func (o *Link) SetLinkVisible(arg string) {
 	o.LinkVisible = arg
 	o.IsLinkVisibleDirty = true
 }
 
+// GetLinkOwner returns the value of
+// Link.LinkOwner
 func (o *Link) GetLinkOwner() int64 {
 	return o.LinkOwner
 }
+
+// SetLinkOwner sets and marks as dirty the value of
+// Link.LinkOwner
 func (o *Link) SetLinkOwner(arg int64) {
 	o.LinkOwner = arg
 	o.IsLinkOwnerDirty = true
 }
 
+// GetLinkRating returns the value of
+// Link.LinkRating
 func (o *Link) GetLinkRating() int {
 	return o.LinkRating
 }
+
+// SetLinkRating sets and marks as dirty the value of
+// Link.LinkRating
 func (o *Link) SetLinkRating(arg int) {
 	o.LinkRating = arg
 	o.IsLinkRatingDirty = true
 }
 
+// GetLinkUpdated returns the value of
+// Link.LinkUpdated
 func (o *Link) GetLinkUpdated() *DateTime {
 	return o.LinkUpdated
 }
+
+// SetLinkUpdated sets and marks as dirty the value of
+// Link.LinkUpdated
 func (o *Link) SetLinkUpdated(arg *DateTime) {
 	o.LinkUpdated = arg
 	o.IsLinkUpdatedDirty = true
 }
 
+// GetLinkRel returns the value of
+// Link.LinkRel
 func (o *Link) GetLinkRel() string {
 	return o.LinkRel
 }
+
+// SetLinkRel sets and marks as dirty the value of
+// Link.LinkRel
 func (o *Link) SetLinkRel(arg string) {
 	o.LinkRel = arg
 	o.IsLinkRelDirty = true
 }
 
+// GetLinkNotes returns the value of
+// Link.LinkNotes
 func (o *Link) GetLinkNotes() string {
 	return o.LinkNotes
 }
+
+// SetLinkNotes sets and marks as dirty the value of
+// Link.LinkNotes
 func (o *Link) SetLinkNotes(arg string) {
 	o.LinkNotes = arg
 	o.IsLinkNotesDirty = true
 }
 
+// GetLinkRss returns the value of
+// Link.LinkRss
 func (o *Link) GetLinkRss() string {
 	return o.LinkRss
 }
+
+// SetLinkRss sets and marks as dirty the value of
+// Link.LinkRss
 func (o *Link) SetLinkRss(arg string) {
 	o.LinkRss = arg
 	o.IsLinkRssDirty = true
 }
 
-// LinkFind(_findByLinkId int64) -> bool,error
+// Find(_findByLinkId int64) -> bool,error
 // Generic and programatically generator finder for Link
 func (o *Link) Find(_findByLinkId int64) (bool, error) {
 
@@ -2003,7 +2177,7 @@ func (o *Link) Find(_findByLinkId int64) (bool, error) {
 
 }
 
-// LinkFindByLinkUrl(_findByLinkUrl string) -> []*Link,error
+// FindByLinkUrl(_findByLinkUrl string) -> []*Link,error
 // Generic and programatically generator finder for Link
 func (o *Link) FindByLinkUrl(_findByLinkUrl string) ([]*Link, error) {
 
@@ -2031,7 +2205,7 @@ func (o *Link) FindByLinkUrl(_findByLinkUrl string) ([]*Link, error) {
 
 }
 
-// LinkFindByLinkName(_findByLinkName string) -> []*Link,error
+// FindByLinkName(_findByLinkName string) -> []*Link,error
 // Generic and programatically generator finder for Link
 func (o *Link) FindByLinkName(_findByLinkName string) ([]*Link, error) {
 
@@ -2059,7 +2233,7 @@ func (o *Link) FindByLinkName(_findByLinkName string) ([]*Link, error) {
 
 }
 
-// LinkFindByLinkImage(_findByLinkImage string) -> []*Link,error
+// FindByLinkImage(_findByLinkImage string) -> []*Link,error
 // Generic and programatically generator finder for Link
 func (o *Link) FindByLinkImage(_findByLinkImage string) ([]*Link, error) {
 
@@ -2087,7 +2261,7 @@ func (o *Link) FindByLinkImage(_findByLinkImage string) ([]*Link, error) {
 
 }
 
-// LinkFindByLinkTarget(_findByLinkTarget string) -> []*Link,error
+// FindByLinkTarget(_findByLinkTarget string) -> []*Link,error
 // Generic and programatically generator finder for Link
 func (o *Link) FindByLinkTarget(_findByLinkTarget string) ([]*Link, error) {
 
@@ -2115,7 +2289,7 @@ func (o *Link) FindByLinkTarget(_findByLinkTarget string) ([]*Link, error) {
 
 }
 
-// LinkFindByLinkDescription(_findByLinkDescription string) -> []*Link,error
+// FindByLinkDescription(_findByLinkDescription string) -> []*Link,error
 // Generic and programatically generator finder for Link
 func (o *Link) FindByLinkDescription(_findByLinkDescription string) ([]*Link, error) {
 
@@ -2143,7 +2317,7 @@ func (o *Link) FindByLinkDescription(_findByLinkDescription string) ([]*Link, er
 
 }
 
-// LinkFindByLinkVisible(_findByLinkVisible string) -> []*Link,error
+// FindByLinkVisible(_findByLinkVisible string) -> []*Link,error
 // Generic and programatically generator finder for Link
 func (o *Link) FindByLinkVisible(_findByLinkVisible string) ([]*Link, error) {
 
@@ -2171,7 +2345,7 @@ func (o *Link) FindByLinkVisible(_findByLinkVisible string) ([]*Link, error) {
 
 }
 
-// LinkFindByLinkOwner(_findByLinkOwner int64) -> []*Link,error
+// FindByLinkOwner(_findByLinkOwner int64) -> []*Link,error
 // Generic and programatically generator finder for Link
 func (o *Link) FindByLinkOwner(_findByLinkOwner int64) ([]*Link, error) {
 
@@ -2199,7 +2373,7 @@ func (o *Link) FindByLinkOwner(_findByLinkOwner int64) ([]*Link, error) {
 
 }
 
-// LinkFindByLinkRating(_findByLinkRating int) -> []*Link,error
+// FindByLinkRating(_findByLinkRating int) -> []*Link,error
 // Generic and programatically generator finder for Link
 func (o *Link) FindByLinkRating(_findByLinkRating int) ([]*Link, error) {
 
@@ -2227,7 +2401,7 @@ func (o *Link) FindByLinkRating(_findByLinkRating int) ([]*Link, error) {
 
 }
 
-// LinkFindByLinkUpdated(_findByLinkUpdated *DateTime) -> []*Link,error
+// FindByLinkUpdated(_findByLinkUpdated *DateTime) -> []*Link,error
 // Generic and programatically generator finder for Link
 func (o *Link) FindByLinkUpdated(_findByLinkUpdated *DateTime) ([]*Link, error) {
 
@@ -2255,7 +2429,7 @@ func (o *Link) FindByLinkUpdated(_findByLinkUpdated *DateTime) ([]*Link, error) 
 
 }
 
-// LinkFindByLinkRel(_findByLinkRel string) -> []*Link,error
+// FindByLinkRel(_findByLinkRel string) -> []*Link,error
 // Generic and programatically generator finder for Link
 func (o *Link) FindByLinkRel(_findByLinkRel string) ([]*Link, error) {
 
@@ -2283,7 +2457,7 @@ func (o *Link) FindByLinkRel(_findByLinkRel string) ([]*Link, error) {
 
 }
 
-// LinkFindByLinkNotes(_findByLinkNotes string) -> []*Link,error
+// FindByLinkNotes(_findByLinkNotes string) -> []*Link,error
 // Generic and programatically generator finder for Link
 func (o *Link) FindByLinkNotes(_findByLinkNotes string) ([]*Link, error) {
 
@@ -2311,7 +2485,7 @@ func (o *Link) FindByLinkNotes(_findByLinkNotes string) ([]*Link, error) {
 
 }
 
-// LinkFindByLinkRss(_findByLinkRss string) -> []*Link,error
+// FindByLinkRss(_findByLinkRss string) -> []*Link,error
 // Generic and programatically generator finder for Link
 func (o *Link) FindByLinkRss(_findByLinkRss string) ([]*Link, error) {
 
@@ -2339,7 +2513,7 @@ func (o *Link) FindByLinkRss(_findByLinkRss string) ([]*Link, error) {
 
 }
 
-// Converts a DBValueMap returned from Adapter.Query to a Link
+// FromDBValueMap Converts a DBValueMap returned from Adapter.Query to a Link
 func (o *Link) FromDBValueMap(m map[string]DBValue) error {
 	_LinkId, err := m["link_id"].AsInt64()
 	if err != nil {
@@ -2410,7 +2584,7 @@ func (o *Link) FromDBValueMap(m map[string]DBValue) error {
 	return nil
 }
 
-// A kind of Clone function for Link
+// FromLink A kind of Clone function for Link
 func (o *Link) FromLink(m *Link) {
 	o.LinkId = m.LinkId
 	o.LinkUrl = m.LinkUrl
@@ -2428,7 +2602,7 @@ func (o *Link) FromLink(m *Link) {
 
 }
 
-// A function to forcibly reload Link
+// Reload A function to forcibly reload Link
 func (o *Link) Reload() error {
 	_, err := o.Find(o.GetPrimaryKeyValue())
 	return err
@@ -2711,46 +2885,70 @@ func NewOption(a Adapter) *Option {
 	return &o
 }
 
+// GetPrimaryKeyValue returns the value, usually int64 of
+// the PrimaryKey
 func (o *Option) GetPrimaryKeyValue() int64 {
 	return o.OptionId
 }
+
+// GetPrimaryKeyName returns the DB field name
 func (o *Option) GetPrimaryKeyName() string {
 	return `option_id`
 }
 
+// GetOptionId returns the value of
+// Option.OptionId
 func (o *Option) GetOptionId() int64 {
 	return o.OptionId
 }
+
+// SetOptionId sets and marks as dirty the value of
+// Option.OptionId
 func (o *Option) SetOptionId(arg int64) {
 	o.OptionId = arg
 	o.IsOptionIdDirty = true
 }
 
+// GetOptionName returns the value of
+// Option.OptionName
 func (o *Option) GetOptionName() string {
 	return o.OptionName
 }
+
+// SetOptionName sets and marks as dirty the value of
+// Option.OptionName
 func (o *Option) SetOptionName(arg string) {
 	o.OptionName = arg
 	o.IsOptionNameDirty = true
 }
 
+// GetOptionValue returns the value of
+// Option.OptionValue
 func (o *Option) GetOptionValue() string {
 	return o.OptionValue
 }
+
+// SetOptionValue sets and marks as dirty the value of
+// Option.OptionValue
 func (o *Option) SetOptionValue(arg string) {
 	o.OptionValue = arg
 	o.IsOptionValueDirty = true
 }
 
+// GetAutoload returns the value of
+// Option.Autoload
 func (o *Option) GetAutoload() string {
 	return o.Autoload
 }
+
+// SetAutoload sets and marks as dirty the value of
+// Option.Autoload
 func (o *Option) SetAutoload(arg string) {
 	o.Autoload = arg
 	o.IsAutoloadDirty = true
 }
 
-// OptionFind(_findByOptionId int64) -> bool,error
+// Find(_findByOptionId int64) -> bool,error
 // Generic and programatically generator finder for Option
 func (o *Option) Find(_findByOptionId int64) (bool, error) {
 
@@ -2779,7 +2977,7 @@ func (o *Option) Find(_findByOptionId int64) (bool, error) {
 
 }
 
-// OptionFindByOptionName(_findByOptionName string) -> []*Option,error
+// FindByOptionName(_findByOptionName string) -> []*Option,error
 // Generic and programatically generator finder for Option
 func (o *Option) FindByOptionName(_findByOptionName string) ([]*Option, error) {
 
@@ -2807,7 +3005,7 @@ func (o *Option) FindByOptionName(_findByOptionName string) ([]*Option, error) {
 
 }
 
-// OptionFindByOptionValue(_findByOptionValue string) -> []*Option,error
+// FindByOptionValue(_findByOptionValue string) -> []*Option,error
 // Generic and programatically generator finder for Option
 func (o *Option) FindByOptionValue(_findByOptionValue string) ([]*Option, error) {
 
@@ -2835,7 +3033,7 @@ func (o *Option) FindByOptionValue(_findByOptionValue string) ([]*Option, error)
 
 }
 
-// OptionFindByAutoload(_findByAutoload string) -> []*Option,error
+// FindByAutoload(_findByAutoload string) -> []*Option,error
 // Generic and programatically generator finder for Option
 func (o *Option) FindByAutoload(_findByAutoload string) ([]*Option, error) {
 
@@ -2863,7 +3061,7 @@ func (o *Option) FindByAutoload(_findByAutoload string) ([]*Option, error) {
 
 }
 
-// Converts a DBValueMap returned from Adapter.Query to a Option
+// FromDBValueMap Converts a DBValueMap returned from Adapter.Query to a Option
 func (o *Option) FromDBValueMap(m map[string]DBValue) error {
 	_OptionId, err := m["option_id"].AsInt64()
 	if err != nil {
@@ -2889,7 +3087,7 @@ func (o *Option) FromDBValueMap(m map[string]DBValue) error {
 	return nil
 }
 
-// A kind of Clone function for Option
+// FromOption A kind of Clone function for Option
 func (o *Option) FromOption(m *Option) {
 	o.OptionId = m.OptionId
 	o.OptionName = m.OptionName
@@ -2898,7 +3096,7 @@ func (o *Option) FromOption(m *Option) {
 
 }
 
-// A function to forcibly reload Option
+// Reload A function to forcibly reload Option
 func (o *Option) Reload() error {
 	_, err := o.Find(o.GetPrimaryKeyValue())
 	return err
@@ -3019,46 +3217,70 @@ func NewPostMeta(a Adapter) *PostMeta {
 	return &o
 }
 
+// GetPrimaryKeyValue returns the value, usually int64 of
+// the PrimaryKey
 func (o *PostMeta) GetPrimaryKeyValue() int64 {
 	return o.MetaId
 }
+
+// GetPrimaryKeyName returns the DB field name
 func (o *PostMeta) GetPrimaryKeyName() string {
 	return `meta_id`
 }
 
+// GetMetaId returns the value of
+// PostMeta.MetaId
 func (o *PostMeta) GetMetaId() int64 {
 	return o.MetaId
 }
+
+// SetMetaId sets and marks as dirty the value of
+// PostMeta.MetaId
 func (o *PostMeta) SetMetaId(arg int64) {
 	o.MetaId = arg
 	o.IsMetaIdDirty = true
 }
 
+// GetPostId returns the value of
+// PostMeta.PostId
 func (o *PostMeta) GetPostId() int64 {
 	return o.PostId
 }
+
+// SetPostId sets and marks as dirty the value of
+// PostMeta.PostId
 func (o *PostMeta) SetPostId(arg int64) {
 	o.PostId = arg
 	o.IsPostIdDirty = true
 }
 
+// GetMetaKey returns the value of
+// PostMeta.MetaKey
 func (o *PostMeta) GetMetaKey() string {
 	return o.MetaKey
 }
+
+// SetMetaKey sets and marks as dirty the value of
+// PostMeta.MetaKey
 func (o *PostMeta) SetMetaKey(arg string) {
 	o.MetaKey = arg
 	o.IsMetaKeyDirty = true
 }
 
+// GetMetaValue returns the value of
+// PostMeta.MetaValue
 func (o *PostMeta) GetMetaValue() string {
 	return o.MetaValue
 }
+
+// SetMetaValue sets and marks as dirty the value of
+// PostMeta.MetaValue
 func (o *PostMeta) SetMetaValue(arg string) {
 	o.MetaValue = arg
 	o.IsMetaValueDirty = true
 }
 
-// PostMetaFind(_findByMetaId int64) -> bool,error
+// Find(_findByMetaId int64) -> bool,error
 // Generic and programatically generator finder for PostMeta
 func (o *PostMeta) Find(_findByMetaId int64) (bool, error) {
 
@@ -3087,7 +3309,7 @@ func (o *PostMeta) Find(_findByMetaId int64) (bool, error) {
 
 }
 
-// PostMetaFindByPostId(_findByPostId int64) -> []*PostMeta,error
+// FindByPostId(_findByPostId int64) -> []*PostMeta,error
 // Generic and programatically generator finder for PostMeta
 func (o *PostMeta) FindByPostId(_findByPostId int64) ([]*PostMeta, error) {
 
@@ -3115,7 +3337,7 @@ func (o *PostMeta) FindByPostId(_findByPostId int64) ([]*PostMeta, error) {
 
 }
 
-// PostMetaFindByMetaKey(_findByMetaKey string) -> []*PostMeta,error
+// FindByMetaKey(_findByMetaKey string) -> []*PostMeta,error
 // Generic and programatically generator finder for PostMeta
 func (o *PostMeta) FindByMetaKey(_findByMetaKey string) ([]*PostMeta, error) {
 
@@ -3143,7 +3365,7 @@ func (o *PostMeta) FindByMetaKey(_findByMetaKey string) ([]*PostMeta, error) {
 
 }
 
-// PostMetaFindByMetaValue(_findByMetaValue string) -> []*PostMeta,error
+// FindByMetaValue(_findByMetaValue string) -> []*PostMeta,error
 // Generic and programatically generator finder for PostMeta
 func (o *PostMeta) FindByMetaValue(_findByMetaValue string) ([]*PostMeta, error) {
 
@@ -3171,7 +3393,7 @@ func (o *PostMeta) FindByMetaValue(_findByMetaValue string) ([]*PostMeta, error)
 
 }
 
-// Converts a DBValueMap returned from Adapter.Query to a PostMeta
+// FromDBValueMap Converts a DBValueMap returned from Adapter.Query to a PostMeta
 func (o *PostMeta) FromDBValueMap(m map[string]DBValue) error {
 	_MetaId, err := m["meta_id"].AsInt64()
 	if err != nil {
@@ -3197,7 +3419,7 @@ func (o *PostMeta) FromDBValueMap(m map[string]DBValue) error {
 	return nil
 }
 
-// A kind of Clone function for PostMeta
+// FromPostMeta A kind of Clone function for PostMeta
 func (o *PostMeta) FromPostMeta(m *PostMeta) {
 	o.MetaId = m.MetaId
 	o.PostId = m.PostId
@@ -3206,7 +3428,7 @@ func (o *PostMeta) FromPostMeta(m *PostMeta) {
 
 }
 
-// A function to forcibly reload PostMeta
+// Reload A function to forcibly reload PostMeta
 func (o *PostMeta) Reload() error {
 	_, err := o.Find(o.GetPrimaryKeyValue())
 	return err
@@ -3365,198 +3587,317 @@ func NewPost(a Adapter) *Post {
 	return &o
 }
 
+// GetPrimaryKeyValue returns the value, usually int64 of
+// the PrimaryKey
 func (o *Post) GetPrimaryKeyValue() int64 {
 	return o.ID
 }
+
+// GetPrimaryKeyName returns the DB field name
 func (o *Post) GetPrimaryKeyName() string {
 	return `ID`
 }
 
+// GetID returns the value of
+// Post.ID
 func (o *Post) GetID() int64 {
 	return o.ID
 }
+
+// SetID sets and marks as dirty the value of
+// Post.ID
 func (o *Post) SetID(arg int64) {
 	o.ID = arg
 	o.IsIDDirty = true
 }
 
+// GetPostAuthor returns the value of
+// Post.PostAuthor
 func (o *Post) GetPostAuthor() int64 {
 	return o.PostAuthor
 }
+
+// SetPostAuthor sets and marks as dirty the value of
+// Post.PostAuthor
 func (o *Post) SetPostAuthor(arg int64) {
 	o.PostAuthor = arg
 	o.IsPostAuthorDirty = true
 }
 
+// GetPostDate returns the value of
+// Post.PostDate
 func (o *Post) GetPostDate() *DateTime {
 	return o.PostDate
 }
+
+// SetPostDate sets and marks as dirty the value of
+// Post.PostDate
 func (o *Post) SetPostDate(arg *DateTime) {
 	o.PostDate = arg
 	o.IsPostDateDirty = true
 }
 
+// GetPostDateGmt returns the value of
+// Post.PostDateGmt
 func (o *Post) GetPostDateGmt() *DateTime {
 	return o.PostDateGmt
 }
+
+// SetPostDateGmt sets and marks as dirty the value of
+// Post.PostDateGmt
 func (o *Post) SetPostDateGmt(arg *DateTime) {
 	o.PostDateGmt = arg
 	o.IsPostDateGmtDirty = true
 }
 
+// GetPostContent returns the value of
+// Post.PostContent
 func (o *Post) GetPostContent() string {
 	return o.PostContent
 }
+
+// SetPostContent sets and marks as dirty the value of
+// Post.PostContent
 func (o *Post) SetPostContent(arg string) {
 	o.PostContent = arg
 	o.IsPostContentDirty = true
 }
 
+// GetPostTitle returns the value of
+// Post.PostTitle
 func (o *Post) GetPostTitle() string {
 	return o.PostTitle
 }
+
+// SetPostTitle sets and marks as dirty the value of
+// Post.PostTitle
 func (o *Post) SetPostTitle(arg string) {
 	o.PostTitle = arg
 	o.IsPostTitleDirty = true
 }
 
+// GetPostExcerpt returns the value of
+// Post.PostExcerpt
 func (o *Post) GetPostExcerpt() string {
 	return o.PostExcerpt
 }
+
+// SetPostExcerpt sets and marks as dirty the value of
+// Post.PostExcerpt
 func (o *Post) SetPostExcerpt(arg string) {
 	o.PostExcerpt = arg
 	o.IsPostExcerptDirty = true
 }
 
+// GetPostStatus returns the value of
+// Post.PostStatus
 func (o *Post) GetPostStatus() string {
 	return o.PostStatus
 }
+
+// SetPostStatus sets and marks as dirty the value of
+// Post.PostStatus
 func (o *Post) SetPostStatus(arg string) {
 	o.PostStatus = arg
 	o.IsPostStatusDirty = true
 }
 
+// GetCommentStatus returns the value of
+// Post.CommentStatus
 func (o *Post) GetCommentStatus() string {
 	return o.CommentStatus
 }
+
+// SetCommentStatus sets and marks as dirty the value of
+// Post.CommentStatus
 func (o *Post) SetCommentStatus(arg string) {
 	o.CommentStatus = arg
 	o.IsCommentStatusDirty = true
 }
 
+// GetPingStatus returns the value of
+// Post.PingStatus
 func (o *Post) GetPingStatus() string {
 	return o.PingStatus
 }
+
+// SetPingStatus sets and marks as dirty the value of
+// Post.PingStatus
 func (o *Post) SetPingStatus(arg string) {
 	o.PingStatus = arg
 	o.IsPingStatusDirty = true
 }
 
+// GetPostPassword returns the value of
+// Post.PostPassword
 func (o *Post) GetPostPassword() string {
 	return o.PostPassword
 }
+
+// SetPostPassword sets and marks as dirty the value of
+// Post.PostPassword
 func (o *Post) SetPostPassword(arg string) {
 	o.PostPassword = arg
 	o.IsPostPasswordDirty = true
 }
 
+// GetPostName returns the value of
+// Post.PostName
 func (o *Post) GetPostName() string {
 	return o.PostName
 }
+
+// SetPostName sets and marks as dirty the value of
+// Post.PostName
 func (o *Post) SetPostName(arg string) {
 	o.PostName = arg
 	o.IsPostNameDirty = true
 }
 
+// GetToPing returns the value of
+// Post.ToPing
 func (o *Post) GetToPing() string {
 	return o.ToPing
 }
+
+// SetToPing sets and marks as dirty the value of
+// Post.ToPing
 func (o *Post) SetToPing(arg string) {
 	o.ToPing = arg
 	o.IsToPingDirty = true
 }
 
+// GetPinged returns the value of
+// Post.Pinged
 func (o *Post) GetPinged() string {
 	return o.Pinged
 }
+
+// SetPinged sets and marks as dirty the value of
+// Post.Pinged
 func (o *Post) SetPinged(arg string) {
 	o.Pinged = arg
 	o.IsPingedDirty = true
 }
 
+// GetPostModified returns the value of
+// Post.PostModified
 func (o *Post) GetPostModified() *DateTime {
 	return o.PostModified
 }
+
+// SetPostModified sets and marks as dirty the value of
+// Post.PostModified
 func (o *Post) SetPostModified(arg *DateTime) {
 	o.PostModified = arg
 	o.IsPostModifiedDirty = true
 }
 
+// GetPostModifiedGmt returns the value of
+// Post.PostModifiedGmt
 func (o *Post) GetPostModifiedGmt() *DateTime {
 	return o.PostModifiedGmt
 }
+
+// SetPostModifiedGmt sets and marks as dirty the value of
+// Post.PostModifiedGmt
 func (o *Post) SetPostModifiedGmt(arg *DateTime) {
 	o.PostModifiedGmt = arg
 	o.IsPostModifiedGmtDirty = true
 }
 
+// GetPostContentFiltered returns the value of
+// Post.PostContentFiltered
 func (o *Post) GetPostContentFiltered() string {
 	return o.PostContentFiltered
 }
+
+// SetPostContentFiltered sets and marks as dirty the value of
+// Post.PostContentFiltered
 func (o *Post) SetPostContentFiltered(arg string) {
 	o.PostContentFiltered = arg
 	o.IsPostContentFilteredDirty = true
 }
 
+// GetPostParent returns the value of
+// Post.PostParent
 func (o *Post) GetPostParent() int64 {
 	return o.PostParent
 }
+
+// SetPostParent sets and marks as dirty the value of
+// Post.PostParent
 func (o *Post) SetPostParent(arg int64) {
 	o.PostParent = arg
 	o.IsPostParentDirty = true
 }
 
+// GetGuid returns the value of
+// Post.Guid
 func (o *Post) GetGuid() string {
 	return o.Guid
 }
+
+// SetGuid sets and marks as dirty the value of
+// Post.Guid
 func (o *Post) SetGuid(arg string) {
 	o.Guid = arg
 	o.IsGuidDirty = true
 }
 
+// GetMenuOrder returns the value of
+// Post.MenuOrder
 func (o *Post) GetMenuOrder() int {
 	return o.MenuOrder
 }
+
+// SetMenuOrder sets and marks as dirty the value of
+// Post.MenuOrder
 func (o *Post) SetMenuOrder(arg int) {
 	o.MenuOrder = arg
 	o.IsMenuOrderDirty = true
 }
 
+// GetPostType returns the value of
+// Post.PostType
 func (o *Post) GetPostType() string {
 	return o.PostType
 }
+
+// SetPostType sets and marks as dirty the value of
+// Post.PostType
 func (o *Post) SetPostType(arg string) {
 	o.PostType = arg
 	o.IsPostTypeDirty = true
 }
 
+// GetPostMimeType returns the value of
+// Post.PostMimeType
 func (o *Post) GetPostMimeType() string {
 	return o.PostMimeType
 }
+
+// SetPostMimeType sets and marks as dirty the value of
+// Post.PostMimeType
 func (o *Post) SetPostMimeType(arg string) {
 	o.PostMimeType = arg
 	o.IsPostMimeTypeDirty = true
 }
 
+// GetCommentCount returns the value of
+// Post.CommentCount
 func (o *Post) GetCommentCount() int64 {
 	return o.CommentCount
 }
+
+// SetCommentCount sets and marks as dirty the value of
+// Post.CommentCount
 func (o *Post) SetCommentCount(arg int64) {
 	o.CommentCount = arg
 	o.IsCommentCountDirty = true
 }
 
-// PostFind(_findByID int64) -> bool,error
+// Find(_findByID int64) -> bool,error
 // Generic and programatically generator finder for Post
 func (o *Post) Find(_findByID int64) (bool, error) {
 
@@ -3585,7 +3926,7 @@ func (o *Post) Find(_findByID int64) (bool, error) {
 
 }
 
-// PostFindByPostAuthor(_findByPostAuthor int64) -> []*Post,error
+// FindByPostAuthor(_findByPostAuthor int64) -> []*Post,error
 // Generic and programatically generator finder for Post
 func (o *Post) FindByPostAuthor(_findByPostAuthor int64) ([]*Post, error) {
 
@@ -3613,7 +3954,7 @@ func (o *Post) FindByPostAuthor(_findByPostAuthor int64) ([]*Post, error) {
 
 }
 
-// PostFindByPostDate(_findByPostDate *DateTime) -> []*Post,error
+// FindByPostDate(_findByPostDate *DateTime) -> []*Post,error
 // Generic and programatically generator finder for Post
 func (o *Post) FindByPostDate(_findByPostDate *DateTime) ([]*Post, error) {
 
@@ -3641,7 +3982,7 @@ func (o *Post) FindByPostDate(_findByPostDate *DateTime) ([]*Post, error) {
 
 }
 
-// PostFindByPostDateGmt(_findByPostDateGmt *DateTime) -> []*Post,error
+// FindByPostDateGmt(_findByPostDateGmt *DateTime) -> []*Post,error
 // Generic and programatically generator finder for Post
 func (o *Post) FindByPostDateGmt(_findByPostDateGmt *DateTime) ([]*Post, error) {
 
@@ -3669,7 +4010,7 @@ func (o *Post) FindByPostDateGmt(_findByPostDateGmt *DateTime) ([]*Post, error) 
 
 }
 
-// PostFindByPostContent(_findByPostContent string) -> []*Post,error
+// FindByPostContent(_findByPostContent string) -> []*Post,error
 // Generic and programatically generator finder for Post
 func (o *Post) FindByPostContent(_findByPostContent string) ([]*Post, error) {
 
@@ -3697,7 +4038,7 @@ func (o *Post) FindByPostContent(_findByPostContent string) ([]*Post, error) {
 
 }
 
-// PostFindByPostTitle(_findByPostTitle string) -> []*Post,error
+// FindByPostTitle(_findByPostTitle string) -> []*Post,error
 // Generic and programatically generator finder for Post
 func (o *Post) FindByPostTitle(_findByPostTitle string) ([]*Post, error) {
 
@@ -3725,7 +4066,7 @@ func (o *Post) FindByPostTitle(_findByPostTitle string) ([]*Post, error) {
 
 }
 
-// PostFindByPostExcerpt(_findByPostExcerpt string) -> []*Post,error
+// FindByPostExcerpt(_findByPostExcerpt string) -> []*Post,error
 // Generic and programatically generator finder for Post
 func (o *Post) FindByPostExcerpt(_findByPostExcerpt string) ([]*Post, error) {
 
@@ -3753,7 +4094,7 @@ func (o *Post) FindByPostExcerpt(_findByPostExcerpt string) ([]*Post, error) {
 
 }
 
-// PostFindByPostStatus(_findByPostStatus string) -> []*Post,error
+// FindByPostStatus(_findByPostStatus string) -> []*Post,error
 // Generic and programatically generator finder for Post
 func (o *Post) FindByPostStatus(_findByPostStatus string) ([]*Post, error) {
 
@@ -3781,7 +4122,7 @@ func (o *Post) FindByPostStatus(_findByPostStatus string) ([]*Post, error) {
 
 }
 
-// PostFindByCommentStatus(_findByCommentStatus string) -> []*Post,error
+// FindByCommentStatus(_findByCommentStatus string) -> []*Post,error
 // Generic and programatically generator finder for Post
 func (o *Post) FindByCommentStatus(_findByCommentStatus string) ([]*Post, error) {
 
@@ -3809,7 +4150,7 @@ func (o *Post) FindByCommentStatus(_findByCommentStatus string) ([]*Post, error)
 
 }
 
-// PostFindByPingStatus(_findByPingStatus string) -> []*Post,error
+// FindByPingStatus(_findByPingStatus string) -> []*Post,error
 // Generic and programatically generator finder for Post
 func (o *Post) FindByPingStatus(_findByPingStatus string) ([]*Post, error) {
 
@@ -3837,7 +4178,7 @@ func (o *Post) FindByPingStatus(_findByPingStatus string) ([]*Post, error) {
 
 }
 
-// PostFindByPostPassword(_findByPostPassword string) -> []*Post,error
+// FindByPostPassword(_findByPostPassword string) -> []*Post,error
 // Generic and programatically generator finder for Post
 func (o *Post) FindByPostPassword(_findByPostPassword string) ([]*Post, error) {
 
@@ -3865,7 +4206,7 @@ func (o *Post) FindByPostPassword(_findByPostPassword string) ([]*Post, error) {
 
 }
 
-// PostFindByPostName(_findByPostName string) -> []*Post,error
+// FindByPostName(_findByPostName string) -> []*Post,error
 // Generic and programatically generator finder for Post
 func (o *Post) FindByPostName(_findByPostName string) ([]*Post, error) {
 
@@ -3893,7 +4234,7 @@ func (o *Post) FindByPostName(_findByPostName string) ([]*Post, error) {
 
 }
 
-// PostFindByToPing(_findByToPing string) -> []*Post,error
+// FindByToPing(_findByToPing string) -> []*Post,error
 // Generic and programatically generator finder for Post
 func (o *Post) FindByToPing(_findByToPing string) ([]*Post, error) {
 
@@ -3921,7 +4262,7 @@ func (o *Post) FindByToPing(_findByToPing string) ([]*Post, error) {
 
 }
 
-// PostFindByPinged(_findByPinged string) -> []*Post,error
+// FindByPinged(_findByPinged string) -> []*Post,error
 // Generic and programatically generator finder for Post
 func (o *Post) FindByPinged(_findByPinged string) ([]*Post, error) {
 
@@ -3949,7 +4290,7 @@ func (o *Post) FindByPinged(_findByPinged string) ([]*Post, error) {
 
 }
 
-// PostFindByPostModified(_findByPostModified *DateTime) -> []*Post,error
+// FindByPostModified(_findByPostModified *DateTime) -> []*Post,error
 // Generic and programatically generator finder for Post
 func (o *Post) FindByPostModified(_findByPostModified *DateTime) ([]*Post, error) {
 
@@ -3977,7 +4318,7 @@ func (o *Post) FindByPostModified(_findByPostModified *DateTime) ([]*Post, error
 
 }
 
-// PostFindByPostModifiedGmt(_findByPostModifiedGmt *DateTime) -> []*Post,error
+// FindByPostModifiedGmt(_findByPostModifiedGmt *DateTime) -> []*Post,error
 // Generic and programatically generator finder for Post
 func (o *Post) FindByPostModifiedGmt(_findByPostModifiedGmt *DateTime) ([]*Post, error) {
 
@@ -4005,7 +4346,7 @@ func (o *Post) FindByPostModifiedGmt(_findByPostModifiedGmt *DateTime) ([]*Post,
 
 }
 
-// PostFindByPostContentFiltered(_findByPostContentFiltered string) -> []*Post,error
+// FindByPostContentFiltered(_findByPostContentFiltered string) -> []*Post,error
 // Generic and programatically generator finder for Post
 func (o *Post) FindByPostContentFiltered(_findByPostContentFiltered string) ([]*Post, error) {
 
@@ -4033,7 +4374,7 @@ func (o *Post) FindByPostContentFiltered(_findByPostContentFiltered string) ([]*
 
 }
 
-// PostFindByPostParent(_findByPostParent int64) -> []*Post,error
+// FindByPostParent(_findByPostParent int64) -> []*Post,error
 // Generic and programatically generator finder for Post
 func (o *Post) FindByPostParent(_findByPostParent int64) ([]*Post, error) {
 
@@ -4061,7 +4402,7 @@ func (o *Post) FindByPostParent(_findByPostParent int64) ([]*Post, error) {
 
 }
 
-// PostFindByGuid(_findByGuid string) -> []*Post,error
+// FindByGuid(_findByGuid string) -> []*Post,error
 // Generic and programatically generator finder for Post
 func (o *Post) FindByGuid(_findByGuid string) ([]*Post, error) {
 
@@ -4089,7 +4430,7 @@ func (o *Post) FindByGuid(_findByGuid string) ([]*Post, error) {
 
 }
 
-// PostFindByMenuOrder(_findByMenuOrder int) -> []*Post,error
+// FindByMenuOrder(_findByMenuOrder int) -> []*Post,error
 // Generic and programatically generator finder for Post
 func (o *Post) FindByMenuOrder(_findByMenuOrder int) ([]*Post, error) {
 
@@ -4117,7 +4458,7 @@ func (o *Post) FindByMenuOrder(_findByMenuOrder int) ([]*Post, error) {
 
 }
 
-// PostFindByPostType(_findByPostType string) -> []*Post,error
+// FindByPostType(_findByPostType string) -> []*Post,error
 // Generic and programatically generator finder for Post
 func (o *Post) FindByPostType(_findByPostType string) ([]*Post, error) {
 
@@ -4145,7 +4486,7 @@ func (o *Post) FindByPostType(_findByPostType string) ([]*Post, error) {
 
 }
 
-// PostFindByPostMimeType(_findByPostMimeType string) -> []*Post,error
+// FindByPostMimeType(_findByPostMimeType string) -> []*Post,error
 // Generic and programatically generator finder for Post
 func (o *Post) FindByPostMimeType(_findByPostMimeType string) ([]*Post, error) {
 
@@ -4173,7 +4514,7 @@ func (o *Post) FindByPostMimeType(_findByPostMimeType string) ([]*Post, error) {
 
 }
 
-// PostFindByCommentCount(_findByCommentCount int64) -> []*Post,error
+// FindByCommentCount(_findByCommentCount int64) -> []*Post,error
 // Generic and programatically generator finder for Post
 func (o *Post) FindByCommentCount(_findByCommentCount int64) ([]*Post, error) {
 
@@ -4201,7 +4542,7 @@ func (o *Post) FindByCommentCount(_findByCommentCount int64) ([]*Post, error) {
 
 }
 
-// Converts a DBValueMap returned from Adapter.Query to a Post
+// FromDBValueMap Converts a DBValueMap returned from Adapter.Query to a Post
 func (o *Post) FromDBValueMap(m map[string]DBValue) error {
 	_ID, err := m["ID"].AsInt64()
 	if err != nil {
@@ -4322,7 +4663,7 @@ func (o *Post) FromDBValueMap(m map[string]DBValue) error {
 	return nil
 }
 
-// A kind of Clone function for Post
+// FromPost A kind of Clone function for Post
 func (o *Post) FromPost(m *Post) {
 	o.ID = m.ID
 	o.PostAuthor = m.PostAuthor
@@ -4350,7 +4691,7 @@ func (o *Post) FromPost(m *Post) {
 
 }
 
-// A function to forcibly reload Post
+// Reload A function to forcibly reload Post
 func (o *Post) Reload() error {
 	_, err := o.Find(o.GetPrimaryKeyValue())
 	return err
@@ -4811,38 +5152,57 @@ func NewTermRelationship(a Adapter) *TermRelationship {
 	return &o
 }
 
+// GetPrimaryKeyValue returns the value, usually int64 of
+// the PrimaryKey
 func (o *TermRelationship) GetPrimaryKeyValue() int64 {
 	return o.TermTaxonomyId
 }
+
+// GetPrimaryKeyName returns the DB field name
 func (o *TermRelationship) GetPrimaryKeyName() string {
 	return `term_taxonomy_id`
 }
 
+// GetObjectId returns the value of
+// TermRelationship.ObjectId
 func (o *TermRelationship) GetObjectId() int64 {
 	return o.ObjectId
 }
+
+// SetObjectId sets and marks as dirty the value of
+// TermRelationship.ObjectId
 func (o *TermRelationship) SetObjectId(arg int64) {
 	o.ObjectId = arg
 	o.IsObjectIdDirty = true
 }
 
+// GetTermTaxonomyId returns the value of
+// TermRelationship.TermTaxonomyId
 func (o *TermRelationship) GetTermTaxonomyId() int64 {
 	return o.TermTaxonomyId
 }
+
+// SetTermTaxonomyId sets and marks as dirty the value of
+// TermRelationship.TermTaxonomyId
 func (o *TermRelationship) SetTermTaxonomyId(arg int64) {
 	o.TermTaxonomyId = arg
 	o.IsTermTaxonomyIdDirty = true
 }
 
+// GetTermOrder returns the value of
+// TermRelationship.TermOrder
 func (o *TermRelationship) GetTermOrder() int {
 	return o.TermOrder
 }
+
+// SetTermOrder sets and marks as dirty the value of
+// TermRelationship.TermOrder
 func (o *TermRelationship) SetTermOrder(arg int) {
 	o.TermOrder = arg
 	o.IsTermOrderDirty = true
 }
 
-// TermRelationshipFindByObjectId(_findByObjectId int64) -> []*TermRelationship,error
+// FindByObjectId(_findByObjectId int64) -> []*TermRelationship,error
 // Generic and programatically generator finder for TermRelationship
 func (o *TermRelationship) FindByObjectId(_findByObjectId int64) ([]*TermRelationship, error) {
 
@@ -4896,7 +5256,7 @@ func (o *TermRelationship) Find(termId int64, objectId int64) (bool, error) {
 
 }
 
-// TermRelationshipFindByTermOrder(_findByTermOrder int) -> []*TermRelationship,error
+// FindByTermOrder(_findByTermOrder int) -> []*TermRelationship,error
 // Generic and programatically generator finder for TermRelationship
 func (o *TermRelationship) FindByTermOrder(_findByTermOrder int) ([]*TermRelationship, error) {
 
@@ -4924,7 +5284,7 @@ func (o *TermRelationship) FindByTermOrder(_findByTermOrder int) ([]*TermRelatio
 
 }
 
-// Converts a DBValueMap returned from Adapter.Query to a TermRelationship
+// FromDBValueMap Converts a DBValueMap returned from Adapter.Query to a TermRelationship
 func (o *TermRelationship) FromDBValueMap(m map[string]DBValue) error {
 	_ObjectId, err := m["object_id"].AsInt64()
 	if err != nil {
@@ -4945,7 +5305,7 @@ func (o *TermRelationship) FromDBValueMap(m map[string]DBValue) error {
 	return nil
 }
 
-// A kind of Clone function for TermRelationship
+// FromTermRelationship A kind of Clone function for TermRelationship
 func (o *TermRelationship) FromTermRelationship(m *TermRelationship) {
 	o.ObjectId = m.ObjectId
 	o.TermTaxonomyId = m.TermTaxonomyId
@@ -4953,7 +5313,7 @@ func (o *TermRelationship) FromTermRelationship(m *TermRelationship) {
 
 }
 
-// A function to forcibly reload TermRelationship
+// Reload A function to forcibly reload TermRelationship
 func (o *TermRelationship) Reload() error {
 	_, err := o.Find(o.TermTaxonomyId, o.ObjectId)
 	return err
@@ -5068,62 +5428,96 @@ func NewTermTaxonomy(a Adapter) *TermTaxonomy {
 	return &o
 }
 
+// GetPrimaryKeyValue returns the value, usually int64 of
+// the PrimaryKey
 func (o *TermTaxonomy) GetPrimaryKeyValue() int64 {
 	return o.TermTaxonomyId
 }
+
+// GetPrimaryKeyName returns the DB field name
 func (o *TermTaxonomy) GetPrimaryKeyName() string {
 	return `term_taxonomy_id`
 }
 
+// GetTermTaxonomyId returns the value of
+// TermTaxonomy.TermTaxonomyId
 func (o *TermTaxonomy) GetTermTaxonomyId() int64 {
 	return o.TermTaxonomyId
 }
+
+// SetTermTaxonomyId sets and marks as dirty the value of
+// TermTaxonomy.TermTaxonomyId
 func (o *TermTaxonomy) SetTermTaxonomyId(arg int64) {
 	o.TermTaxonomyId = arg
 	o.IsTermTaxonomyIdDirty = true
 }
 
+// GetTermId returns the value of
+// TermTaxonomy.TermId
 func (o *TermTaxonomy) GetTermId() int64 {
 	return o.TermId
 }
+
+// SetTermId sets and marks as dirty the value of
+// TermTaxonomy.TermId
 func (o *TermTaxonomy) SetTermId(arg int64) {
 	o.TermId = arg
 	o.IsTermIdDirty = true
 }
 
+// GetTaxonomy returns the value of
+// TermTaxonomy.Taxonomy
 func (o *TermTaxonomy) GetTaxonomy() string {
 	return o.Taxonomy
 }
+
+// SetTaxonomy sets and marks as dirty the value of
+// TermTaxonomy.Taxonomy
 func (o *TermTaxonomy) SetTaxonomy(arg string) {
 	o.Taxonomy = arg
 	o.IsTaxonomyDirty = true
 }
 
+// GetDescription returns the value of
+// TermTaxonomy.Description
 func (o *TermTaxonomy) GetDescription() string {
 	return o.Description
 }
+
+// SetDescription sets and marks as dirty the value of
+// TermTaxonomy.Description
 func (o *TermTaxonomy) SetDescription(arg string) {
 	o.Description = arg
 	o.IsDescriptionDirty = true
 }
 
+// GetParent returns the value of
+// TermTaxonomy.Parent
 func (o *TermTaxonomy) GetParent() int64 {
 	return o.Parent
 }
+
+// SetParent sets and marks as dirty the value of
+// TermTaxonomy.Parent
 func (o *TermTaxonomy) SetParent(arg int64) {
 	o.Parent = arg
 	o.IsParentDirty = true
 }
 
+// GetCount returns the value of
+// TermTaxonomy.Count
 func (o *TermTaxonomy) GetCount() int64 {
 	return o.Count
 }
+
+// SetCount sets and marks as dirty the value of
+// TermTaxonomy.Count
 func (o *TermTaxonomy) SetCount(arg int64) {
 	o.Count = arg
 	o.IsCountDirty = true
 }
 
-// TermTaxonomyFind(_findByTermTaxonomyId int64) -> bool,error
+// Find(_findByTermTaxonomyId int64) -> bool,error
 // Generic and programatically generator finder for TermTaxonomy
 func (o *TermTaxonomy) Find(_findByTermTaxonomyId int64) (bool, error) {
 
@@ -5152,7 +5546,7 @@ func (o *TermTaxonomy) Find(_findByTermTaxonomyId int64) (bool, error) {
 
 }
 
-// TermTaxonomyFindByTermId(_findByTermId int64) -> []*TermTaxonomy,error
+// FindByTermId(_findByTermId int64) -> []*TermTaxonomy,error
 // Generic and programatically generator finder for TermTaxonomy
 func (o *TermTaxonomy) FindByTermId(_findByTermId int64) ([]*TermTaxonomy, error) {
 
@@ -5180,7 +5574,7 @@ func (o *TermTaxonomy) FindByTermId(_findByTermId int64) ([]*TermTaxonomy, error
 
 }
 
-// TermTaxonomyFindByTaxonomy(_findByTaxonomy string) -> []*TermTaxonomy,error
+// FindByTaxonomy(_findByTaxonomy string) -> []*TermTaxonomy,error
 // Generic and programatically generator finder for TermTaxonomy
 func (o *TermTaxonomy) FindByTaxonomy(_findByTaxonomy string) ([]*TermTaxonomy, error) {
 
@@ -5208,7 +5602,7 @@ func (o *TermTaxonomy) FindByTaxonomy(_findByTaxonomy string) ([]*TermTaxonomy, 
 
 }
 
-// TermTaxonomyFindByDescription(_findByDescription string) -> []*TermTaxonomy,error
+// FindByDescription(_findByDescription string) -> []*TermTaxonomy,error
 // Generic and programatically generator finder for TermTaxonomy
 func (o *TermTaxonomy) FindByDescription(_findByDescription string) ([]*TermTaxonomy, error) {
 
@@ -5236,7 +5630,7 @@ func (o *TermTaxonomy) FindByDescription(_findByDescription string) ([]*TermTaxo
 
 }
 
-// TermTaxonomyFindByParent(_findByParent int64) -> []*TermTaxonomy,error
+// FindByParent(_findByParent int64) -> []*TermTaxonomy,error
 // Generic and programatically generator finder for TermTaxonomy
 func (o *TermTaxonomy) FindByParent(_findByParent int64) ([]*TermTaxonomy, error) {
 
@@ -5264,7 +5658,7 @@ func (o *TermTaxonomy) FindByParent(_findByParent int64) ([]*TermTaxonomy, error
 
 }
 
-// TermTaxonomyFindByCount(_findByCount int64) -> []*TermTaxonomy,error
+// FindByCount(_findByCount int64) -> []*TermTaxonomy,error
 // Generic and programatically generator finder for TermTaxonomy
 func (o *TermTaxonomy) FindByCount(_findByCount int64) ([]*TermTaxonomy, error) {
 
@@ -5292,7 +5686,7 @@ func (o *TermTaxonomy) FindByCount(_findByCount int64) ([]*TermTaxonomy, error) 
 
 }
 
-// Converts a DBValueMap returned from Adapter.Query to a TermTaxonomy
+// FromDBValueMap Converts a DBValueMap returned from Adapter.Query to a TermTaxonomy
 func (o *TermTaxonomy) FromDBValueMap(m map[string]DBValue) error {
 	_TermTaxonomyId, err := m["term_taxonomy_id"].AsInt64()
 	if err != nil {
@@ -5328,7 +5722,7 @@ func (o *TermTaxonomy) FromDBValueMap(m map[string]DBValue) error {
 	return nil
 }
 
-// A kind of Clone function for TermTaxonomy
+// FromTermTaxonomy A kind of Clone function for TermTaxonomy
 func (o *TermTaxonomy) FromTermTaxonomy(m *TermTaxonomy) {
 	o.TermTaxonomyId = m.TermTaxonomyId
 	o.TermId = m.TermId
@@ -5339,7 +5733,7 @@ func (o *TermTaxonomy) FromTermTaxonomy(m *TermTaxonomy) {
 
 }
 
-// A function to forcibly reload TermTaxonomy
+// Reload A function to forcibly reload TermTaxonomy
 func (o *TermTaxonomy) Reload() error {
 	_, err := o.Find(o.GetPrimaryKeyValue())
 	return err
@@ -5496,46 +5890,70 @@ func NewTerm(a Adapter) *Term {
 	return &o
 }
 
+// GetPrimaryKeyValue returns the value, usually int64 of
+// the PrimaryKey
 func (o *Term) GetPrimaryKeyValue() int64 {
 	return o.TermId
 }
+
+// GetPrimaryKeyName returns the DB field name
 func (o *Term) GetPrimaryKeyName() string {
 	return `term_id`
 }
 
+// GetTermId returns the value of
+// Term.TermId
 func (o *Term) GetTermId() int64 {
 	return o.TermId
 }
+
+// SetTermId sets and marks as dirty the value of
+// Term.TermId
 func (o *Term) SetTermId(arg int64) {
 	o.TermId = arg
 	o.IsTermIdDirty = true
 }
 
+// GetName returns the value of
+// Term.Name
 func (o *Term) GetName() string {
 	return o.Name
 }
+
+// SetName sets and marks as dirty the value of
+// Term.Name
 func (o *Term) SetName(arg string) {
 	o.Name = arg
 	o.IsNameDirty = true
 }
 
+// GetSlug returns the value of
+// Term.Slug
 func (o *Term) GetSlug() string {
 	return o.Slug
 }
+
+// SetSlug sets and marks as dirty the value of
+// Term.Slug
 func (o *Term) SetSlug(arg string) {
 	o.Slug = arg
 	o.IsSlugDirty = true
 }
 
+// GetTermGroup returns the value of
+// Term.TermGroup
 func (o *Term) GetTermGroup() int64 {
 	return o.TermGroup
 }
+
+// SetTermGroup sets and marks as dirty the value of
+// Term.TermGroup
 func (o *Term) SetTermGroup(arg int64) {
 	o.TermGroup = arg
 	o.IsTermGroupDirty = true
 }
 
-// TermFind(_findByTermId int64) -> bool,error
+// Find(_findByTermId int64) -> bool,error
 // Generic and programatically generator finder for Term
 func (o *Term) Find(_findByTermId int64) (bool, error) {
 
@@ -5564,7 +5982,7 @@ func (o *Term) Find(_findByTermId int64) (bool, error) {
 
 }
 
-// TermFindByName(_findByName string) -> []*Term,error
+// FindByName(_findByName string) -> []*Term,error
 // Generic and programatically generator finder for Term
 func (o *Term) FindByName(_findByName string) ([]*Term, error) {
 
@@ -5592,7 +6010,7 @@ func (o *Term) FindByName(_findByName string) ([]*Term, error) {
 
 }
 
-// TermFindBySlug(_findBySlug string) -> []*Term,error
+// FindBySlug(_findBySlug string) -> []*Term,error
 // Generic and programatically generator finder for Term
 func (o *Term) FindBySlug(_findBySlug string) ([]*Term, error) {
 
@@ -5620,7 +6038,7 @@ func (o *Term) FindBySlug(_findBySlug string) ([]*Term, error) {
 
 }
 
-// TermFindByTermGroup(_findByTermGroup int64) -> []*Term,error
+// FindByTermGroup(_findByTermGroup int64) -> []*Term,error
 // Generic and programatically generator finder for Term
 func (o *Term) FindByTermGroup(_findByTermGroup int64) ([]*Term, error) {
 
@@ -5648,7 +6066,7 @@ func (o *Term) FindByTermGroup(_findByTermGroup int64) ([]*Term, error) {
 
 }
 
-// Converts a DBValueMap returned from Adapter.Query to a Term
+// FromDBValueMap Converts a DBValueMap returned from Adapter.Query to a Term
 func (o *Term) FromDBValueMap(m map[string]DBValue) error {
 	_TermId, err := m["term_id"].AsInt64()
 	if err != nil {
@@ -5674,7 +6092,7 @@ func (o *Term) FromDBValueMap(m map[string]DBValue) error {
 	return nil
 }
 
-// A kind of Clone function for Term
+// FromTerm A kind of Clone function for Term
 func (o *Term) FromTerm(m *Term) {
 	o.TermId = m.TermId
 	o.Name = m.Name
@@ -5683,7 +6101,7 @@ func (o *Term) FromTerm(m *Term) {
 
 }
 
-// A function to forcibly reload Term
+// Reload A function to forcibly reload Term
 func (o *Term) Reload() error {
 	_, err := o.Find(o.GetPrimaryKeyValue())
 	return err
@@ -5804,46 +6222,70 @@ func NewUserMeta(a Adapter) *UserMeta {
 	return &o
 }
 
+// GetPrimaryKeyValue returns the value, usually int64 of
+// the PrimaryKey
 func (o *UserMeta) GetPrimaryKeyValue() int64 {
 	return o.UMetaId
 }
+
+// GetPrimaryKeyName returns the DB field name
 func (o *UserMeta) GetPrimaryKeyName() string {
 	return `umeta_id`
 }
 
+// GetUMetaId returns the value of
+// UserMeta.UMetaId
 func (o *UserMeta) GetUMetaId() int64 {
 	return o.UMetaId
 }
+
+// SetUMetaId sets and marks as dirty the value of
+// UserMeta.UMetaId
 func (o *UserMeta) SetUMetaId(arg int64) {
 	o.UMetaId = arg
 	o.IsUMetaIdDirty = true
 }
 
+// GetUserId returns the value of
+// UserMeta.UserId
 func (o *UserMeta) GetUserId() int64 {
 	return o.UserId
 }
+
+// SetUserId sets and marks as dirty the value of
+// UserMeta.UserId
 func (o *UserMeta) SetUserId(arg int64) {
 	o.UserId = arg
 	o.IsUserIdDirty = true
 }
 
+// GetMetaKey returns the value of
+// UserMeta.MetaKey
 func (o *UserMeta) GetMetaKey() string {
 	return o.MetaKey
 }
+
+// SetMetaKey sets and marks as dirty the value of
+// UserMeta.MetaKey
 func (o *UserMeta) SetMetaKey(arg string) {
 	o.MetaKey = arg
 	o.IsMetaKeyDirty = true
 }
 
+// GetMetaValue returns the value of
+// UserMeta.MetaValue
 func (o *UserMeta) GetMetaValue() string {
 	return o.MetaValue
 }
+
+// SetMetaValue sets and marks as dirty the value of
+// UserMeta.MetaValue
 func (o *UserMeta) SetMetaValue(arg string) {
 	o.MetaValue = arg
 	o.IsMetaValueDirty = true
 }
 
-// UserMetaFind(_findByUMetaId int64) -> bool,error
+// Find(_findByUMetaId int64) -> bool,error
 // Generic and programatically generator finder for UserMeta
 func (o *UserMeta) Find(_findByUMetaId int64) (bool, error) {
 
@@ -5872,7 +6314,7 @@ func (o *UserMeta) Find(_findByUMetaId int64) (bool, error) {
 
 }
 
-// UserMetaFindByUserId(_findByUserId int64) -> []*UserMeta,error
+// FindByUserId(_findByUserId int64) -> []*UserMeta,error
 // Generic and programatically generator finder for UserMeta
 func (o *UserMeta) FindByUserId(_findByUserId int64) ([]*UserMeta, error) {
 
@@ -5900,7 +6342,7 @@ func (o *UserMeta) FindByUserId(_findByUserId int64) ([]*UserMeta, error) {
 
 }
 
-// UserMetaFindByMetaKey(_findByMetaKey string) -> []*UserMeta,error
+// FindByMetaKey(_findByMetaKey string) -> []*UserMeta,error
 // Generic and programatically generator finder for UserMeta
 func (o *UserMeta) FindByMetaKey(_findByMetaKey string) ([]*UserMeta, error) {
 
@@ -5928,7 +6370,7 @@ func (o *UserMeta) FindByMetaKey(_findByMetaKey string) ([]*UserMeta, error) {
 
 }
 
-// UserMetaFindByMetaValue(_findByMetaValue string) -> []*UserMeta,error
+// FindByMetaValue(_findByMetaValue string) -> []*UserMeta,error
 // Generic and programatically generator finder for UserMeta
 func (o *UserMeta) FindByMetaValue(_findByMetaValue string) ([]*UserMeta, error) {
 
@@ -5956,7 +6398,7 @@ func (o *UserMeta) FindByMetaValue(_findByMetaValue string) ([]*UserMeta, error)
 
 }
 
-// Converts a DBValueMap returned from Adapter.Query to a UserMeta
+// FromDBValueMap Converts a DBValueMap returned from Adapter.Query to a UserMeta
 func (o *UserMeta) FromDBValueMap(m map[string]DBValue) error {
 	_UMetaId, err := m["umeta_id"].AsInt64()
 	if err != nil {
@@ -5982,7 +6424,7 @@ func (o *UserMeta) FromDBValueMap(m map[string]DBValue) error {
 	return nil
 }
 
-// A kind of Clone function for UserMeta
+// FromUserMeta A kind of Clone function for UserMeta
 func (o *UserMeta) FromUserMeta(m *UserMeta) {
 	o.UMetaId = m.UMetaId
 	o.UserId = m.UserId
@@ -5991,7 +6433,7 @@ func (o *UserMeta) FromUserMeta(m *UserMeta) {
 
 }
 
-// A function to forcibly reload UserMeta
+// Reload A function to forcibly reload UserMeta
 func (o *UserMeta) Reload() error {
 	_, err := o.Find(o.GetPrimaryKeyValue())
 	return err

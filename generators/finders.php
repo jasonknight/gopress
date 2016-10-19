@@ -45,7 +45,7 @@ foreach($t->fields as $f) {
         $failure_return = "return model_slice,err";
     }
     $sig = "
-    // {$t->model_name}{$fname}($arg $argtype) -> $rtype,error
+    // {$fname}($arg $argtype) -> $rtype,error
     // Generic and programatically generator finder for {$t->model_name}
     ";
     $sig .= "func (o *{$t->model_name}) $fname($arg $argtype) ($rtype,error) {";
@@ -94,16 +94,16 @@ if ($t->model_name == "TermRelationship") {
     $find_line = "o.Find(o.TermTaxonomyId ,o.ObjectId)";
 }
 puts("
-// Converts a DBValueMap returned from Adapter.Query to a {$t->model_name}
+// FromDBValueMap Converts a DBValueMap returned from Adapter.Query to a {$t->model_name}
 func (o *{$t->model_name}) FromDBValueMap(m map[string]DBValue) error {
 $from_map_body
  \treturn nil
 }
-// A kind of Clone function for {$t->model_name}
+// From{$t->model_name} A kind of Clone function for {$t->model_name}
 func (o *{$t->model_name}) From{$t->model_name}(m *{$t->model_name}) {
 $from_model_body
 }
-// A function to forcibly reload {$t->model_name}
+// Reload A function to forcibly reload {$t->model_name}
 func (o *{$t->model_name}) Reload() error {
     _,err := $find_line
     return err
