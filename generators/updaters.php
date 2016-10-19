@@ -11,7 +11,7 @@ function gen_updaters($t) {
         }
         $fname = convertFieldName($f->Field);
         $mname = maybeLC($fname);
-        $arg = "_upd_" . maybeLC(convertFieldName($f->Field));
+        $arg = "_upd" . maybeLC(convertFieldName($f->Field));
         $argtype = $f->go_type;
         $fmt_type = mysqlToFmtType($f->Type);
         

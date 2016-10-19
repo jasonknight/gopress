@@ -203,8 +203,7 @@ puts("package gopress");
 puts('import (
     "database/sql"
     "fmt"
-    // This is standard for this library.
-    _ "github.com/go-sql-driver/mysql"
+    _ "github.com/go-sql-driver/mysql" // This is standard for this library.
     "strconv"
     "gopkg.in/yaml.v2"
     "regexp"

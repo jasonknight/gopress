@@ -1,12 +1,11 @@
 package gopress
 
 import (
-	"database/sql"
-	"fmt"
-	// This is standard for this library.
 	"bufio"
+	"database/sql"
 	"errors"
-	_ "github.com/go-sql-driver/mysql"
+	"fmt"
+	_ "github.com/go-sql-driver/mysql" // This is standard for this library.
 	"gopkg.in/yaml.v2"
 	"io"
 	"io/ioutil"
@@ -612,7 +611,7 @@ func (o *CommentMeta) SetMetaValue(arg string) {
 	o.IsMetaValueDirty = true
 }
 
-// Find(_findByMetaId int64) -> bool,error
+// Find dynamic finder for meta_id -> bool,error
 // Generic and programatically generator finder for CommentMeta
 func (o *CommentMeta) Find(_findByMetaId int64) (bool, error) {
 
@@ -641,7 +640,7 @@ func (o *CommentMeta) Find(_findByMetaId int64) (bool, error) {
 
 }
 
-// FindByCommentId(_findByCommentId int64) -> []*CommentMeta,error
+// FindByCommentId dynamic finder for comment_id -> []*CommentMeta,error
 // Generic and programatically generator finder for CommentMeta
 func (o *CommentMeta) FindByCommentId(_findByCommentId int64) ([]*CommentMeta, error) {
 
@@ -669,7 +668,7 @@ func (o *CommentMeta) FindByCommentId(_findByCommentId int64) ([]*CommentMeta, e
 
 }
 
-// FindByMetaKey(_findByMetaKey string) -> []*CommentMeta,error
+// FindByMetaKey dynamic finder for meta_key -> []*CommentMeta,error
 // Generic and programatically generator finder for CommentMeta
 func (o *CommentMeta) FindByMetaKey(_findByMetaKey string) ([]*CommentMeta, error) {
 
@@ -697,7 +696,7 @@ func (o *CommentMeta) FindByMetaKey(_findByMetaKey string) ([]*CommentMeta, erro
 
 }
 
-// FindByMetaValue(_findByMetaValue string) -> []*CommentMeta,error
+// FindByMetaValue dynamic finder for meta_value -> []*CommentMeta,error
 // Generic and programatically generator finder for CommentMeta
 func (o *CommentMeta) FindByMetaValue(_findByMetaValue string) ([]*CommentMeta, error) {
 
@@ -826,37 +825,37 @@ func (o *CommentMeta) Create() error {
 
 // UpdateCommentId an immediate DB Query to update a single column, in this
 // case comment_id
-func (o *CommentMeta) UpdateCommentId(_upd_CommentId int64) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `comment_id` = '%d' WHERE `meta_id` = '%d'", o._table, _upd_CommentId, o.MetaId)
+func (o *CommentMeta) UpdateCommentId(_updCommentId int64) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `comment_id` = '%d' WHERE `meta_id` = '%d'", o._table, _updCommentId, o.MetaId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.CommentId = _upd_CommentId
+	o.CommentId = _updCommentId
 	return o._adapter.AffectedRows(), nil
 }
 
 // UpdateMetaKey an immediate DB Query to update a single column, in this
 // case meta_key
-func (o *CommentMeta) UpdateMetaKey(_upd_MetaKey string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `meta_key` = '%s' WHERE `meta_id` = '%d'", o._table, _upd_MetaKey, o.MetaId)
+func (o *CommentMeta) UpdateMetaKey(_updMetaKey string) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `meta_key` = '%s' WHERE `meta_id` = '%d'", o._table, _updMetaKey, o.MetaId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.MetaKey = _upd_MetaKey
+	o.MetaKey = _updMetaKey
 	return o._adapter.AffectedRows(), nil
 }
 
 // UpdateMetaValue an immediate DB Query to update a single column, in this
 // case meta_value
-func (o *CommentMeta) UpdateMetaValue(_upd_MetaValue string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `meta_value` = '%s' WHERE `meta_id` = '%d'", o._table, _upd_MetaValue, o.MetaId)
+func (o *CommentMeta) UpdateMetaValue(_updMetaValue string) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `meta_value` = '%s' WHERE `meta_id` = '%d'", o._table, _updMetaValue, o.MetaId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.MetaValue = _upd_MetaValue
+	o.MetaValue = _updMetaValue
 	return o._adapter.AffectedRows(), nil
 }
 
@@ -1115,7 +1114,7 @@ func (o *Comment) SetUserId(arg int64) {
 	o.IsUserIdDirty = true
 }
 
-// Find(_findByCommentID int64) -> bool,error
+// Find dynamic finder for comment_ID -> bool,error
 // Generic and programatically generator finder for Comment
 func (o *Comment) Find(_findByCommentID int64) (bool, error) {
 
@@ -1144,7 +1143,7 @@ func (o *Comment) Find(_findByCommentID int64) (bool, error) {
 
 }
 
-// FindByCommentPostID(_findByCommentPostID int64) -> []*Comment,error
+// FindByCommentPostID dynamic finder for comment_post_ID -> []*Comment,error
 // Generic and programatically generator finder for Comment
 func (o *Comment) FindByCommentPostID(_findByCommentPostID int64) ([]*Comment, error) {
 
@@ -1172,7 +1171,7 @@ func (o *Comment) FindByCommentPostID(_findByCommentPostID int64) ([]*Comment, e
 
 }
 
-// FindByCommentAuthor(_findByCommentAuthor string) -> []*Comment,error
+// FindByCommentAuthor dynamic finder for comment_author -> []*Comment,error
 // Generic and programatically generator finder for Comment
 func (o *Comment) FindByCommentAuthor(_findByCommentAuthor string) ([]*Comment, error) {
 
@@ -1200,7 +1199,7 @@ func (o *Comment) FindByCommentAuthor(_findByCommentAuthor string) ([]*Comment, 
 
 }
 
-// FindByCommentAuthorEmail(_findByCommentAuthorEmail string) -> []*Comment,error
+// FindByCommentAuthorEmail dynamic finder for comment_author_email -> []*Comment,error
 // Generic and programatically generator finder for Comment
 func (o *Comment) FindByCommentAuthorEmail(_findByCommentAuthorEmail string) ([]*Comment, error) {
 
@@ -1228,7 +1227,7 @@ func (o *Comment) FindByCommentAuthorEmail(_findByCommentAuthorEmail string) ([]
 
 }
 
-// FindByCommentAuthorUrl(_findByCommentAuthorUrl string) -> []*Comment,error
+// FindByCommentAuthorUrl dynamic finder for comment_author_url -> []*Comment,error
 // Generic and programatically generator finder for Comment
 func (o *Comment) FindByCommentAuthorUrl(_findByCommentAuthorUrl string) ([]*Comment, error) {
 
@@ -1256,7 +1255,7 @@ func (o *Comment) FindByCommentAuthorUrl(_findByCommentAuthorUrl string) ([]*Com
 
 }
 
-// FindByCommentAuthorIP(_findByCommentAuthorIP string) -> []*Comment,error
+// FindByCommentAuthorIP dynamic finder for comment_author_IP -> []*Comment,error
 // Generic and programatically generator finder for Comment
 func (o *Comment) FindByCommentAuthorIP(_findByCommentAuthorIP string) ([]*Comment, error) {
 
@@ -1284,7 +1283,7 @@ func (o *Comment) FindByCommentAuthorIP(_findByCommentAuthorIP string) ([]*Comme
 
 }
 
-// FindByCommentDate(_findByCommentDate *DateTime) -> []*Comment,error
+// FindByCommentDate dynamic finder for comment_date -> []*Comment,error
 // Generic and programatically generator finder for Comment
 func (o *Comment) FindByCommentDate(_findByCommentDate *DateTime) ([]*Comment, error) {
 
@@ -1312,7 +1311,7 @@ func (o *Comment) FindByCommentDate(_findByCommentDate *DateTime) ([]*Comment, e
 
 }
 
-// FindByCommentDateGmt(_findByCommentDateGmt *DateTime) -> []*Comment,error
+// FindByCommentDateGmt dynamic finder for comment_date_gmt -> []*Comment,error
 // Generic and programatically generator finder for Comment
 func (o *Comment) FindByCommentDateGmt(_findByCommentDateGmt *DateTime) ([]*Comment, error) {
 
@@ -1340,7 +1339,7 @@ func (o *Comment) FindByCommentDateGmt(_findByCommentDateGmt *DateTime) ([]*Comm
 
 }
 
-// FindByCommentContent(_findByCommentContent string) -> []*Comment,error
+// FindByCommentContent dynamic finder for comment_content -> []*Comment,error
 // Generic and programatically generator finder for Comment
 func (o *Comment) FindByCommentContent(_findByCommentContent string) ([]*Comment, error) {
 
@@ -1368,7 +1367,7 @@ func (o *Comment) FindByCommentContent(_findByCommentContent string) ([]*Comment
 
 }
 
-// FindByCommentKarma(_findByCommentKarma int) -> []*Comment,error
+// FindByCommentKarma dynamic finder for comment_karma -> []*Comment,error
 // Generic and programatically generator finder for Comment
 func (o *Comment) FindByCommentKarma(_findByCommentKarma int) ([]*Comment, error) {
 
@@ -1396,7 +1395,7 @@ func (o *Comment) FindByCommentKarma(_findByCommentKarma int) ([]*Comment, error
 
 }
 
-// FindByCommentApproved(_findByCommentApproved string) -> []*Comment,error
+// FindByCommentApproved dynamic finder for comment_approved -> []*Comment,error
 // Generic and programatically generator finder for Comment
 func (o *Comment) FindByCommentApproved(_findByCommentApproved string) ([]*Comment, error) {
 
@@ -1424,7 +1423,7 @@ func (o *Comment) FindByCommentApproved(_findByCommentApproved string) ([]*Comme
 
 }
 
-// FindByCommentAgent(_findByCommentAgent string) -> []*Comment,error
+// FindByCommentAgent dynamic finder for comment_agent -> []*Comment,error
 // Generic and programatically generator finder for Comment
 func (o *Comment) FindByCommentAgent(_findByCommentAgent string) ([]*Comment, error) {
 
@@ -1452,7 +1451,7 @@ func (o *Comment) FindByCommentAgent(_findByCommentAgent string) ([]*Comment, er
 
 }
 
-// FindByCommentType(_findByCommentType string) -> []*Comment,error
+// FindByCommentType dynamic finder for comment_type -> []*Comment,error
 // Generic and programatically generator finder for Comment
 func (o *Comment) FindByCommentType(_findByCommentType string) ([]*Comment, error) {
 
@@ -1480,7 +1479,7 @@ func (o *Comment) FindByCommentType(_findByCommentType string) ([]*Comment, erro
 
 }
 
-// FindByCommentParent(_findByCommentParent int64) -> []*Comment,error
+// FindByCommentParent dynamic finder for comment_parent -> []*Comment,error
 // Generic and programatically generator finder for Comment
 func (o *Comment) FindByCommentParent(_findByCommentParent int64) ([]*Comment, error) {
 
@@ -1508,7 +1507,7 @@ func (o *Comment) FindByCommentParent(_findByCommentParent int64) ([]*Comment, e
 
 }
 
-// FindByUserId(_findByUserId int64) -> []*Comment,error
+// FindByUserId dynamic finder for user_id -> []*Comment,error
 // Generic and programatically generator finder for Comment
 func (o *Comment) FindByUserId(_findByUserId int64) ([]*Comment, error) {
 
@@ -1791,169 +1790,169 @@ func (o *Comment) Create() error {
 
 // UpdateCommentPostID an immediate DB Query to update a single column, in this
 // case comment_post_ID
-func (o *Comment) UpdateCommentPostID(_upd_CommentPostID int64) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `comment_post_ID` = '%d' WHERE `comment_ID` = '%d'", o._table, _upd_CommentPostID, o.CommentID)
+func (o *Comment) UpdateCommentPostID(_updCommentPostID int64) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `comment_post_ID` = '%d' WHERE `comment_ID` = '%d'", o._table, _updCommentPostID, o.CommentID)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.CommentPostID = _upd_CommentPostID
+	o.CommentPostID = _updCommentPostID
 	return o._adapter.AffectedRows(), nil
 }
 
 // UpdateCommentAuthor an immediate DB Query to update a single column, in this
 // case comment_author
-func (o *Comment) UpdateCommentAuthor(_upd_CommentAuthor string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `comment_author` = '%s' WHERE `comment_ID` = '%d'", o._table, _upd_CommentAuthor, o.CommentID)
+func (o *Comment) UpdateCommentAuthor(_updCommentAuthor string) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `comment_author` = '%s' WHERE `comment_ID` = '%d'", o._table, _updCommentAuthor, o.CommentID)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.CommentAuthor = _upd_CommentAuthor
+	o.CommentAuthor = _updCommentAuthor
 	return o._adapter.AffectedRows(), nil
 }
 
 // UpdateCommentAuthorEmail an immediate DB Query to update a single column, in this
 // case comment_author_email
-func (o *Comment) UpdateCommentAuthorEmail(_upd_CommentAuthorEmail string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `comment_author_email` = '%s' WHERE `comment_ID` = '%d'", o._table, _upd_CommentAuthorEmail, o.CommentID)
+func (o *Comment) UpdateCommentAuthorEmail(_updCommentAuthorEmail string) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `comment_author_email` = '%s' WHERE `comment_ID` = '%d'", o._table, _updCommentAuthorEmail, o.CommentID)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.CommentAuthorEmail = _upd_CommentAuthorEmail
+	o.CommentAuthorEmail = _updCommentAuthorEmail
 	return o._adapter.AffectedRows(), nil
 }
 
 // UpdateCommentAuthorUrl an immediate DB Query to update a single column, in this
 // case comment_author_url
-func (o *Comment) UpdateCommentAuthorUrl(_upd_CommentAuthorUrl string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `comment_author_url` = '%s' WHERE `comment_ID` = '%d'", o._table, _upd_CommentAuthorUrl, o.CommentID)
+func (o *Comment) UpdateCommentAuthorUrl(_updCommentAuthorUrl string) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `comment_author_url` = '%s' WHERE `comment_ID` = '%d'", o._table, _updCommentAuthorUrl, o.CommentID)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.CommentAuthorUrl = _upd_CommentAuthorUrl
+	o.CommentAuthorUrl = _updCommentAuthorUrl
 	return o._adapter.AffectedRows(), nil
 }
 
 // UpdateCommentAuthorIP an immediate DB Query to update a single column, in this
 // case comment_author_IP
-func (o *Comment) UpdateCommentAuthorIP(_upd_CommentAuthorIP string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `comment_author_IP` = '%s' WHERE `comment_ID` = '%d'", o._table, _upd_CommentAuthorIP, o.CommentID)
+func (o *Comment) UpdateCommentAuthorIP(_updCommentAuthorIP string) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `comment_author_IP` = '%s' WHERE `comment_ID` = '%d'", o._table, _updCommentAuthorIP, o.CommentID)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.CommentAuthorIP = _upd_CommentAuthorIP
+	o.CommentAuthorIP = _updCommentAuthorIP
 	return o._adapter.AffectedRows(), nil
 }
 
 // UpdateCommentDate an immediate DB Query to update a single column, in this
 // case comment_date
-func (o *Comment) UpdateCommentDate(_upd_CommentDate *DateTime) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `comment_date` = '%s' WHERE `comment_ID` = '%d'", o._table, _upd_CommentDate, o.CommentID)
+func (o *Comment) UpdateCommentDate(_updCommentDate *DateTime) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `comment_date` = '%s' WHERE `comment_ID` = '%d'", o._table, _updCommentDate, o.CommentID)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.CommentDate = _upd_CommentDate
+	o.CommentDate = _updCommentDate
 	return o._adapter.AffectedRows(), nil
 }
 
 // UpdateCommentDateGmt an immediate DB Query to update a single column, in this
 // case comment_date_gmt
-func (o *Comment) UpdateCommentDateGmt(_upd_CommentDateGmt *DateTime) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `comment_date_gmt` = '%s' WHERE `comment_ID` = '%d'", o._table, _upd_CommentDateGmt, o.CommentID)
+func (o *Comment) UpdateCommentDateGmt(_updCommentDateGmt *DateTime) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `comment_date_gmt` = '%s' WHERE `comment_ID` = '%d'", o._table, _updCommentDateGmt, o.CommentID)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.CommentDateGmt = _upd_CommentDateGmt
+	o.CommentDateGmt = _updCommentDateGmt
 	return o._adapter.AffectedRows(), nil
 }
 
 // UpdateCommentContent an immediate DB Query to update a single column, in this
 // case comment_content
-func (o *Comment) UpdateCommentContent(_upd_CommentContent string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `comment_content` = '%s' WHERE `comment_ID` = '%d'", o._table, _upd_CommentContent, o.CommentID)
+func (o *Comment) UpdateCommentContent(_updCommentContent string) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `comment_content` = '%s' WHERE `comment_ID` = '%d'", o._table, _updCommentContent, o.CommentID)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.CommentContent = _upd_CommentContent
+	o.CommentContent = _updCommentContent
 	return o._adapter.AffectedRows(), nil
 }
 
 // UpdateCommentKarma an immediate DB Query to update a single column, in this
 // case comment_karma
-func (o *Comment) UpdateCommentKarma(_upd_CommentKarma int) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `comment_karma` = '%d' WHERE `comment_ID` = '%d'", o._table, _upd_CommentKarma, o.CommentID)
+func (o *Comment) UpdateCommentKarma(_updCommentKarma int) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `comment_karma` = '%d' WHERE `comment_ID` = '%d'", o._table, _updCommentKarma, o.CommentID)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.CommentKarma = _upd_CommentKarma
+	o.CommentKarma = _updCommentKarma
 	return o._adapter.AffectedRows(), nil
 }
 
 // UpdateCommentApproved an immediate DB Query to update a single column, in this
 // case comment_approved
-func (o *Comment) UpdateCommentApproved(_upd_CommentApproved string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `comment_approved` = '%s' WHERE `comment_ID` = '%d'", o._table, _upd_CommentApproved, o.CommentID)
+func (o *Comment) UpdateCommentApproved(_updCommentApproved string) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `comment_approved` = '%s' WHERE `comment_ID` = '%d'", o._table, _updCommentApproved, o.CommentID)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.CommentApproved = _upd_CommentApproved
+	o.CommentApproved = _updCommentApproved
 	return o._adapter.AffectedRows(), nil
 }
 
 // UpdateCommentAgent an immediate DB Query to update a single column, in this
 // case comment_agent
-func (o *Comment) UpdateCommentAgent(_upd_CommentAgent string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `comment_agent` = '%s' WHERE `comment_ID` = '%d'", o._table, _upd_CommentAgent, o.CommentID)
+func (o *Comment) UpdateCommentAgent(_updCommentAgent string) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `comment_agent` = '%s' WHERE `comment_ID` = '%d'", o._table, _updCommentAgent, o.CommentID)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.CommentAgent = _upd_CommentAgent
+	o.CommentAgent = _updCommentAgent
 	return o._adapter.AffectedRows(), nil
 }
 
 // UpdateCommentType an immediate DB Query to update a single column, in this
 // case comment_type
-func (o *Comment) UpdateCommentType(_upd_CommentType string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `comment_type` = '%s' WHERE `comment_ID` = '%d'", o._table, _upd_CommentType, o.CommentID)
+func (o *Comment) UpdateCommentType(_updCommentType string) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `comment_type` = '%s' WHERE `comment_ID` = '%d'", o._table, _updCommentType, o.CommentID)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.CommentType = _upd_CommentType
+	o.CommentType = _updCommentType
 	return o._adapter.AffectedRows(), nil
 }
 
 // UpdateCommentParent an immediate DB Query to update a single column, in this
 // case comment_parent
-func (o *Comment) UpdateCommentParent(_upd_CommentParent int64) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `comment_parent` = '%d' WHERE `comment_ID` = '%d'", o._table, _upd_CommentParent, o.CommentID)
+func (o *Comment) UpdateCommentParent(_updCommentParent int64) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `comment_parent` = '%d' WHERE `comment_ID` = '%d'", o._table, _updCommentParent, o.CommentID)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.CommentParent = _upd_CommentParent
+	o.CommentParent = _updCommentParent
 	return o._adapter.AffectedRows(), nil
 }
 
 // UpdateUserId an immediate DB Query to update a single column, in this
 // case user_id
-func (o *Comment) UpdateUserId(_upd_UserId int64) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `user_id` = '%d' WHERE `comment_ID` = '%d'", o._table, _upd_UserId, o.CommentID)
+func (o *Comment) UpdateUserId(_updUserId int64) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `user_id` = '%d' WHERE `comment_ID` = '%d'", o._table, _updUserId, o.CommentID)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.UserId = _upd_UserId
+	o.UserId = _updUserId
 	return o._adapter.AffectedRows(), nil
 }
 
@@ -2182,7 +2181,7 @@ func (o *Link) SetLinkRss(arg string) {
 	o.IsLinkRssDirty = true
 }
 
-// Find(_findByLinkId int64) -> bool,error
+// Find dynamic finder for link_id -> bool,error
 // Generic and programatically generator finder for Link
 func (o *Link) Find(_findByLinkId int64) (bool, error) {
 
@@ -2211,7 +2210,7 @@ func (o *Link) Find(_findByLinkId int64) (bool, error) {
 
 }
 
-// FindByLinkUrl(_findByLinkUrl string) -> []*Link,error
+// FindByLinkUrl dynamic finder for link_url -> []*Link,error
 // Generic and programatically generator finder for Link
 func (o *Link) FindByLinkUrl(_findByLinkUrl string) ([]*Link, error) {
 
@@ -2239,7 +2238,7 @@ func (o *Link) FindByLinkUrl(_findByLinkUrl string) ([]*Link, error) {
 
 }
 
-// FindByLinkName(_findByLinkName string) -> []*Link,error
+// FindByLinkName dynamic finder for link_name -> []*Link,error
 // Generic and programatically generator finder for Link
 func (o *Link) FindByLinkName(_findByLinkName string) ([]*Link, error) {
 
@@ -2267,7 +2266,7 @@ func (o *Link) FindByLinkName(_findByLinkName string) ([]*Link, error) {
 
 }
 
-// FindByLinkImage(_findByLinkImage string) -> []*Link,error
+// FindByLinkImage dynamic finder for link_image -> []*Link,error
 // Generic and programatically generator finder for Link
 func (o *Link) FindByLinkImage(_findByLinkImage string) ([]*Link, error) {
 
@@ -2295,7 +2294,7 @@ func (o *Link) FindByLinkImage(_findByLinkImage string) ([]*Link, error) {
 
 }
 
-// FindByLinkTarget(_findByLinkTarget string) -> []*Link,error
+// FindByLinkTarget dynamic finder for link_target -> []*Link,error
 // Generic and programatically generator finder for Link
 func (o *Link) FindByLinkTarget(_findByLinkTarget string) ([]*Link, error) {
 
@@ -2323,7 +2322,7 @@ func (o *Link) FindByLinkTarget(_findByLinkTarget string) ([]*Link, error) {
 
 }
 
-// FindByLinkDescription(_findByLinkDescription string) -> []*Link,error
+// FindByLinkDescription dynamic finder for link_description -> []*Link,error
 // Generic and programatically generator finder for Link
 func (o *Link) FindByLinkDescription(_findByLinkDescription string) ([]*Link, error) {
 
@@ -2351,7 +2350,7 @@ func (o *Link) FindByLinkDescription(_findByLinkDescription string) ([]*Link, er
 
 }
 
-// FindByLinkVisible(_findByLinkVisible string) -> []*Link,error
+// FindByLinkVisible dynamic finder for link_visible -> []*Link,error
 // Generic and programatically generator finder for Link
 func (o *Link) FindByLinkVisible(_findByLinkVisible string) ([]*Link, error) {
 
@@ -2379,7 +2378,7 @@ func (o *Link) FindByLinkVisible(_findByLinkVisible string) ([]*Link, error) {
 
 }
 
-// FindByLinkOwner(_findByLinkOwner int64) -> []*Link,error
+// FindByLinkOwner dynamic finder for link_owner -> []*Link,error
 // Generic and programatically generator finder for Link
 func (o *Link) FindByLinkOwner(_findByLinkOwner int64) ([]*Link, error) {
 
@@ -2407,7 +2406,7 @@ func (o *Link) FindByLinkOwner(_findByLinkOwner int64) ([]*Link, error) {
 
 }
 
-// FindByLinkRating(_findByLinkRating int) -> []*Link,error
+// FindByLinkRating dynamic finder for link_rating -> []*Link,error
 // Generic and programatically generator finder for Link
 func (o *Link) FindByLinkRating(_findByLinkRating int) ([]*Link, error) {
 
@@ -2435,7 +2434,7 @@ func (o *Link) FindByLinkRating(_findByLinkRating int) ([]*Link, error) {
 
 }
 
-// FindByLinkUpdated(_findByLinkUpdated *DateTime) -> []*Link,error
+// FindByLinkUpdated dynamic finder for link_updated -> []*Link,error
 // Generic and programatically generator finder for Link
 func (o *Link) FindByLinkUpdated(_findByLinkUpdated *DateTime) ([]*Link, error) {
 
@@ -2463,7 +2462,7 @@ func (o *Link) FindByLinkUpdated(_findByLinkUpdated *DateTime) ([]*Link, error) 
 
 }
 
-// FindByLinkRel(_findByLinkRel string) -> []*Link,error
+// FindByLinkRel dynamic finder for link_rel -> []*Link,error
 // Generic and programatically generator finder for Link
 func (o *Link) FindByLinkRel(_findByLinkRel string) ([]*Link, error) {
 
@@ -2491,7 +2490,7 @@ func (o *Link) FindByLinkRel(_findByLinkRel string) ([]*Link, error) {
 
 }
 
-// FindByLinkNotes(_findByLinkNotes string) -> []*Link,error
+// FindByLinkNotes dynamic finder for link_notes -> []*Link,error
 // Generic and programatically generator finder for Link
 func (o *Link) FindByLinkNotes(_findByLinkNotes string) ([]*Link, error) {
 
@@ -2519,7 +2518,7 @@ func (o *Link) FindByLinkNotes(_findByLinkNotes string) ([]*Link, error) {
 
 }
 
-// FindByLinkRss(_findByLinkRss string) -> []*Link,error
+// FindByLinkRss dynamic finder for link_rss -> []*Link,error
 // Generic and programatically generator finder for Link
 func (o *Link) FindByLinkRss(_findByLinkRss string) ([]*Link, error) {
 
@@ -2774,145 +2773,145 @@ func (o *Link) Create() error {
 
 // UpdateLinkUrl an immediate DB Query to update a single column, in this
 // case link_url
-func (o *Link) UpdateLinkUrl(_upd_LinkUrl string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `link_url` = '%s' WHERE `link_id` = '%d'", o._table, _upd_LinkUrl, o.LinkId)
+func (o *Link) UpdateLinkUrl(_updLinkUrl string) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `link_url` = '%s' WHERE `link_id` = '%d'", o._table, _updLinkUrl, o.LinkId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.LinkUrl = _upd_LinkUrl
+	o.LinkUrl = _updLinkUrl
 	return o._adapter.AffectedRows(), nil
 }
 
 // UpdateLinkName an immediate DB Query to update a single column, in this
 // case link_name
-func (o *Link) UpdateLinkName(_upd_LinkName string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `link_name` = '%s' WHERE `link_id` = '%d'", o._table, _upd_LinkName, o.LinkId)
+func (o *Link) UpdateLinkName(_updLinkName string) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `link_name` = '%s' WHERE `link_id` = '%d'", o._table, _updLinkName, o.LinkId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.LinkName = _upd_LinkName
+	o.LinkName = _updLinkName
 	return o._adapter.AffectedRows(), nil
 }
 
 // UpdateLinkImage an immediate DB Query to update a single column, in this
 // case link_image
-func (o *Link) UpdateLinkImage(_upd_LinkImage string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `link_image` = '%s' WHERE `link_id` = '%d'", o._table, _upd_LinkImage, o.LinkId)
+func (o *Link) UpdateLinkImage(_updLinkImage string) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `link_image` = '%s' WHERE `link_id` = '%d'", o._table, _updLinkImage, o.LinkId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.LinkImage = _upd_LinkImage
+	o.LinkImage = _updLinkImage
 	return o._adapter.AffectedRows(), nil
 }
 
 // UpdateLinkTarget an immediate DB Query to update a single column, in this
 // case link_target
-func (o *Link) UpdateLinkTarget(_upd_LinkTarget string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `link_target` = '%s' WHERE `link_id` = '%d'", o._table, _upd_LinkTarget, o.LinkId)
+func (o *Link) UpdateLinkTarget(_updLinkTarget string) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `link_target` = '%s' WHERE `link_id` = '%d'", o._table, _updLinkTarget, o.LinkId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.LinkTarget = _upd_LinkTarget
+	o.LinkTarget = _updLinkTarget
 	return o._adapter.AffectedRows(), nil
 }
 
 // UpdateLinkDescription an immediate DB Query to update a single column, in this
 // case link_description
-func (o *Link) UpdateLinkDescription(_upd_LinkDescription string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `link_description` = '%s' WHERE `link_id` = '%d'", o._table, _upd_LinkDescription, o.LinkId)
+func (o *Link) UpdateLinkDescription(_updLinkDescription string) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `link_description` = '%s' WHERE `link_id` = '%d'", o._table, _updLinkDescription, o.LinkId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.LinkDescription = _upd_LinkDescription
+	o.LinkDescription = _updLinkDescription
 	return o._adapter.AffectedRows(), nil
 }
 
 // UpdateLinkVisible an immediate DB Query to update a single column, in this
 // case link_visible
-func (o *Link) UpdateLinkVisible(_upd_LinkVisible string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `link_visible` = '%s' WHERE `link_id` = '%d'", o._table, _upd_LinkVisible, o.LinkId)
+func (o *Link) UpdateLinkVisible(_updLinkVisible string) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `link_visible` = '%s' WHERE `link_id` = '%d'", o._table, _updLinkVisible, o.LinkId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.LinkVisible = _upd_LinkVisible
+	o.LinkVisible = _updLinkVisible
 	return o._adapter.AffectedRows(), nil
 }
 
 // UpdateLinkOwner an immediate DB Query to update a single column, in this
 // case link_owner
-func (o *Link) UpdateLinkOwner(_upd_LinkOwner int64) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `link_owner` = '%d' WHERE `link_id` = '%d'", o._table, _upd_LinkOwner, o.LinkId)
+func (o *Link) UpdateLinkOwner(_updLinkOwner int64) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `link_owner` = '%d' WHERE `link_id` = '%d'", o._table, _updLinkOwner, o.LinkId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.LinkOwner = _upd_LinkOwner
+	o.LinkOwner = _updLinkOwner
 	return o._adapter.AffectedRows(), nil
 }
 
 // UpdateLinkRating an immediate DB Query to update a single column, in this
 // case link_rating
-func (o *Link) UpdateLinkRating(_upd_LinkRating int) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `link_rating` = '%d' WHERE `link_id` = '%d'", o._table, _upd_LinkRating, o.LinkId)
+func (o *Link) UpdateLinkRating(_updLinkRating int) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `link_rating` = '%d' WHERE `link_id` = '%d'", o._table, _updLinkRating, o.LinkId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.LinkRating = _upd_LinkRating
+	o.LinkRating = _updLinkRating
 	return o._adapter.AffectedRows(), nil
 }
 
 // UpdateLinkUpdated an immediate DB Query to update a single column, in this
 // case link_updated
-func (o *Link) UpdateLinkUpdated(_upd_LinkUpdated *DateTime) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `link_updated` = '%s' WHERE `link_id` = '%d'", o._table, _upd_LinkUpdated, o.LinkId)
+func (o *Link) UpdateLinkUpdated(_updLinkUpdated *DateTime) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `link_updated` = '%s' WHERE `link_id` = '%d'", o._table, _updLinkUpdated, o.LinkId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.LinkUpdated = _upd_LinkUpdated
+	o.LinkUpdated = _updLinkUpdated
 	return o._adapter.AffectedRows(), nil
 }
 
 // UpdateLinkRel an immediate DB Query to update a single column, in this
 // case link_rel
-func (o *Link) UpdateLinkRel(_upd_LinkRel string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `link_rel` = '%s' WHERE `link_id` = '%d'", o._table, _upd_LinkRel, o.LinkId)
+func (o *Link) UpdateLinkRel(_updLinkRel string) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `link_rel` = '%s' WHERE `link_id` = '%d'", o._table, _updLinkRel, o.LinkId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.LinkRel = _upd_LinkRel
+	o.LinkRel = _updLinkRel
 	return o._adapter.AffectedRows(), nil
 }
 
 // UpdateLinkNotes an immediate DB Query to update a single column, in this
 // case link_notes
-func (o *Link) UpdateLinkNotes(_upd_LinkNotes string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `link_notes` = '%s' WHERE `link_id` = '%d'", o._table, _upd_LinkNotes, o.LinkId)
+func (o *Link) UpdateLinkNotes(_updLinkNotes string) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `link_notes` = '%s' WHERE `link_id` = '%d'", o._table, _updLinkNotes, o.LinkId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.LinkNotes = _upd_LinkNotes
+	o.LinkNotes = _updLinkNotes
 	return o._adapter.AffectedRows(), nil
 }
 
 // UpdateLinkRss an immediate DB Query to update a single column, in this
 // case link_rss
-func (o *Link) UpdateLinkRss(_upd_LinkRss string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `link_rss` = '%s' WHERE `link_id` = '%d'", o._table, _upd_LinkRss, o.LinkId)
+func (o *Link) UpdateLinkRss(_updLinkRss string) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `link_rss` = '%s' WHERE `link_id` = '%d'", o._table, _updLinkRss, o.LinkId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.LinkRss = _upd_LinkRss
+	o.LinkRss = _updLinkRss
 	return o._adapter.AffectedRows(), nil
 }
 
@@ -3006,7 +3005,7 @@ func (o *Option) SetAutoload(arg string) {
 	o.IsAutoloadDirty = true
 }
 
-// Find(_findByOptionId int64) -> bool,error
+// Find dynamic finder for option_id -> bool,error
 // Generic and programatically generator finder for Option
 func (o *Option) Find(_findByOptionId int64) (bool, error) {
 
@@ -3035,7 +3034,7 @@ func (o *Option) Find(_findByOptionId int64) (bool, error) {
 
 }
 
-// FindByOptionName(_findByOptionName string) -> []*Option,error
+// FindByOptionName dynamic finder for option_name -> []*Option,error
 // Generic and programatically generator finder for Option
 func (o *Option) FindByOptionName(_findByOptionName string) ([]*Option, error) {
 
@@ -3063,7 +3062,7 @@ func (o *Option) FindByOptionName(_findByOptionName string) ([]*Option, error) {
 
 }
 
-// FindByOptionValue(_findByOptionValue string) -> []*Option,error
+// FindByOptionValue dynamic finder for option_value -> []*Option,error
 // Generic and programatically generator finder for Option
 func (o *Option) FindByOptionValue(_findByOptionValue string) ([]*Option, error) {
 
@@ -3091,7 +3090,7 @@ func (o *Option) FindByOptionValue(_findByOptionValue string) ([]*Option, error)
 
 }
 
-// FindByAutoload(_findByAutoload string) -> []*Option,error
+// FindByAutoload dynamic finder for autoload -> []*Option,error
 // Generic and programatically generator finder for Option
 func (o *Option) FindByAutoload(_findByAutoload string) ([]*Option, error) {
 
@@ -3220,37 +3219,37 @@ func (o *Option) Create() error {
 
 // UpdateOptionName an immediate DB Query to update a single column, in this
 // case option_name
-func (o *Option) UpdateOptionName(_upd_OptionName string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `option_name` = '%s' WHERE `option_id` = '%d'", o._table, _upd_OptionName, o.OptionId)
+func (o *Option) UpdateOptionName(_updOptionName string) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `option_name` = '%s' WHERE `option_id` = '%d'", o._table, _updOptionName, o.OptionId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.OptionName = _upd_OptionName
+	o.OptionName = _updOptionName
 	return o._adapter.AffectedRows(), nil
 }
 
 // UpdateOptionValue an immediate DB Query to update a single column, in this
 // case option_value
-func (o *Option) UpdateOptionValue(_upd_OptionValue string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `option_value` = '%s' WHERE `option_id` = '%d'", o._table, _upd_OptionValue, o.OptionId)
+func (o *Option) UpdateOptionValue(_updOptionValue string) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `option_value` = '%s' WHERE `option_id` = '%d'", o._table, _updOptionValue, o.OptionId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.OptionValue = _upd_OptionValue
+	o.OptionValue = _updOptionValue
 	return o._adapter.AffectedRows(), nil
 }
 
 // UpdateAutoload an immediate DB Query to update a single column, in this
 // case autoload
-func (o *Option) UpdateAutoload(_upd_Autoload string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `autoload` = '%s' WHERE `option_id` = '%d'", o._table, _upd_Autoload, o.OptionId)
+func (o *Option) UpdateAutoload(_updAutoload string) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `autoload` = '%s' WHERE `option_id` = '%d'", o._table, _updAutoload, o.OptionId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.Autoload = _upd_Autoload
+	o.Autoload = _updAutoload
 	return o._adapter.AffectedRows(), nil
 }
 
@@ -3344,7 +3343,7 @@ func (o *PostMeta) SetMetaValue(arg string) {
 	o.IsMetaValueDirty = true
 }
 
-// Find(_findByMetaId int64) -> bool,error
+// Find dynamic finder for meta_id -> bool,error
 // Generic and programatically generator finder for PostMeta
 func (o *PostMeta) Find(_findByMetaId int64) (bool, error) {
 
@@ -3373,7 +3372,7 @@ func (o *PostMeta) Find(_findByMetaId int64) (bool, error) {
 
 }
 
-// FindByPostId(_findByPostId int64) -> []*PostMeta,error
+// FindByPostId dynamic finder for post_id -> []*PostMeta,error
 // Generic and programatically generator finder for PostMeta
 func (o *PostMeta) FindByPostId(_findByPostId int64) ([]*PostMeta, error) {
 
@@ -3401,7 +3400,7 @@ func (o *PostMeta) FindByPostId(_findByPostId int64) ([]*PostMeta, error) {
 
 }
 
-// FindByMetaKey(_findByMetaKey string) -> []*PostMeta,error
+// FindByMetaKey dynamic finder for meta_key -> []*PostMeta,error
 // Generic and programatically generator finder for PostMeta
 func (o *PostMeta) FindByMetaKey(_findByMetaKey string) ([]*PostMeta, error) {
 
@@ -3429,7 +3428,7 @@ func (o *PostMeta) FindByMetaKey(_findByMetaKey string) ([]*PostMeta, error) {
 
 }
 
-// FindByMetaValue(_findByMetaValue string) -> []*PostMeta,error
+// FindByMetaValue dynamic finder for meta_value -> []*PostMeta,error
 // Generic and programatically generator finder for PostMeta
 func (o *PostMeta) FindByMetaValue(_findByMetaValue string) ([]*PostMeta, error) {
 
@@ -3558,37 +3557,37 @@ func (o *PostMeta) Create() error {
 
 // UpdatePostId an immediate DB Query to update a single column, in this
 // case post_id
-func (o *PostMeta) UpdatePostId(_upd_PostId int64) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `post_id` = '%d' WHERE `meta_id` = '%d'", o._table, _upd_PostId, o.MetaId)
+func (o *PostMeta) UpdatePostId(_updPostId int64) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `post_id` = '%d' WHERE `meta_id` = '%d'", o._table, _updPostId, o.MetaId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.PostId = _upd_PostId
+	o.PostId = _updPostId
 	return o._adapter.AffectedRows(), nil
 }
 
 // UpdateMetaKey an immediate DB Query to update a single column, in this
 // case meta_key
-func (o *PostMeta) UpdateMetaKey(_upd_MetaKey string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `meta_key` = '%s' WHERE `meta_id` = '%d'", o._table, _upd_MetaKey, o.MetaId)
+func (o *PostMeta) UpdateMetaKey(_updMetaKey string) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `meta_key` = '%s' WHERE `meta_id` = '%d'", o._table, _updMetaKey, o.MetaId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.MetaKey = _upd_MetaKey
+	o.MetaKey = _updMetaKey
 	return o._adapter.AffectedRows(), nil
 }
 
 // UpdateMetaValue an immediate DB Query to update a single column, in this
 // case meta_value
-func (o *PostMeta) UpdateMetaValue(_upd_MetaValue string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `meta_value` = '%s' WHERE `meta_id` = '%d'", o._table, _upd_MetaValue, o.MetaId)
+func (o *PostMeta) UpdateMetaValue(_updMetaValue string) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `meta_value` = '%s' WHERE `meta_id` = '%d'", o._table, _updMetaValue, o.MetaId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.MetaValue = _upd_MetaValue
+	o.MetaValue = _updMetaValue
 	return o._adapter.AffectedRows(), nil
 }
 
@@ -3967,7 +3966,7 @@ func (o *Post) SetCommentCount(arg int64) {
 	o.IsCommentCountDirty = true
 }
 
-// Find(_findByID int64) -> bool,error
+// Find dynamic finder for ID -> bool,error
 // Generic and programatically generator finder for Post
 func (o *Post) Find(_findByID int64) (bool, error) {
 
@@ -3996,7 +3995,7 @@ func (o *Post) Find(_findByID int64) (bool, error) {
 
 }
 
-// FindByPostAuthor(_findByPostAuthor int64) -> []*Post,error
+// FindByPostAuthor dynamic finder for post_author -> []*Post,error
 // Generic and programatically generator finder for Post
 func (o *Post) FindByPostAuthor(_findByPostAuthor int64) ([]*Post, error) {
 
@@ -4024,7 +4023,7 @@ func (o *Post) FindByPostAuthor(_findByPostAuthor int64) ([]*Post, error) {
 
 }
 
-// FindByPostDate(_findByPostDate *DateTime) -> []*Post,error
+// FindByPostDate dynamic finder for post_date -> []*Post,error
 // Generic and programatically generator finder for Post
 func (o *Post) FindByPostDate(_findByPostDate *DateTime) ([]*Post, error) {
 
@@ -4052,7 +4051,7 @@ func (o *Post) FindByPostDate(_findByPostDate *DateTime) ([]*Post, error) {
 
 }
 
-// FindByPostDateGmt(_findByPostDateGmt *DateTime) -> []*Post,error
+// FindByPostDateGmt dynamic finder for post_date_gmt -> []*Post,error
 // Generic and programatically generator finder for Post
 func (o *Post) FindByPostDateGmt(_findByPostDateGmt *DateTime) ([]*Post, error) {
 
@@ -4080,7 +4079,7 @@ func (o *Post) FindByPostDateGmt(_findByPostDateGmt *DateTime) ([]*Post, error) 
 
 }
 
-// FindByPostContent(_findByPostContent string) -> []*Post,error
+// FindByPostContent dynamic finder for post_content -> []*Post,error
 // Generic and programatically generator finder for Post
 func (o *Post) FindByPostContent(_findByPostContent string) ([]*Post, error) {
 
@@ -4108,7 +4107,7 @@ func (o *Post) FindByPostContent(_findByPostContent string) ([]*Post, error) {
 
 }
 
-// FindByPostTitle(_findByPostTitle string) -> []*Post,error
+// FindByPostTitle dynamic finder for post_title -> []*Post,error
 // Generic and programatically generator finder for Post
 func (o *Post) FindByPostTitle(_findByPostTitle string) ([]*Post, error) {
 
@@ -4136,7 +4135,7 @@ func (o *Post) FindByPostTitle(_findByPostTitle string) ([]*Post, error) {
 
 }
 
-// FindByPostExcerpt(_findByPostExcerpt string) -> []*Post,error
+// FindByPostExcerpt dynamic finder for post_excerpt -> []*Post,error
 // Generic and programatically generator finder for Post
 func (o *Post) FindByPostExcerpt(_findByPostExcerpt string) ([]*Post, error) {
 
@@ -4164,7 +4163,7 @@ func (o *Post) FindByPostExcerpt(_findByPostExcerpt string) ([]*Post, error) {
 
 }
 
-// FindByPostStatus(_findByPostStatus string) -> []*Post,error
+// FindByPostStatus dynamic finder for post_status -> []*Post,error
 // Generic and programatically generator finder for Post
 func (o *Post) FindByPostStatus(_findByPostStatus string) ([]*Post, error) {
 
@@ -4192,7 +4191,7 @@ func (o *Post) FindByPostStatus(_findByPostStatus string) ([]*Post, error) {
 
 }
 
-// FindByCommentStatus(_findByCommentStatus string) -> []*Post,error
+// FindByCommentStatus dynamic finder for comment_status -> []*Post,error
 // Generic and programatically generator finder for Post
 func (o *Post) FindByCommentStatus(_findByCommentStatus string) ([]*Post, error) {
 
@@ -4220,7 +4219,7 @@ func (o *Post) FindByCommentStatus(_findByCommentStatus string) ([]*Post, error)
 
 }
 
-// FindByPingStatus(_findByPingStatus string) -> []*Post,error
+// FindByPingStatus dynamic finder for ping_status -> []*Post,error
 // Generic and programatically generator finder for Post
 func (o *Post) FindByPingStatus(_findByPingStatus string) ([]*Post, error) {
 
@@ -4248,7 +4247,7 @@ func (o *Post) FindByPingStatus(_findByPingStatus string) ([]*Post, error) {
 
 }
 
-// FindByPostPassword(_findByPostPassword string) -> []*Post,error
+// FindByPostPassword dynamic finder for post_password -> []*Post,error
 // Generic and programatically generator finder for Post
 func (o *Post) FindByPostPassword(_findByPostPassword string) ([]*Post, error) {
 
@@ -4276,7 +4275,7 @@ func (o *Post) FindByPostPassword(_findByPostPassword string) ([]*Post, error) {
 
 }
 
-// FindByPostName(_findByPostName string) -> []*Post,error
+// FindByPostName dynamic finder for post_name -> []*Post,error
 // Generic and programatically generator finder for Post
 func (o *Post) FindByPostName(_findByPostName string) ([]*Post, error) {
 
@@ -4304,7 +4303,7 @@ func (o *Post) FindByPostName(_findByPostName string) ([]*Post, error) {
 
 }
 
-// FindByToPing(_findByToPing string) -> []*Post,error
+// FindByToPing dynamic finder for to_ping -> []*Post,error
 // Generic and programatically generator finder for Post
 func (o *Post) FindByToPing(_findByToPing string) ([]*Post, error) {
 
@@ -4332,7 +4331,7 @@ func (o *Post) FindByToPing(_findByToPing string) ([]*Post, error) {
 
 }
 
-// FindByPinged(_findByPinged string) -> []*Post,error
+// FindByPinged dynamic finder for pinged -> []*Post,error
 // Generic and programatically generator finder for Post
 func (o *Post) FindByPinged(_findByPinged string) ([]*Post, error) {
 
@@ -4360,7 +4359,7 @@ func (o *Post) FindByPinged(_findByPinged string) ([]*Post, error) {
 
 }
 
-// FindByPostModified(_findByPostModified *DateTime) -> []*Post,error
+// FindByPostModified dynamic finder for post_modified -> []*Post,error
 // Generic and programatically generator finder for Post
 func (o *Post) FindByPostModified(_findByPostModified *DateTime) ([]*Post, error) {
 
@@ -4388,7 +4387,7 @@ func (o *Post) FindByPostModified(_findByPostModified *DateTime) ([]*Post, error
 
 }
 
-// FindByPostModifiedGmt(_findByPostModifiedGmt *DateTime) -> []*Post,error
+// FindByPostModifiedGmt dynamic finder for post_modified_gmt -> []*Post,error
 // Generic and programatically generator finder for Post
 func (o *Post) FindByPostModifiedGmt(_findByPostModifiedGmt *DateTime) ([]*Post, error) {
 
@@ -4416,7 +4415,7 @@ func (o *Post) FindByPostModifiedGmt(_findByPostModifiedGmt *DateTime) ([]*Post,
 
 }
 
-// FindByPostContentFiltered(_findByPostContentFiltered string) -> []*Post,error
+// FindByPostContentFiltered dynamic finder for post_content_filtered -> []*Post,error
 // Generic and programatically generator finder for Post
 func (o *Post) FindByPostContentFiltered(_findByPostContentFiltered string) ([]*Post, error) {
 
@@ -4444,7 +4443,7 @@ func (o *Post) FindByPostContentFiltered(_findByPostContentFiltered string) ([]*
 
 }
 
-// FindByPostParent(_findByPostParent int64) -> []*Post,error
+// FindByPostParent dynamic finder for post_parent -> []*Post,error
 // Generic and programatically generator finder for Post
 func (o *Post) FindByPostParent(_findByPostParent int64) ([]*Post, error) {
 
@@ -4472,7 +4471,7 @@ func (o *Post) FindByPostParent(_findByPostParent int64) ([]*Post, error) {
 
 }
 
-// FindByGuid(_findByGuid string) -> []*Post,error
+// FindByGuid dynamic finder for guid -> []*Post,error
 // Generic and programatically generator finder for Post
 func (o *Post) FindByGuid(_findByGuid string) ([]*Post, error) {
 
@@ -4500,7 +4499,7 @@ func (o *Post) FindByGuid(_findByGuid string) ([]*Post, error) {
 
 }
 
-// FindByMenuOrder(_findByMenuOrder int) -> []*Post,error
+// FindByMenuOrder dynamic finder for menu_order -> []*Post,error
 // Generic and programatically generator finder for Post
 func (o *Post) FindByMenuOrder(_findByMenuOrder int) ([]*Post, error) {
 
@@ -4528,7 +4527,7 @@ func (o *Post) FindByMenuOrder(_findByMenuOrder int) ([]*Post, error) {
 
 }
 
-// FindByPostType(_findByPostType string) -> []*Post,error
+// FindByPostType dynamic finder for post_type -> []*Post,error
 // Generic and programatically generator finder for Post
 func (o *Post) FindByPostType(_findByPostType string) ([]*Post, error) {
 
@@ -4556,7 +4555,7 @@ func (o *Post) FindByPostType(_findByPostType string) ([]*Post, error) {
 
 }
 
-// FindByPostMimeType(_findByPostMimeType string) -> []*Post,error
+// FindByPostMimeType dynamic finder for post_mime_type -> []*Post,error
 // Generic and programatically generator finder for Post
 func (o *Post) FindByPostMimeType(_findByPostMimeType string) ([]*Post, error) {
 
@@ -4584,7 +4583,7 @@ func (o *Post) FindByPostMimeType(_findByPostMimeType string) ([]*Post, error) {
 
 }
 
-// FindByCommentCount(_findByCommentCount int64) -> []*Post,error
+// FindByCommentCount dynamic finder for comment_count -> []*Post,error
 // Generic and programatically generator finder for Post
 func (o *Post) FindByCommentCount(_findByCommentCount int64) ([]*Post, error) {
 
@@ -4979,265 +4978,265 @@ func (o *Post) Create() error {
 
 // UpdatePostAuthor an immediate DB Query to update a single column, in this
 // case post_author
-func (o *Post) UpdatePostAuthor(_upd_PostAuthor int64) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `post_author` = '%d' WHERE `ID` = '%d'", o._table, _upd_PostAuthor, o.ID)
+func (o *Post) UpdatePostAuthor(_updPostAuthor int64) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `post_author` = '%d' WHERE `ID` = '%d'", o._table, _updPostAuthor, o.ID)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.PostAuthor = _upd_PostAuthor
+	o.PostAuthor = _updPostAuthor
 	return o._adapter.AffectedRows(), nil
 }
 
 // UpdatePostDate an immediate DB Query to update a single column, in this
 // case post_date
-func (o *Post) UpdatePostDate(_upd_PostDate *DateTime) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `post_date` = '%s' WHERE `ID` = '%d'", o._table, _upd_PostDate, o.ID)
+func (o *Post) UpdatePostDate(_updPostDate *DateTime) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `post_date` = '%s' WHERE `ID` = '%d'", o._table, _updPostDate, o.ID)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.PostDate = _upd_PostDate
+	o.PostDate = _updPostDate
 	return o._adapter.AffectedRows(), nil
 }
 
 // UpdatePostDateGmt an immediate DB Query to update a single column, in this
 // case post_date_gmt
-func (o *Post) UpdatePostDateGmt(_upd_PostDateGmt *DateTime) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `post_date_gmt` = '%s' WHERE `ID` = '%d'", o._table, _upd_PostDateGmt, o.ID)
+func (o *Post) UpdatePostDateGmt(_updPostDateGmt *DateTime) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `post_date_gmt` = '%s' WHERE `ID` = '%d'", o._table, _updPostDateGmt, o.ID)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.PostDateGmt = _upd_PostDateGmt
+	o.PostDateGmt = _updPostDateGmt
 	return o._adapter.AffectedRows(), nil
 }
 
 // UpdatePostContent an immediate DB Query to update a single column, in this
 // case post_content
-func (o *Post) UpdatePostContent(_upd_PostContent string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `post_content` = '%s' WHERE `ID` = '%d'", o._table, _upd_PostContent, o.ID)
+func (o *Post) UpdatePostContent(_updPostContent string) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `post_content` = '%s' WHERE `ID` = '%d'", o._table, _updPostContent, o.ID)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.PostContent = _upd_PostContent
+	o.PostContent = _updPostContent
 	return o._adapter.AffectedRows(), nil
 }
 
 // UpdatePostTitle an immediate DB Query to update a single column, in this
 // case post_title
-func (o *Post) UpdatePostTitle(_upd_PostTitle string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `post_title` = '%s' WHERE `ID` = '%d'", o._table, _upd_PostTitle, o.ID)
+func (o *Post) UpdatePostTitle(_updPostTitle string) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `post_title` = '%s' WHERE `ID` = '%d'", o._table, _updPostTitle, o.ID)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.PostTitle = _upd_PostTitle
+	o.PostTitle = _updPostTitle
 	return o._adapter.AffectedRows(), nil
 }
 
 // UpdatePostExcerpt an immediate DB Query to update a single column, in this
 // case post_excerpt
-func (o *Post) UpdatePostExcerpt(_upd_PostExcerpt string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `post_excerpt` = '%s' WHERE `ID` = '%d'", o._table, _upd_PostExcerpt, o.ID)
+func (o *Post) UpdatePostExcerpt(_updPostExcerpt string) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `post_excerpt` = '%s' WHERE `ID` = '%d'", o._table, _updPostExcerpt, o.ID)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.PostExcerpt = _upd_PostExcerpt
+	o.PostExcerpt = _updPostExcerpt
 	return o._adapter.AffectedRows(), nil
 }
 
 // UpdatePostStatus an immediate DB Query to update a single column, in this
 // case post_status
-func (o *Post) UpdatePostStatus(_upd_PostStatus string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `post_status` = '%s' WHERE `ID` = '%d'", o._table, _upd_PostStatus, o.ID)
+func (o *Post) UpdatePostStatus(_updPostStatus string) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `post_status` = '%s' WHERE `ID` = '%d'", o._table, _updPostStatus, o.ID)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.PostStatus = _upd_PostStatus
+	o.PostStatus = _updPostStatus
 	return o._adapter.AffectedRows(), nil
 }
 
 // UpdateCommentStatus an immediate DB Query to update a single column, in this
 // case comment_status
-func (o *Post) UpdateCommentStatus(_upd_CommentStatus string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `comment_status` = '%s' WHERE `ID` = '%d'", o._table, _upd_CommentStatus, o.ID)
+func (o *Post) UpdateCommentStatus(_updCommentStatus string) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `comment_status` = '%s' WHERE `ID` = '%d'", o._table, _updCommentStatus, o.ID)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.CommentStatus = _upd_CommentStatus
+	o.CommentStatus = _updCommentStatus
 	return o._adapter.AffectedRows(), nil
 }
 
 // UpdatePingStatus an immediate DB Query to update a single column, in this
 // case ping_status
-func (o *Post) UpdatePingStatus(_upd_PingStatus string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `ping_status` = '%s' WHERE `ID` = '%d'", o._table, _upd_PingStatus, o.ID)
+func (o *Post) UpdatePingStatus(_updPingStatus string) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `ping_status` = '%s' WHERE `ID` = '%d'", o._table, _updPingStatus, o.ID)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.PingStatus = _upd_PingStatus
+	o.PingStatus = _updPingStatus
 	return o._adapter.AffectedRows(), nil
 }
 
 // UpdatePostPassword an immediate DB Query to update a single column, in this
 // case post_password
-func (o *Post) UpdatePostPassword(_upd_PostPassword string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `post_password` = '%s' WHERE `ID` = '%d'", o._table, _upd_PostPassword, o.ID)
+func (o *Post) UpdatePostPassword(_updPostPassword string) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `post_password` = '%s' WHERE `ID` = '%d'", o._table, _updPostPassword, o.ID)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.PostPassword = _upd_PostPassword
+	o.PostPassword = _updPostPassword
 	return o._adapter.AffectedRows(), nil
 }
 
 // UpdatePostName an immediate DB Query to update a single column, in this
 // case post_name
-func (o *Post) UpdatePostName(_upd_PostName string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `post_name` = '%s' WHERE `ID` = '%d'", o._table, _upd_PostName, o.ID)
+func (o *Post) UpdatePostName(_updPostName string) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `post_name` = '%s' WHERE `ID` = '%d'", o._table, _updPostName, o.ID)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.PostName = _upd_PostName
+	o.PostName = _updPostName
 	return o._adapter.AffectedRows(), nil
 }
 
 // UpdateToPing an immediate DB Query to update a single column, in this
 // case to_ping
-func (o *Post) UpdateToPing(_upd_ToPing string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `to_ping` = '%s' WHERE `ID` = '%d'", o._table, _upd_ToPing, o.ID)
+func (o *Post) UpdateToPing(_updToPing string) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `to_ping` = '%s' WHERE `ID` = '%d'", o._table, _updToPing, o.ID)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.ToPing = _upd_ToPing
+	o.ToPing = _updToPing
 	return o._adapter.AffectedRows(), nil
 }
 
 // UpdatePinged an immediate DB Query to update a single column, in this
 // case pinged
-func (o *Post) UpdatePinged(_upd_Pinged string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `pinged` = '%s' WHERE `ID` = '%d'", o._table, _upd_Pinged, o.ID)
+func (o *Post) UpdatePinged(_updPinged string) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `pinged` = '%s' WHERE `ID` = '%d'", o._table, _updPinged, o.ID)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.Pinged = _upd_Pinged
+	o.Pinged = _updPinged
 	return o._adapter.AffectedRows(), nil
 }
 
 // UpdatePostModified an immediate DB Query to update a single column, in this
 // case post_modified
-func (o *Post) UpdatePostModified(_upd_PostModified *DateTime) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `post_modified` = '%s' WHERE `ID` = '%d'", o._table, _upd_PostModified, o.ID)
+func (o *Post) UpdatePostModified(_updPostModified *DateTime) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `post_modified` = '%s' WHERE `ID` = '%d'", o._table, _updPostModified, o.ID)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.PostModified = _upd_PostModified
+	o.PostModified = _updPostModified
 	return o._adapter.AffectedRows(), nil
 }
 
 // UpdatePostModifiedGmt an immediate DB Query to update a single column, in this
 // case post_modified_gmt
-func (o *Post) UpdatePostModifiedGmt(_upd_PostModifiedGmt *DateTime) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `post_modified_gmt` = '%s' WHERE `ID` = '%d'", o._table, _upd_PostModifiedGmt, o.ID)
+func (o *Post) UpdatePostModifiedGmt(_updPostModifiedGmt *DateTime) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `post_modified_gmt` = '%s' WHERE `ID` = '%d'", o._table, _updPostModifiedGmt, o.ID)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.PostModifiedGmt = _upd_PostModifiedGmt
+	o.PostModifiedGmt = _updPostModifiedGmt
 	return o._adapter.AffectedRows(), nil
 }
 
 // UpdatePostContentFiltered an immediate DB Query to update a single column, in this
 // case post_content_filtered
-func (o *Post) UpdatePostContentFiltered(_upd_PostContentFiltered string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `post_content_filtered` = '%s' WHERE `ID` = '%d'", o._table, _upd_PostContentFiltered, o.ID)
+func (o *Post) UpdatePostContentFiltered(_updPostContentFiltered string) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `post_content_filtered` = '%s' WHERE `ID` = '%d'", o._table, _updPostContentFiltered, o.ID)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.PostContentFiltered = _upd_PostContentFiltered
+	o.PostContentFiltered = _updPostContentFiltered
 	return o._adapter.AffectedRows(), nil
 }
 
 // UpdatePostParent an immediate DB Query to update a single column, in this
 // case post_parent
-func (o *Post) UpdatePostParent(_upd_PostParent int64) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `post_parent` = '%d' WHERE `ID` = '%d'", o._table, _upd_PostParent, o.ID)
+func (o *Post) UpdatePostParent(_updPostParent int64) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `post_parent` = '%d' WHERE `ID` = '%d'", o._table, _updPostParent, o.ID)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.PostParent = _upd_PostParent
+	o.PostParent = _updPostParent
 	return o._adapter.AffectedRows(), nil
 }
 
 // UpdateGuid an immediate DB Query to update a single column, in this
 // case guid
-func (o *Post) UpdateGuid(_upd_Guid string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `guid` = '%s' WHERE `ID` = '%d'", o._table, _upd_Guid, o.ID)
+func (o *Post) UpdateGuid(_updGuid string) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `guid` = '%s' WHERE `ID` = '%d'", o._table, _updGuid, o.ID)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.Guid = _upd_Guid
+	o.Guid = _updGuid
 	return o._adapter.AffectedRows(), nil
 }
 
 // UpdateMenuOrder an immediate DB Query to update a single column, in this
 // case menu_order
-func (o *Post) UpdateMenuOrder(_upd_MenuOrder int) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `menu_order` = '%d' WHERE `ID` = '%d'", o._table, _upd_MenuOrder, o.ID)
+func (o *Post) UpdateMenuOrder(_updMenuOrder int) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `menu_order` = '%d' WHERE `ID` = '%d'", o._table, _updMenuOrder, o.ID)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.MenuOrder = _upd_MenuOrder
+	o.MenuOrder = _updMenuOrder
 	return o._adapter.AffectedRows(), nil
 }
 
 // UpdatePostType an immediate DB Query to update a single column, in this
 // case post_type
-func (o *Post) UpdatePostType(_upd_PostType string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `post_type` = '%s' WHERE `ID` = '%d'", o._table, _upd_PostType, o.ID)
+func (o *Post) UpdatePostType(_updPostType string) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `post_type` = '%s' WHERE `ID` = '%d'", o._table, _updPostType, o.ID)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.PostType = _upd_PostType
+	o.PostType = _updPostType
 	return o._adapter.AffectedRows(), nil
 }
 
 // UpdatePostMimeType an immediate DB Query to update a single column, in this
 // case post_mime_type
-func (o *Post) UpdatePostMimeType(_upd_PostMimeType string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `post_mime_type` = '%s' WHERE `ID` = '%d'", o._table, _upd_PostMimeType, o.ID)
+func (o *Post) UpdatePostMimeType(_updPostMimeType string) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `post_mime_type` = '%s' WHERE `ID` = '%d'", o._table, _updPostMimeType, o.ID)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.PostMimeType = _upd_PostMimeType
+	o.PostMimeType = _updPostMimeType
 	return o._adapter.AffectedRows(), nil
 }
 
 // UpdateCommentCount an immediate DB Query to update a single column, in this
 // case comment_count
-func (o *Post) UpdateCommentCount(_upd_CommentCount int64) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `comment_count` = '%d' WHERE `ID` = '%d'", o._table, _upd_CommentCount, o.ID)
+func (o *Post) UpdateCommentCount(_updCommentCount int64) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `comment_count` = '%d' WHERE `ID` = '%d'", o._table, _updCommentCount, o.ID)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.CommentCount = _upd_CommentCount
+	o.CommentCount = _updCommentCount
 	return o._adapter.AffectedRows(), nil
 }
 
@@ -5316,7 +5315,7 @@ func (o *TermRelationship) SetTermOrder(arg int) {
 	o.IsTermOrderDirty = true
 }
 
-// FindByObjectId(_findByObjectId int64) -> []*TermRelationship,error
+// FindByObjectId dynamic finder for object_id -> []*TermRelationship,error
 // Generic and programatically generator finder for TermRelationship
 func (o *TermRelationship) FindByObjectId(_findByObjectId int64) ([]*TermRelationship, error) {
 
@@ -5370,7 +5369,7 @@ func (o *TermRelationship) Find(termId int64, objectId int64) (bool, error) {
 
 }
 
-// FindByTermOrder(_findByTermOrder int) -> []*TermRelationship,error
+// FindByTermOrder dynamic finder for term_order -> []*TermRelationship,error
 // Generic and programatically generator finder for TermRelationship
 func (o *TermRelationship) FindByTermOrder(_findByTermOrder int) ([]*TermRelationship, error) {
 
@@ -5493,25 +5492,25 @@ func (o *TermRelationship) Create() error {
 
 // UpdateObjectId an immediate DB Query to update a single column, in this
 // case object_id
-func (o *TermRelationship) UpdateObjectId(_upd_ObjectId int64) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `object_id` = '%d' WHERE term_taxonomy_id = '%d' AND object_id = '%d'", o._table, _upd_ObjectId, o.TermTaxonomyId, o.ObjectId)
+func (o *TermRelationship) UpdateObjectId(_updObjectId int64) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `object_id` = '%d' WHERE term_taxonomy_id = '%d' AND object_id = '%d'", o._table, _updObjectId, o.TermTaxonomyId, o.ObjectId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.ObjectId = _upd_ObjectId
+	o.ObjectId = _updObjectId
 	return o._adapter.AffectedRows(), nil
 }
 
 // UpdateTermOrder an immediate DB Query to update a single column, in this
 // case term_order
-func (o *TermRelationship) UpdateTermOrder(_upd_TermOrder int) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `term_order` = '%d' WHERE term_taxonomy_id = '%d' AND object_id = '%d'", o._table, _upd_TermOrder, o.TermTaxonomyId, o.ObjectId)
+func (o *TermRelationship) UpdateTermOrder(_updTermOrder int) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `term_order` = '%d' WHERE term_taxonomy_id = '%d' AND object_id = '%d'", o._table, _updTermOrder, o.TermTaxonomyId, o.ObjectId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.TermOrder = _upd_TermOrder
+	o.TermOrder = _updTermOrder
 	return o._adapter.AffectedRows(), nil
 }
 
@@ -5635,7 +5634,7 @@ func (o *TermTaxonomy) SetCount(arg int64) {
 	o.IsCountDirty = true
 }
 
-// Find(_findByTermTaxonomyId int64) -> bool,error
+// Find dynamic finder for term_taxonomy_id -> bool,error
 // Generic and programatically generator finder for TermTaxonomy
 func (o *TermTaxonomy) Find(_findByTermTaxonomyId int64) (bool, error) {
 
@@ -5664,7 +5663,7 @@ func (o *TermTaxonomy) Find(_findByTermTaxonomyId int64) (bool, error) {
 
 }
 
-// FindByTermId(_findByTermId int64) -> []*TermTaxonomy,error
+// FindByTermId dynamic finder for term_id -> []*TermTaxonomy,error
 // Generic and programatically generator finder for TermTaxonomy
 func (o *TermTaxonomy) FindByTermId(_findByTermId int64) ([]*TermTaxonomy, error) {
 
@@ -5692,7 +5691,7 @@ func (o *TermTaxonomy) FindByTermId(_findByTermId int64) ([]*TermTaxonomy, error
 
 }
 
-// FindByTaxonomy(_findByTaxonomy string) -> []*TermTaxonomy,error
+// FindByTaxonomy dynamic finder for taxonomy -> []*TermTaxonomy,error
 // Generic and programatically generator finder for TermTaxonomy
 func (o *TermTaxonomy) FindByTaxonomy(_findByTaxonomy string) ([]*TermTaxonomy, error) {
 
@@ -5720,7 +5719,7 @@ func (o *TermTaxonomy) FindByTaxonomy(_findByTaxonomy string) ([]*TermTaxonomy, 
 
 }
 
-// FindByDescription(_findByDescription string) -> []*TermTaxonomy,error
+// FindByDescription dynamic finder for description -> []*TermTaxonomy,error
 // Generic and programatically generator finder for TermTaxonomy
 func (o *TermTaxonomy) FindByDescription(_findByDescription string) ([]*TermTaxonomy, error) {
 
@@ -5748,7 +5747,7 @@ func (o *TermTaxonomy) FindByDescription(_findByDescription string) ([]*TermTaxo
 
 }
 
-// FindByParent(_findByParent int64) -> []*TermTaxonomy,error
+// FindByParent dynamic finder for parent -> []*TermTaxonomy,error
 // Generic and programatically generator finder for TermTaxonomy
 func (o *TermTaxonomy) FindByParent(_findByParent int64) ([]*TermTaxonomy, error) {
 
@@ -5776,7 +5775,7 @@ func (o *TermTaxonomy) FindByParent(_findByParent int64) ([]*TermTaxonomy, error
 
 }
 
-// FindByCount(_findByCount int64) -> []*TermTaxonomy,error
+// FindByCount dynamic finder for count -> []*TermTaxonomy,error
 // Generic and programatically generator finder for TermTaxonomy
 func (o *TermTaxonomy) FindByCount(_findByCount int64) ([]*TermTaxonomy, error) {
 
@@ -5933,61 +5932,61 @@ func (o *TermTaxonomy) Create() error {
 
 // UpdateTermId an immediate DB Query to update a single column, in this
 // case term_id
-func (o *TermTaxonomy) UpdateTermId(_upd_TermId int64) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `term_id` = '%d' WHERE `term_taxonomy_id` = '%d'", o._table, _upd_TermId, o.TermTaxonomyId)
+func (o *TermTaxonomy) UpdateTermId(_updTermId int64) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `term_id` = '%d' WHERE `term_taxonomy_id` = '%d'", o._table, _updTermId, o.TermTaxonomyId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.TermId = _upd_TermId
+	o.TermId = _updTermId
 	return o._adapter.AffectedRows(), nil
 }
 
 // UpdateTaxonomy an immediate DB Query to update a single column, in this
 // case taxonomy
-func (o *TermTaxonomy) UpdateTaxonomy(_upd_Taxonomy string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `taxonomy` = '%s' WHERE `term_taxonomy_id` = '%d'", o._table, _upd_Taxonomy, o.TermTaxonomyId)
+func (o *TermTaxonomy) UpdateTaxonomy(_updTaxonomy string) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `taxonomy` = '%s' WHERE `term_taxonomy_id` = '%d'", o._table, _updTaxonomy, o.TermTaxonomyId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.Taxonomy = _upd_Taxonomy
+	o.Taxonomy = _updTaxonomy
 	return o._adapter.AffectedRows(), nil
 }
 
 // UpdateDescription an immediate DB Query to update a single column, in this
 // case description
-func (o *TermTaxonomy) UpdateDescription(_upd_Description string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `description` = '%s' WHERE `term_taxonomy_id` = '%d'", o._table, _upd_Description, o.TermTaxonomyId)
+func (o *TermTaxonomy) UpdateDescription(_updDescription string) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `description` = '%s' WHERE `term_taxonomy_id` = '%d'", o._table, _updDescription, o.TermTaxonomyId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.Description = _upd_Description
+	o.Description = _updDescription
 	return o._adapter.AffectedRows(), nil
 }
 
 // UpdateParent an immediate DB Query to update a single column, in this
 // case parent
-func (o *TermTaxonomy) UpdateParent(_upd_Parent int64) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `parent` = '%d' WHERE `term_taxonomy_id` = '%d'", o._table, _upd_Parent, o.TermTaxonomyId)
+func (o *TermTaxonomy) UpdateParent(_updParent int64) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `parent` = '%d' WHERE `term_taxonomy_id` = '%d'", o._table, _updParent, o.TermTaxonomyId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.Parent = _upd_Parent
+	o.Parent = _updParent
 	return o._adapter.AffectedRows(), nil
 }
 
 // UpdateCount an immediate DB Query to update a single column, in this
 // case count
-func (o *TermTaxonomy) UpdateCount(_upd_Count int64) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `count` = '%d' WHERE `term_taxonomy_id` = '%d'", o._table, _upd_Count, o.TermTaxonomyId)
+func (o *TermTaxonomy) UpdateCount(_updCount int64) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `count` = '%d' WHERE `term_taxonomy_id` = '%d'", o._table, _updCount, o.TermTaxonomyId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.Count = _upd_Count
+	o.Count = _updCount
 	return o._adapter.AffectedRows(), nil
 }
 
@@ -6081,7 +6080,7 @@ func (o *Term) SetTermGroup(arg int64) {
 	o.IsTermGroupDirty = true
 }
 
-// Find(_findByTermId int64) -> bool,error
+// Find dynamic finder for term_id -> bool,error
 // Generic and programatically generator finder for Term
 func (o *Term) Find(_findByTermId int64) (bool, error) {
 
@@ -6110,7 +6109,7 @@ func (o *Term) Find(_findByTermId int64) (bool, error) {
 
 }
 
-// FindByName(_findByName string) -> []*Term,error
+// FindByName dynamic finder for name -> []*Term,error
 // Generic and programatically generator finder for Term
 func (o *Term) FindByName(_findByName string) ([]*Term, error) {
 
@@ -6138,7 +6137,7 @@ func (o *Term) FindByName(_findByName string) ([]*Term, error) {
 
 }
 
-// FindBySlug(_findBySlug string) -> []*Term,error
+// FindBySlug dynamic finder for slug -> []*Term,error
 // Generic and programatically generator finder for Term
 func (o *Term) FindBySlug(_findBySlug string) ([]*Term, error) {
 
@@ -6166,7 +6165,7 @@ func (o *Term) FindBySlug(_findBySlug string) ([]*Term, error) {
 
 }
 
-// FindByTermGroup(_findByTermGroup int64) -> []*Term,error
+// FindByTermGroup dynamic finder for term_group -> []*Term,error
 // Generic and programatically generator finder for Term
 func (o *Term) FindByTermGroup(_findByTermGroup int64) ([]*Term, error) {
 
@@ -6295,37 +6294,37 @@ func (o *Term) Create() error {
 
 // UpdateName an immediate DB Query to update a single column, in this
 // case name
-func (o *Term) UpdateName(_upd_Name string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `name` = '%s' WHERE `term_id` = '%d'", o._table, _upd_Name, o.TermId)
+func (o *Term) UpdateName(_updName string) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `name` = '%s' WHERE `term_id` = '%d'", o._table, _updName, o.TermId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.Name = _upd_Name
+	o.Name = _updName
 	return o._adapter.AffectedRows(), nil
 }
 
 // UpdateSlug an immediate DB Query to update a single column, in this
 // case slug
-func (o *Term) UpdateSlug(_upd_Slug string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `slug` = '%s' WHERE `term_id` = '%d'", o._table, _upd_Slug, o.TermId)
+func (o *Term) UpdateSlug(_updSlug string) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `slug` = '%s' WHERE `term_id` = '%d'", o._table, _updSlug, o.TermId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.Slug = _upd_Slug
+	o.Slug = _updSlug
 	return o._adapter.AffectedRows(), nil
 }
 
 // UpdateTermGroup an immediate DB Query to update a single column, in this
 // case term_group
-func (o *Term) UpdateTermGroup(_upd_TermGroup int64) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `term_group` = '%d' WHERE `term_id` = '%d'", o._table, _upd_TermGroup, o.TermId)
+func (o *Term) UpdateTermGroup(_updTermGroup int64) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `term_group` = '%d' WHERE `term_id` = '%d'", o._table, _updTermGroup, o.TermId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.TermGroup = _upd_TermGroup
+	o.TermGroup = _updTermGroup
 	return o._adapter.AffectedRows(), nil
 }
 
@@ -6419,7 +6418,7 @@ func (o *UserMeta) SetMetaValue(arg string) {
 	o.IsMetaValueDirty = true
 }
 
-// Find(_findByUMetaId int64) -> bool,error
+// Find dynamic finder for umeta_id -> bool,error
 // Generic and programatically generator finder for UserMeta
 func (o *UserMeta) Find(_findByUMetaId int64) (bool, error) {
 
@@ -6448,7 +6447,7 @@ func (o *UserMeta) Find(_findByUMetaId int64) (bool, error) {
 
 }
 
-// FindByUserId(_findByUserId int64) -> []*UserMeta,error
+// FindByUserId dynamic finder for user_id -> []*UserMeta,error
 // Generic and programatically generator finder for UserMeta
 func (o *UserMeta) FindByUserId(_findByUserId int64) ([]*UserMeta, error) {
 
@@ -6476,7 +6475,7 @@ func (o *UserMeta) FindByUserId(_findByUserId int64) ([]*UserMeta, error) {
 
 }
 
-// FindByMetaKey(_findByMetaKey string) -> []*UserMeta,error
+// FindByMetaKey dynamic finder for meta_key -> []*UserMeta,error
 // Generic and programatically generator finder for UserMeta
 func (o *UserMeta) FindByMetaKey(_findByMetaKey string) ([]*UserMeta, error) {
 
@@ -6504,7 +6503,7 @@ func (o *UserMeta) FindByMetaKey(_findByMetaKey string) ([]*UserMeta, error) {
 
 }
 
-// FindByMetaValue(_findByMetaValue string) -> []*UserMeta,error
+// FindByMetaValue dynamic finder for meta_value -> []*UserMeta,error
 // Generic and programatically generator finder for UserMeta
 func (o *UserMeta) FindByMetaValue(_findByMetaValue string) ([]*UserMeta, error) {
 
@@ -6633,36 +6632,36 @@ func (o *UserMeta) Create() error {
 
 // UpdateUserId an immediate DB Query to update a single column, in this
 // case user_id
-func (o *UserMeta) UpdateUserId(_upd_UserId int64) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `user_id` = '%d' WHERE `umeta_id` = '%d'", o._table, _upd_UserId, o.UMetaId)
+func (o *UserMeta) UpdateUserId(_updUserId int64) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `user_id` = '%d' WHERE `umeta_id` = '%d'", o._table, _updUserId, o.UMetaId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.UserId = _upd_UserId
+	o.UserId = _updUserId
 	return o._adapter.AffectedRows(), nil
 }
 
 // UpdateMetaKey an immediate DB Query to update a single column, in this
 // case meta_key
-func (o *UserMeta) UpdateMetaKey(_upd_MetaKey string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `meta_key` = '%s' WHERE `umeta_id` = '%d'", o._table, _upd_MetaKey, o.UMetaId)
+func (o *UserMeta) UpdateMetaKey(_updMetaKey string) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `meta_key` = '%s' WHERE `umeta_id` = '%d'", o._table, _updMetaKey, o.UMetaId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.MetaKey = _upd_MetaKey
+	o.MetaKey = _updMetaKey
 	return o._adapter.AffectedRows(), nil
 }
 
 // UpdateMetaValue an immediate DB Query to update a single column, in this
 // case meta_value
-func (o *UserMeta) UpdateMetaValue(_upd_MetaValue string) (int64, error) {
-	frmt := fmt.Sprintf("UPDATE %s SET `meta_value` = '%s' WHERE `umeta_id` = '%d'", o._table, _upd_MetaValue, o.UMetaId)
+func (o *UserMeta) UpdateMetaValue(_updMetaValue string) (int64, error) {
+	frmt := fmt.Sprintf("UPDATE %s SET `meta_value` = '%s' WHERE `umeta_id` = '%d'", o._table, _updMetaValue, o.UMetaId)
 	err := o._adapter.Execute(frmt)
 	if err != nil {
 		return 0, err
 	}
-	o.MetaValue = _upd_MetaValue
+	o.MetaValue = _updMetaValue
 	return o._adapter.AffectedRows(), nil
 }

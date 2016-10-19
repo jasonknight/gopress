@@ -44,8 +44,7 @@ foreach($t->fields as $f) {
     } else {
         $failure_return = "return _modelSlice,err";
     }
-    $sig = "
-    // {$fname}($arg $argtype) -> $rtype,error
+    $sig = "// {$fname} dynamic finder for {$f->Field} -> $rtype,error
     // Generic and programatically generator finder for {$t->model_name}
     ";
     $sig .= "func (o *{$t->model_name}) $fname($arg $argtype) ($rtype,error) {";
