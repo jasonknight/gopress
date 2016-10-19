@@ -1,6 +1,6 @@
 # Gopress
 [![Build Status](https://travis-ci.org/jasonknight/gopress.svg?branch=master)](https://travis-ci.org/jasonknight/gopress)
-[![codecov.io](https://codecov.io/gh/jasonknight/gopress/coverage.svg?branch=master)](https://codecov.io/gh/jasonknight/gopress)
+[![codecov](https://codecov.io/gh/jasonknight/gopress/branch/master/graph/badge.svg)](https://codecov.io/gh/jasonknight/gopress)
 
 This is a Golang [ActiveRecord](https://en.wikipedia.org/wiki/Active_record_pattern) implementation of the Wordpress database Schema. This library is automatically generated. If you'd like to contribute, you can change the go files and I will merge them into the generator, or if you're brave you can try
 to futz with the generator. 
