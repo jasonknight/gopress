@@ -106,7 +106,7 @@ func TestCommentMetaCreate(t *testing.T) {
 		}
 		file, err := os.OpenFile("adapter.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
 		if err != nil {
-			t.Errorf("Failed to open log file %s", err)
+			t.Errorf(" Failed to open log file %s", err)
 		}
 		a.SetLogs(file)
 		model := NewCommentMeta(a)
@@ -116,33 +116,33 @@ func TestCommentMetaCreate(t *testing.T) {
 
 		err = model.Create()
 		if err != nil {
-			t.Errorf(`failed to create model %s`, err)
+			t.Errorf(` failed to create model %s`, err)
 			return
 		}
 
 		model2 := NewCommentMeta(a)
 		found, err := model2.Find(model.GetPrimaryKeyValue())
 		if err != nil {
-			t.Errorf(`did not find record for %s = %d because of %s`, model.GetPrimaryKeyName(), model.GetPrimaryKeyValue(), err)
+			t.Errorf(` did not find record for %s = %d because of %s`, model.GetPrimaryKeyName(), model.GetPrimaryKeyValue(), err)
 			return
 		}
 		if found == false {
-			t.Errorf(`did not find record for %s = %d because of %s`, model.GetPrimaryKeyName(), model.GetPrimaryKeyValue(), err)
+			t.Errorf(` did not find record for %s = %d because of %s`, model.GetPrimaryKeyName(), model.GetPrimaryKeyValue(), err)
 			return
 		}
 
 		if model.CommentId != model2.CommentId {
-			t.Errorf(`model.CommentId[%d] != model2.CommentId[%d]`, model.CommentId, model2.CommentId)
+			t.Errorf(` model.CommentId[%d] != model2.CommentId[%d]`, model.CommentId, model2.CommentId)
 			return
 		}
 
 		if model.MetaKey != model2.MetaKey {
-			t.Errorf(`model.MetaKey[%s] != model2.MetaKey[%s]`, model.MetaKey, model2.MetaKey)
+			t.Errorf(` model.MetaKey[%s] != model2.MetaKey[%s]`, model.MetaKey, model2.MetaKey)
 			return
 		}
 
 		if model.MetaValue != model2.MetaValue {
-			t.Errorf(`model.MetaValue[%s] != model2.MetaValue[%s]`, model.MetaValue, model2.MetaValue)
+			t.Errorf(` model.MetaValue[%s] != model2.MetaValue[%s]`, model.MetaValue, model2.MetaValue)
 			return
 		}
 		model2.SetCommentId(int64(randomInteger()))
@@ -155,17 +155,17 @@ func TestCommentMetaCreate(t *testing.T) {
 		}
 
 		if model.CommentId == model2.CommentId {
-			t.Errorf(`model.CommentId[%d] != model2.CommentId[%d]`, model.CommentId, model2.CommentId)
+			t.Errorf(`1: model.CommentId[%d] != model2.CommentId[%d]`, model.CommentId, model2.CommentId)
 			return
 		}
 
 		if model.MetaKey == model2.MetaKey {
-			t.Errorf(`model.MetaKey[%s] != model2.MetaKey[%s]`, model.MetaKey, model2.MetaKey)
+			t.Errorf(`1: model.MetaKey[%s] != model2.MetaKey[%s]`, model.MetaKey, model2.MetaKey)
 			return
 		}
 
 		if model.MetaValue == model2.MetaValue {
-			t.Errorf(`model.MetaValue[%s] != model2.MetaValue[%s]`, model.MetaValue, model2.MetaValue)
+			t.Errorf(`1: model.MetaValue[%s] != model2.MetaValue[%s]`, model.MetaValue, model2.MetaValue)
 			return
 		}
 
@@ -451,7 +451,7 @@ func TestCommentCreate(t *testing.T) {
 		}
 		file, err := os.OpenFile("adapter.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
 		if err != nil {
-			t.Errorf("Failed to open log file %s", err)
+			t.Errorf(" Failed to open log file %s", err)
 		}
 		a.SetLogs(file)
 		model := NewComment(a)
@@ -472,43 +472,43 @@ func TestCommentCreate(t *testing.T) {
 
 		err = model.Create()
 		if err != nil {
-			t.Errorf(`failed to create model %s`, err)
+			t.Errorf(` failed to create model %s`, err)
 			return
 		}
 
 		model2 := NewComment(a)
 		found, err := model2.Find(model.GetPrimaryKeyValue())
 		if err != nil {
-			t.Errorf(`did not find record for %s = %d because of %s`, model.GetPrimaryKeyName(), model.GetPrimaryKeyValue(), err)
+			t.Errorf(` did not find record for %s = %d because of %s`, model.GetPrimaryKeyName(), model.GetPrimaryKeyValue(), err)
 			return
 		}
 		if found == false {
-			t.Errorf(`did not find record for %s = %d because of %s`, model.GetPrimaryKeyName(), model.GetPrimaryKeyValue(), err)
+			t.Errorf(` did not find record for %s = %d because of %s`, model.GetPrimaryKeyName(), model.GetPrimaryKeyValue(), err)
 			return
 		}
 
 		if model.CommentPostID != model2.CommentPostID {
-			t.Errorf(`model.CommentPostID[%d] != model2.CommentPostID[%d]`, model.CommentPostID, model2.CommentPostID)
+			t.Errorf(` model.CommentPostID[%d] != model2.CommentPostID[%d]`, model.CommentPostID, model2.CommentPostID)
 			return
 		}
 
 		if model.CommentAuthor != model2.CommentAuthor {
-			t.Errorf(`model.CommentAuthor[%s] != model2.CommentAuthor[%s]`, model.CommentAuthor, model2.CommentAuthor)
+			t.Errorf(` model.CommentAuthor[%s] != model2.CommentAuthor[%s]`, model.CommentAuthor, model2.CommentAuthor)
 			return
 		}
 
 		if model.CommentAuthorEmail != model2.CommentAuthorEmail {
-			t.Errorf(`model.CommentAuthorEmail[%s] != model2.CommentAuthorEmail[%s]`, model.CommentAuthorEmail, model2.CommentAuthorEmail)
+			t.Errorf(` model.CommentAuthorEmail[%s] != model2.CommentAuthorEmail[%s]`, model.CommentAuthorEmail, model2.CommentAuthorEmail)
 			return
 		}
 
 		if model.CommentAuthorUrl != model2.CommentAuthorUrl {
-			t.Errorf(`model.CommentAuthorUrl[%s] != model2.CommentAuthorUrl[%s]`, model.CommentAuthorUrl, model2.CommentAuthorUrl)
+			t.Errorf(` model.CommentAuthorUrl[%s] != model2.CommentAuthorUrl[%s]`, model.CommentAuthorUrl, model2.CommentAuthorUrl)
 			return
 		}
 
 		if model.CommentAuthorIP != model2.CommentAuthorIP {
-			t.Errorf(`model.CommentAuthorIP[%s] != model2.CommentAuthorIP[%s]`, model.CommentAuthorIP, model2.CommentAuthorIP)
+			t.Errorf(` model.CommentAuthorIP[%s] != model2.CommentAuthorIP[%s]`, model.CommentAuthorIP, model2.CommentAuthorIP)
 			return
 		}
 
@@ -518,7 +518,7 @@ func TestCommentCreate(t *testing.T) {
 			model.CommentDate.Hours != model2.CommentDate.Hours ||
 			model.CommentDate.Minutes != model2.CommentDate.Minutes ||
 			model.CommentDate.Seconds != model2.CommentDate.Seconds {
-			t.Errorf(`model.CommentDate != model2.CommentDate %+v --- %+v`, model.CommentDate, model2.CommentDate)
+			t.Errorf(`2: model.CommentDate != model2.CommentDate %+v --- %+v`, model.CommentDate, model2.CommentDate)
 			return
 		}
 
@@ -528,42 +528,42 @@ func TestCommentCreate(t *testing.T) {
 			model.CommentDateGmt.Hours != model2.CommentDateGmt.Hours ||
 			model.CommentDateGmt.Minutes != model2.CommentDateGmt.Minutes ||
 			model.CommentDateGmt.Seconds != model2.CommentDateGmt.Seconds {
-			t.Errorf(`model.CommentDateGmt != model2.CommentDateGmt %+v --- %+v`, model.CommentDateGmt, model2.CommentDateGmt)
+			t.Errorf(`2: model.CommentDateGmt != model2.CommentDateGmt %+v --- %+v`, model.CommentDateGmt, model2.CommentDateGmt)
 			return
 		}
 
 		if model.CommentContent != model2.CommentContent {
-			t.Errorf(`model.CommentContent[%s] != model2.CommentContent[%s]`, model.CommentContent, model2.CommentContent)
+			t.Errorf(` model.CommentContent[%s] != model2.CommentContent[%s]`, model.CommentContent, model2.CommentContent)
 			return
 		}
 
 		if model.CommentKarma != model2.CommentKarma {
-			t.Errorf(`model.CommentKarma[%d] != model2.CommentKarma[%d]`, model.CommentKarma, model2.CommentKarma)
+			t.Errorf(` model.CommentKarma[%d] != model2.CommentKarma[%d]`, model.CommentKarma, model2.CommentKarma)
 			return
 		}
 
 		if model.CommentApproved != model2.CommentApproved {
-			t.Errorf(`model.CommentApproved[%s] != model2.CommentApproved[%s]`, model.CommentApproved, model2.CommentApproved)
+			t.Errorf(` model.CommentApproved[%s] != model2.CommentApproved[%s]`, model.CommentApproved, model2.CommentApproved)
 			return
 		}
 
 		if model.CommentAgent != model2.CommentAgent {
-			t.Errorf(`model.CommentAgent[%s] != model2.CommentAgent[%s]`, model.CommentAgent, model2.CommentAgent)
+			t.Errorf(` model.CommentAgent[%s] != model2.CommentAgent[%s]`, model.CommentAgent, model2.CommentAgent)
 			return
 		}
 
 		if model.CommentType != model2.CommentType {
-			t.Errorf(`model.CommentType[%s] != model2.CommentType[%s]`, model.CommentType, model2.CommentType)
+			t.Errorf(` model.CommentType[%s] != model2.CommentType[%s]`, model.CommentType, model2.CommentType)
 			return
 		}
 
 		if model.CommentParent != model2.CommentParent {
-			t.Errorf(`model.CommentParent[%d] != model2.CommentParent[%d]`, model.CommentParent, model2.CommentParent)
+			t.Errorf(` model.CommentParent[%d] != model2.CommentParent[%d]`, model.CommentParent, model2.CommentParent)
 			return
 		}
 
 		if model.UserId != model2.UserId {
-			t.Errorf(`model.UserId[%d] != model2.UserId[%d]`, model.UserId, model2.UserId)
+			t.Errorf(` model.UserId[%d] != model2.UserId[%d]`, model.UserId, model2.UserId)
 			return
 		}
 		model2.SetCommentPostID(int64(randomInteger()))
@@ -587,72 +587,72 @@ func TestCommentCreate(t *testing.T) {
 		}
 
 		if model.CommentPostID == model2.CommentPostID {
-			t.Errorf(`model.CommentPostID[%d] != model2.CommentPostID[%d]`, model.CommentPostID, model2.CommentPostID)
+			t.Errorf(`1: model.CommentPostID[%d] != model2.CommentPostID[%d]`, model.CommentPostID, model2.CommentPostID)
 			return
 		}
 
 		if model.CommentAuthor == model2.CommentAuthor {
-			t.Errorf(`model.CommentAuthor[%s] != model2.CommentAuthor[%s]`, model.CommentAuthor, model2.CommentAuthor)
+			t.Errorf(`1: model.CommentAuthor[%s] != model2.CommentAuthor[%s]`, model.CommentAuthor, model2.CommentAuthor)
 			return
 		}
 
 		if model.CommentAuthorEmail == model2.CommentAuthorEmail {
-			t.Errorf(`model.CommentAuthorEmail[%s] != model2.CommentAuthorEmail[%s]`, model.CommentAuthorEmail, model2.CommentAuthorEmail)
+			t.Errorf(`1: model.CommentAuthorEmail[%s] != model2.CommentAuthorEmail[%s]`, model.CommentAuthorEmail, model2.CommentAuthorEmail)
 			return
 		}
 
 		if model.CommentAuthorUrl == model2.CommentAuthorUrl {
-			t.Errorf(`model.CommentAuthorUrl[%s] != model2.CommentAuthorUrl[%s]`, model.CommentAuthorUrl, model2.CommentAuthorUrl)
+			t.Errorf(`1: model.CommentAuthorUrl[%s] != model2.CommentAuthorUrl[%s]`, model.CommentAuthorUrl, model2.CommentAuthorUrl)
 			return
 		}
 
 		if model.CommentAuthorIP == model2.CommentAuthorIP {
-			t.Errorf(`model.CommentAuthorIP[%s] != model2.CommentAuthorIP[%s]`, model.CommentAuthorIP, model2.CommentAuthorIP)
+			t.Errorf(`1: model.CommentAuthorIP[%s] != model2.CommentAuthorIP[%s]`, model.CommentAuthorIP, model2.CommentAuthorIP)
 			return
 		}
 
 		if model.CommentDate.Year == model2.CommentDate.Year {
-			t.Errorf(`model.CommentDate.Year == model2.CommentDate but should not!`, model.CommentDate, model2.CommentDate)
+			t.Errorf(` model.CommentDate.Year == model2.CommentDate but should not!`)
 			return
 		}
 
 		if model.CommentDateGmt.Year == model2.CommentDateGmt.Year {
-			t.Errorf(`model.CommentDateGmt.Year == model2.CommentDateGmt but should not!`, model.CommentDateGmt, model2.CommentDateGmt)
+			t.Errorf(` model.CommentDateGmt.Year == model2.CommentDateGmt but should not!`)
 			return
 		}
 
 		if model.CommentContent == model2.CommentContent {
-			t.Errorf(`model.CommentContent[%s] != model2.CommentContent[%s]`, model.CommentContent, model2.CommentContent)
+			t.Errorf(`1: model.CommentContent[%s] != model2.CommentContent[%s]`, model.CommentContent, model2.CommentContent)
 			return
 		}
 
 		if model.CommentKarma == model2.CommentKarma {
-			t.Errorf(`model.CommentKarma[%d] != model2.CommentKarma[%d]`, model.CommentKarma, model2.CommentKarma)
+			t.Errorf(`1: model.CommentKarma[%d] != model2.CommentKarma[%d]`, model.CommentKarma, model2.CommentKarma)
 			return
 		}
 
 		if model.CommentApproved == model2.CommentApproved {
-			t.Errorf(`model.CommentApproved[%s] != model2.CommentApproved[%s]`, model.CommentApproved, model2.CommentApproved)
+			t.Errorf(`1: model.CommentApproved[%s] != model2.CommentApproved[%s]`, model.CommentApproved, model2.CommentApproved)
 			return
 		}
 
 		if model.CommentAgent == model2.CommentAgent {
-			t.Errorf(`model.CommentAgent[%s] != model2.CommentAgent[%s]`, model.CommentAgent, model2.CommentAgent)
+			t.Errorf(`1: model.CommentAgent[%s] != model2.CommentAgent[%s]`, model.CommentAgent, model2.CommentAgent)
 			return
 		}
 
 		if model.CommentType == model2.CommentType {
-			t.Errorf(`model.CommentType[%s] != model2.CommentType[%s]`, model.CommentType, model2.CommentType)
+			t.Errorf(`1: model.CommentType[%s] != model2.CommentType[%s]`, model.CommentType, model2.CommentType)
 			return
 		}
 
 		if model.CommentParent == model2.CommentParent {
-			t.Errorf(`model.CommentParent[%d] != model2.CommentParent[%d]`, model.CommentParent, model2.CommentParent)
+			t.Errorf(`1: model.CommentParent[%d] != model2.CommentParent[%d]`, model.CommentParent, model2.CommentParent)
 			return
 		}
 
 		if model.UserId == model2.UserId {
-			t.Errorf(`model.UserId[%d] != model2.UserId[%d]`, model.UserId, model2.UserId)
+			t.Errorf(`1: model.UserId[%d] != model2.UserId[%d]`, model.UserId, model2.UserId)
 			return
 		}
 
@@ -1286,7 +1286,7 @@ func TestLinkCreate(t *testing.T) {
 		}
 		file, err := os.OpenFile("adapter.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
 		if err != nil {
-			t.Errorf("Failed to open log file %s", err)
+			t.Errorf(" Failed to open log file %s", err)
 		}
 		a.SetLogs(file)
 		model := NewLink(a)
@@ -1305,58 +1305,58 @@ func TestLinkCreate(t *testing.T) {
 
 		err = model.Create()
 		if err != nil {
-			t.Errorf(`failed to create model %s`, err)
+			t.Errorf(` failed to create model %s`, err)
 			return
 		}
 
 		model2 := NewLink(a)
 		found, err := model2.Find(model.GetPrimaryKeyValue())
 		if err != nil {
-			t.Errorf(`did not find record for %s = %d because of %s`, model.GetPrimaryKeyName(), model.GetPrimaryKeyValue(), err)
+			t.Errorf(` did not find record for %s = %d because of %s`, model.GetPrimaryKeyName(), model.GetPrimaryKeyValue(), err)
 			return
 		}
 		if found == false {
-			t.Errorf(`did not find record for %s = %d because of %s`, model.GetPrimaryKeyName(), model.GetPrimaryKeyValue(), err)
+			t.Errorf(` did not find record for %s = %d because of %s`, model.GetPrimaryKeyName(), model.GetPrimaryKeyValue(), err)
 			return
 		}
 
 		if model.LinkUrl != model2.LinkUrl {
-			t.Errorf(`model.LinkUrl[%s] != model2.LinkUrl[%s]`, model.LinkUrl, model2.LinkUrl)
+			t.Errorf(` model.LinkUrl[%s] != model2.LinkUrl[%s]`, model.LinkUrl, model2.LinkUrl)
 			return
 		}
 
 		if model.LinkName != model2.LinkName {
-			t.Errorf(`model.LinkName[%s] != model2.LinkName[%s]`, model.LinkName, model2.LinkName)
+			t.Errorf(` model.LinkName[%s] != model2.LinkName[%s]`, model.LinkName, model2.LinkName)
 			return
 		}
 
 		if model.LinkImage != model2.LinkImage {
-			t.Errorf(`model.LinkImage[%s] != model2.LinkImage[%s]`, model.LinkImage, model2.LinkImage)
+			t.Errorf(` model.LinkImage[%s] != model2.LinkImage[%s]`, model.LinkImage, model2.LinkImage)
 			return
 		}
 
 		if model.LinkTarget != model2.LinkTarget {
-			t.Errorf(`model.LinkTarget[%s] != model2.LinkTarget[%s]`, model.LinkTarget, model2.LinkTarget)
+			t.Errorf(` model.LinkTarget[%s] != model2.LinkTarget[%s]`, model.LinkTarget, model2.LinkTarget)
 			return
 		}
 
 		if model.LinkDescription != model2.LinkDescription {
-			t.Errorf(`model.LinkDescription[%s] != model2.LinkDescription[%s]`, model.LinkDescription, model2.LinkDescription)
+			t.Errorf(` model.LinkDescription[%s] != model2.LinkDescription[%s]`, model.LinkDescription, model2.LinkDescription)
 			return
 		}
 
 		if model.LinkVisible != model2.LinkVisible {
-			t.Errorf(`model.LinkVisible[%s] != model2.LinkVisible[%s]`, model.LinkVisible, model2.LinkVisible)
+			t.Errorf(` model.LinkVisible[%s] != model2.LinkVisible[%s]`, model.LinkVisible, model2.LinkVisible)
 			return
 		}
 
 		if model.LinkOwner != model2.LinkOwner {
-			t.Errorf(`model.LinkOwner[%d] != model2.LinkOwner[%d]`, model.LinkOwner, model2.LinkOwner)
+			t.Errorf(` model.LinkOwner[%d] != model2.LinkOwner[%d]`, model.LinkOwner, model2.LinkOwner)
 			return
 		}
 
 		if model.LinkRating != model2.LinkRating {
-			t.Errorf(`model.LinkRating[%d] != model2.LinkRating[%d]`, model.LinkRating, model2.LinkRating)
+			t.Errorf(` model.LinkRating[%d] != model2.LinkRating[%d]`, model.LinkRating, model2.LinkRating)
 			return
 		}
 
@@ -1366,22 +1366,22 @@ func TestLinkCreate(t *testing.T) {
 			model.LinkUpdated.Hours != model2.LinkUpdated.Hours ||
 			model.LinkUpdated.Minutes != model2.LinkUpdated.Minutes ||
 			model.LinkUpdated.Seconds != model2.LinkUpdated.Seconds {
-			t.Errorf(`model.LinkUpdated != model2.LinkUpdated %+v --- %+v`, model.LinkUpdated, model2.LinkUpdated)
+			t.Errorf(`2: model.LinkUpdated != model2.LinkUpdated %+v --- %+v`, model.LinkUpdated, model2.LinkUpdated)
 			return
 		}
 
 		if model.LinkRel != model2.LinkRel {
-			t.Errorf(`model.LinkRel[%s] != model2.LinkRel[%s]`, model.LinkRel, model2.LinkRel)
+			t.Errorf(` model.LinkRel[%s] != model2.LinkRel[%s]`, model.LinkRel, model2.LinkRel)
 			return
 		}
 
 		if model.LinkNotes != model2.LinkNotes {
-			t.Errorf(`model.LinkNotes[%s] != model2.LinkNotes[%s]`, model.LinkNotes, model2.LinkNotes)
+			t.Errorf(` model.LinkNotes[%s] != model2.LinkNotes[%s]`, model.LinkNotes, model2.LinkNotes)
 			return
 		}
 
 		if model.LinkRss != model2.LinkRss {
-			t.Errorf(`model.LinkRss[%s] != model2.LinkRss[%s]`, model.LinkRss, model2.LinkRss)
+			t.Errorf(` model.LinkRss[%s] != model2.LinkRss[%s]`, model.LinkRss, model2.LinkRss)
 			return
 		}
 		model2.SetLinkUrl(randomString(19))
@@ -1403,62 +1403,62 @@ func TestLinkCreate(t *testing.T) {
 		}
 
 		if model.LinkUrl == model2.LinkUrl {
-			t.Errorf(`model.LinkUrl[%s] != model2.LinkUrl[%s]`, model.LinkUrl, model2.LinkUrl)
+			t.Errorf(`1: model.LinkUrl[%s] != model2.LinkUrl[%s]`, model.LinkUrl, model2.LinkUrl)
 			return
 		}
 
 		if model.LinkName == model2.LinkName {
-			t.Errorf(`model.LinkName[%s] != model2.LinkName[%s]`, model.LinkName, model2.LinkName)
+			t.Errorf(`1: model.LinkName[%s] != model2.LinkName[%s]`, model.LinkName, model2.LinkName)
 			return
 		}
 
 		if model.LinkImage == model2.LinkImage {
-			t.Errorf(`model.LinkImage[%s] != model2.LinkImage[%s]`, model.LinkImage, model2.LinkImage)
+			t.Errorf(`1: model.LinkImage[%s] != model2.LinkImage[%s]`, model.LinkImage, model2.LinkImage)
 			return
 		}
 
 		if model.LinkTarget == model2.LinkTarget {
-			t.Errorf(`model.LinkTarget[%s] != model2.LinkTarget[%s]`, model.LinkTarget, model2.LinkTarget)
+			t.Errorf(`1: model.LinkTarget[%s] != model2.LinkTarget[%s]`, model.LinkTarget, model2.LinkTarget)
 			return
 		}
 
 		if model.LinkDescription == model2.LinkDescription {
-			t.Errorf(`model.LinkDescription[%s] != model2.LinkDescription[%s]`, model.LinkDescription, model2.LinkDescription)
+			t.Errorf(`1: model.LinkDescription[%s] != model2.LinkDescription[%s]`, model.LinkDescription, model2.LinkDescription)
 			return
 		}
 
 		if model.LinkVisible == model2.LinkVisible {
-			t.Errorf(`model.LinkVisible[%s] != model2.LinkVisible[%s]`, model.LinkVisible, model2.LinkVisible)
+			t.Errorf(`1: model.LinkVisible[%s] != model2.LinkVisible[%s]`, model.LinkVisible, model2.LinkVisible)
 			return
 		}
 
 		if model.LinkOwner == model2.LinkOwner {
-			t.Errorf(`model.LinkOwner[%d] != model2.LinkOwner[%d]`, model.LinkOwner, model2.LinkOwner)
+			t.Errorf(`1: model.LinkOwner[%d] != model2.LinkOwner[%d]`, model.LinkOwner, model2.LinkOwner)
 			return
 		}
 
 		if model.LinkRating == model2.LinkRating {
-			t.Errorf(`model.LinkRating[%d] != model2.LinkRating[%d]`, model.LinkRating, model2.LinkRating)
+			t.Errorf(`1: model.LinkRating[%d] != model2.LinkRating[%d]`, model.LinkRating, model2.LinkRating)
 			return
 		}
 
 		if model.LinkUpdated.Year == model2.LinkUpdated.Year {
-			t.Errorf(`model.LinkUpdated.Year == model2.LinkUpdated but should not!`, model.LinkUpdated, model2.LinkUpdated)
+			t.Errorf(` model.LinkUpdated.Year == model2.LinkUpdated but should not!`)
 			return
 		}
 
 		if model.LinkRel == model2.LinkRel {
-			t.Errorf(`model.LinkRel[%s] != model2.LinkRel[%s]`, model.LinkRel, model2.LinkRel)
+			t.Errorf(`1: model.LinkRel[%s] != model2.LinkRel[%s]`, model.LinkRel, model2.LinkRel)
 			return
 		}
 
 		if model.LinkNotes == model2.LinkNotes {
-			t.Errorf(`model.LinkNotes[%s] != model2.LinkNotes[%s]`, model.LinkNotes, model2.LinkNotes)
+			t.Errorf(`1: model.LinkNotes[%s] != model2.LinkNotes[%s]`, model.LinkNotes, model2.LinkNotes)
 			return
 		}
 
 		if model.LinkRss == model2.LinkRss {
-			t.Errorf(`model.LinkRss[%s] != model2.LinkRss[%s]`, model.LinkRss, model2.LinkRss)
+			t.Errorf(`1: model.LinkRss[%s] != model2.LinkRss[%s]`, model.LinkRss, model2.LinkRss)
 			return
 		}
 
@@ -1949,7 +1949,7 @@ func TestOptionCreate(t *testing.T) {
 		}
 		file, err := os.OpenFile("adapter.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
 		if err != nil {
-			t.Errorf("Failed to open log file %s", err)
+			t.Errorf(" Failed to open log file %s", err)
 		}
 		a.SetLogs(file)
 		model := NewOption(a)
@@ -1959,33 +1959,33 @@ func TestOptionCreate(t *testing.T) {
 
 		err = model.Create()
 		if err != nil {
-			t.Errorf(`failed to create model %s`, err)
+			t.Errorf(` failed to create model %s`, err)
 			return
 		}
 
 		model2 := NewOption(a)
 		found, err := model2.Find(model.GetPrimaryKeyValue())
 		if err != nil {
-			t.Errorf(`did not find record for %s = %d because of %s`, model.GetPrimaryKeyName(), model.GetPrimaryKeyValue(), err)
+			t.Errorf(` did not find record for %s = %d because of %s`, model.GetPrimaryKeyName(), model.GetPrimaryKeyValue(), err)
 			return
 		}
 		if found == false {
-			t.Errorf(`did not find record for %s = %d because of %s`, model.GetPrimaryKeyName(), model.GetPrimaryKeyValue(), err)
+			t.Errorf(` did not find record for %s = %d because of %s`, model.GetPrimaryKeyName(), model.GetPrimaryKeyValue(), err)
 			return
 		}
 
 		if model.OptionName != model2.OptionName {
-			t.Errorf(`model.OptionName[%s] != model2.OptionName[%s]`, model.OptionName, model2.OptionName)
+			t.Errorf(` model.OptionName[%s] != model2.OptionName[%s]`, model.OptionName, model2.OptionName)
 			return
 		}
 
 		if model.OptionValue != model2.OptionValue {
-			t.Errorf(`model.OptionValue[%s] != model2.OptionValue[%s]`, model.OptionValue, model2.OptionValue)
+			t.Errorf(` model.OptionValue[%s] != model2.OptionValue[%s]`, model.OptionValue, model2.OptionValue)
 			return
 		}
 
 		if model.Autoload != model2.Autoload {
-			t.Errorf(`model.Autoload[%s] != model2.Autoload[%s]`, model.Autoload, model2.Autoload)
+			t.Errorf(` model.Autoload[%s] != model2.Autoload[%s]`, model.Autoload, model2.Autoload)
 			return
 		}
 		model2.SetOptionName(randomString(19))
@@ -1998,17 +1998,17 @@ func TestOptionCreate(t *testing.T) {
 		}
 
 		if model.OptionName == model2.OptionName {
-			t.Errorf(`model.OptionName[%s] != model2.OptionName[%s]`, model.OptionName, model2.OptionName)
+			t.Errorf(`1: model.OptionName[%s] != model2.OptionName[%s]`, model.OptionName, model2.OptionName)
 			return
 		}
 
 		if model.OptionValue == model2.OptionValue {
-			t.Errorf(`model.OptionValue[%s] != model2.OptionValue[%s]`, model.OptionValue, model2.OptionValue)
+			t.Errorf(`1: model.OptionValue[%s] != model2.OptionValue[%s]`, model.OptionValue, model2.OptionValue)
 			return
 		}
 
 		if model.Autoload == model2.Autoload {
-			t.Errorf(`model.Autoload[%s] != model2.Autoload[%s]`, model.Autoload, model2.Autoload)
+			t.Errorf(`1: model.Autoload[%s] != model2.Autoload[%s]`, model.Autoload, model2.Autoload)
 			return
 		}
 
@@ -2193,7 +2193,7 @@ func TestPostMetaCreate(t *testing.T) {
 		}
 		file, err := os.OpenFile("adapter.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
 		if err != nil {
-			t.Errorf("Failed to open log file %s", err)
+			t.Errorf(" Failed to open log file %s", err)
 		}
 		a.SetLogs(file)
 		model := NewPostMeta(a)
@@ -2203,33 +2203,33 @@ func TestPostMetaCreate(t *testing.T) {
 
 		err = model.Create()
 		if err != nil {
-			t.Errorf(`failed to create model %s`, err)
+			t.Errorf(` failed to create model %s`, err)
 			return
 		}
 
 		model2 := NewPostMeta(a)
 		found, err := model2.Find(model.GetPrimaryKeyValue())
 		if err != nil {
-			t.Errorf(`did not find record for %s = %d because of %s`, model.GetPrimaryKeyName(), model.GetPrimaryKeyValue(), err)
+			t.Errorf(` did not find record for %s = %d because of %s`, model.GetPrimaryKeyName(), model.GetPrimaryKeyValue(), err)
 			return
 		}
 		if found == false {
-			t.Errorf(`did not find record for %s = %d because of %s`, model.GetPrimaryKeyName(), model.GetPrimaryKeyValue(), err)
+			t.Errorf(` did not find record for %s = %d because of %s`, model.GetPrimaryKeyName(), model.GetPrimaryKeyValue(), err)
 			return
 		}
 
 		if model.PostId != model2.PostId {
-			t.Errorf(`model.PostId[%d] != model2.PostId[%d]`, model.PostId, model2.PostId)
+			t.Errorf(` model.PostId[%d] != model2.PostId[%d]`, model.PostId, model2.PostId)
 			return
 		}
 
 		if model.MetaKey != model2.MetaKey {
-			t.Errorf(`model.MetaKey[%s] != model2.MetaKey[%s]`, model.MetaKey, model2.MetaKey)
+			t.Errorf(` model.MetaKey[%s] != model2.MetaKey[%s]`, model.MetaKey, model2.MetaKey)
 			return
 		}
 
 		if model.MetaValue != model2.MetaValue {
-			t.Errorf(`model.MetaValue[%s] != model2.MetaValue[%s]`, model.MetaValue, model2.MetaValue)
+			t.Errorf(` model.MetaValue[%s] != model2.MetaValue[%s]`, model.MetaValue, model2.MetaValue)
 			return
 		}
 		model2.SetPostId(int64(randomInteger()))
@@ -2242,17 +2242,17 @@ func TestPostMetaCreate(t *testing.T) {
 		}
 
 		if model.PostId == model2.PostId {
-			t.Errorf(`model.PostId[%d] != model2.PostId[%d]`, model.PostId, model2.PostId)
+			t.Errorf(`1: model.PostId[%d] != model2.PostId[%d]`, model.PostId, model2.PostId)
 			return
 		}
 
 		if model.MetaKey == model2.MetaKey {
-			t.Errorf(`model.MetaKey[%s] != model2.MetaKey[%s]`, model.MetaKey, model2.MetaKey)
+			t.Errorf(`1: model.MetaKey[%s] != model2.MetaKey[%s]`, model.MetaKey, model2.MetaKey)
 			return
 		}
 
 		if model.MetaValue == model2.MetaValue {
-			t.Errorf(`model.MetaValue[%s] != model2.MetaValue[%s]`, model.MetaValue, model2.MetaValue)
+			t.Errorf(`1: model.MetaValue[%s] != model2.MetaValue[%s]`, model.MetaValue, model2.MetaValue)
 			return
 		}
 
@@ -2618,7 +2618,7 @@ func TestPostCreate(t *testing.T) {
 		}
 		file, err := os.OpenFile("adapter.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
 		if err != nil {
-			t.Errorf("Failed to open log file %s", err)
+			t.Errorf(" Failed to open log file %s", err)
 		}
 		a.SetLogs(file)
 		model := NewPost(a)
@@ -2647,23 +2647,23 @@ func TestPostCreate(t *testing.T) {
 
 		err = model.Create()
 		if err != nil {
-			t.Errorf(`failed to create model %s`, err)
+			t.Errorf(` failed to create model %s`, err)
 			return
 		}
 
 		model2 := NewPost(a)
 		found, err := model2.Find(model.GetPrimaryKeyValue())
 		if err != nil {
-			t.Errorf(`did not find record for %s = %d because of %s`, model.GetPrimaryKeyName(), model.GetPrimaryKeyValue(), err)
+			t.Errorf(` did not find record for %s = %d because of %s`, model.GetPrimaryKeyName(), model.GetPrimaryKeyValue(), err)
 			return
 		}
 		if found == false {
-			t.Errorf(`did not find record for %s = %d because of %s`, model.GetPrimaryKeyName(), model.GetPrimaryKeyValue(), err)
+			t.Errorf(` did not find record for %s = %d because of %s`, model.GetPrimaryKeyName(), model.GetPrimaryKeyValue(), err)
 			return
 		}
 
 		if model.PostAuthor != model2.PostAuthor {
-			t.Errorf(`model.PostAuthor[%d] != model2.PostAuthor[%d]`, model.PostAuthor, model2.PostAuthor)
+			t.Errorf(` model.PostAuthor[%d] != model2.PostAuthor[%d]`, model.PostAuthor, model2.PostAuthor)
 			return
 		}
 
@@ -2673,7 +2673,7 @@ func TestPostCreate(t *testing.T) {
 			model.PostDate.Hours != model2.PostDate.Hours ||
 			model.PostDate.Minutes != model2.PostDate.Minutes ||
 			model.PostDate.Seconds != model2.PostDate.Seconds {
-			t.Errorf(`model.PostDate != model2.PostDate %+v --- %+v`, model.PostDate, model2.PostDate)
+			t.Errorf(`2: model.PostDate != model2.PostDate %+v --- %+v`, model.PostDate, model2.PostDate)
 			return
 		}
 
@@ -2683,57 +2683,57 @@ func TestPostCreate(t *testing.T) {
 			model.PostDateGmt.Hours != model2.PostDateGmt.Hours ||
 			model.PostDateGmt.Minutes != model2.PostDateGmt.Minutes ||
 			model.PostDateGmt.Seconds != model2.PostDateGmt.Seconds {
-			t.Errorf(`model.PostDateGmt != model2.PostDateGmt %+v --- %+v`, model.PostDateGmt, model2.PostDateGmt)
+			t.Errorf(`2: model.PostDateGmt != model2.PostDateGmt %+v --- %+v`, model.PostDateGmt, model2.PostDateGmt)
 			return
 		}
 
 		if model.PostContent != model2.PostContent {
-			t.Errorf(`model.PostContent[%s] != model2.PostContent[%s]`, model.PostContent, model2.PostContent)
+			t.Errorf(` model.PostContent[%s] != model2.PostContent[%s]`, model.PostContent, model2.PostContent)
 			return
 		}
 
 		if model.PostTitle != model2.PostTitle {
-			t.Errorf(`model.PostTitle[%s] != model2.PostTitle[%s]`, model.PostTitle, model2.PostTitle)
+			t.Errorf(` model.PostTitle[%s] != model2.PostTitle[%s]`, model.PostTitle, model2.PostTitle)
 			return
 		}
 
 		if model.PostExcerpt != model2.PostExcerpt {
-			t.Errorf(`model.PostExcerpt[%s] != model2.PostExcerpt[%s]`, model.PostExcerpt, model2.PostExcerpt)
+			t.Errorf(` model.PostExcerpt[%s] != model2.PostExcerpt[%s]`, model.PostExcerpt, model2.PostExcerpt)
 			return
 		}
 
 		if model.PostStatus != model2.PostStatus {
-			t.Errorf(`model.PostStatus[%s] != model2.PostStatus[%s]`, model.PostStatus, model2.PostStatus)
+			t.Errorf(` model.PostStatus[%s] != model2.PostStatus[%s]`, model.PostStatus, model2.PostStatus)
 			return
 		}
 
 		if model.CommentStatus != model2.CommentStatus {
-			t.Errorf(`model.CommentStatus[%s] != model2.CommentStatus[%s]`, model.CommentStatus, model2.CommentStatus)
+			t.Errorf(` model.CommentStatus[%s] != model2.CommentStatus[%s]`, model.CommentStatus, model2.CommentStatus)
 			return
 		}
 
 		if model.PingStatus != model2.PingStatus {
-			t.Errorf(`model.PingStatus[%s] != model2.PingStatus[%s]`, model.PingStatus, model2.PingStatus)
+			t.Errorf(` model.PingStatus[%s] != model2.PingStatus[%s]`, model.PingStatus, model2.PingStatus)
 			return
 		}
 
 		if model.PostPassword != model2.PostPassword {
-			t.Errorf(`model.PostPassword[%s] != model2.PostPassword[%s]`, model.PostPassword, model2.PostPassword)
+			t.Errorf(` model.PostPassword[%s] != model2.PostPassword[%s]`, model.PostPassword, model2.PostPassword)
 			return
 		}
 
 		if model.PostName != model2.PostName {
-			t.Errorf(`model.PostName[%s] != model2.PostName[%s]`, model.PostName, model2.PostName)
+			t.Errorf(` model.PostName[%s] != model2.PostName[%s]`, model.PostName, model2.PostName)
 			return
 		}
 
 		if model.ToPing != model2.ToPing {
-			t.Errorf(`model.ToPing[%s] != model2.ToPing[%s]`, model.ToPing, model2.ToPing)
+			t.Errorf(` model.ToPing[%s] != model2.ToPing[%s]`, model.ToPing, model2.ToPing)
 			return
 		}
 
 		if model.Pinged != model2.Pinged {
-			t.Errorf(`model.Pinged[%s] != model2.Pinged[%s]`, model.Pinged, model2.Pinged)
+			t.Errorf(` model.Pinged[%s] != model2.Pinged[%s]`, model.Pinged, model2.Pinged)
 			return
 		}
 
@@ -2743,7 +2743,7 @@ func TestPostCreate(t *testing.T) {
 			model.PostModified.Hours != model2.PostModified.Hours ||
 			model.PostModified.Minutes != model2.PostModified.Minutes ||
 			model.PostModified.Seconds != model2.PostModified.Seconds {
-			t.Errorf(`model.PostModified != model2.PostModified %+v --- %+v`, model.PostModified, model2.PostModified)
+			t.Errorf(`2: model.PostModified != model2.PostModified %+v --- %+v`, model.PostModified, model2.PostModified)
 			return
 		}
 
@@ -2753,42 +2753,42 @@ func TestPostCreate(t *testing.T) {
 			model.PostModifiedGmt.Hours != model2.PostModifiedGmt.Hours ||
 			model.PostModifiedGmt.Minutes != model2.PostModifiedGmt.Minutes ||
 			model.PostModifiedGmt.Seconds != model2.PostModifiedGmt.Seconds {
-			t.Errorf(`model.PostModifiedGmt != model2.PostModifiedGmt %+v --- %+v`, model.PostModifiedGmt, model2.PostModifiedGmt)
+			t.Errorf(`2: model.PostModifiedGmt != model2.PostModifiedGmt %+v --- %+v`, model.PostModifiedGmt, model2.PostModifiedGmt)
 			return
 		}
 
 		if model.PostContentFiltered != model2.PostContentFiltered {
-			t.Errorf(`model.PostContentFiltered[%s] != model2.PostContentFiltered[%s]`, model.PostContentFiltered, model2.PostContentFiltered)
+			t.Errorf(` model.PostContentFiltered[%s] != model2.PostContentFiltered[%s]`, model.PostContentFiltered, model2.PostContentFiltered)
 			return
 		}
 
 		if model.PostParent != model2.PostParent {
-			t.Errorf(`model.PostParent[%d] != model2.PostParent[%d]`, model.PostParent, model2.PostParent)
+			t.Errorf(` model.PostParent[%d] != model2.PostParent[%d]`, model.PostParent, model2.PostParent)
 			return
 		}
 
 		if model.Guid != model2.Guid {
-			t.Errorf(`model.Guid[%s] != model2.Guid[%s]`, model.Guid, model2.Guid)
+			t.Errorf(` model.Guid[%s] != model2.Guid[%s]`, model.Guid, model2.Guid)
 			return
 		}
 
 		if model.MenuOrder != model2.MenuOrder {
-			t.Errorf(`model.MenuOrder[%d] != model2.MenuOrder[%d]`, model.MenuOrder, model2.MenuOrder)
+			t.Errorf(` model.MenuOrder[%d] != model2.MenuOrder[%d]`, model.MenuOrder, model2.MenuOrder)
 			return
 		}
 
 		if model.PostType != model2.PostType {
-			t.Errorf(`model.PostType[%s] != model2.PostType[%s]`, model.PostType, model2.PostType)
+			t.Errorf(` model.PostType[%s] != model2.PostType[%s]`, model.PostType, model2.PostType)
 			return
 		}
 
 		if model.PostMimeType != model2.PostMimeType {
-			t.Errorf(`model.PostMimeType[%s] != model2.PostMimeType[%s]`, model.PostMimeType, model2.PostMimeType)
+			t.Errorf(` model.PostMimeType[%s] != model2.PostMimeType[%s]`, model.PostMimeType, model2.PostMimeType)
 			return
 		}
 
 		if model.CommentCount != model2.CommentCount {
-			t.Errorf(`model.CommentCount[%d] != model2.CommentCount[%d]`, model.CommentCount, model2.CommentCount)
+			t.Errorf(` model.CommentCount[%d] != model2.CommentCount[%d]`, model.CommentCount, model2.CommentCount)
 			return
 		}
 		model2.SetPostAuthor(int64(randomInteger()))
@@ -2820,112 +2820,112 @@ func TestPostCreate(t *testing.T) {
 		}
 
 		if model.PostAuthor == model2.PostAuthor {
-			t.Errorf(`model.PostAuthor[%d] != model2.PostAuthor[%d]`, model.PostAuthor, model2.PostAuthor)
+			t.Errorf(`1: model.PostAuthor[%d] != model2.PostAuthor[%d]`, model.PostAuthor, model2.PostAuthor)
 			return
 		}
 
 		if model.PostDate.Year == model2.PostDate.Year {
-			t.Errorf(`model.PostDate.Year == model2.PostDate but should not!`, model.PostDate, model2.PostDate)
+			t.Errorf(` model.PostDate.Year == model2.PostDate but should not!`)
 			return
 		}
 
 		if model.PostDateGmt.Year == model2.PostDateGmt.Year {
-			t.Errorf(`model.PostDateGmt.Year == model2.PostDateGmt but should not!`, model.PostDateGmt, model2.PostDateGmt)
+			t.Errorf(` model.PostDateGmt.Year == model2.PostDateGmt but should not!`)
 			return
 		}
 
 		if model.PostContent == model2.PostContent {
-			t.Errorf(`model.PostContent[%s] != model2.PostContent[%s]`, model.PostContent, model2.PostContent)
+			t.Errorf(`1: model.PostContent[%s] != model2.PostContent[%s]`, model.PostContent, model2.PostContent)
 			return
 		}
 
 		if model.PostTitle == model2.PostTitle {
-			t.Errorf(`model.PostTitle[%s] != model2.PostTitle[%s]`, model.PostTitle, model2.PostTitle)
+			t.Errorf(`1: model.PostTitle[%s] != model2.PostTitle[%s]`, model.PostTitle, model2.PostTitle)
 			return
 		}
 
 		if model.PostExcerpt == model2.PostExcerpt {
-			t.Errorf(`model.PostExcerpt[%s] != model2.PostExcerpt[%s]`, model.PostExcerpt, model2.PostExcerpt)
+			t.Errorf(`1: model.PostExcerpt[%s] != model2.PostExcerpt[%s]`, model.PostExcerpt, model2.PostExcerpt)
 			return
 		}
 
 		if model.PostStatus == model2.PostStatus {
-			t.Errorf(`model.PostStatus[%s] != model2.PostStatus[%s]`, model.PostStatus, model2.PostStatus)
+			t.Errorf(`1: model.PostStatus[%s] != model2.PostStatus[%s]`, model.PostStatus, model2.PostStatus)
 			return
 		}
 
 		if model.CommentStatus == model2.CommentStatus {
-			t.Errorf(`model.CommentStatus[%s] != model2.CommentStatus[%s]`, model.CommentStatus, model2.CommentStatus)
+			t.Errorf(`1: model.CommentStatus[%s] != model2.CommentStatus[%s]`, model.CommentStatus, model2.CommentStatus)
 			return
 		}
 
 		if model.PingStatus == model2.PingStatus {
-			t.Errorf(`model.PingStatus[%s] != model2.PingStatus[%s]`, model.PingStatus, model2.PingStatus)
+			t.Errorf(`1: model.PingStatus[%s] != model2.PingStatus[%s]`, model.PingStatus, model2.PingStatus)
 			return
 		}
 
 		if model.PostPassword == model2.PostPassword {
-			t.Errorf(`model.PostPassword[%s] != model2.PostPassword[%s]`, model.PostPassword, model2.PostPassword)
+			t.Errorf(`1: model.PostPassword[%s] != model2.PostPassword[%s]`, model.PostPassword, model2.PostPassword)
 			return
 		}
 
 		if model.PostName == model2.PostName {
-			t.Errorf(`model.PostName[%s] != model2.PostName[%s]`, model.PostName, model2.PostName)
+			t.Errorf(`1: model.PostName[%s] != model2.PostName[%s]`, model.PostName, model2.PostName)
 			return
 		}
 
 		if model.ToPing == model2.ToPing {
-			t.Errorf(`model.ToPing[%s] != model2.ToPing[%s]`, model.ToPing, model2.ToPing)
+			t.Errorf(`1: model.ToPing[%s] != model2.ToPing[%s]`, model.ToPing, model2.ToPing)
 			return
 		}
 
 		if model.Pinged == model2.Pinged {
-			t.Errorf(`model.Pinged[%s] != model2.Pinged[%s]`, model.Pinged, model2.Pinged)
+			t.Errorf(`1: model.Pinged[%s] != model2.Pinged[%s]`, model.Pinged, model2.Pinged)
 			return
 		}
 
 		if model.PostModified.Year == model2.PostModified.Year {
-			t.Errorf(`model.PostModified.Year == model2.PostModified but should not!`, model.PostModified, model2.PostModified)
+			t.Errorf(` model.PostModified.Year == model2.PostModified but should not!`)
 			return
 		}
 
 		if model.PostModifiedGmt.Year == model2.PostModifiedGmt.Year {
-			t.Errorf(`model.PostModifiedGmt.Year == model2.PostModifiedGmt but should not!`, model.PostModifiedGmt, model2.PostModifiedGmt)
+			t.Errorf(` model.PostModifiedGmt.Year == model2.PostModifiedGmt but should not!`)
 			return
 		}
 
 		if model.PostContentFiltered == model2.PostContentFiltered {
-			t.Errorf(`model.PostContentFiltered[%s] != model2.PostContentFiltered[%s]`, model.PostContentFiltered, model2.PostContentFiltered)
+			t.Errorf(`1: model.PostContentFiltered[%s] != model2.PostContentFiltered[%s]`, model.PostContentFiltered, model2.PostContentFiltered)
 			return
 		}
 
 		if model.PostParent == model2.PostParent {
-			t.Errorf(`model.PostParent[%d] != model2.PostParent[%d]`, model.PostParent, model2.PostParent)
+			t.Errorf(`1: model.PostParent[%d] != model2.PostParent[%d]`, model.PostParent, model2.PostParent)
 			return
 		}
 
 		if model.Guid == model2.Guid {
-			t.Errorf(`model.Guid[%s] != model2.Guid[%s]`, model.Guid, model2.Guid)
+			t.Errorf(`1: model.Guid[%s] != model2.Guid[%s]`, model.Guid, model2.Guid)
 			return
 		}
 
 		if model.MenuOrder == model2.MenuOrder {
-			t.Errorf(`model.MenuOrder[%d] != model2.MenuOrder[%d]`, model.MenuOrder, model2.MenuOrder)
+			t.Errorf(`1: model.MenuOrder[%d] != model2.MenuOrder[%d]`, model.MenuOrder, model2.MenuOrder)
 			return
 		}
 
 		if model.PostType == model2.PostType {
-			t.Errorf(`model.PostType[%s] != model2.PostType[%s]`, model.PostType, model2.PostType)
+			t.Errorf(`1: model.PostType[%s] != model2.PostType[%s]`, model.PostType, model2.PostType)
 			return
 		}
 
 		if model.PostMimeType == model2.PostMimeType {
-			t.Errorf(`model.PostMimeType[%s] != model2.PostMimeType[%s]`, model.PostMimeType, model2.PostMimeType)
+			t.Errorf(`1: model.PostMimeType[%s] != model2.PostMimeType[%s]`, model.PostMimeType, model2.PostMimeType)
 			return
 		}
 
 		if model.CommentCount == model2.CommentCount {
-			t.Errorf(`model.CommentCount[%d] != model2.CommentCount[%d]`, model.CommentCount, model2.CommentCount)
+			t.Errorf(`1: model.CommentCount[%d] != model2.CommentCount[%d]`, model.CommentCount, model2.CommentCount)
 			return
 		}
 
@@ -3741,7 +3741,7 @@ func TestTermRelationshipCreate(t *testing.T) {
 		}
 		file, err := os.OpenFile("adapter.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
 		if err != nil {
-			t.Errorf("Failed to open log file %s", err)
+			t.Errorf(" Failed to open log file %s", err)
 		}
 		a.SetLogs(file)
 		model := NewTermRelationship(a)
@@ -3751,7 +3751,7 @@ func TestTermRelationshipCreate(t *testing.T) {
 
 		err = model.Create()
 		if err != nil {
-			t.Errorf(`failed to create model %s`, err)
+			t.Errorf(` failed to create model %s`, err)
 			return
 		}
 
@@ -3762,26 +3762,26 @@ func TestTermRelationshipCreate(t *testing.T) {
 		}
 
 		if err != nil {
-			t.Errorf(`did not find record for term_taxonomy_id = %d AND object_id = %d because of %s`, model.TermTaxonomyId, model.ObjectId, err)
+			t.Errorf(` did not find record for term_taxonomy_id = %d AND object_id = %d because of %s`, model.TermTaxonomyId, model.ObjectId, err)
 			return
 		}
 		if found == false {
-			t.Errorf(`did not find record for term_taxonomy_id = %d AND object_id = %d because of %s`, model.TermTaxonomyId, model.ObjectId, err)
+			t.Errorf(` did not find record for term_taxonomy_id = %d AND object_id = %d because of %s`, model.TermTaxonomyId, model.ObjectId, err)
 			return
 		}
 
 		if model.ObjectId != model2.ObjectId {
-			t.Errorf(`model.ObjectId[%d] != model2.ObjectId[%d]`, model.ObjectId, model2.ObjectId)
+			t.Errorf(` model.ObjectId[%d] != model2.ObjectId[%d]`, model.ObjectId, model2.ObjectId)
 			return
 		}
 
 		if model.TermTaxonomyId != model2.TermTaxonomyId {
-			t.Errorf(`model.TermTaxonomyId[%d] != model2.TermTaxonomyId[%d]`, model.TermTaxonomyId, model2.TermTaxonomyId)
+			t.Errorf(` model.TermTaxonomyId[%d] != model2.TermTaxonomyId[%d]`, model.TermTaxonomyId, model2.TermTaxonomyId)
 			return
 		}
 
 		if model.TermOrder != model2.TermOrder {
-			t.Errorf(`model.TermOrder[%d] != model2.TermOrder[%d]`, model.TermOrder, model2.TermOrder)
+			t.Errorf(` model.TermOrder[%d] != model2.TermOrder[%d]`, model.TermOrder, model2.TermOrder)
 			return
 		}
 		model2.SetObjectId(int64(randomInteger()))
@@ -3794,17 +3794,17 @@ func TestTermRelationshipCreate(t *testing.T) {
 		}
 
 		if model.ObjectId == model2.ObjectId {
-			t.Errorf(`model.ObjectId[%d] != model2.ObjectId[%d]`, model.ObjectId, model2.ObjectId)
+			t.Errorf(`1: model.ObjectId[%d] != model2.ObjectId[%d]`, model.ObjectId, model2.ObjectId)
 			return
 		}
 
 		if model.TermTaxonomyId == model2.TermTaxonomyId {
-			t.Errorf(`model.TermTaxonomyId[%d] != model2.TermTaxonomyId[%d]`, model.TermTaxonomyId, model2.TermTaxonomyId)
+			t.Errorf(`1: model.TermTaxonomyId[%d] != model2.TermTaxonomyId[%d]`, model.TermTaxonomyId, model2.TermTaxonomyId)
 			return
 		}
 
 		if model.TermOrder == model2.TermOrder {
-			t.Errorf(`model.TermOrder[%d] != model2.TermOrder[%d]`, model.TermOrder, model2.TermOrder)
+			t.Errorf(`1: model.TermOrder[%d] != model2.TermOrder[%d]`, model.TermOrder, model2.TermOrder)
 			return
 		}
 	} // end of if fileExists
@@ -3953,7 +3953,7 @@ func TestTermTaxonomyCreate(t *testing.T) {
 		}
 		file, err := os.OpenFile("adapter.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
 		if err != nil {
-			t.Errorf("Failed to open log file %s", err)
+			t.Errorf(" Failed to open log file %s", err)
 		}
 		a.SetLogs(file)
 		model := NewTermTaxonomy(a)
@@ -3965,43 +3965,43 @@ func TestTermTaxonomyCreate(t *testing.T) {
 
 		err = model.Create()
 		if err != nil {
-			t.Errorf(`failed to create model %s`, err)
+			t.Errorf(` failed to create model %s`, err)
 			return
 		}
 
 		model2 := NewTermTaxonomy(a)
 		found, err := model2.Find(model.GetPrimaryKeyValue())
 		if err != nil {
-			t.Errorf(`did not find record for %s = %d because of %s`, model.GetPrimaryKeyName(), model.GetPrimaryKeyValue(), err)
+			t.Errorf(` did not find record for %s = %d because of %s`, model.GetPrimaryKeyName(), model.GetPrimaryKeyValue(), err)
 			return
 		}
 		if found == false {
-			t.Errorf(`did not find record for %s = %d because of %s`, model.GetPrimaryKeyName(), model.GetPrimaryKeyValue(), err)
+			t.Errorf(` did not find record for %s = %d because of %s`, model.GetPrimaryKeyName(), model.GetPrimaryKeyValue(), err)
 			return
 		}
 
 		if model.TermId != model2.TermId {
-			t.Errorf(`model.TermId[%d] != model2.TermId[%d]`, model.TermId, model2.TermId)
+			t.Errorf(` model.TermId[%d] != model2.TermId[%d]`, model.TermId, model2.TermId)
 			return
 		}
 
 		if model.Taxonomy != model2.Taxonomy {
-			t.Errorf(`model.Taxonomy[%s] != model2.Taxonomy[%s]`, model.Taxonomy, model2.Taxonomy)
+			t.Errorf(` model.Taxonomy[%s] != model2.Taxonomy[%s]`, model.Taxonomy, model2.Taxonomy)
 			return
 		}
 
 		if model.Description != model2.Description {
-			t.Errorf(`model.Description[%s] != model2.Description[%s]`, model.Description, model2.Description)
+			t.Errorf(` model.Description[%s] != model2.Description[%s]`, model.Description, model2.Description)
 			return
 		}
 
 		if model.Parent != model2.Parent {
-			t.Errorf(`model.Parent[%d] != model2.Parent[%d]`, model.Parent, model2.Parent)
+			t.Errorf(` model.Parent[%d] != model2.Parent[%d]`, model.Parent, model2.Parent)
 			return
 		}
 
 		if model.Count != model2.Count {
-			t.Errorf(`model.Count[%d] != model2.Count[%d]`, model.Count, model2.Count)
+			t.Errorf(` model.Count[%d] != model2.Count[%d]`, model.Count, model2.Count)
 			return
 		}
 		model2.SetTermId(int64(randomInteger()))
@@ -4016,27 +4016,27 @@ func TestTermTaxonomyCreate(t *testing.T) {
 		}
 
 		if model.TermId == model2.TermId {
-			t.Errorf(`model.TermId[%d] != model2.TermId[%d]`, model.TermId, model2.TermId)
+			t.Errorf(`1: model.TermId[%d] != model2.TermId[%d]`, model.TermId, model2.TermId)
 			return
 		}
 
 		if model.Taxonomy == model2.Taxonomy {
-			t.Errorf(`model.Taxonomy[%s] != model2.Taxonomy[%s]`, model.Taxonomy, model2.Taxonomy)
+			t.Errorf(`1: model.Taxonomy[%s] != model2.Taxonomy[%s]`, model.Taxonomy, model2.Taxonomy)
 			return
 		}
 
 		if model.Description == model2.Description {
-			t.Errorf(`model.Description[%s] != model2.Description[%s]`, model.Description, model2.Description)
+			t.Errorf(`1: model.Description[%s] != model2.Description[%s]`, model.Description, model2.Description)
 			return
 		}
 
 		if model.Parent == model2.Parent {
-			t.Errorf(`model.Parent[%d] != model2.Parent[%d]`, model.Parent, model2.Parent)
+			t.Errorf(`1: model.Parent[%d] != model2.Parent[%d]`, model.Parent, model2.Parent)
 			return
 		}
 
 		if model.Count == model2.Count {
-			t.Errorf(`model.Count[%d] != model2.Count[%d]`, model.Count, model2.Count)
+			t.Errorf(`1: model.Count[%d] != model2.Count[%d]`, model.Count, model2.Count)
 			return
 		}
 
@@ -4289,7 +4289,7 @@ func TestTermCreate(t *testing.T) {
 		}
 		file, err := os.OpenFile("adapter.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
 		if err != nil {
-			t.Errorf("Failed to open log file %s", err)
+			t.Errorf(" Failed to open log file %s", err)
 		}
 		a.SetLogs(file)
 		model := NewTerm(a)
@@ -4299,33 +4299,33 @@ func TestTermCreate(t *testing.T) {
 
 		err = model.Create()
 		if err != nil {
-			t.Errorf(`failed to create model %s`, err)
+			t.Errorf(` failed to create model %s`, err)
 			return
 		}
 
 		model2 := NewTerm(a)
 		found, err := model2.Find(model.GetPrimaryKeyValue())
 		if err != nil {
-			t.Errorf(`did not find record for %s = %d because of %s`, model.GetPrimaryKeyName(), model.GetPrimaryKeyValue(), err)
+			t.Errorf(` did not find record for %s = %d because of %s`, model.GetPrimaryKeyName(), model.GetPrimaryKeyValue(), err)
 			return
 		}
 		if found == false {
-			t.Errorf(`did not find record for %s = %d because of %s`, model.GetPrimaryKeyName(), model.GetPrimaryKeyValue(), err)
+			t.Errorf(` did not find record for %s = %d because of %s`, model.GetPrimaryKeyName(), model.GetPrimaryKeyValue(), err)
 			return
 		}
 
 		if model.Name != model2.Name {
-			t.Errorf(`model.Name[%s] != model2.Name[%s]`, model.Name, model2.Name)
+			t.Errorf(` model.Name[%s] != model2.Name[%s]`, model.Name, model2.Name)
 			return
 		}
 
 		if model.Slug != model2.Slug {
-			t.Errorf(`model.Slug[%s] != model2.Slug[%s]`, model.Slug, model2.Slug)
+			t.Errorf(` model.Slug[%s] != model2.Slug[%s]`, model.Slug, model2.Slug)
 			return
 		}
 
 		if model.TermGroup != model2.TermGroup {
-			t.Errorf(`model.TermGroup[%d] != model2.TermGroup[%d]`, model.TermGroup, model2.TermGroup)
+			t.Errorf(` model.TermGroup[%d] != model2.TermGroup[%d]`, model.TermGroup, model2.TermGroup)
 			return
 		}
 		model2.SetName(randomString(19))
@@ -4338,17 +4338,17 @@ func TestTermCreate(t *testing.T) {
 		}
 
 		if model.Name == model2.Name {
-			t.Errorf(`model.Name[%s] != model2.Name[%s]`, model.Name, model2.Name)
+			t.Errorf(`1: model.Name[%s] != model2.Name[%s]`, model.Name, model2.Name)
 			return
 		}
 
 		if model.Slug == model2.Slug {
-			t.Errorf(`model.Slug[%s] != model2.Slug[%s]`, model.Slug, model2.Slug)
+			t.Errorf(`1: model.Slug[%s] != model2.Slug[%s]`, model.Slug, model2.Slug)
 			return
 		}
 
 		if model.TermGroup == model2.TermGroup {
-			t.Errorf(`model.TermGroup[%d] != model2.TermGroup[%d]`, model.TermGroup, model2.TermGroup)
+			t.Errorf(`1: model.TermGroup[%d] != model2.TermGroup[%d]`, model.TermGroup, model2.TermGroup)
 			return
 		}
 
@@ -4533,7 +4533,7 @@ func TestUserMetaCreate(t *testing.T) {
 		}
 		file, err := os.OpenFile("adapter.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
 		if err != nil {
-			t.Errorf("Failed to open log file %s", err)
+			t.Errorf(" Failed to open log file %s", err)
 		}
 		a.SetLogs(file)
 		model := NewUserMeta(a)
@@ -4543,33 +4543,33 @@ func TestUserMetaCreate(t *testing.T) {
 
 		err = model.Create()
 		if err != nil {
-			t.Errorf(`failed to create model %s`, err)
+			t.Errorf(` failed to create model %s`, err)
 			return
 		}
 
 		model2 := NewUserMeta(a)
 		found, err := model2.Find(model.GetPrimaryKeyValue())
 		if err != nil {
-			t.Errorf(`did not find record for %s = %d because of %s`, model.GetPrimaryKeyName(), model.GetPrimaryKeyValue(), err)
+			t.Errorf(` did not find record for %s = %d because of %s`, model.GetPrimaryKeyName(), model.GetPrimaryKeyValue(), err)
 			return
 		}
 		if found == false {
-			t.Errorf(`did not find record for %s = %d because of %s`, model.GetPrimaryKeyName(), model.GetPrimaryKeyValue(), err)
+			t.Errorf(` did not find record for %s = %d because of %s`, model.GetPrimaryKeyName(), model.GetPrimaryKeyValue(), err)
 			return
 		}
 
 		if model.UserId != model2.UserId {
-			t.Errorf(`model.UserId[%d] != model2.UserId[%d]`, model.UserId, model2.UserId)
+			t.Errorf(` model.UserId[%d] != model2.UserId[%d]`, model.UserId, model2.UserId)
 			return
 		}
 
 		if model.MetaKey != model2.MetaKey {
-			t.Errorf(`model.MetaKey[%s] != model2.MetaKey[%s]`, model.MetaKey, model2.MetaKey)
+			t.Errorf(` model.MetaKey[%s] != model2.MetaKey[%s]`, model.MetaKey, model2.MetaKey)
 			return
 		}
 
 		if model.MetaValue != model2.MetaValue {
-			t.Errorf(`model.MetaValue[%s] != model2.MetaValue[%s]`, model.MetaValue, model2.MetaValue)
+			t.Errorf(` model.MetaValue[%s] != model2.MetaValue[%s]`, model.MetaValue, model2.MetaValue)
 			return
 		}
 		model2.SetUserId(int64(randomInteger()))
@@ -4582,17 +4582,17 @@ func TestUserMetaCreate(t *testing.T) {
 		}
 
 		if model.UserId == model2.UserId {
-			t.Errorf(`model.UserId[%d] != model2.UserId[%d]`, model.UserId, model2.UserId)
+			t.Errorf(`1: model.UserId[%d] != model2.UserId[%d]`, model.UserId, model2.UserId)
 			return
 		}
 
 		if model.MetaKey == model2.MetaKey {
-			t.Errorf(`model.MetaKey[%s] != model2.MetaKey[%s]`, model.MetaKey, model2.MetaKey)
+			t.Errorf(`1: model.MetaKey[%s] != model2.MetaKey[%s]`, model.MetaKey, model2.MetaKey)
 			return
 		}
 
 		if model.MetaValue == model2.MetaValue {
-			t.Errorf(`model.MetaValue[%s] != model2.MetaValue[%s]`, model.MetaValue, model2.MetaValue)
+			t.Errorf(`1: model.MetaValue[%s] != model2.MetaValue[%s]`, model.MetaValue, model2.MetaValue)
 			return
 		}
 

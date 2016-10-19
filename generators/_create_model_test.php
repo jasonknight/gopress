@@ -11,7 +11,7 @@ func Test{$t->model_name}Create(t *testing.T) {
     }
     file, err := os.OpenFile(\"adapter.log\", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
     if err != nil {
-        $fail(\"Failed to open log file %s\", err)
+        $fail(\" Failed to open log file %s\", err)
     }
     a.SetLogs(file)
     model := New{$t->model_name}(a)
@@ -22,15 +22,15 @@ foreach ($fields as $f) {
     $i++;
 }
 $find_line = "model2.Find(model.GetPrimaryKeyValue())";
-$find_fail_line = "$fail(`did not find record for %s = {$t->pfield->mysql_fmt_type} because of %s`,model.GetPrimaryKeyName(),model.GetPrimaryKeyValue(),err)";
+$find_fail_line = "$fail(` did not find record for %s = {$t->pfield->mysql_fmt_type} because of %s`,model.GetPrimaryKeyName(),model.GetPrimaryKeyValue(),err)";
 if ($t->model_name == "TermRelationship") {
     $find_line = "model2.Find(model.TermTaxonomyId,model.ObjectId)\nif model.TermTaxonomyId == 0 {\n$fail(`it's 0`)\n} \n";
-    $find_fail_line = "$fail(`did not find record for term_taxonomy_id = %d AND object_id = %d because of %s`,model.TermTaxonomyId,model.ObjectId,err)";
+    $find_fail_line = "$fail(` did not find record for term_taxonomy_id = %d AND object_id = %d because of %s`,model.TermTaxonomyId,model.ObjectId,err)";
 }
 $txt .= "
     err = model.Create()
     if err != nil {
-        $fail(`failed to create model %s`,err)
+        $fail(` failed to create model %s`,err)
         return
     }
 
@@ -56,7 +56,7 @@ foreach ($fields as $f) {
         model.{$f['name']}.Hours != model2.{$f['name']}.Hours ||
         model.{$f['name']}.Minutes != model2.{$f['name']}.Minutes ||
         model.{$f['name']}.Seconds != model2.{$f['name']}.Seconds ) {
-        $fail(`model.{$f['name']} != model2.{$f['name']} %+v --- %+v`,model.{$f['name']},model2.{$f['name']})
+        $fail(`2: model.{$f['name']} != model2.{$f['name']} %+v --- %+v`,model.{$f['name']},model2.{$f['name']})
         return
     }
 ";
@@ -64,7 +64,7 @@ foreach ($fields as $f) {
    }
    $txt .= "
     if model.{$f['name']} != model2.{$f['name']} {
-        $fail(`model.{$f['name']}[{$f['fmt']}] != model2.{$f['name']}[{$f['fmt']}]`,model.{$f['name']},model2.{$f['name']})
+        $fail(` model.{$f['name']}[{$f['fmt']}] != model2.{$f['name']}[{$f['fmt']}]`,model.{$f['name']},model2.{$f['name']})
         return
     }
 ";
@@ -84,7 +84,7 @@ foreach ($fields as $f) {
    if ( $f['type'] == "*DateTime") {
    $txt .= "
     if (model.{$f['name']}.Year == model2.{$f['name']}.Year) {
-        $fail(`model.{$f['name']}.Year == model2.{$f['name']} but should not!`,model.{$f['name']},model2.{$f['name']})
+        $fail(` model.{$f['name']}.Year == model2.{$f['name']} but should not!`)
         return
     }
 ";
@@ -92,7 +92,7 @@ foreach ($fields as $f) {
    }
    $txt .= "
     if model.{$f['name']} == model2.{$f['name']} {
-        $fail(`model.{$f['name']}[{$f['fmt']}] != model2.{$f['name']}[{$f['fmt']}]`,model.{$f['name']},model2.{$f['name']})
+        $fail(`1: model.{$f['name']}[{$f['fmt']}] != model2.{$f['name']}[{$f['fmt']}]`,model.{$f['name']},model2.{$f['name']})
         return
     }
 ";

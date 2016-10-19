@@ -16,8 +16,21 @@ import (
 	"strings"
 )
 
+// LogFilter is an anonymous function that
+// that receives the log tag and string and
+// allows you to filter out extraneous lines
+// when trying to find bugs.
 type LogFilter func(string, string) string
+
+// SafeStringFilter is the function that escapes
+// possible SQL Injection code.
 type SafeStringFilter func(string) string
+
+// Adapter is the main Database interface which helps
+// to separate the DB from the Models. This is not
+// 100% just yet, and may never be. Eventually the
+// Adapter will probably receive some arguments and
+// a value map and build the Query internally
 type Adapter interface {
 	Open(string, string, string, string) error
 	Close()
@@ -36,26 +49,43 @@ type Adapter interface {
 	NewDBValue() DBValue
 }
 
+// MysqlAdapter is the MySql implementation
 type MysqlAdapter struct {
-	Host         string `yaml:"host"`
-	User         string `yaml:"user"`
-	Pass         string `yaml:"pass"`
-	Database     string `yaml:"database"`
-	DBPrefix     string `yaml:"prefix"`
-	_info_log    *log.Logger
-	_error_log   *log.Logger
-	_debug_log   *log.Logger
-	_conn_       *sql.DB
-	_lid         int64
-	_cnt         int64
-	_opened      bool
-	_log_filter  LogFilter
-	_safe_filter SafeStringFilter
+	// The host, localhost is valid here, or 127.0.0.1
+	// if you use localhost, the system won't use TCP
+	Host string `yaml:"host"`
+	// The database username
+	User string `yaml:"user"`
+	// The database password
+	Pass string `yaml:"pass"`
+	// The database name
+	Database string `yaml:"database"`
+	// A prefix, if any - can be blank
+	DBPrefix          string `yaml:"prefix"`
+	_infoLog          *log.Logger
+	_errorLog         *log.Logger
+	_debugLog         *log.Logger
+	_conn             *sql.DB
+	_lid              int64
+	_cnt              int64
+	_opened           bool
+	_logFilter        LogFilter
+	_safeStringFilter SafeStringFilter
 }
 
+// Simply returns a pointer to MysqlAdapter
 func NewMysqlAdapter(pre string) *MysqlAdapter {
 	return &MysqlAdapter{DBPrefix: pre}
 }
+
+// Args: fname is a string path to a YAML config file
+// This function will attempt to Open the database
+// defined in that file. Example file:
+//     host: "localhost"
+//     user: "dbuser"
+//     pass: "dbuserpass"
+//     database: "my_db"
+//     prefix: "wp_"
 func NewMysqlAdapterEx(fname string) (*MysqlAdapter, error) {
 	a := NewMysqlAdapter(``)
 	y, err := fileGetContents(fname)
@@ -73,69 +103,98 @@ func NewMysqlAdapterEx(fname string) (*MysqlAdapter, error) {
 	a.SetLogs(ioutil.Discard)
 	return a, nil
 }
+
+// Set the LogFilter to a function. This is only
+// useful if you are debugging, or you want to
+// reformat the log data.
 func (a *MysqlAdapter) SetLogFilter(f LogFilter) {
-	a._log_filter = f
+	a._logFilter = f
 }
+
+// Not implemented yet, but soon.
 func (a *MysqlAdapter) SafeString(s string) string {
 	return s
 }
+
+// Sets the _infoLog to the io.Writer, use ioutil.Discard if you
+// don't want this one at all.
 func (a *MysqlAdapter) SetInfoLog(t io.Writer) {
-	a._info_log = log.New(t, `[INFO]:`, log.Ldate|log.Ltime|log.Lshortfile)
+	a._infoLog = log.New(t, `[INFO]:`, log.Ldate|log.Ltime|log.Lshortfile)
 }
+
+// Sets the _errorLog to the io.Writer, use ioutil.Discard if you
+// don't want this one at all.
 func (a *MysqlAdapter) SetErrorLog(t io.Writer) {
-	a._error_log = log.New(t, `[ERROR]:`, log.Ldate|log.Ltime|log.Lshortfile)
+	a._errorLog = log.New(t, `[ERROR]:`, log.Ldate|log.Ltime|log.Lshortfile)
 }
+
+// Sets the _debugLog to the io.Writer, use ioutil.Discard if you
+// don't want this one at all.
 func (a *MysqlAdapter) SetDebugLog(t io.Writer) {
-	a._debug_log = log.New(t, `[DEBUG]:`, log.Ldate|log.Ltime|log.Lshortfile)
+	a._debugLog = log.New(t, `[DEBUG]:`, log.Ldate|log.Ltime|log.Lshortfile)
 }
+
+// Sets ALL logs to the io.Writer, use ioutil.Discard if you
+// don't want this one at all.
 func (a *MysqlAdapter) SetLogs(t io.Writer) {
 	a.SetInfoLog(t)
 	a.SetErrorLog(t)
 	a.SetDebugLog(t)
 }
 
+// Tags the string with INFO and puts it into _infoLog.
 func (a *MysqlAdapter) LogInfo(s string) {
-	if a._log_filter != nil {
-		s = a._log_filter(`INFO`, s)
+	if a._logFilter != nil {
+		s = a._logFilter(`INFO`, s)
 	}
 	if s == "" {
 		return
 	}
-	a._info_log.Println(s)
+	a._infoLog.Println(s)
 }
 
+// Tags the string with ERROR and puts it into _errorLog.
 func (a *MysqlAdapter) LogError(s error) {
-	if a._log_filter != nil {
-		ns := a._log_filter(`ERROR`, fmt.Sprintf(`%s`, s))
+	if a._logFilter != nil {
+		ns := a._logFilter(`ERROR`, fmt.Sprintf(`%s`, s))
 		if ns == `` {
 			return
 		}
-		a._error_log.Println(ns)
+		a._errorLog.Println(ns)
 		return
 	}
-	a._error_log.Println(s)
+	a._errorLog.Println(s)
 }
 
+// Tags the string with DEBUG and puts it into _debugLog.
 func (a *MysqlAdapter) LogDebug(s string) {
-	if a._log_filter != nil {
-		s = a._log_filter(`DEBUG`, s)
+	if a._logFilter != nil {
+		s = a._logFilter(`DEBUG`, s)
 	}
 	if s == "" {
 		return
 	}
-	a._debug_log.Println(s)
+	a._debugLog.Println(s)
 }
 
+// Creates a new DBValue, mostly used internally, but
+// you may wish to use it in special circumstances.
 func (a *MysqlAdapter) NewDBValue() DBValue {
 	return NewMysqlValue(a)
 }
+
+// Get the DatabasePrefix from the Adapter
 func (a *MysqlAdapter) DatabasePrefix() string {
 	return a.DBPrefix
 }
+
+// Set the Adapter's members from a YAML file
 func (a *MysqlAdapter) FromYAML(b []byte) error {
 	return yaml.Unmarshal(b, a)
 }
 
+// Opens the database connection. Be sure to use
+// a.Close() as closing is NOT handled for you.
 func (a *MysqlAdapter) Open(h, u, p, d string) error {
 	if h != "localhost" {
 		l := fmt.Sprintf("%s:%s@tcp(%s)/%s", u, p, h, d)
@@ -143,16 +202,16 @@ func (a *MysqlAdapter) Open(h, u, p, d string) error {
 		if err != nil {
 			return a.Oops(fmt.Sprintf(`%s with %s`, err, l))
 		}
-		a._conn_ = tc
+		a._conn = tc
 	} else {
 		l := fmt.Sprintf("%s:%s@/%s", u, p, d)
 		tc, err := sql.Open("mysql", l)
 		if err != nil {
 			return a.Oops(fmt.Sprintf(`%s with %s`, err, l))
 		}
-		a._conn_ = tc
+		a._conn = tc
 	}
-	err := a._conn_.Ping()
+	err := a._conn.Ping()
 	if err != nil {
 		return err
 	}
@@ -160,17 +219,22 @@ func (a *MysqlAdapter) Open(h, u, p, d string) error {
 	return nil
 
 }
+
+// This should be called in your application with a defer a.Close()
+// or something similar. Closing is not automatic!
 func (a *MysqlAdapter) Close() {
-	a._conn_.Close()
+	a._conn.Close()
 }
 
+// The generay Query function, i.e. SQL that returns results, as
+// opposed to an INSERT or UPDATE which uses Execute.
 func (a *MysqlAdapter) Query(q string) ([]map[string]DBValue, error) {
 	if a._opened != true {
 		return nil, a.Oops(`you must first open the connection`)
 	}
 	results := new([]map[string]DBValue)
 	a.LogInfo(q)
-	rows, err := a._conn_.Query(q)
+	rows, err := a._conn.Query(q)
 	if err != nil {
 		return nil, err
 	}
@@ -199,16 +263,22 @@ func (a *MysqlAdapter) Query(q string) ([]map[string]DBValue, error) {
 	}
 	return *results, nil
 }
+
+// A function for catching errors generated by
+// the library and funneling them to the log files
 func (a *MysqlAdapter) Oops(s string) error {
 	e := errors.New(s)
 	a.LogError(e)
 	return e
 }
+
+// For UPDATE and INSERT calls, i.e. nothing that
+// returns a result set.
 func (a *MysqlAdapter) Execute(q string) error {
 	if a._opened != true {
 		return a.Oops(`you must first open the connection`)
 	}
-	tx, err := a._conn_.Begin()
+	tx, err := a._conn.Begin()
 	if err != nil {
 		return a.Oops(fmt.Sprintf(`could not Begin Transaction %s`, err))
 	}
@@ -238,13 +308,19 @@ func (a *MysqlAdapter) Execute(q string) error {
 	}
 	return nil
 }
+
+// Grab the last auto_incremented id
 func (a *MysqlAdapter) LastInsertedId() int64 {
 	return a._lid
 }
+
+// Grab the number of AffectedRows
 func (a *MysqlAdapter) AffectedRows() int64 {
 	return a._cnt
 }
 
+// Provides a tidy way to convert string
+// values from the DB into go values
 type DBValue interface {
 	AsInt() (int, error)
 	AsInt32() (int32, error)
@@ -256,32 +332,47 @@ type DBValue interface {
 	SetInternalValue(string, string)
 }
 
+// Implements DBValue for MySQL, you'll generally
+// not interact directly with this type, but it
+// is there for special cases.
 type MysqlValue struct {
 	_v       string
 	_k       string
 	_adapter Adapter
 }
 
+// Sets the internal value of the DBValue to the string
+// provided. key isn't really used, but it may be.
 func (v *MysqlValue) SetInternalValue(key, value string) {
 	v._v = value
 	v._k = key
 
 }
+
+// Simply returns the internal string representation.
 func (v *MysqlValue) AsString() (string, error) {
 	return v._v, nil
 }
+
+// Attempts to convert the internal string to an Int
 func (v *MysqlValue) AsInt() (int, error) {
 	i, err := strconv.ParseInt(v._v, 10, 32)
 	return int(i), err
 }
+
+// Tries to convert the internal string to an int32
 func (v *MysqlValue) AsInt32() (int32, error) {
 	i, err := strconv.ParseInt(v._v, 10, 32)
 	return int32(i), err
 }
+
+// Tries to convert the internal string to an int64 (i.e. BIGINT)
 func (v *MysqlValue) AsInt64() (int64, error) {
 	i, err := strconv.ParseInt(v._v, 10, 64)
 	return i, err
 }
+
+// Tries to convert the internal string to a float32
 func (v *MysqlValue) AsFloat32() (float32, error) {
 	i, err := strconv.ParseFloat(v._v, 32)
 	if err != nil {
@@ -289,6 +380,8 @@ func (v *MysqlValue) AsFloat32() (float32, error) {
 	}
 	return float32(i), err
 }
+
+// Tries to convert the internal string to a float64
 func (v *MysqlValue) AsFloat64() (float64, error) {
 	i, err := strconv.ParseFloat(v._v, 64)
 	if err != nil {
@@ -297,6 +390,8 @@ func (v *MysqlValue) AsFloat64() (float64, error) {
 	return i, err
 }
 
+// Tries to convert the string to a DateTime,
+// parsing may fail.
 func (v *MysqlValue) AsDateTime() (*DateTime, error) {
 	dt := NewDateTime(v._adapter)
 	err := dt.FromString(v._v)
@@ -306,20 +401,34 @@ func (v *MysqlValue) AsDateTime() (*DateTime, error) {
 	return dt, nil
 }
 
+// A function for largely internal use, but
+// basically in order to use a DBValue, it
+// needs to have its Adapter setup, this is
+// because some values have Adapter specific
+// issues. The implementing adapter may need
+// to provide some information, or logging etc
 func NewMysqlValue(a Adapter) *MysqlValue {
 	return &MysqlValue{_adapter: a}
 }
 
+// A simple struct to represent DateTime fields
 type DateTime struct {
-	Day      int
-	Month    int
-	Year     int
-	Hours    int
-	Minutes  int
+	// The day as an int
+	Day int
+	// the month, as an int
+	Month int
+	// The year, as an int
+	Year int
+	// the hours, in 24 hour format
+	Hours int
+	// the minutes
+	Minutes int
+	// the seconds
 	Seconds  int
 	_adapter Adapter
 }
 
+// Converts a string like 0000-00-00 00:00:00 into a DateTime
 func (d *DateTime) FromString(s string) error {
 	es := s
 	re := regexp.MustCompile("(?P<year>[\\d]{4})-(?P<month>[\\d]{2})-(?P<day>[\\d]{2}) (?P<hours>[\\d]{2}):(?P<minutes>[\\d]{2}):(?P<seconds>[\\d]{2})")
@@ -375,12 +484,18 @@ func (d *DateTime) FromString(s string) error {
 	}
 	return nil
 }
+
+// For backwards compat...
 func (d *DateTime) ToString() string {
 	return fmt.Sprintf("%d-%02d-%02d %02d:%02d:%02d", d.Year, d.Month, d.Day, d.Hours, d.Minutes, d.Seconds)
 }
+
+// The Stringer for DateTime to avoid having to call ToString all the time.
 func (d *DateTime) String() string {
 	return d.ToString()
 }
+
+// Returns a basic DateTime value
 func NewDateTime(a Adapter) *DateTime {
 	d := &DateTime{_adapter: a}
 	return d
@@ -432,49 +547,51 @@ func NewCommentMeta(a Adapter) *CommentMeta {
 	return &o
 }
 
-func (m *CommentMeta) GetPrimaryKeyValue() int64 {
-	return m.MetaId
+func (o *CommentMeta) GetPrimaryKeyValue() int64 {
+	return o.MetaId
 }
-func (m *CommentMeta) GetPrimaryKeyName() string {
+func (o *CommentMeta) GetPrimaryKeyName() string {
 	return `meta_id`
 }
 
-func (m *CommentMeta) GetMetaId() int64 {
-	return m.MetaId
+func (o *CommentMeta) GetMetaId() int64 {
+	return o.MetaId
 }
-func (m *CommentMeta) SetMetaId(arg int64) {
-	m.MetaId = arg
-	m.IsMetaIdDirty = true
-}
-
-func (m *CommentMeta) GetCommentId() int64 {
-	return m.CommentId
-}
-func (m *CommentMeta) SetCommentId(arg int64) {
-	m.CommentId = arg
-	m.IsCommentIdDirty = true
+func (o *CommentMeta) SetMetaId(arg int64) {
+	o.MetaId = arg
+	o.IsMetaIdDirty = true
 }
 
-func (m *CommentMeta) GetMetaKey() string {
-	return m.MetaKey
+func (o *CommentMeta) GetCommentId() int64 {
+	return o.CommentId
 }
-func (m *CommentMeta) SetMetaKey(arg string) {
-	m.MetaKey = arg
-	m.IsMetaKeyDirty = true
-}
-
-func (m *CommentMeta) GetMetaValue() string {
-	return m.MetaValue
-}
-func (m *CommentMeta) SetMetaValue(arg string) {
-	m.MetaValue = arg
-	m.IsMetaValueDirty = true
+func (o *CommentMeta) SetCommentId(arg int64) {
+	o.CommentId = arg
+	o.IsCommentIdDirty = true
 }
 
-func (o *CommentMeta) Find(_find_by_MetaId int64) (bool, error) {
+func (o *CommentMeta) GetMetaKey() string {
+	return o.MetaKey
+}
+func (o *CommentMeta) SetMetaKey(arg string) {
+	o.MetaKey = arg
+	o.IsMetaKeyDirty = true
+}
+
+func (o *CommentMeta) GetMetaValue() string {
+	return o.MetaValue
+}
+func (o *CommentMeta) SetMetaValue(arg string) {
+	o.MetaValue = arg
+	o.IsMetaValueDirty = true
+}
+
+// CommentMetaFind(_findByMetaId int64) -> bool,error
+// Generic and programatically generator finder for CommentMeta
+func (o *CommentMeta) Find(_findByMetaId int64) (bool, error) {
 
 	var model_slice []*CommentMeta
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "meta_id", _find_by_MetaId)
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "meta_id", _findByMetaId)
 	results, err := o._adapter.Query(q)
 	if err != nil {
 		return false, o._adapter.Oops(fmt.Sprintf(`%s`, err))
@@ -497,60 +614,13 @@ func (o *CommentMeta) Find(_find_by_MetaId int64) (bool, error) {
 	return true, nil
 
 }
-func (o *CommentMeta) FindByCommentId(_find_by_CommentId int64) ([]*CommentMeta, error) {
+
+// CommentMetaFindByCommentId(_findByCommentId int64) -> []*CommentMeta,error
+// Generic and programatically generator finder for CommentMeta
+func (o *CommentMeta) FindByCommentId(_findByCommentId int64) ([]*CommentMeta, error) {
 
 	var model_slice []*CommentMeta
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "comment_id", _find_by_CommentId)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := CommentMeta{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *CommentMeta) FindByMetaKey(_find_by_MetaKey string) ([]*CommentMeta, error) {
-
-	var model_slice []*CommentMeta
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "meta_key", _find_by_MetaKey)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := CommentMeta{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *CommentMeta) FindByMetaValue(_find_by_MetaValue string) ([]*CommentMeta, error) {
-
-	var model_slice []*CommentMeta
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "meta_value", _find_by_MetaValue)
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "comment_id", _findByCommentId)
 	results, err := o._adapter.Query(q)
 	if err != nil {
 		return model_slice, err
@@ -573,6 +643,63 @@ func (o *CommentMeta) FindByMetaValue(_find_by_MetaValue string) ([]*CommentMeta
 
 }
 
+// CommentMetaFindByMetaKey(_findByMetaKey string) -> []*CommentMeta,error
+// Generic and programatically generator finder for CommentMeta
+func (o *CommentMeta) FindByMetaKey(_findByMetaKey string) ([]*CommentMeta, error) {
+
+	var model_slice []*CommentMeta
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "meta_key", _findByMetaKey)
+	results, err := o._adapter.Query(q)
+	if err != nil {
+		return model_slice, err
+	}
+
+	for _, result := range results {
+		ro := CommentMeta{}
+		err = ro.FromDBValueMap(result)
+		if err != nil {
+			return model_slice, err
+		}
+		model_slice = append(model_slice, &ro)
+	}
+
+	if len(model_slice) == 0 {
+		// there was an error!
+		return nil, o._adapter.Oops(`no results`)
+	}
+	return model_slice, nil
+
+}
+
+// CommentMetaFindByMetaValue(_findByMetaValue string) -> []*CommentMeta,error
+// Generic and programatically generator finder for CommentMeta
+func (o *CommentMeta) FindByMetaValue(_findByMetaValue string) ([]*CommentMeta, error) {
+
+	var model_slice []*CommentMeta
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "meta_value", _findByMetaValue)
+	results, err := o._adapter.Query(q)
+	if err != nil {
+		return model_slice, err
+	}
+
+	for _, result := range results {
+		ro := CommentMeta{}
+		err = ro.FromDBValueMap(result)
+		if err != nil {
+			return model_slice, err
+		}
+		model_slice = append(model_slice, &ro)
+	}
+
+	if len(model_slice) == 0 {
+		// there was an error!
+		return nil, o._adapter.Oops(`no results`)
+	}
+	return model_slice, nil
+
+}
+
+// Converts a DBValueMap returned from Adapter.Query to a CommentMeta
 func (o *CommentMeta) FromDBValueMap(m map[string]DBValue) error {
 	_MetaId, err := m["meta_id"].AsInt64()
 	if err != nil {
@@ -597,6 +724,8 @@ func (o *CommentMeta) FromDBValueMap(m map[string]DBValue) error {
 
 	return nil
 }
+
+// A kind of Clone function for CommentMeta
 func (o *CommentMeta) FromCommentMeta(m *CommentMeta) {
 	o.MetaId = m.MetaId
 	o.CommentId = m.CommentId
@@ -604,6 +733,8 @@ func (o *CommentMeta) FromCommentMeta(m *CommentMeta) {
 	o.MetaValue = m.MetaValue
 
 }
+
+// A function to forcibly reload CommentMeta
 func (o *CommentMeta) Reload() error {
 	_, err := o.Find(o.GetPrimaryKeyValue())
 	return err
@@ -746,137 +877,139 @@ func NewComment(a Adapter) *Comment {
 	return &o
 }
 
-func (m *Comment) GetPrimaryKeyValue() int64 {
-	return m.CommentID
+func (o *Comment) GetPrimaryKeyValue() int64 {
+	return o.CommentID
 }
-func (m *Comment) GetPrimaryKeyName() string {
+func (o *Comment) GetPrimaryKeyName() string {
 	return `comment_ID`
 }
 
-func (m *Comment) GetCommentID() int64 {
-	return m.CommentID
+func (o *Comment) GetCommentID() int64 {
+	return o.CommentID
 }
-func (m *Comment) SetCommentID(arg int64) {
-	m.CommentID = arg
-	m.IsCommentIDDirty = true
-}
-
-func (m *Comment) GetCommentPostID() int64 {
-	return m.CommentPostID
-}
-func (m *Comment) SetCommentPostID(arg int64) {
-	m.CommentPostID = arg
-	m.IsCommentPostIDDirty = true
+func (o *Comment) SetCommentID(arg int64) {
+	o.CommentID = arg
+	o.IsCommentIDDirty = true
 }
 
-func (m *Comment) GetCommentAuthor() string {
-	return m.CommentAuthor
+func (o *Comment) GetCommentPostID() int64 {
+	return o.CommentPostID
 }
-func (m *Comment) SetCommentAuthor(arg string) {
-	m.CommentAuthor = arg
-	m.IsCommentAuthorDirty = true
-}
-
-func (m *Comment) GetCommentAuthorEmail() string {
-	return m.CommentAuthorEmail
-}
-func (m *Comment) SetCommentAuthorEmail(arg string) {
-	m.CommentAuthorEmail = arg
-	m.IsCommentAuthorEmailDirty = true
+func (o *Comment) SetCommentPostID(arg int64) {
+	o.CommentPostID = arg
+	o.IsCommentPostIDDirty = true
 }
 
-func (m *Comment) GetCommentAuthorUrl() string {
-	return m.CommentAuthorUrl
+func (o *Comment) GetCommentAuthor() string {
+	return o.CommentAuthor
 }
-func (m *Comment) SetCommentAuthorUrl(arg string) {
-	m.CommentAuthorUrl = arg
-	m.IsCommentAuthorUrlDirty = true
-}
-
-func (m *Comment) GetCommentAuthorIP() string {
-	return m.CommentAuthorIP
-}
-func (m *Comment) SetCommentAuthorIP(arg string) {
-	m.CommentAuthorIP = arg
-	m.IsCommentAuthorIPDirty = true
+func (o *Comment) SetCommentAuthor(arg string) {
+	o.CommentAuthor = arg
+	o.IsCommentAuthorDirty = true
 }
 
-func (m *Comment) GetCommentDate() *DateTime {
-	return m.CommentDate
+func (o *Comment) GetCommentAuthorEmail() string {
+	return o.CommentAuthorEmail
 }
-func (m *Comment) SetCommentDate(arg *DateTime) {
-	m.CommentDate = arg
-	m.IsCommentDateDirty = true
-}
-
-func (m *Comment) GetCommentDateGmt() *DateTime {
-	return m.CommentDateGmt
-}
-func (m *Comment) SetCommentDateGmt(arg *DateTime) {
-	m.CommentDateGmt = arg
-	m.IsCommentDateGmtDirty = true
+func (o *Comment) SetCommentAuthorEmail(arg string) {
+	o.CommentAuthorEmail = arg
+	o.IsCommentAuthorEmailDirty = true
 }
 
-func (m *Comment) GetCommentContent() string {
-	return m.CommentContent
+func (o *Comment) GetCommentAuthorUrl() string {
+	return o.CommentAuthorUrl
 }
-func (m *Comment) SetCommentContent(arg string) {
-	m.CommentContent = arg
-	m.IsCommentContentDirty = true
-}
-
-func (m *Comment) GetCommentKarma() int {
-	return m.CommentKarma
-}
-func (m *Comment) SetCommentKarma(arg int) {
-	m.CommentKarma = arg
-	m.IsCommentKarmaDirty = true
+func (o *Comment) SetCommentAuthorUrl(arg string) {
+	o.CommentAuthorUrl = arg
+	o.IsCommentAuthorUrlDirty = true
 }
 
-func (m *Comment) GetCommentApproved() string {
-	return m.CommentApproved
+func (o *Comment) GetCommentAuthorIP() string {
+	return o.CommentAuthorIP
 }
-func (m *Comment) SetCommentApproved(arg string) {
-	m.CommentApproved = arg
-	m.IsCommentApprovedDirty = true
-}
-
-func (m *Comment) GetCommentAgent() string {
-	return m.CommentAgent
-}
-func (m *Comment) SetCommentAgent(arg string) {
-	m.CommentAgent = arg
-	m.IsCommentAgentDirty = true
+func (o *Comment) SetCommentAuthorIP(arg string) {
+	o.CommentAuthorIP = arg
+	o.IsCommentAuthorIPDirty = true
 }
 
-func (m *Comment) GetCommentType() string {
-	return m.CommentType
+func (o *Comment) GetCommentDate() *DateTime {
+	return o.CommentDate
 }
-func (m *Comment) SetCommentType(arg string) {
-	m.CommentType = arg
-	m.IsCommentTypeDirty = true
-}
-
-func (m *Comment) GetCommentParent() int64 {
-	return m.CommentParent
-}
-func (m *Comment) SetCommentParent(arg int64) {
-	m.CommentParent = arg
-	m.IsCommentParentDirty = true
+func (o *Comment) SetCommentDate(arg *DateTime) {
+	o.CommentDate = arg
+	o.IsCommentDateDirty = true
 }
 
-func (m *Comment) GetUserId() int64 {
-	return m.UserId
+func (o *Comment) GetCommentDateGmt() *DateTime {
+	return o.CommentDateGmt
 }
-func (m *Comment) SetUserId(arg int64) {
-	m.UserId = arg
-	m.IsUserIdDirty = true
+func (o *Comment) SetCommentDateGmt(arg *DateTime) {
+	o.CommentDateGmt = arg
+	o.IsCommentDateGmtDirty = true
 }
 
-func (o *Comment) Find(_find_by_CommentID int64) (bool, error) {
+func (o *Comment) GetCommentContent() string {
+	return o.CommentContent
+}
+func (o *Comment) SetCommentContent(arg string) {
+	o.CommentContent = arg
+	o.IsCommentContentDirty = true
+}
+
+func (o *Comment) GetCommentKarma() int {
+	return o.CommentKarma
+}
+func (o *Comment) SetCommentKarma(arg int) {
+	o.CommentKarma = arg
+	o.IsCommentKarmaDirty = true
+}
+
+func (o *Comment) GetCommentApproved() string {
+	return o.CommentApproved
+}
+func (o *Comment) SetCommentApproved(arg string) {
+	o.CommentApproved = arg
+	o.IsCommentApprovedDirty = true
+}
+
+func (o *Comment) GetCommentAgent() string {
+	return o.CommentAgent
+}
+func (o *Comment) SetCommentAgent(arg string) {
+	o.CommentAgent = arg
+	o.IsCommentAgentDirty = true
+}
+
+func (o *Comment) GetCommentType() string {
+	return o.CommentType
+}
+func (o *Comment) SetCommentType(arg string) {
+	o.CommentType = arg
+	o.IsCommentTypeDirty = true
+}
+
+func (o *Comment) GetCommentParent() int64 {
+	return o.CommentParent
+}
+func (o *Comment) SetCommentParent(arg int64) {
+	o.CommentParent = arg
+	o.IsCommentParentDirty = true
+}
+
+func (o *Comment) GetUserId() int64 {
+	return o.UserId
+}
+func (o *Comment) SetUserId(arg int64) {
+	o.UserId = arg
+	o.IsUserIdDirty = true
+}
+
+// CommentFind(_findByCommentID int64) -> bool,error
+// Generic and programatically generator finder for Comment
+func (o *Comment) Find(_findByCommentID int64) (bool, error) {
 
 	var model_slice []*Comment
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "comment_ID", _find_by_CommentID)
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "comment_ID", _findByCommentID)
 	results, err := o._adapter.Query(q)
 	if err != nil {
 		return false, o._adapter.Oops(fmt.Sprintf(`%s`, err))
@@ -899,335 +1032,13 @@ func (o *Comment) Find(_find_by_CommentID int64) (bool, error) {
 	return true, nil
 
 }
-func (o *Comment) FindByCommentPostID(_find_by_CommentPostID int64) ([]*Comment, error) {
+
+// CommentFindByCommentPostID(_findByCommentPostID int64) -> []*Comment,error
+// Generic and programatically generator finder for Comment
+func (o *Comment) FindByCommentPostID(_findByCommentPostID int64) ([]*Comment, error) {
 
 	var model_slice []*Comment
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "comment_post_ID", _find_by_CommentPostID)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := Comment{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *Comment) FindByCommentAuthor(_find_by_CommentAuthor string) ([]*Comment, error) {
-
-	var model_slice []*Comment
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "comment_author", _find_by_CommentAuthor)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := Comment{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *Comment) FindByCommentAuthorEmail(_find_by_CommentAuthorEmail string) ([]*Comment, error) {
-
-	var model_slice []*Comment
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "comment_author_email", _find_by_CommentAuthorEmail)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := Comment{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *Comment) FindByCommentAuthorUrl(_find_by_CommentAuthorUrl string) ([]*Comment, error) {
-
-	var model_slice []*Comment
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "comment_author_url", _find_by_CommentAuthorUrl)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := Comment{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *Comment) FindByCommentAuthorIP(_find_by_CommentAuthorIP string) ([]*Comment, error) {
-
-	var model_slice []*Comment
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "comment_author_IP", _find_by_CommentAuthorIP)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := Comment{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *Comment) FindByCommentDate(_find_by_CommentDate *DateTime) ([]*Comment, error) {
-
-	var model_slice []*Comment
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "comment_date", _find_by_CommentDate)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := Comment{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *Comment) FindByCommentDateGmt(_find_by_CommentDateGmt *DateTime) ([]*Comment, error) {
-
-	var model_slice []*Comment
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "comment_date_gmt", _find_by_CommentDateGmt)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := Comment{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *Comment) FindByCommentContent(_find_by_CommentContent string) ([]*Comment, error) {
-
-	var model_slice []*Comment
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "comment_content", _find_by_CommentContent)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := Comment{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *Comment) FindByCommentKarma(_find_by_CommentKarma int) ([]*Comment, error) {
-
-	var model_slice []*Comment
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "comment_karma", _find_by_CommentKarma)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := Comment{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *Comment) FindByCommentApproved(_find_by_CommentApproved string) ([]*Comment, error) {
-
-	var model_slice []*Comment
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "comment_approved", _find_by_CommentApproved)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := Comment{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *Comment) FindByCommentAgent(_find_by_CommentAgent string) ([]*Comment, error) {
-
-	var model_slice []*Comment
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "comment_agent", _find_by_CommentAgent)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := Comment{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *Comment) FindByCommentType(_find_by_CommentType string) ([]*Comment, error) {
-
-	var model_slice []*Comment
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "comment_type", _find_by_CommentType)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := Comment{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *Comment) FindByCommentParent(_find_by_CommentParent int64) ([]*Comment, error) {
-
-	var model_slice []*Comment
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "comment_parent", _find_by_CommentParent)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := Comment{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *Comment) FindByUserId(_find_by_UserId int64) ([]*Comment, error) {
-
-	var model_slice []*Comment
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "user_id", _find_by_UserId)
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "comment_post_ID", _findByCommentPostID)
 	results, err := o._adapter.Query(q)
 	if err != nil {
 		return model_slice, err
@@ -1250,6 +1061,371 @@ func (o *Comment) FindByUserId(_find_by_UserId int64) ([]*Comment, error) {
 
 }
 
+// CommentFindByCommentAuthor(_findByCommentAuthor string) -> []*Comment,error
+// Generic and programatically generator finder for Comment
+func (o *Comment) FindByCommentAuthor(_findByCommentAuthor string) ([]*Comment, error) {
+
+	var model_slice []*Comment
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "comment_author", _findByCommentAuthor)
+	results, err := o._adapter.Query(q)
+	if err != nil {
+		return model_slice, err
+	}
+
+	for _, result := range results {
+		ro := Comment{}
+		err = ro.FromDBValueMap(result)
+		if err != nil {
+			return model_slice, err
+		}
+		model_slice = append(model_slice, &ro)
+	}
+
+	if len(model_slice) == 0 {
+		// there was an error!
+		return nil, o._adapter.Oops(`no results`)
+	}
+	return model_slice, nil
+
+}
+
+// CommentFindByCommentAuthorEmail(_findByCommentAuthorEmail string) -> []*Comment,error
+// Generic and programatically generator finder for Comment
+func (o *Comment) FindByCommentAuthorEmail(_findByCommentAuthorEmail string) ([]*Comment, error) {
+
+	var model_slice []*Comment
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "comment_author_email", _findByCommentAuthorEmail)
+	results, err := o._adapter.Query(q)
+	if err != nil {
+		return model_slice, err
+	}
+
+	for _, result := range results {
+		ro := Comment{}
+		err = ro.FromDBValueMap(result)
+		if err != nil {
+			return model_slice, err
+		}
+		model_slice = append(model_slice, &ro)
+	}
+
+	if len(model_slice) == 0 {
+		// there was an error!
+		return nil, o._adapter.Oops(`no results`)
+	}
+	return model_slice, nil
+
+}
+
+// CommentFindByCommentAuthorUrl(_findByCommentAuthorUrl string) -> []*Comment,error
+// Generic and programatically generator finder for Comment
+func (o *Comment) FindByCommentAuthorUrl(_findByCommentAuthorUrl string) ([]*Comment, error) {
+
+	var model_slice []*Comment
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "comment_author_url", _findByCommentAuthorUrl)
+	results, err := o._adapter.Query(q)
+	if err != nil {
+		return model_slice, err
+	}
+
+	for _, result := range results {
+		ro := Comment{}
+		err = ro.FromDBValueMap(result)
+		if err != nil {
+			return model_slice, err
+		}
+		model_slice = append(model_slice, &ro)
+	}
+
+	if len(model_slice) == 0 {
+		// there was an error!
+		return nil, o._adapter.Oops(`no results`)
+	}
+	return model_slice, nil
+
+}
+
+// CommentFindByCommentAuthorIP(_findByCommentAuthorIP string) -> []*Comment,error
+// Generic and programatically generator finder for Comment
+func (o *Comment) FindByCommentAuthorIP(_findByCommentAuthorIP string) ([]*Comment, error) {
+
+	var model_slice []*Comment
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "comment_author_IP", _findByCommentAuthorIP)
+	results, err := o._adapter.Query(q)
+	if err != nil {
+		return model_slice, err
+	}
+
+	for _, result := range results {
+		ro := Comment{}
+		err = ro.FromDBValueMap(result)
+		if err != nil {
+			return model_slice, err
+		}
+		model_slice = append(model_slice, &ro)
+	}
+
+	if len(model_slice) == 0 {
+		// there was an error!
+		return nil, o._adapter.Oops(`no results`)
+	}
+	return model_slice, nil
+
+}
+
+// CommentFindByCommentDate(_findByCommentDate *DateTime) -> []*Comment,error
+// Generic and programatically generator finder for Comment
+func (o *Comment) FindByCommentDate(_findByCommentDate *DateTime) ([]*Comment, error) {
+
+	var model_slice []*Comment
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "comment_date", _findByCommentDate)
+	results, err := o._adapter.Query(q)
+	if err != nil {
+		return model_slice, err
+	}
+
+	for _, result := range results {
+		ro := Comment{}
+		err = ro.FromDBValueMap(result)
+		if err != nil {
+			return model_slice, err
+		}
+		model_slice = append(model_slice, &ro)
+	}
+
+	if len(model_slice) == 0 {
+		// there was an error!
+		return nil, o._adapter.Oops(`no results`)
+	}
+	return model_slice, nil
+
+}
+
+// CommentFindByCommentDateGmt(_findByCommentDateGmt *DateTime) -> []*Comment,error
+// Generic and programatically generator finder for Comment
+func (o *Comment) FindByCommentDateGmt(_findByCommentDateGmt *DateTime) ([]*Comment, error) {
+
+	var model_slice []*Comment
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "comment_date_gmt", _findByCommentDateGmt)
+	results, err := o._adapter.Query(q)
+	if err != nil {
+		return model_slice, err
+	}
+
+	for _, result := range results {
+		ro := Comment{}
+		err = ro.FromDBValueMap(result)
+		if err != nil {
+			return model_slice, err
+		}
+		model_slice = append(model_slice, &ro)
+	}
+
+	if len(model_slice) == 0 {
+		// there was an error!
+		return nil, o._adapter.Oops(`no results`)
+	}
+	return model_slice, nil
+
+}
+
+// CommentFindByCommentContent(_findByCommentContent string) -> []*Comment,error
+// Generic and programatically generator finder for Comment
+func (o *Comment) FindByCommentContent(_findByCommentContent string) ([]*Comment, error) {
+
+	var model_slice []*Comment
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "comment_content", _findByCommentContent)
+	results, err := o._adapter.Query(q)
+	if err != nil {
+		return model_slice, err
+	}
+
+	for _, result := range results {
+		ro := Comment{}
+		err = ro.FromDBValueMap(result)
+		if err != nil {
+			return model_slice, err
+		}
+		model_slice = append(model_slice, &ro)
+	}
+
+	if len(model_slice) == 0 {
+		// there was an error!
+		return nil, o._adapter.Oops(`no results`)
+	}
+	return model_slice, nil
+
+}
+
+// CommentFindByCommentKarma(_findByCommentKarma int) -> []*Comment,error
+// Generic and programatically generator finder for Comment
+func (o *Comment) FindByCommentKarma(_findByCommentKarma int) ([]*Comment, error) {
+
+	var model_slice []*Comment
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "comment_karma", _findByCommentKarma)
+	results, err := o._adapter.Query(q)
+	if err != nil {
+		return model_slice, err
+	}
+
+	for _, result := range results {
+		ro := Comment{}
+		err = ro.FromDBValueMap(result)
+		if err != nil {
+			return model_slice, err
+		}
+		model_slice = append(model_slice, &ro)
+	}
+
+	if len(model_slice) == 0 {
+		// there was an error!
+		return nil, o._adapter.Oops(`no results`)
+	}
+	return model_slice, nil
+
+}
+
+// CommentFindByCommentApproved(_findByCommentApproved string) -> []*Comment,error
+// Generic and programatically generator finder for Comment
+func (o *Comment) FindByCommentApproved(_findByCommentApproved string) ([]*Comment, error) {
+
+	var model_slice []*Comment
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "comment_approved", _findByCommentApproved)
+	results, err := o._adapter.Query(q)
+	if err != nil {
+		return model_slice, err
+	}
+
+	for _, result := range results {
+		ro := Comment{}
+		err = ro.FromDBValueMap(result)
+		if err != nil {
+			return model_slice, err
+		}
+		model_slice = append(model_slice, &ro)
+	}
+
+	if len(model_slice) == 0 {
+		// there was an error!
+		return nil, o._adapter.Oops(`no results`)
+	}
+	return model_slice, nil
+
+}
+
+// CommentFindByCommentAgent(_findByCommentAgent string) -> []*Comment,error
+// Generic and programatically generator finder for Comment
+func (o *Comment) FindByCommentAgent(_findByCommentAgent string) ([]*Comment, error) {
+
+	var model_slice []*Comment
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "comment_agent", _findByCommentAgent)
+	results, err := o._adapter.Query(q)
+	if err != nil {
+		return model_slice, err
+	}
+
+	for _, result := range results {
+		ro := Comment{}
+		err = ro.FromDBValueMap(result)
+		if err != nil {
+			return model_slice, err
+		}
+		model_slice = append(model_slice, &ro)
+	}
+
+	if len(model_slice) == 0 {
+		// there was an error!
+		return nil, o._adapter.Oops(`no results`)
+	}
+	return model_slice, nil
+
+}
+
+// CommentFindByCommentType(_findByCommentType string) -> []*Comment,error
+// Generic and programatically generator finder for Comment
+func (o *Comment) FindByCommentType(_findByCommentType string) ([]*Comment, error) {
+
+	var model_slice []*Comment
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "comment_type", _findByCommentType)
+	results, err := o._adapter.Query(q)
+	if err != nil {
+		return model_slice, err
+	}
+
+	for _, result := range results {
+		ro := Comment{}
+		err = ro.FromDBValueMap(result)
+		if err != nil {
+			return model_slice, err
+		}
+		model_slice = append(model_slice, &ro)
+	}
+
+	if len(model_slice) == 0 {
+		// there was an error!
+		return nil, o._adapter.Oops(`no results`)
+	}
+	return model_slice, nil
+
+}
+
+// CommentFindByCommentParent(_findByCommentParent int64) -> []*Comment,error
+// Generic and programatically generator finder for Comment
+func (o *Comment) FindByCommentParent(_findByCommentParent int64) ([]*Comment, error) {
+
+	var model_slice []*Comment
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "comment_parent", _findByCommentParent)
+	results, err := o._adapter.Query(q)
+	if err != nil {
+		return model_slice, err
+	}
+
+	for _, result := range results {
+		ro := Comment{}
+		err = ro.FromDBValueMap(result)
+		if err != nil {
+			return model_slice, err
+		}
+		model_slice = append(model_slice, &ro)
+	}
+
+	if len(model_slice) == 0 {
+		// there was an error!
+		return nil, o._adapter.Oops(`no results`)
+	}
+	return model_slice, nil
+
+}
+
+// CommentFindByUserId(_findByUserId int64) -> []*Comment,error
+// Generic and programatically generator finder for Comment
+func (o *Comment) FindByUserId(_findByUserId int64) ([]*Comment, error) {
+
+	var model_slice []*Comment
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "user_id", _findByUserId)
+	results, err := o._adapter.Query(q)
+	if err != nil {
+		return model_slice, err
+	}
+
+	for _, result := range results {
+		ro := Comment{}
+		err = ro.FromDBValueMap(result)
+		if err != nil {
+			return model_slice, err
+		}
+		model_slice = append(model_slice, &ro)
+	}
+
+	if len(model_slice) == 0 {
+		// there was an error!
+		return nil, o._adapter.Oops(`no results`)
+	}
+	return model_slice, nil
+
+}
+
+// Converts a DBValueMap returned from Adapter.Query to a Comment
 func (o *Comment) FromDBValueMap(m map[string]DBValue) error {
 	_CommentID, err := m["comment_ID"].AsInt64()
 	if err != nil {
@@ -1329,6 +1505,8 @@ func (o *Comment) FromDBValueMap(m map[string]DBValue) error {
 
 	return nil
 }
+
+// A kind of Clone function for Comment
 func (o *Comment) FromComment(m *Comment) {
 	o.CommentID = m.CommentID
 	o.CommentPostID = m.CommentPostID
@@ -1347,6 +1525,8 @@ func (o *Comment) FromComment(m *Comment) {
 	o.UserId = m.UserId
 
 }
+
+// A function to forcibly reload Comment
 func (o *Comment) Reload() error {
 	_, err := o.Find(o.GetPrimaryKeyValue())
 	return err
@@ -1683,121 +1863,123 @@ func NewLink(a Adapter) *Link {
 	return &o
 }
 
-func (m *Link) GetPrimaryKeyValue() int64 {
-	return m.LinkId
+func (o *Link) GetPrimaryKeyValue() int64 {
+	return o.LinkId
 }
-func (m *Link) GetPrimaryKeyName() string {
+func (o *Link) GetPrimaryKeyName() string {
 	return `link_id`
 }
 
-func (m *Link) GetLinkId() int64 {
-	return m.LinkId
+func (o *Link) GetLinkId() int64 {
+	return o.LinkId
 }
-func (m *Link) SetLinkId(arg int64) {
-	m.LinkId = arg
-	m.IsLinkIdDirty = true
-}
-
-func (m *Link) GetLinkUrl() string {
-	return m.LinkUrl
-}
-func (m *Link) SetLinkUrl(arg string) {
-	m.LinkUrl = arg
-	m.IsLinkUrlDirty = true
+func (o *Link) SetLinkId(arg int64) {
+	o.LinkId = arg
+	o.IsLinkIdDirty = true
 }
 
-func (m *Link) GetLinkName() string {
-	return m.LinkName
+func (o *Link) GetLinkUrl() string {
+	return o.LinkUrl
 }
-func (m *Link) SetLinkName(arg string) {
-	m.LinkName = arg
-	m.IsLinkNameDirty = true
-}
-
-func (m *Link) GetLinkImage() string {
-	return m.LinkImage
-}
-func (m *Link) SetLinkImage(arg string) {
-	m.LinkImage = arg
-	m.IsLinkImageDirty = true
+func (o *Link) SetLinkUrl(arg string) {
+	o.LinkUrl = arg
+	o.IsLinkUrlDirty = true
 }
 
-func (m *Link) GetLinkTarget() string {
-	return m.LinkTarget
+func (o *Link) GetLinkName() string {
+	return o.LinkName
 }
-func (m *Link) SetLinkTarget(arg string) {
-	m.LinkTarget = arg
-	m.IsLinkTargetDirty = true
-}
-
-func (m *Link) GetLinkDescription() string {
-	return m.LinkDescription
-}
-func (m *Link) SetLinkDescription(arg string) {
-	m.LinkDescription = arg
-	m.IsLinkDescriptionDirty = true
+func (o *Link) SetLinkName(arg string) {
+	o.LinkName = arg
+	o.IsLinkNameDirty = true
 }
 
-func (m *Link) GetLinkVisible() string {
-	return m.LinkVisible
+func (o *Link) GetLinkImage() string {
+	return o.LinkImage
 }
-func (m *Link) SetLinkVisible(arg string) {
-	m.LinkVisible = arg
-	m.IsLinkVisibleDirty = true
-}
-
-func (m *Link) GetLinkOwner() int64 {
-	return m.LinkOwner
-}
-func (m *Link) SetLinkOwner(arg int64) {
-	m.LinkOwner = arg
-	m.IsLinkOwnerDirty = true
+func (o *Link) SetLinkImage(arg string) {
+	o.LinkImage = arg
+	o.IsLinkImageDirty = true
 }
 
-func (m *Link) GetLinkRating() int {
-	return m.LinkRating
+func (o *Link) GetLinkTarget() string {
+	return o.LinkTarget
 }
-func (m *Link) SetLinkRating(arg int) {
-	m.LinkRating = arg
-	m.IsLinkRatingDirty = true
-}
-
-func (m *Link) GetLinkUpdated() *DateTime {
-	return m.LinkUpdated
-}
-func (m *Link) SetLinkUpdated(arg *DateTime) {
-	m.LinkUpdated = arg
-	m.IsLinkUpdatedDirty = true
+func (o *Link) SetLinkTarget(arg string) {
+	o.LinkTarget = arg
+	o.IsLinkTargetDirty = true
 }
 
-func (m *Link) GetLinkRel() string {
-	return m.LinkRel
+func (o *Link) GetLinkDescription() string {
+	return o.LinkDescription
 }
-func (m *Link) SetLinkRel(arg string) {
-	m.LinkRel = arg
-	m.IsLinkRelDirty = true
-}
-
-func (m *Link) GetLinkNotes() string {
-	return m.LinkNotes
-}
-func (m *Link) SetLinkNotes(arg string) {
-	m.LinkNotes = arg
-	m.IsLinkNotesDirty = true
+func (o *Link) SetLinkDescription(arg string) {
+	o.LinkDescription = arg
+	o.IsLinkDescriptionDirty = true
 }
 
-func (m *Link) GetLinkRss() string {
-	return m.LinkRss
+func (o *Link) GetLinkVisible() string {
+	return o.LinkVisible
 }
-func (m *Link) SetLinkRss(arg string) {
-	m.LinkRss = arg
-	m.IsLinkRssDirty = true
+func (o *Link) SetLinkVisible(arg string) {
+	o.LinkVisible = arg
+	o.IsLinkVisibleDirty = true
 }
 
-func (o *Link) Find(_find_by_LinkId int64) (bool, error) {
+func (o *Link) GetLinkOwner() int64 {
+	return o.LinkOwner
+}
+func (o *Link) SetLinkOwner(arg int64) {
+	o.LinkOwner = arg
+	o.IsLinkOwnerDirty = true
+}
+
+func (o *Link) GetLinkRating() int {
+	return o.LinkRating
+}
+func (o *Link) SetLinkRating(arg int) {
+	o.LinkRating = arg
+	o.IsLinkRatingDirty = true
+}
+
+func (o *Link) GetLinkUpdated() *DateTime {
+	return o.LinkUpdated
+}
+func (o *Link) SetLinkUpdated(arg *DateTime) {
+	o.LinkUpdated = arg
+	o.IsLinkUpdatedDirty = true
+}
+
+func (o *Link) GetLinkRel() string {
+	return o.LinkRel
+}
+func (o *Link) SetLinkRel(arg string) {
+	o.LinkRel = arg
+	o.IsLinkRelDirty = true
+}
+
+func (o *Link) GetLinkNotes() string {
+	return o.LinkNotes
+}
+func (o *Link) SetLinkNotes(arg string) {
+	o.LinkNotes = arg
+	o.IsLinkNotesDirty = true
+}
+
+func (o *Link) GetLinkRss() string {
+	return o.LinkRss
+}
+func (o *Link) SetLinkRss(arg string) {
+	o.LinkRss = arg
+	o.IsLinkRssDirty = true
+}
+
+// LinkFind(_findByLinkId int64) -> bool,error
+// Generic and programatically generator finder for Link
+func (o *Link) Find(_findByLinkId int64) (bool, error) {
 
 	var model_slice []*Link
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "link_id", _find_by_LinkId)
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "link_id", _findByLinkId)
 	results, err := o._adapter.Query(q)
 	if err != nil {
 		return false, o._adapter.Oops(fmt.Sprintf(`%s`, err))
@@ -1820,285 +2002,13 @@ func (o *Link) Find(_find_by_LinkId int64) (bool, error) {
 	return true, nil
 
 }
-func (o *Link) FindByLinkUrl(_find_by_LinkUrl string) ([]*Link, error) {
+
+// LinkFindByLinkUrl(_findByLinkUrl string) -> []*Link,error
+// Generic and programatically generator finder for Link
+func (o *Link) FindByLinkUrl(_findByLinkUrl string) ([]*Link, error) {
 
 	var model_slice []*Link
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "link_url", _find_by_LinkUrl)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := Link{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *Link) FindByLinkName(_find_by_LinkName string) ([]*Link, error) {
-
-	var model_slice []*Link
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "link_name", _find_by_LinkName)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := Link{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *Link) FindByLinkImage(_find_by_LinkImage string) ([]*Link, error) {
-
-	var model_slice []*Link
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "link_image", _find_by_LinkImage)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := Link{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *Link) FindByLinkTarget(_find_by_LinkTarget string) ([]*Link, error) {
-
-	var model_slice []*Link
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "link_target", _find_by_LinkTarget)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := Link{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *Link) FindByLinkDescription(_find_by_LinkDescription string) ([]*Link, error) {
-
-	var model_slice []*Link
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "link_description", _find_by_LinkDescription)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := Link{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *Link) FindByLinkVisible(_find_by_LinkVisible string) ([]*Link, error) {
-
-	var model_slice []*Link
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "link_visible", _find_by_LinkVisible)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := Link{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *Link) FindByLinkOwner(_find_by_LinkOwner int64) ([]*Link, error) {
-
-	var model_slice []*Link
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "link_owner", _find_by_LinkOwner)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := Link{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *Link) FindByLinkRating(_find_by_LinkRating int) ([]*Link, error) {
-
-	var model_slice []*Link
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "link_rating", _find_by_LinkRating)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := Link{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *Link) FindByLinkUpdated(_find_by_LinkUpdated *DateTime) ([]*Link, error) {
-
-	var model_slice []*Link
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "link_updated", _find_by_LinkUpdated)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := Link{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *Link) FindByLinkRel(_find_by_LinkRel string) ([]*Link, error) {
-
-	var model_slice []*Link
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "link_rel", _find_by_LinkRel)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := Link{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *Link) FindByLinkNotes(_find_by_LinkNotes string) ([]*Link, error) {
-
-	var model_slice []*Link
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "link_notes", _find_by_LinkNotes)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := Link{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *Link) FindByLinkRss(_find_by_LinkRss string) ([]*Link, error) {
-
-	var model_slice []*Link
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "link_rss", _find_by_LinkRss)
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "link_url", _findByLinkUrl)
 	results, err := o._adapter.Query(q)
 	if err != nil {
 		return model_slice, err
@@ -2121,6 +2031,315 @@ func (o *Link) FindByLinkRss(_find_by_LinkRss string) ([]*Link, error) {
 
 }
 
+// LinkFindByLinkName(_findByLinkName string) -> []*Link,error
+// Generic and programatically generator finder for Link
+func (o *Link) FindByLinkName(_findByLinkName string) ([]*Link, error) {
+
+	var model_slice []*Link
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "link_name", _findByLinkName)
+	results, err := o._adapter.Query(q)
+	if err != nil {
+		return model_slice, err
+	}
+
+	for _, result := range results {
+		ro := Link{}
+		err = ro.FromDBValueMap(result)
+		if err != nil {
+			return model_slice, err
+		}
+		model_slice = append(model_slice, &ro)
+	}
+
+	if len(model_slice) == 0 {
+		// there was an error!
+		return nil, o._adapter.Oops(`no results`)
+	}
+	return model_slice, nil
+
+}
+
+// LinkFindByLinkImage(_findByLinkImage string) -> []*Link,error
+// Generic and programatically generator finder for Link
+func (o *Link) FindByLinkImage(_findByLinkImage string) ([]*Link, error) {
+
+	var model_slice []*Link
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "link_image", _findByLinkImage)
+	results, err := o._adapter.Query(q)
+	if err != nil {
+		return model_slice, err
+	}
+
+	for _, result := range results {
+		ro := Link{}
+		err = ro.FromDBValueMap(result)
+		if err != nil {
+			return model_slice, err
+		}
+		model_slice = append(model_slice, &ro)
+	}
+
+	if len(model_slice) == 0 {
+		// there was an error!
+		return nil, o._adapter.Oops(`no results`)
+	}
+	return model_slice, nil
+
+}
+
+// LinkFindByLinkTarget(_findByLinkTarget string) -> []*Link,error
+// Generic and programatically generator finder for Link
+func (o *Link) FindByLinkTarget(_findByLinkTarget string) ([]*Link, error) {
+
+	var model_slice []*Link
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "link_target", _findByLinkTarget)
+	results, err := o._adapter.Query(q)
+	if err != nil {
+		return model_slice, err
+	}
+
+	for _, result := range results {
+		ro := Link{}
+		err = ro.FromDBValueMap(result)
+		if err != nil {
+			return model_slice, err
+		}
+		model_slice = append(model_slice, &ro)
+	}
+
+	if len(model_slice) == 0 {
+		// there was an error!
+		return nil, o._adapter.Oops(`no results`)
+	}
+	return model_slice, nil
+
+}
+
+// LinkFindByLinkDescription(_findByLinkDescription string) -> []*Link,error
+// Generic and programatically generator finder for Link
+func (o *Link) FindByLinkDescription(_findByLinkDescription string) ([]*Link, error) {
+
+	var model_slice []*Link
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "link_description", _findByLinkDescription)
+	results, err := o._adapter.Query(q)
+	if err != nil {
+		return model_slice, err
+	}
+
+	for _, result := range results {
+		ro := Link{}
+		err = ro.FromDBValueMap(result)
+		if err != nil {
+			return model_slice, err
+		}
+		model_slice = append(model_slice, &ro)
+	}
+
+	if len(model_slice) == 0 {
+		// there was an error!
+		return nil, o._adapter.Oops(`no results`)
+	}
+	return model_slice, nil
+
+}
+
+// LinkFindByLinkVisible(_findByLinkVisible string) -> []*Link,error
+// Generic and programatically generator finder for Link
+func (o *Link) FindByLinkVisible(_findByLinkVisible string) ([]*Link, error) {
+
+	var model_slice []*Link
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "link_visible", _findByLinkVisible)
+	results, err := o._adapter.Query(q)
+	if err != nil {
+		return model_slice, err
+	}
+
+	for _, result := range results {
+		ro := Link{}
+		err = ro.FromDBValueMap(result)
+		if err != nil {
+			return model_slice, err
+		}
+		model_slice = append(model_slice, &ro)
+	}
+
+	if len(model_slice) == 0 {
+		// there was an error!
+		return nil, o._adapter.Oops(`no results`)
+	}
+	return model_slice, nil
+
+}
+
+// LinkFindByLinkOwner(_findByLinkOwner int64) -> []*Link,error
+// Generic and programatically generator finder for Link
+func (o *Link) FindByLinkOwner(_findByLinkOwner int64) ([]*Link, error) {
+
+	var model_slice []*Link
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "link_owner", _findByLinkOwner)
+	results, err := o._adapter.Query(q)
+	if err != nil {
+		return model_slice, err
+	}
+
+	for _, result := range results {
+		ro := Link{}
+		err = ro.FromDBValueMap(result)
+		if err != nil {
+			return model_slice, err
+		}
+		model_slice = append(model_slice, &ro)
+	}
+
+	if len(model_slice) == 0 {
+		// there was an error!
+		return nil, o._adapter.Oops(`no results`)
+	}
+	return model_slice, nil
+
+}
+
+// LinkFindByLinkRating(_findByLinkRating int) -> []*Link,error
+// Generic and programatically generator finder for Link
+func (o *Link) FindByLinkRating(_findByLinkRating int) ([]*Link, error) {
+
+	var model_slice []*Link
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "link_rating", _findByLinkRating)
+	results, err := o._adapter.Query(q)
+	if err != nil {
+		return model_slice, err
+	}
+
+	for _, result := range results {
+		ro := Link{}
+		err = ro.FromDBValueMap(result)
+		if err != nil {
+			return model_slice, err
+		}
+		model_slice = append(model_slice, &ro)
+	}
+
+	if len(model_slice) == 0 {
+		// there was an error!
+		return nil, o._adapter.Oops(`no results`)
+	}
+	return model_slice, nil
+
+}
+
+// LinkFindByLinkUpdated(_findByLinkUpdated *DateTime) -> []*Link,error
+// Generic and programatically generator finder for Link
+func (o *Link) FindByLinkUpdated(_findByLinkUpdated *DateTime) ([]*Link, error) {
+
+	var model_slice []*Link
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "link_updated", _findByLinkUpdated)
+	results, err := o._adapter.Query(q)
+	if err != nil {
+		return model_slice, err
+	}
+
+	for _, result := range results {
+		ro := Link{}
+		err = ro.FromDBValueMap(result)
+		if err != nil {
+			return model_slice, err
+		}
+		model_slice = append(model_slice, &ro)
+	}
+
+	if len(model_slice) == 0 {
+		// there was an error!
+		return nil, o._adapter.Oops(`no results`)
+	}
+	return model_slice, nil
+
+}
+
+// LinkFindByLinkRel(_findByLinkRel string) -> []*Link,error
+// Generic and programatically generator finder for Link
+func (o *Link) FindByLinkRel(_findByLinkRel string) ([]*Link, error) {
+
+	var model_slice []*Link
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "link_rel", _findByLinkRel)
+	results, err := o._adapter.Query(q)
+	if err != nil {
+		return model_slice, err
+	}
+
+	for _, result := range results {
+		ro := Link{}
+		err = ro.FromDBValueMap(result)
+		if err != nil {
+			return model_slice, err
+		}
+		model_slice = append(model_slice, &ro)
+	}
+
+	if len(model_slice) == 0 {
+		// there was an error!
+		return nil, o._adapter.Oops(`no results`)
+	}
+	return model_slice, nil
+
+}
+
+// LinkFindByLinkNotes(_findByLinkNotes string) -> []*Link,error
+// Generic and programatically generator finder for Link
+func (o *Link) FindByLinkNotes(_findByLinkNotes string) ([]*Link, error) {
+
+	var model_slice []*Link
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "link_notes", _findByLinkNotes)
+	results, err := o._adapter.Query(q)
+	if err != nil {
+		return model_slice, err
+	}
+
+	for _, result := range results {
+		ro := Link{}
+		err = ro.FromDBValueMap(result)
+		if err != nil {
+			return model_slice, err
+		}
+		model_slice = append(model_slice, &ro)
+	}
+
+	if len(model_slice) == 0 {
+		// there was an error!
+		return nil, o._adapter.Oops(`no results`)
+	}
+	return model_slice, nil
+
+}
+
+// LinkFindByLinkRss(_findByLinkRss string) -> []*Link,error
+// Generic and programatically generator finder for Link
+func (o *Link) FindByLinkRss(_findByLinkRss string) ([]*Link, error) {
+
+	var model_slice []*Link
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "link_rss", _findByLinkRss)
+	results, err := o._adapter.Query(q)
+	if err != nil {
+		return model_slice, err
+	}
+
+	for _, result := range results {
+		ro := Link{}
+		err = ro.FromDBValueMap(result)
+		if err != nil {
+			return model_slice, err
+		}
+		model_slice = append(model_slice, &ro)
+	}
+
+	if len(model_slice) == 0 {
+		// there was an error!
+		return nil, o._adapter.Oops(`no results`)
+	}
+	return model_slice, nil
+
+}
+
+// Converts a DBValueMap returned from Adapter.Query to a Link
 func (o *Link) FromDBValueMap(m map[string]DBValue) error {
 	_LinkId, err := m["link_id"].AsInt64()
 	if err != nil {
@@ -2190,6 +2409,8 @@ func (o *Link) FromDBValueMap(m map[string]DBValue) error {
 
 	return nil
 }
+
+// A kind of Clone function for Link
 func (o *Link) FromLink(m *Link) {
 	o.LinkId = m.LinkId
 	o.LinkUrl = m.LinkUrl
@@ -2206,6 +2427,8 @@ func (o *Link) FromLink(m *Link) {
 	o.LinkRss = m.LinkRss
 
 }
+
+// A function to forcibly reload Link
 func (o *Link) Reload() error {
 	_, err := o.Find(o.GetPrimaryKeyValue())
 	return err
@@ -2488,49 +2711,51 @@ func NewOption(a Adapter) *Option {
 	return &o
 }
 
-func (m *Option) GetPrimaryKeyValue() int64 {
-	return m.OptionId
+func (o *Option) GetPrimaryKeyValue() int64 {
+	return o.OptionId
 }
-func (m *Option) GetPrimaryKeyName() string {
+func (o *Option) GetPrimaryKeyName() string {
 	return `option_id`
 }
 
-func (m *Option) GetOptionId() int64 {
-	return m.OptionId
+func (o *Option) GetOptionId() int64 {
+	return o.OptionId
 }
-func (m *Option) SetOptionId(arg int64) {
-	m.OptionId = arg
-	m.IsOptionIdDirty = true
-}
-
-func (m *Option) GetOptionName() string {
-	return m.OptionName
-}
-func (m *Option) SetOptionName(arg string) {
-	m.OptionName = arg
-	m.IsOptionNameDirty = true
+func (o *Option) SetOptionId(arg int64) {
+	o.OptionId = arg
+	o.IsOptionIdDirty = true
 }
 
-func (m *Option) GetOptionValue() string {
-	return m.OptionValue
+func (o *Option) GetOptionName() string {
+	return o.OptionName
 }
-func (m *Option) SetOptionValue(arg string) {
-	m.OptionValue = arg
-	m.IsOptionValueDirty = true
-}
-
-func (m *Option) GetAutoload() string {
-	return m.Autoload
-}
-func (m *Option) SetAutoload(arg string) {
-	m.Autoload = arg
-	m.IsAutoloadDirty = true
+func (o *Option) SetOptionName(arg string) {
+	o.OptionName = arg
+	o.IsOptionNameDirty = true
 }
 
-func (o *Option) Find(_find_by_OptionId int64) (bool, error) {
+func (o *Option) GetOptionValue() string {
+	return o.OptionValue
+}
+func (o *Option) SetOptionValue(arg string) {
+	o.OptionValue = arg
+	o.IsOptionValueDirty = true
+}
+
+func (o *Option) GetAutoload() string {
+	return o.Autoload
+}
+func (o *Option) SetAutoload(arg string) {
+	o.Autoload = arg
+	o.IsAutoloadDirty = true
+}
+
+// OptionFind(_findByOptionId int64) -> bool,error
+// Generic and programatically generator finder for Option
+func (o *Option) Find(_findByOptionId int64) (bool, error) {
 
 	var model_slice []*Option
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "option_id", _find_by_OptionId)
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "option_id", _findByOptionId)
 	results, err := o._adapter.Query(q)
 	if err != nil {
 		return false, o._adapter.Oops(fmt.Sprintf(`%s`, err))
@@ -2553,60 +2778,13 @@ func (o *Option) Find(_find_by_OptionId int64) (bool, error) {
 	return true, nil
 
 }
-func (o *Option) FindByOptionName(_find_by_OptionName string) ([]*Option, error) {
+
+// OptionFindByOptionName(_findByOptionName string) -> []*Option,error
+// Generic and programatically generator finder for Option
+func (o *Option) FindByOptionName(_findByOptionName string) ([]*Option, error) {
 
 	var model_slice []*Option
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "option_name", _find_by_OptionName)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := Option{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *Option) FindByOptionValue(_find_by_OptionValue string) ([]*Option, error) {
-
-	var model_slice []*Option
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "option_value", _find_by_OptionValue)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := Option{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *Option) FindByAutoload(_find_by_Autoload string) ([]*Option, error) {
-
-	var model_slice []*Option
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "autoload", _find_by_Autoload)
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "option_name", _findByOptionName)
 	results, err := o._adapter.Query(q)
 	if err != nil {
 		return model_slice, err
@@ -2629,6 +2807,63 @@ func (o *Option) FindByAutoload(_find_by_Autoload string) ([]*Option, error) {
 
 }
 
+// OptionFindByOptionValue(_findByOptionValue string) -> []*Option,error
+// Generic and programatically generator finder for Option
+func (o *Option) FindByOptionValue(_findByOptionValue string) ([]*Option, error) {
+
+	var model_slice []*Option
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "option_value", _findByOptionValue)
+	results, err := o._adapter.Query(q)
+	if err != nil {
+		return model_slice, err
+	}
+
+	for _, result := range results {
+		ro := Option{}
+		err = ro.FromDBValueMap(result)
+		if err != nil {
+			return model_slice, err
+		}
+		model_slice = append(model_slice, &ro)
+	}
+
+	if len(model_slice) == 0 {
+		// there was an error!
+		return nil, o._adapter.Oops(`no results`)
+	}
+	return model_slice, nil
+
+}
+
+// OptionFindByAutoload(_findByAutoload string) -> []*Option,error
+// Generic and programatically generator finder for Option
+func (o *Option) FindByAutoload(_findByAutoload string) ([]*Option, error) {
+
+	var model_slice []*Option
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "autoload", _findByAutoload)
+	results, err := o._adapter.Query(q)
+	if err != nil {
+		return model_slice, err
+	}
+
+	for _, result := range results {
+		ro := Option{}
+		err = ro.FromDBValueMap(result)
+		if err != nil {
+			return model_slice, err
+		}
+		model_slice = append(model_slice, &ro)
+	}
+
+	if len(model_slice) == 0 {
+		// there was an error!
+		return nil, o._adapter.Oops(`no results`)
+	}
+	return model_slice, nil
+
+}
+
+// Converts a DBValueMap returned from Adapter.Query to a Option
 func (o *Option) FromDBValueMap(m map[string]DBValue) error {
 	_OptionId, err := m["option_id"].AsInt64()
 	if err != nil {
@@ -2653,6 +2888,8 @@ func (o *Option) FromDBValueMap(m map[string]DBValue) error {
 
 	return nil
 }
+
+// A kind of Clone function for Option
 func (o *Option) FromOption(m *Option) {
 	o.OptionId = m.OptionId
 	o.OptionName = m.OptionName
@@ -2660,6 +2897,8 @@ func (o *Option) FromOption(m *Option) {
 	o.Autoload = m.Autoload
 
 }
+
+// A function to forcibly reload Option
 func (o *Option) Reload() error {
 	_, err := o.Find(o.GetPrimaryKeyValue())
 	return err
@@ -2780,49 +3019,51 @@ func NewPostMeta(a Adapter) *PostMeta {
 	return &o
 }
 
-func (m *PostMeta) GetPrimaryKeyValue() int64 {
-	return m.MetaId
+func (o *PostMeta) GetPrimaryKeyValue() int64 {
+	return o.MetaId
 }
-func (m *PostMeta) GetPrimaryKeyName() string {
+func (o *PostMeta) GetPrimaryKeyName() string {
 	return `meta_id`
 }
 
-func (m *PostMeta) GetMetaId() int64 {
-	return m.MetaId
+func (o *PostMeta) GetMetaId() int64 {
+	return o.MetaId
 }
-func (m *PostMeta) SetMetaId(arg int64) {
-	m.MetaId = arg
-	m.IsMetaIdDirty = true
-}
-
-func (m *PostMeta) GetPostId() int64 {
-	return m.PostId
-}
-func (m *PostMeta) SetPostId(arg int64) {
-	m.PostId = arg
-	m.IsPostIdDirty = true
+func (o *PostMeta) SetMetaId(arg int64) {
+	o.MetaId = arg
+	o.IsMetaIdDirty = true
 }
 
-func (m *PostMeta) GetMetaKey() string {
-	return m.MetaKey
+func (o *PostMeta) GetPostId() int64 {
+	return o.PostId
 }
-func (m *PostMeta) SetMetaKey(arg string) {
-	m.MetaKey = arg
-	m.IsMetaKeyDirty = true
-}
-
-func (m *PostMeta) GetMetaValue() string {
-	return m.MetaValue
-}
-func (m *PostMeta) SetMetaValue(arg string) {
-	m.MetaValue = arg
-	m.IsMetaValueDirty = true
+func (o *PostMeta) SetPostId(arg int64) {
+	o.PostId = arg
+	o.IsPostIdDirty = true
 }
 
-func (o *PostMeta) Find(_find_by_MetaId int64) (bool, error) {
+func (o *PostMeta) GetMetaKey() string {
+	return o.MetaKey
+}
+func (o *PostMeta) SetMetaKey(arg string) {
+	o.MetaKey = arg
+	o.IsMetaKeyDirty = true
+}
+
+func (o *PostMeta) GetMetaValue() string {
+	return o.MetaValue
+}
+func (o *PostMeta) SetMetaValue(arg string) {
+	o.MetaValue = arg
+	o.IsMetaValueDirty = true
+}
+
+// PostMetaFind(_findByMetaId int64) -> bool,error
+// Generic and programatically generator finder for PostMeta
+func (o *PostMeta) Find(_findByMetaId int64) (bool, error) {
 
 	var model_slice []*PostMeta
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "meta_id", _find_by_MetaId)
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "meta_id", _findByMetaId)
 	results, err := o._adapter.Query(q)
 	if err != nil {
 		return false, o._adapter.Oops(fmt.Sprintf(`%s`, err))
@@ -2845,60 +3086,13 @@ func (o *PostMeta) Find(_find_by_MetaId int64) (bool, error) {
 	return true, nil
 
 }
-func (o *PostMeta) FindByPostId(_find_by_PostId int64) ([]*PostMeta, error) {
+
+// PostMetaFindByPostId(_findByPostId int64) -> []*PostMeta,error
+// Generic and programatically generator finder for PostMeta
+func (o *PostMeta) FindByPostId(_findByPostId int64) ([]*PostMeta, error) {
 
 	var model_slice []*PostMeta
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "post_id", _find_by_PostId)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := PostMeta{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *PostMeta) FindByMetaKey(_find_by_MetaKey string) ([]*PostMeta, error) {
-
-	var model_slice []*PostMeta
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "meta_key", _find_by_MetaKey)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := PostMeta{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *PostMeta) FindByMetaValue(_find_by_MetaValue string) ([]*PostMeta, error) {
-
-	var model_slice []*PostMeta
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "meta_value", _find_by_MetaValue)
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "post_id", _findByPostId)
 	results, err := o._adapter.Query(q)
 	if err != nil {
 		return model_slice, err
@@ -2921,6 +3115,63 @@ func (o *PostMeta) FindByMetaValue(_find_by_MetaValue string) ([]*PostMeta, erro
 
 }
 
+// PostMetaFindByMetaKey(_findByMetaKey string) -> []*PostMeta,error
+// Generic and programatically generator finder for PostMeta
+func (o *PostMeta) FindByMetaKey(_findByMetaKey string) ([]*PostMeta, error) {
+
+	var model_slice []*PostMeta
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "meta_key", _findByMetaKey)
+	results, err := o._adapter.Query(q)
+	if err != nil {
+		return model_slice, err
+	}
+
+	for _, result := range results {
+		ro := PostMeta{}
+		err = ro.FromDBValueMap(result)
+		if err != nil {
+			return model_slice, err
+		}
+		model_slice = append(model_slice, &ro)
+	}
+
+	if len(model_slice) == 0 {
+		// there was an error!
+		return nil, o._adapter.Oops(`no results`)
+	}
+	return model_slice, nil
+
+}
+
+// PostMetaFindByMetaValue(_findByMetaValue string) -> []*PostMeta,error
+// Generic and programatically generator finder for PostMeta
+func (o *PostMeta) FindByMetaValue(_findByMetaValue string) ([]*PostMeta, error) {
+
+	var model_slice []*PostMeta
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "meta_value", _findByMetaValue)
+	results, err := o._adapter.Query(q)
+	if err != nil {
+		return model_slice, err
+	}
+
+	for _, result := range results {
+		ro := PostMeta{}
+		err = ro.FromDBValueMap(result)
+		if err != nil {
+			return model_slice, err
+		}
+		model_slice = append(model_slice, &ro)
+	}
+
+	if len(model_slice) == 0 {
+		// there was an error!
+		return nil, o._adapter.Oops(`no results`)
+	}
+	return model_slice, nil
+
+}
+
+// Converts a DBValueMap returned from Adapter.Query to a PostMeta
 func (o *PostMeta) FromDBValueMap(m map[string]DBValue) error {
 	_MetaId, err := m["meta_id"].AsInt64()
 	if err != nil {
@@ -2945,6 +3196,8 @@ func (o *PostMeta) FromDBValueMap(m map[string]DBValue) error {
 
 	return nil
 }
+
+// A kind of Clone function for PostMeta
 func (o *PostMeta) FromPostMeta(m *PostMeta) {
 	o.MetaId = m.MetaId
 	o.PostId = m.PostId
@@ -2952,6 +3205,8 @@ func (o *PostMeta) FromPostMeta(m *PostMeta) {
 	o.MetaValue = m.MetaValue
 
 }
+
+// A function to forcibly reload PostMeta
 func (o *PostMeta) Reload() error {
 	_, err := o.Find(o.GetPrimaryKeyValue())
 	return err
@@ -3110,201 +3365,203 @@ func NewPost(a Adapter) *Post {
 	return &o
 }
 
-func (m *Post) GetPrimaryKeyValue() int64 {
-	return m.ID
+func (o *Post) GetPrimaryKeyValue() int64 {
+	return o.ID
 }
-func (m *Post) GetPrimaryKeyName() string {
+func (o *Post) GetPrimaryKeyName() string {
 	return `ID`
 }
 
-func (m *Post) GetID() int64 {
-	return m.ID
+func (o *Post) GetID() int64 {
+	return o.ID
 }
-func (m *Post) SetID(arg int64) {
-	m.ID = arg
-	m.IsIDDirty = true
-}
-
-func (m *Post) GetPostAuthor() int64 {
-	return m.PostAuthor
-}
-func (m *Post) SetPostAuthor(arg int64) {
-	m.PostAuthor = arg
-	m.IsPostAuthorDirty = true
+func (o *Post) SetID(arg int64) {
+	o.ID = arg
+	o.IsIDDirty = true
 }
 
-func (m *Post) GetPostDate() *DateTime {
-	return m.PostDate
+func (o *Post) GetPostAuthor() int64 {
+	return o.PostAuthor
 }
-func (m *Post) SetPostDate(arg *DateTime) {
-	m.PostDate = arg
-	m.IsPostDateDirty = true
-}
-
-func (m *Post) GetPostDateGmt() *DateTime {
-	return m.PostDateGmt
-}
-func (m *Post) SetPostDateGmt(arg *DateTime) {
-	m.PostDateGmt = arg
-	m.IsPostDateGmtDirty = true
+func (o *Post) SetPostAuthor(arg int64) {
+	o.PostAuthor = arg
+	o.IsPostAuthorDirty = true
 }
 
-func (m *Post) GetPostContent() string {
-	return m.PostContent
+func (o *Post) GetPostDate() *DateTime {
+	return o.PostDate
 }
-func (m *Post) SetPostContent(arg string) {
-	m.PostContent = arg
-	m.IsPostContentDirty = true
-}
-
-func (m *Post) GetPostTitle() string {
-	return m.PostTitle
-}
-func (m *Post) SetPostTitle(arg string) {
-	m.PostTitle = arg
-	m.IsPostTitleDirty = true
+func (o *Post) SetPostDate(arg *DateTime) {
+	o.PostDate = arg
+	o.IsPostDateDirty = true
 }
 
-func (m *Post) GetPostExcerpt() string {
-	return m.PostExcerpt
+func (o *Post) GetPostDateGmt() *DateTime {
+	return o.PostDateGmt
 }
-func (m *Post) SetPostExcerpt(arg string) {
-	m.PostExcerpt = arg
-	m.IsPostExcerptDirty = true
-}
-
-func (m *Post) GetPostStatus() string {
-	return m.PostStatus
-}
-func (m *Post) SetPostStatus(arg string) {
-	m.PostStatus = arg
-	m.IsPostStatusDirty = true
+func (o *Post) SetPostDateGmt(arg *DateTime) {
+	o.PostDateGmt = arg
+	o.IsPostDateGmtDirty = true
 }
 
-func (m *Post) GetCommentStatus() string {
-	return m.CommentStatus
+func (o *Post) GetPostContent() string {
+	return o.PostContent
 }
-func (m *Post) SetCommentStatus(arg string) {
-	m.CommentStatus = arg
-	m.IsCommentStatusDirty = true
-}
-
-func (m *Post) GetPingStatus() string {
-	return m.PingStatus
-}
-func (m *Post) SetPingStatus(arg string) {
-	m.PingStatus = arg
-	m.IsPingStatusDirty = true
+func (o *Post) SetPostContent(arg string) {
+	o.PostContent = arg
+	o.IsPostContentDirty = true
 }
 
-func (m *Post) GetPostPassword() string {
-	return m.PostPassword
+func (o *Post) GetPostTitle() string {
+	return o.PostTitle
 }
-func (m *Post) SetPostPassword(arg string) {
-	m.PostPassword = arg
-	m.IsPostPasswordDirty = true
-}
-
-func (m *Post) GetPostName() string {
-	return m.PostName
-}
-func (m *Post) SetPostName(arg string) {
-	m.PostName = arg
-	m.IsPostNameDirty = true
+func (o *Post) SetPostTitle(arg string) {
+	o.PostTitle = arg
+	o.IsPostTitleDirty = true
 }
 
-func (m *Post) GetToPing() string {
-	return m.ToPing
+func (o *Post) GetPostExcerpt() string {
+	return o.PostExcerpt
 }
-func (m *Post) SetToPing(arg string) {
-	m.ToPing = arg
-	m.IsToPingDirty = true
-}
-
-func (m *Post) GetPinged() string {
-	return m.Pinged
-}
-func (m *Post) SetPinged(arg string) {
-	m.Pinged = arg
-	m.IsPingedDirty = true
+func (o *Post) SetPostExcerpt(arg string) {
+	o.PostExcerpt = arg
+	o.IsPostExcerptDirty = true
 }
 
-func (m *Post) GetPostModified() *DateTime {
-	return m.PostModified
+func (o *Post) GetPostStatus() string {
+	return o.PostStatus
 }
-func (m *Post) SetPostModified(arg *DateTime) {
-	m.PostModified = arg
-	m.IsPostModifiedDirty = true
-}
-
-func (m *Post) GetPostModifiedGmt() *DateTime {
-	return m.PostModifiedGmt
-}
-func (m *Post) SetPostModifiedGmt(arg *DateTime) {
-	m.PostModifiedGmt = arg
-	m.IsPostModifiedGmtDirty = true
+func (o *Post) SetPostStatus(arg string) {
+	o.PostStatus = arg
+	o.IsPostStatusDirty = true
 }
 
-func (m *Post) GetPostContentFiltered() string {
-	return m.PostContentFiltered
+func (o *Post) GetCommentStatus() string {
+	return o.CommentStatus
 }
-func (m *Post) SetPostContentFiltered(arg string) {
-	m.PostContentFiltered = arg
-	m.IsPostContentFilteredDirty = true
-}
-
-func (m *Post) GetPostParent() int64 {
-	return m.PostParent
-}
-func (m *Post) SetPostParent(arg int64) {
-	m.PostParent = arg
-	m.IsPostParentDirty = true
+func (o *Post) SetCommentStatus(arg string) {
+	o.CommentStatus = arg
+	o.IsCommentStatusDirty = true
 }
 
-func (m *Post) GetGuid() string {
-	return m.Guid
+func (o *Post) GetPingStatus() string {
+	return o.PingStatus
 }
-func (m *Post) SetGuid(arg string) {
-	m.Guid = arg
-	m.IsGuidDirty = true
-}
-
-func (m *Post) GetMenuOrder() int {
-	return m.MenuOrder
-}
-func (m *Post) SetMenuOrder(arg int) {
-	m.MenuOrder = arg
-	m.IsMenuOrderDirty = true
+func (o *Post) SetPingStatus(arg string) {
+	o.PingStatus = arg
+	o.IsPingStatusDirty = true
 }
 
-func (m *Post) GetPostType() string {
-	return m.PostType
+func (o *Post) GetPostPassword() string {
+	return o.PostPassword
 }
-func (m *Post) SetPostType(arg string) {
-	m.PostType = arg
-	m.IsPostTypeDirty = true
-}
-
-func (m *Post) GetPostMimeType() string {
-	return m.PostMimeType
-}
-func (m *Post) SetPostMimeType(arg string) {
-	m.PostMimeType = arg
-	m.IsPostMimeTypeDirty = true
+func (o *Post) SetPostPassword(arg string) {
+	o.PostPassword = arg
+	o.IsPostPasswordDirty = true
 }
 
-func (m *Post) GetCommentCount() int64 {
-	return m.CommentCount
+func (o *Post) GetPostName() string {
+	return o.PostName
 }
-func (m *Post) SetCommentCount(arg int64) {
-	m.CommentCount = arg
-	m.IsCommentCountDirty = true
+func (o *Post) SetPostName(arg string) {
+	o.PostName = arg
+	o.IsPostNameDirty = true
 }
 
-func (o *Post) Find(_find_by_ID int64) (bool, error) {
+func (o *Post) GetToPing() string {
+	return o.ToPing
+}
+func (o *Post) SetToPing(arg string) {
+	o.ToPing = arg
+	o.IsToPingDirty = true
+}
+
+func (o *Post) GetPinged() string {
+	return o.Pinged
+}
+func (o *Post) SetPinged(arg string) {
+	o.Pinged = arg
+	o.IsPingedDirty = true
+}
+
+func (o *Post) GetPostModified() *DateTime {
+	return o.PostModified
+}
+func (o *Post) SetPostModified(arg *DateTime) {
+	o.PostModified = arg
+	o.IsPostModifiedDirty = true
+}
+
+func (o *Post) GetPostModifiedGmt() *DateTime {
+	return o.PostModifiedGmt
+}
+func (o *Post) SetPostModifiedGmt(arg *DateTime) {
+	o.PostModifiedGmt = arg
+	o.IsPostModifiedGmtDirty = true
+}
+
+func (o *Post) GetPostContentFiltered() string {
+	return o.PostContentFiltered
+}
+func (o *Post) SetPostContentFiltered(arg string) {
+	o.PostContentFiltered = arg
+	o.IsPostContentFilteredDirty = true
+}
+
+func (o *Post) GetPostParent() int64 {
+	return o.PostParent
+}
+func (o *Post) SetPostParent(arg int64) {
+	o.PostParent = arg
+	o.IsPostParentDirty = true
+}
+
+func (o *Post) GetGuid() string {
+	return o.Guid
+}
+func (o *Post) SetGuid(arg string) {
+	o.Guid = arg
+	o.IsGuidDirty = true
+}
+
+func (o *Post) GetMenuOrder() int {
+	return o.MenuOrder
+}
+func (o *Post) SetMenuOrder(arg int) {
+	o.MenuOrder = arg
+	o.IsMenuOrderDirty = true
+}
+
+func (o *Post) GetPostType() string {
+	return o.PostType
+}
+func (o *Post) SetPostType(arg string) {
+	o.PostType = arg
+	o.IsPostTypeDirty = true
+}
+
+func (o *Post) GetPostMimeType() string {
+	return o.PostMimeType
+}
+func (o *Post) SetPostMimeType(arg string) {
+	o.PostMimeType = arg
+	o.IsPostMimeTypeDirty = true
+}
+
+func (o *Post) GetCommentCount() int64 {
+	return o.CommentCount
+}
+func (o *Post) SetCommentCount(arg int64) {
+	o.CommentCount = arg
+	o.IsCommentCountDirty = true
+}
+
+// PostFind(_findByID int64) -> bool,error
+// Generic and programatically generator finder for Post
+func (o *Post) Find(_findByID int64) (bool, error) {
 
 	var model_slice []*Post
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "ID", _find_by_ID)
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "ID", _findByID)
 	results, err := o._adapter.Query(q)
 	if err != nil {
 		return false, o._adapter.Oops(fmt.Sprintf(`%s`, err))
@@ -3327,535 +3584,13 @@ func (o *Post) Find(_find_by_ID int64) (bool, error) {
 	return true, nil
 
 }
-func (o *Post) FindByPostAuthor(_find_by_PostAuthor int64) ([]*Post, error) {
+
+// PostFindByPostAuthor(_findByPostAuthor int64) -> []*Post,error
+// Generic and programatically generator finder for Post
+func (o *Post) FindByPostAuthor(_findByPostAuthor int64) ([]*Post, error) {
 
 	var model_slice []*Post
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "post_author", _find_by_PostAuthor)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := Post{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *Post) FindByPostDate(_find_by_PostDate *DateTime) ([]*Post, error) {
-
-	var model_slice []*Post
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_date", _find_by_PostDate)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := Post{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *Post) FindByPostDateGmt(_find_by_PostDateGmt *DateTime) ([]*Post, error) {
-
-	var model_slice []*Post
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_date_gmt", _find_by_PostDateGmt)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := Post{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *Post) FindByPostContent(_find_by_PostContent string) ([]*Post, error) {
-
-	var model_slice []*Post
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_content", _find_by_PostContent)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := Post{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *Post) FindByPostTitle(_find_by_PostTitle string) ([]*Post, error) {
-
-	var model_slice []*Post
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_title", _find_by_PostTitle)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := Post{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *Post) FindByPostExcerpt(_find_by_PostExcerpt string) ([]*Post, error) {
-
-	var model_slice []*Post
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_excerpt", _find_by_PostExcerpt)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := Post{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *Post) FindByPostStatus(_find_by_PostStatus string) ([]*Post, error) {
-
-	var model_slice []*Post
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_status", _find_by_PostStatus)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := Post{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *Post) FindByCommentStatus(_find_by_CommentStatus string) ([]*Post, error) {
-
-	var model_slice []*Post
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "comment_status", _find_by_CommentStatus)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := Post{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *Post) FindByPingStatus(_find_by_PingStatus string) ([]*Post, error) {
-
-	var model_slice []*Post
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "ping_status", _find_by_PingStatus)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := Post{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *Post) FindByPostPassword(_find_by_PostPassword string) ([]*Post, error) {
-
-	var model_slice []*Post
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_password", _find_by_PostPassword)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := Post{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *Post) FindByPostName(_find_by_PostName string) ([]*Post, error) {
-
-	var model_slice []*Post
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_name", _find_by_PostName)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := Post{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *Post) FindByToPing(_find_by_ToPing string) ([]*Post, error) {
-
-	var model_slice []*Post
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "to_ping", _find_by_ToPing)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := Post{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *Post) FindByPinged(_find_by_Pinged string) ([]*Post, error) {
-
-	var model_slice []*Post
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "pinged", _find_by_Pinged)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := Post{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *Post) FindByPostModified(_find_by_PostModified *DateTime) ([]*Post, error) {
-
-	var model_slice []*Post
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_modified", _find_by_PostModified)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := Post{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *Post) FindByPostModifiedGmt(_find_by_PostModifiedGmt *DateTime) ([]*Post, error) {
-
-	var model_slice []*Post
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_modified_gmt", _find_by_PostModifiedGmt)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := Post{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *Post) FindByPostContentFiltered(_find_by_PostContentFiltered string) ([]*Post, error) {
-
-	var model_slice []*Post
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_content_filtered", _find_by_PostContentFiltered)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := Post{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *Post) FindByPostParent(_find_by_PostParent int64) ([]*Post, error) {
-
-	var model_slice []*Post
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "post_parent", _find_by_PostParent)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := Post{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *Post) FindByGuid(_find_by_Guid string) ([]*Post, error) {
-
-	var model_slice []*Post
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "guid", _find_by_Guid)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := Post{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *Post) FindByMenuOrder(_find_by_MenuOrder int) ([]*Post, error) {
-
-	var model_slice []*Post
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "menu_order", _find_by_MenuOrder)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := Post{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *Post) FindByPostType(_find_by_PostType string) ([]*Post, error) {
-
-	var model_slice []*Post
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_type", _find_by_PostType)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := Post{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *Post) FindByPostMimeType(_find_by_PostMimeType string) ([]*Post, error) {
-
-	var model_slice []*Post
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_mime_type", _find_by_PostMimeType)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := Post{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *Post) FindByCommentCount(_find_by_CommentCount int64) ([]*Post, error) {
-
-	var model_slice []*Post
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "comment_count", _find_by_CommentCount)
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "post_author", _findByPostAuthor)
 	results, err := o._adapter.Query(q)
 	if err != nil {
 		return model_slice, err
@@ -3878,6 +3613,595 @@ func (o *Post) FindByCommentCount(_find_by_CommentCount int64) ([]*Post, error) 
 
 }
 
+// PostFindByPostDate(_findByPostDate *DateTime) -> []*Post,error
+// Generic and programatically generator finder for Post
+func (o *Post) FindByPostDate(_findByPostDate *DateTime) ([]*Post, error) {
+
+	var model_slice []*Post
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_date", _findByPostDate)
+	results, err := o._adapter.Query(q)
+	if err != nil {
+		return model_slice, err
+	}
+
+	for _, result := range results {
+		ro := Post{}
+		err = ro.FromDBValueMap(result)
+		if err != nil {
+			return model_slice, err
+		}
+		model_slice = append(model_slice, &ro)
+	}
+
+	if len(model_slice) == 0 {
+		// there was an error!
+		return nil, o._adapter.Oops(`no results`)
+	}
+	return model_slice, nil
+
+}
+
+// PostFindByPostDateGmt(_findByPostDateGmt *DateTime) -> []*Post,error
+// Generic and programatically generator finder for Post
+func (o *Post) FindByPostDateGmt(_findByPostDateGmt *DateTime) ([]*Post, error) {
+
+	var model_slice []*Post
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_date_gmt", _findByPostDateGmt)
+	results, err := o._adapter.Query(q)
+	if err != nil {
+		return model_slice, err
+	}
+
+	for _, result := range results {
+		ro := Post{}
+		err = ro.FromDBValueMap(result)
+		if err != nil {
+			return model_slice, err
+		}
+		model_slice = append(model_slice, &ro)
+	}
+
+	if len(model_slice) == 0 {
+		// there was an error!
+		return nil, o._adapter.Oops(`no results`)
+	}
+	return model_slice, nil
+
+}
+
+// PostFindByPostContent(_findByPostContent string) -> []*Post,error
+// Generic and programatically generator finder for Post
+func (o *Post) FindByPostContent(_findByPostContent string) ([]*Post, error) {
+
+	var model_slice []*Post
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_content", _findByPostContent)
+	results, err := o._adapter.Query(q)
+	if err != nil {
+		return model_slice, err
+	}
+
+	for _, result := range results {
+		ro := Post{}
+		err = ro.FromDBValueMap(result)
+		if err != nil {
+			return model_slice, err
+		}
+		model_slice = append(model_slice, &ro)
+	}
+
+	if len(model_slice) == 0 {
+		// there was an error!
+		return nil, o._adapter.Oops(`no results`)
+	}
+	return model_slice, nil
+
+}
+
+// PostFindByPostTitle(_findByPostTitle string) -> []*Post,error
+// Generic and programatically generator finder for Post
+func (o *Post) FindByPostTitle(_findByPostTitle string) ([]*Post, error) {
+
+	var model_slice []*Post
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_title", _findByPostTitle)
+	results, err := o._adapter.Query(q)
+	if err != nil {
+		return model_slice, err
+	}
+
+	for _, result := range results {
+		ro := Post{}
+		err = ro.FromDBValueMap(result)
+		if err != nil {
+			return model_slice, err
+		}
+		model_slice = append(model_slice, &ro)
+	}
+
+	if len(model_slice) == 0 {
+		// there was an error!
+		return nil, o._adapter.Oops(`no results`)
+	}
+	return model_slice, nil
+
+}
+
+// PostFindByPostExcerpt(_findByPostExcerpt string) -> []*Post,error
+// Generic and programatically generator finder for Post
+func (o *Post) FindByPostExcerpt(_findByPostExcerpt string) ([]*Post, error) {
+
+	var model_slice []*Post
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_excerpt", _findByPostExcerpt)
+	results, err := o._adapter.Query(q)
+	if err != nil {
+		return model_slice, err
+	}
+
+	for _, result := range results {
+		ro := Post{}
+		err = ro.FromDBValueMap(result)
+		if err != nil {
+			return model_slice, err
+		}
+		model_slice = append(model_slice, &ro)
+	}
+
+	if len(model_slice) == 0 {
+		// there was an error!
+		return nil, o._adapter.Oops(`no results`)
+	}
+	return model_slice, nil
+
+}
+
+// PostFindByPostStatus(_findByPostStatus string) -> []*Post,error
+// Generic and programatically generator finder for Post
+func (o *Post) FindByPostStatus(_findByPostStatus string) ([]*Post, error) {
+
+	var model_slice []*Post
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_status", _findByPostStatus)
+	results, err := o._adapter.Query(q)
+	if err != nil {
+		return model_slice, err
+	}
+
+	for _, result := range results {
+		ro := Post{}
+		err = ro.FromDBValueMap(result)
+		if err != nil {
+			return model_slice, err
+		}
+		model_slice = append(model_slice, &ro)
+	}
+
+	if len(model_slice) == 0 {
+		// there was an error!
+		return nil, o._adapter.Oops(`no results`)
+	}
+	return model_slice, nil
+
+}
+
+// PostFindByCommentStatus(_findByCommentStatus string) -> []*Post,error
+// Generic and programatically generator finder for Post
+func (o *Post) FindByCommentStatus(_findByCommentStatus string) ([]*Post, error) {
+
+	var model_slice []*Post
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "comment_status", _findByCommentStatus)
+	results, err := o._adapter.Query(q)
+	if err != nil {
+		return model_slice, err
+	}
+
+	for _, result := range results {
+		ro := Post{}
+		err = ro.FromDBValueMap(result)
+		if err != nil {
+			return model_slice, err
+		}
+		model_slice = append(model_slice, &ro)
+	}
+
+	if len(model_slice) == 0 {
+		// there was an error!
+		return nil, o._adapter.Oops(`no results`)
+	}
+	return model_slice, nil
+
+}
+
+// PostFindByPingStatus(_findByPingStatus string) -> []*Post,error
+// Generic and programatically generator finder for Post
+func (o *Post) FindByPingStatus(_findByPingStatus string) ([]*Post, error) {
+
+	var model_slice []*Post
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "ping_status", _findByPingStatus)
+	results, err := o._adapter.Query(q)
+	if err != nil {
+		return model_slice, err
+	}
+
+	for _, result := range results {
+		ro := Post{}
+		err = ro.FromDBValueMap(result)
+		if err != nil {
+			return model_slice, err
+		}
+		model_slice = append(model_slice, &ro)
+	}
+
+	if len(model_slice) == 0 {
+		// there was an error!
+		return nil, o._adapter.Oops(`no results`)
+	}
+	return model_slice, nil
+
+}
+
+// PostFindByPostPassword(_findByPostPassword string) -> []*Post,error
+// Generic and programatically generator finder for Post
+func (o *Post) FindByPostPassword(_findByPostPassword string) ([]*Post, error) {
+
+	var model_slice []*Post
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_password", _findByPostPassword)
+	results, err := o._adapter.Query(q)
+	if err != nil {
+		return model_slice, err
+	}
+
+	for _, result := range results {
+		ro := Post{}
+		err = ro.FromDBValueMap(result)
+		if err != nil {
+			return model_slice, err
+		}
+		model_slice = append(model_slice, &ro)
+	}
+
+	if len(model_slice) == 0 {
+		// there was an error!
+		return nil, o._adapter.Oops(`no results`)
+	}
+	return model_slice, nil
+
+}
+
+// PostFindByPostName(_findByPostName string) -> []*Post,error
+// Generic and programatically generator finder for Post
+func (o *Post) FindByPostName(_findByPostName string) ([]*Post, error) {
+
+	var model_slice []*Post
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_name", _findByPostName)
+	results, err := o._adapter.Query(q)
+	if err != nil {
+		return model_slice, err
+	}
+
+	for _, result := range results {
+		ro := Post{}
+		err = ro.FromDBValueMap(result)
+		if err != nil {
+			return model_slice, err
+		}
+		model_slice = append(model_slice, &ro)
+	}
+
+	if len(model_slice) == 0 {
+		// there was an error!
+		return nil, o._adapter.Oops(`no results`)
+	}
+	return model_slice, nil
+
+}
+
+// PostFindByToPing(_findByToPing string) -> []*Post,error
+// Generic and programatically generator finder for Post
+func (o *Post) FindByToPing(_findByToPing string) ([]*Post, error) {
+
+	var model_slice []*Post
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "to_ping", _findByToPing)
+	results, err := o._adapter.Query(q)
+	if err != nil {
+		return model_slice, err
+	}
+
+	for _, result := range results {
+		ro := Post{}
+		err = ro.FromDBValueMap(result)
+		if err != nil {
+			return model_slice, err
+		}
+		model_slice = append(model_slice, &ro)
+	}
+
+	if len(model_slice) == 0 {
+		// there was an error!
+		return nil, o._adapter.Oops(`no results`)
+	}
+	return model_slice, nil
+
+}
+
+// PostFindByPinged(_findByPinged string) -> []*Post,error
+// Generic and programatically generator finder for Post
+func (o *Post) FindByPinged(_findByPinged string) ([]*Post, error) {
+
+	var model_slice []*Post
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "pinged", _findByPinged)
+	results, err := o._adapter.Query(q)
+	if err != nil {
+		return model_slice, err
+	}
+
+	for _, result := range results {
+		ro := Post{}
+		err = ro.FromDBValueMap(result)
+		if err != nil {
+			return model_slice, err
+		}
+		model_slice = append(model_slice, &ro)
+	}
+
+	if len(model_slice) == 0 {
+		// there was an error!
+		return nil, o._adapter.Oops(`no results`)
+	}
+	return model_slice, nil
+
+}
+
+// PostFindByPostModified(_findByPostModified *DateTime) -> []*Post,error
+// Generic and programatically generator finder for Post
+func (o *Post) FindByPostModified(_findByPostModified *DateTime) ([]*Post, error) {
+
+	var model_slice []*Post
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_modified", _findByPostModified)
+	results, err := o._adapter.Query(q)
+	if err != nil {
+		return model_slice, err
+	}
+
+	for _, result := range results {
+		ro := Post{}
+		err = ro.FromDBValueMap(result)
+		if err != nil {
+			return model_slice, err
+		}
+		model_slice = append(model_slice, &ro)
+	}
+
+	if len(model_slice) == 0 {
+		// there was an error!
+		return nil, o._adapter.Oops(`no results`)
+	}
+	return model_slice, nil
+
+}
+
+// PostFindByPostModifiedGmt(_findByPostModifiedGmt *DateTime) -> []*Post,error
+// Generic and programatically generator finder for Post
+func (o *Post) FindByPostModifiedGmt(_findByPostModifiedGmt *DateTime) ([]*Post, error) {
+
+	var model_slice []*Post
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_modified_gmt", _findByPostModifiedGmt)
+	results, err := o._adapter.Query(q)
+	if err != nil {
+		return model_slice, err
+	}
+
+	for _, result := range results {
+		ro := Post{}
+		err = ro.FromDBValueMap(result)
+		if err != nil {
+			return model_slice, err
+		}
+		model_slice = append(model_slice, &ro)
+	}
+
+	if len(model_slice) == 0 {
+		// there was an error!
+		return nil, o._adapter.Oops(`no results`)
+	}
+	return model_slice, nil
+
+}
+
+// PostFindByPostContentFiltered(_findByPostContentFiltered string) -> []*Post,error
+// Generic and programatically generator finder for Post
+func (o *Post) FindByPostContentFiltered(_findByPostContentFiltered string) ([]*Post, error) {
+
+	var model_slice []*Post
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_content_filtered", _findByPostContentFiltered)
+	results, err := o._adapter.Query(q)
+	if err != nil {
+		return model_slice, err
+	}
+
+	for _, result := range results {
+		ro := Post{}
+		err = ro.FromDBValueMap(result)
+		if err != nil {
+			return model_slice, err
+		}
+		model_slice = append(model_slice, &ro)
+	}
+
+	if len(model_slice) == 0 {
+		// there was an error!
+		return nil, o._adapter.Oops(`no results`)
+	}
+	return model_slice, nil
+
+}
+
+// PostFindByPostParent(_findByPostParent int64) -> []*Post,error
+// Generic and programatically generator finder for Post
+func (o *Post) FindByPostParent(_findByPostParent int64) ([]*Post, error) {
+
+	var model_slice []*Post
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "post_parent", _findByPostParent)
+	results, err := o._adapter.Query(q)
+	if err != nil {
+		return model_slice, err
+	}
+
+	for _, result := range results {
+		ro := Post{}
+		err = ro.FromDBValueMap(result)
+		if err != nil {
+			return model_slice, err
+		}
+		model_slice = append(model_slice, &ro)
+	}
+
+	if len(model_slice) == 0 {
+		// there was an error!
+		return nil, o._adapter.Oops(`no results`)
+	}
+	return model_slice, nil
+
+}
+
+// PostFindByGuid(_findByGuid string) -> []*Post,error
+// Generic and programatically generator finder for Post
+func (o *Post) FindByGuid(_findByGuid string) ([]*Post, error) {
+
+	var model_slice []*Post
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "guid", _findByGuid)
+	results, err := o._adapter.Query(q)
+	if err != nil {
+		return model_slice, err
+	}
+
+	for _, result := range results {
+		ro := Post{}
+		err = ro.FromDBValueMap(result)
+		if err != nil {
+			return model_slice, err
+		}
+		model_slice = append(model_slice, &ro)
+	}
+
+	if len(model_slice) == 0 {
+		// there was an error!
+		return nil, o._adapter.Oops(`no results`)
+	}
+	return model_slice, nil
+
+}
+
+// PostFindByMenuOrder(_findByMenuOrder int) -> []*Post,error
+// Generic and programatically generator finder for Post
+func (o *Post) FindByMenuOrder(_findByMenuOrder int) ([]*Post, error) {
+
+	var model_slice []*Post
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "menu_order", _findByMenuOrder)
+	results, err := o._adapter.Query(q)
+	if err != nil {
+		return model_slice, err
+	}
+
+	for _, result := range results {
+		ro := Post{}
+		err = ro.FromDBValueMap(result)
+		if err != nil {
+			return model_slice, err
+		}
+		model_slice = append(model_slice, &ro)
+	}
+
+	if len(model_slice) == 0 {
+		// there was an error!
+		return nil, o._adapter.Oops(`no results`)
+	}
+	return model_slice, nil
+
+}
+
+// PostFindByPostType(_findByPostType string) -> []*Post,error
+// Generic and programatically generator finder for Post
+func (o *Post) FindByPostType(_findByPostType string) ([]*Post, error) {
+
+	var model_slice []*Post
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_type", _findByPostType)
+	results, err := o._adapter.Query(q)
+	if err != nil {
+		return model_slice, err
+	}
+
+	for _, result := range results {
+		ro := Post{}
+		err = ro.FromDBValueMap(result)
+		if err != nil {
+			return model_slice, err
+		}
+		model_slice = append(model_slice, &ro)
+	}
+
+	if len(model_slice) == 0 {
+		// there was an error!
+		return nil, o._adapter.Oops(`no results`)
+	}
+	return model_slice, nil
+
+}
+
+// PostFindByPostMimeType(_findByPostMimeType string) -> []*Post,error
+// Generic and programatically generator finder for Post
+func (o *Post) FindByPostMimeType(_findByPostMimeType string) ([]*Post, error) {
+
+	var model_slice []*Post
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "post_mime_type", _findByPostMimeType)
+	results, err := o._adapter.Query(q)
+	if err != nil {
+		return model_slice, err
+	}
+
+	for _, result := range results {
+		ro := Post{}
+		err = ro.FromDBValueMap(result)
+		if err != nil {
+			return model_slice, err
+		}
+		model_slice = append(model_slice, &ro)
+	}
+
+	if len(model_slice) == 0 {
+		// there was an error!
+		return nil, o._adapter.Oops(`no results`)
+	}
+	return model_slice, nil
+
+}
+
+// PostFindByCommentCount(_findByCommentCount int64) -> []*Post,error
+// Generic and programatically generator finder for Post
+func (o *Post) FindByCommentCount(_findByCommentCount int64) ([]*Post, error) {
+
+	var model_slice []*Post
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "comment_count", _findByCommentCount)
+	results, err := o._adapter.Query(q)
+	if err != nil {
+		return model_slice, err
+	}
+
+	for _, result := range results {
+		ro := Post{}
+		err = ro.FromDBValueMap(result)
+		if err != nil {
+			return model_slice, err
+		}
+		model_slice = append(model_slice, &ro)
+	}
+
+	if len(model_slice) == 0 {
+		// there was an error!
+		return nil, o._adapter.Oops(`no results`)
+	}
+	return model_slice, nil
+
+}
+
+// Converts a DBValueMap returned from Adapter.Query to a Post
 func (o *Post) FromDBValueMap(m map[string]DBValue) error {
 	_ID, err := m["ID"].AsInt64()
 	if err != nil {
@@ -3997,6 +4321,8 @@ func (o *Post) FromDBValueMap(m map[string]DBValue) error {
 
 	return nil
 }
+
+// A kind of Clone function for Post
 func (o *Post) FromPost(m *Post) {
 	o.ID = m.ID
 	o.PostAuthor = m.PostAuthor
@@ -4023,6 +4349,8 @@ func (o *Post) FromPost(m *Post) {
 	o.CommentCount = m.CommentCount
 
 }
+
+// A function to forcibly reload Post
 func (o *Post) Reload() error {
 	_, err := o.Find(o.GetPrimaryKeyValue())
 	return err
@@ -4483,41 +4811,43 @@ func NewTermRelationship(a Adapter) *TermRelationship {
 	return &o
 }
 
-func (m *TermRelationship) GetPrimaryKeyValue() int64 {
-	return m.TermTaxonomyId
+func (o *TermRelationship) GetPrimaryKeyValue() int64 {
+	return o.TermTaxonomyId
 }
-func (m *TermRelationship) GetPrimaryKeyName() string {
+func (o *TermRelationship) GetPrimaryKeyName() string {
 	return `term_taxonomy_id`
 }
 
-func (m *TermRelationship) GetObjectId() int64 {
-	return m.ObjectId
+func (o *TermRelationship) GetObjectId() int64 {
+	return o.ObjectId
 }
-func (m *TermRelationship) SetObjectId(arg int64) {
-	m.ObjectId = arg
-	m.IsObjectIdDirty = true
-}
-
-func (m *TermRelationship) GetTermTaxonomyId() int64 {
-	return m.TermTaxonomyId
-}
-func (m *TermRelationship) SetTermTaxonomyId(arg int64) {
-	m.TermTaxonomyId = arg
-	m.IsTermTaxonomyIdDirty = true
+func (o *TermRelationship) SetObjectId(arg int64) {
+	o.ObjectId = arg
+	o.IsObjectIdDirty = true
 }
 
-func (m *TermRelationship) GetTermOrder() int {
-	return m.TermOrder
+func (o *TermRelationship) GetTermTaxonomyId() int64 {
+	return o.TermTaxonomyId
 }
-func (m *TermRelationship) SetTermOrder(arg int) {
-	m.TermOrder = arg
-	m.IsTermOrderDirty = true
+func (o *TermRelationship) SetTermTaxonomyId(arg int64) {
+	o.TermTaxonomyId = arg
+	o.IsTermTaxonomyIdDirty = true
 }
 
-func (o *TermRelationship) FindByObjectId(_find_by_ObjectId int64) ([]*TermRelationship, error) {
+func (o *TermRelationship) GetTermOrder() int {
+	return o.TermOrder
+}
+func (o *TermRelationship) SetTermOrder(arg int) {
+	o.TermOrder = arg
+	o.IsTermOrderDirty = true
+}
+
+// TermRelationshipFindByObjectId(_findByObjectId int64) -> []*TermRelationship,error
+// Generic and programatically generator finder for TermRelationship
+func (o *TermRelationship) FindByObjectId(_findByObjectId int64) ([]*TermRelationship, error) {
 
 	var model_slice []*TermRelationship
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "object_id", _find_by_ObjectId)
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "object_id", _findByObjectId)
 	results, err := o._adapter.Query(q)
 	if err != nil {
 		return model_slice, err
@@ -4565,10 +4895,13 @@ func (o *TermRelationship) Find(termId int64, objectId int64) (bool, error) {
 	return true, nil
 
 }
-func (o *TermRelationship) FindByTermOrder(_find_by_TermOrder int) ([]*TermRelationship, error) {
+
+// TermRelationshipFindByTermOrder(_findByTermOrder int) -> []*TermRelationship,error
+// Generic and programatically generator finder for TermRelationship
+func (o *TermRelationship) FindByTermOrder(_findByTermOrder int) ([]*TermRelationship, error) {
 
 	var model_slice []*TermRelationship
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "term_order", _find_by_TermOrder)
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "term_order", _findByTermOrder)
 	results, err := o._adapter.Query(q)
 	if err != nil {
 		return model_slice, err
@@ -4591,6 +4924,7 @@ func (o *TermRelationship) FindByTermOrder(_find_by_TermOrder int) ([]*TermRelat
 
 }
 
+// Converts a DBValueMap returned from Adapter.Query to a TermRelationship
 func (o *TermRelationship) FromDBValueMap(m map[string]DBValue) error {
 	_ObjectId, err := m["object_id"].AsInt64()
 	if err != nil {
@@ -4610,12 +4944,16 @@ func (o *TermRelationship) FromDBValueMap(m map[string]DBValue) error {
 
 	return nil
 }
+
+// A kind of Clone function for TermRelationship
 func (o *TermRelationship) FromTermRelationship(m *TermRelationship) {
 	o.ObjectId = m.ObjectId
 	o.TermTaxonomyId = m.TermTaxonomyId
 	o.TermOrder = m.TermOrder
 
 }
+
+// A function to forcibly reload TermRelationship
 func (o *TermRelationship) Reload() error {
 	_, err := o.Find(o.TermTaxonomyId, o.ObjectId)
 	return err
@@ -4730,65 +5068,67 @@ func NewTermTaxonomy(a Adapter) *TermTaxonomy {
 	return &o
 }
 
-func (m *TermTaxonomy) GetPrimaryKeyValue() int64 {
-	return m.TermTaxonomyId
+func (o *TermTaxonomy) GetPrimaryKeyValue() int64 {
+	return o.TermTaxonomyId
 }
-func (m *TermTaxonomy) GetPrimaryKeyName() string {
+func (o *TermTaxonomy) GetPrimaryKeyName() string {
 	return `term_taxonomy_id`
 }
 
-func (m *TermTaxonomy) GetTermTaxonomyId() int64 {
-	return m.TermTaxonomyId
+func (o *TermTaxonomy) GetTermTaxonomyId() int64 {
+	return o.TermTaxonomyId
 }
-func (m *TermTaxonomy) SetTermTaxonomyId(arg int64) {
-	m.TermTaxonomyId = arg
-	m.IsTermTaxonomyIdDirty = true
-}
-
-func (m *TermTaxonomy) GetTermId() int64 {
-	return m.TermId
-}
-func (m *TermTaxonomy) SetTermId(arg int64) {
-	m.TermId = arg
-	m.IsTermIdDirty = true
+func (o *TermTaxonomy) SetTermTaxonomyId(arg int64) {
+	o.TermTaxonomyId = arg
+	o.IsTermTaxonomyIdDirty = true
 }
 
-func (m *TermTaxonomy) GetTaxonomy() string {
-	return m.Taxonomy
+func (o *TermTaxonomy) GetTermId() int64 {
+	return o.TermId
 }
-func (m *TermTaxonomy) SetTaxonomy(arg string) {
-	m.Taxonomy = arg
-	m.IsTaxonomyDirty = true
-}
-
-func (m *TermTaxonomy) GetDescription() string {
-	return m.Description
-}
-func (m *TermTaxonomy) SetDescription(arg string) {
-	m.Description = arg
-	m.IsDescriptionDirty = true
+func (o *TermTaxonomy) SetTermId(arg int64) {
+	o.TermId = arg
+	o.IsTermIdDirty = true
 }
 
-func (m *TermTaxonomy) GetParent() int64 {
-	return m.Parent
+func (o *TermTaxonomy) GetTaxonomy() string {
+	return o.Taxonomy
 }
-func (m *TermTaxonomy) SetParent(arg int64) {
-	m.Parent = arg
-	m.IsParentDirty = true
-}
-
-func (m *TermTaxonomy) GetCount() int64 {
-	return m.Count
-}
-func (m *TermTaxonomy) SetCount(arg int64) {
-	m.Count = arg
-	m.IsCountDirty = true
+func (o *TermTaxonomy) SetTaxonomy(arg string) {
+	o.Taxonomy = arg
+	o.IsTaxonomyDirty = true
 }
 
-func (o *TermTaxonomy) Find(_find_by_TermTaxonomyId int64) (bool, error) {
+func (o *TermTaxonomy) GetDescription() string {
+	return o.Description
+}
+func (o *TermTaxonomy) SetDescription(arg string) {
+	o.Description = arg
+	o.IsDescriptionDirty = true
+}
+
+func (o *TermTaxonomy) GetParent() int64 {
+	return o.Parent
+}
+func (o *TermTaxonomy) SetParent(arg int64) {
+	o.Parent = arg
+	o.IsParentDirty = true
+}
+
+func (o *TermTaxonomy) GetCount() int64 {
+	return o.Count
+}
+func (o *TermTaxonomy) SetCount(arg int64) {
+	o.Count = arg
+	o.IsCountDirty = true
+}
+
+// TermTaxonomyFind(_findByTermTaxonomyId int64) -> bool,error
+// Generic and programatically generator finder for TermTaxonomy
+func (o *TermTaxonomy) Find(_findByTermTaxonomyId int64) (bool, error) {
 
 	var model_slice []*TermTaxonomy
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "term_taxonomy_id", _find_by_TermTaxonomyId)
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "term_taxonomy_id", _findByTermTaxonomyId)
 	results, err := o._adapter.Query(q)
 	if err != nil {
 		return false, o._adapter.Oops(fmt.Sprintf(`%s`, err))
@@ -4811,110 +5151,13 @@ func (o *TermTaxonomy) Find(_find_by_TermTaxonomyId int64) (bool, error) {
 	return true, nil
 
 }
-func (o *TermTaxonomy) FindByTermId(_find_by_TermId int64) ([]*TermTaxonomy, error) {
+
+// TermTaxonomyFindByTermId(_findByTermId int64) -> []*TermTaxonomy,error
+// Generic and programatically generator finder for TermTaxonomy
+func (o *TermTaxonomy) FindByTermId(_findByTermId int64) ([]*TermTaxonomy, error) {
 
 	var model_slice []*TermTaxonomy
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "term_id", _find_by_TermId)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := TermTaxonomy{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *TermTaxonomy) FindByTaxonomy(_find_by_Taxonomy string) ([]*TermTaxonomy, error) {
-
-	var model_slice []*TermTaxonomy
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "taxonomy", _find_by_Taxonomy)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := TermTaxonomy{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *TermTaxonomy) FindByDescription(_find_by_Description string) ([]*TermTaxonomy, error) {
-
-	var model_slice []*TermTaxonomy
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "description", _find_by_Description)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := TermTaxonomy{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *TermTaxonomy) FindByParent(_find_by_Parent int64) ([]*TermTaxonomy, error) {
-
-	var model_slice []*TermTaxonomy
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "parent", _find_by_Parent)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := TermTaxonomy{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *TermTaxonomy) FindByCount(_find_by_Count int64) ([]*TermTaxonomy, error) {
-
-	var model_slice []*TermTaxonomy
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "count", _find_by_Count)
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "term_id", _findByTermId)
 	results, err := o._adapter.Query(q)
 	if err != nil {
 		return model_slice, err
@@ -4937,6 +5180,119 @@ func (o *TermTaxonomy) FindByCount(_find_by_Count int64) ([]*TermTaxonomy, error
 
 }
 
+// TermTaxonomyFindByTaxonomy(_findByTaxonomy string) -> []*TermTaxonomy,error
+// Generic and programatically generator finder for TermTaxonomy
+func (o *TermTaxonomy) FindByTaxonomy(_findByTaxonomy string) ([]*TermTaxonomy, error) {
+
+	var model_slice []*TermTaxonomy
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "taxonomy", _findByTaxonomy)
+	results, err := o._adapter.Query(q)
+	if err != nil {
+		return model_slice, err
+	}
+
+	for _, result := range results {
+		ro := TermTaxonomy{}
+		err = ro.FromDBValueMap(result)
+		if err != nil {
+			return model_slice, err
+		}
+		model_slice = append(model_slice, &ro)
+	}
+
+	if len(model_slice) == 0 {
+		// there was an error!
+		return nil, o._adapter.Oops(`no results`)
+	}
+	return model_slice, nil
+
+}
+
+// TermTaxonomyFindByDescription(_findByDescription string) -> []*TermTaxonomy,error
+// Generic and programatically generator finder for TermTaxonomy
+func (o *TermTaxonomy) FindByDescription(_findByDescription string) ([]*TermTaxonomy, error) {
+
+	var model_slice []*TermTaxonomy
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "description", _findByDescription)
+	results, err := o._adapter.Query(q)
+	if err != nil {
+		return model_slice, err
+	}
+
+	for _, result := range results {
+		ro := TermTaxonomy{}
+		err = ro.FromDBValueMap(result)
+		if err != nil {
+			return model_slice, err
+		}
+		model_slice = append(model_slice, &ro)
+	}
+
+	if len(model_slice) == 0 {
+		// there was an error!
+		return nil, o._adapter.Oops(`no results`)
+	}
+	return model_slice, nil
+
+}
+
+// TermTaxonomyFindByParent(_findByParent int64) -> []*TermTaxonomy,error
+// Generic and programatically generator finder for TermTaxonomy
+func (o *TermTaxonomy) FindByParent(_findByParent int64) ([]*TermTaxonomy, error) {
+
+	var model_slice []*TermTaxonomy
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "parent", _findByParent)
+	results, err := o._adapter.Query(q)
+	if err != nil {
+		return model_slice, err
+	}
+
+	for _, result := range results {
+		ro := TermTaxonomy{}
+		err = ro.FromDBValueMap(result)
+		if err != nil {
+			return model_slice, err
+		}
+		model_slice = append(model_slice, &ro)
+	}
+
+	if len(model_slice) == 0 {
+		// there was an error!
+		return nil, o._adapter.Oops(`no results`)
+	}
+	return model_slice, nil
+
+}
+
+// TermTaxonomyFindByCount(_findByCount int64) -> []*TermTaxonomy,error
+// Generic and programatically generator finder for TermTaxonomy
+func (o *TermTaxonomy) FindByCount(_findByCount int64) ([]*TermTaxonomy, error) {
+
+	var model_slice []*TermTaxonomy
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "count", _findByCount)
+	results, err := o._adapter.Query(q)
+	if err != nil {
+		return model_slice, err
+	}
+
+	for _, result := range results {
+		ro := TermTaxonomy{}
+		err = ro.FromDBValueMap(result)
+		if err != nil {
+			return model_slice, err
+		}
+		model_slice = append(model_slice, &ro)
+	}
+
+	if len(model_slice) == 0 {
+		// there was an error!
+		return nil, o._adapter.Oops(`no results`)
+	}
+	return model_slice, nil
+
+}
+
+// Converts a DBValueMap returned from Adapter.Query to a TermTaxonomy
 func (o *TermTaxonomy) FromDBValueMap(m map[string]DBValue) error {
 	_TermTaxonomyId, err := m["term_taxonomy_id"].AsInt64()
 	if err != nil {
@@ -4971,6 +5327,8 @@ func (o *TermTaxonomy) FromDBValueMap(m map[string]DBValue) error {
 
 	return nil
 }
+
+// A kind of Clone function for TermTaxonomy
 func (o *TermTaxonomy) FromTermTaxonomy(m *TermTaxonomy) {
 	o.TermTaxonomyId = m.TermTaxonomyId
 	o.TermId = m.TermId
@@ -4980,6 +5338,8 @@ func (o *TermTaxonomy) FromTermTaxonomy(m *TermTaxonomy) {
 	o.Count = m.Count
 
 }
+
+// A function to forcibly reload TermTaxonomy
 func (o *TermTaxonomy) Reload() error {
 	_, err := o.Find(o.GetPrimaryKeyValue())
 	return err
@@ -5136,49 +5496,51 @@ func NewTerm(a Adapter) *Term {
 	return &o
 }
 
-func (m *Term) GetPrimaryKeyValue() int64 {
-	return m.TermId
+func (o *Term) GetPrimaryKeyValue() int64 {
+	return o.TermId
 }
-func (m *Term) GetPrimaryKeyName() string {
+func (o *Term) GetPrimaryKeyName() string {
 	return `term_id`
 }
 
-func (m *Term) GetTermId() int64 {
-	return m.TermId
+func (o *Term) GetTermId() int64 {
+	return o.TermId
 }
-func (m *Term) SetTermId(arg int64) {
-	m.TermId = arg
-	m.IsTermIdDirty = true
-}
-
-func (m *Term) GetName() string {
-	return m.Name
-}
-func (m *Term) SetName(arg string) {
-	m.Name = arg
-	m.IsNameDirty = true
+func (o *Term) SetTermId(arg int64) {
+	o.TermId = arg
+	o.IsTermIdDirty = true
 }
 
-func (m *Term) GetSlug() string {
-	return m.Slug
+func (o *Term) GetName() string {
+	return o.Name
 }
-func (m *Term) SetSlug(arg string) {
-	m.Slug = arg
-	m.IsSlugDirty = true
-}
-
-func (m *Term) GetTermGroup() int64 {
-	return m.TermGroup
-}
-func (m *Term) SetTermGroup(arg int64) {
-	m.TermGroup = arg
-	m.IsTermGroupDirty = true
+func (o *Term) SetName(arg string) {
+	o.Name = arg
+	o.IsNameDirty = true
 }
 
-func (o *Term) Find(_find_by_TermId int64) (bool, error) {
+func (o *Term) GetSlug() string {
+	return o.Slug
+}
+func (o *Term) SetSlug(arg string) {
+	o.Slug = arg
+	o.IsSlugDirty = true
+}
+
+func (o *Term) GetTermGroup() int64 {
+	return o.TermGroup
+}
+func (o *Term) SetTermGroup(arg int64) {
+	o.TermGroup = arg
+	o.IsTermGroupDirty = true
+}
+
+// TermFind(_findByTermId int64) -> bool,error
+// Generic and programatically generator finder for Term
+func (o *Term) Find(_findByTermId int64) (bool, error) {
 
 	var model_slice []*Term
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "term_id", _find_by_TermId)
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "term_id", _findByTermId)
 	results, err := o._adapter.Query(q)
 	if err != nil {
 		return false, o._adapter.Oops(fmt.Sprintf(`%s`, err))
@@ -5201,60 +5563,13 @@ func (o *Term) Find(_find_by_TermId int64) (bool, error) {
 	return true, nil
 
 }
-func (o *Term) FindByName(_find_by_Name string) ([]*Term, error) {
+
+// TermFindByName(_findByName string) -> []*Term,error
+// Generic and programatically generator finder for Term
+func (o *Term) FindByName(_findByName string) ([]*Term, error) {
 
 	var model_slice []*Term
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "name", _find_by_Name)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := Term{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *Term) FindBySlug(_find_by_Slug string) ([]*Term, error) {
-
-	var model_slice []*Term
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "slug", _find_by_Slug)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := Term{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *Term) FindByTermGroup(_find_by_TermGroup int64) ([]*Term, error) {
-
-	var model_slice []*Term
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "term_group", _find_by_TermGroup)
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "name", _findByName)
 	results, err := o._adapter.Query(q)
 	if err != nil {
 		return model_slice, err
@@ -5277,6 +5592,63 @@ func (o *Term) FindByTermGroup(_find_by_TermGroup int64) ([]*Term, error) {
 
 }
 
+// TermFindBySlug(_findBySlug string) -> []*Term,error
+// Generic and programatically generator finder for Term
+func (o *Term) FindBySlug(_findBySlug string) ([]*Term, error) {
+
+	var model_slice []*Term
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "slug", _findBySlug)
+	results, err := o._adapter.Query(q)
+	if err != nil {
+		return model_slice, err
+	}
+
+	for _, result := range results {
+		ro := Term{}
+		err = ro.FromDBValueMap(result)
+		if err != nil {
+			return model_slice, err
+		}
+		model_slice = append(model_slice, &ro)
+	}
+
+	if len(model_slice) == 0 {
+		// there was an error!
+		return nil, o._adapter.Oops(`no results`)
+	}
+	return model_slice, nil
+
+}
+
+// TermFindByTermGroup(_findByTermGroup int64) -> []*Term,error
+// Generic and programatically generator finder for Term
+func (o *Term) FindByTermGroup(_findByTermGroup int64) ([]*Term, error) {
+
+	var model_slice []*Term
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "term_group", _findByTermGroup)
+	results, err := o._adapter.Query(q)
+	if err != nil {
+		return model_slice, err
+	}
+
+	for _, result := range results {
+		ro := Term{}
+		err = ro.FromDBValueMap(result)
+		if err != nil {
+			return model_slice, err
+		}
+		model_slice = append(model_slice, &ro)
+	}
+
+	if len(model_slice) == 0 {
+		// there was an error!
+		return nil, o._adapter.Oops(`no results`)
+	}
+	return model_slice, nil
+
+}
+
+// Converts a DBValueMap returned from Adapter.Query to a Term
 func (o *Term) FromDBValueMap(m map[string]DBValue) error {
 	_TermId, err := m["term_id"].AsInt64()
 	if err != nil {
@@ -5301,6 +5673,8 @@ func (o *Term) FromDBValueMap(m map[string]DBValue) error {
 
 	return nil
 }
+
+// A kind of Clone function for Term
 func (o *Term) FromTerm(m *Term) {
 	o.TermId = m.TermId
 	o.Name = m.Name
@@ -5308,6 +5682,8 @@ func (o *Term) FromTerm(m *Term) {
 	o.TermGroup = m.TermGroup
 
 }
+
+// A function to forcibly reload Term
 func (o *Term) Reload() error {
 	_, err := o.Find(o.GetPrimaryKeyValue())
 	return err
@@ -5428,49 +5804,51 @@ func NewUserMeta(a Adapter) *UserMeta {
 	return &o
 }
 
-func (m *UserMeta) GetPrimaryKeyValue() int64 {
-	return m.UMetaId
+func (o *UserMeta) GetPrimaryKeyValue() int64 {
+	return o.UMetaId
 }
-func (m *UserMeta) GetPrimaryKeyName() string {
+func (o *UserMeta) GetPrimaryKeyName() string {
 	return `umeta_id`
 }
 
-func (m *UserMeta) GetUMetaId() int64 {
-	return m.UMetaId
+func (o *UserMeta) GetUMetaId() int64 {
+	return o.UMetaId
 }
-func (m *UserMeta) SetUMetaId(arg int64) {
-	m.UMetaId = arg
-	m.IsUMetaIdDirty = true
-}
-
-func (m *UserMeta) GetUserId() int64 {
-	return m.UserId
-}
-func (m *UserMeta) SetUserId(arg int64) {
-	m.UserId = arg
-	m.IsUserIdDirty = true
+func (o *UserMeta) SetUMetaId(arg int64) {
+	o.UMetaId = arg
+	o.IsUMetaIdDirty = true
 }
 
-func (m *UserMeta) GetMetaKey() string {
-	return m.MetaKey
+func (o *UserMeta) GetUserId() int64 {
+	return o.UserId
 }
-func (m *UserMeta) SetMetaKey(arg string) {
-	m.MetaKey = arg
-	m.IsMetaKeyDirty = true
-}
-
-func (m *UserMeta) GetMetaValue() string {
-	return m.MetaValue
-}
-func (m *UserMeta) SetMetaValue(arg string) {
-	m.MetaValue = arg
-	m.IsMetaValueDirty = true
+func (o *UserMeta) SetUserId(arg int64) {
+	o.UserId = arg
+	o.IsUserIdDirty = true
 }
 
-func (o *UserMeta) Find(_find_by_UMetaId int64) (bool, error) {
+func (o *UserMeta) GetMetaKey() string {
+	return o.MetaKey
+}
+func (o *UserMeta) SetMetaKey(arg string) {
+	o.MetaKey = arg
+	o.IsMetaKeyDirty = true
+}
+
+func (o *UserMeta) GetMetaValue() string {
+	return o.MetaValue
+}
+func (o *UserMeta) SetMetaValue(arg string) {
+	o.MetaValue = arg
+	o.IsMetaValueDirty = true
+}
+
+// UserMetaFind(_findByUMetaId int64) -> bool,error
+// Generic and programatically generator finder for UserMeta
+func (o *UserMeta) Find(_findByUMetaId int64) (bool, error) {
 
 	var model_slice []*UserMeta
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "umeta_id", _find_by_UMetaId)
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "umeta_id", _findByUMetaId)
 	results, err := o._adapter.Query(q)
 	if err != nil {
 		return false, o._adapter.Oops(fmt.Sprintf(`%s`, err))
@@ -5493,60 +5871,13 @@ func (o *UserMeta) Find(_find_by_UMetaId int64) (bool, error) {
 	return true, nil
 
 }
-func (o *UserMeta) FindByUserId(_find_by_UserId int64) ([]*UserMeta, error) {
+
+// UserMetaFindByUserId(_findByUserId int64) -> []*UserMeta,error
+// Generic and programatically generator finder for UserMeta
+func (o *UserMeta) FindByUserId(_findByUserId int64) ([]*UserMeta, error) {
 
 	var model_slice []*UserMeta
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "user_id", _find_by_UserId)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := UserMeta{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *UserMeta) FindByMetaKey(_find_by_MetaKey string) ([]*UserMeta, error) {
-
-	var model_slice []*UserMeta
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "meta_key", _find_by_MetaKey)
-	results, err := o._adapter.Query(q)
-	if err != nil {
-		return model_slice, err
-	}
-
-	for _, result := range results {
-		ro := UserMeta{}
-		err = ro.FromDBValueMap(result)
-		if err != nil {
-			return model_slice, err
-		}
-		model_slice = append(model_slice, &ro)
-	}
-
-	if len(model_slice) == 0 {
-		// there was an error!
-		return nil, o._adapter.Oops(`no results`)
-	}
-	return model_slice, nil
-
-}
-func (o *UserMeta) FindByMetaValue(_find_by_MetaValue string) ([]*UserMeta, error) {
-
-	var model_slice []*UserMeta
-	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "meta_value", _find_by_MetaValue)
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%d'", o._table, "user_id", _findByUserId)
 	results, err := o._adapter.Query(q)
 	if err != nil {
 		return model_slice, err
@@ -5569,6 +5900,63 @@ func (o *UserMeta) FindByMetaValue(_find_by_MetaValue string) ([]*UserMeta, erro
 
 }
 
+// UserMetaFindByMetaKey(_findByMetaKey string) -> []*UserMeta,error
+// Generic and programatically generator finder for UserMeta
+func (o *UserMeta) FindByMetaKey(_findByMetaKey string) ([]*UserMeta, error) {
+
+	var model_slice []*UserMeta
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "meta_key", _findByMetaKey)
+	results, err := o._adapter.Query(q)
+	if err != nil {
+		return model_slice, err
+	}
+
+	for _, result := range results {
+		ro := UserMeta{}
+		err = ro.FromDBValueMap(result)
+		if err != nil {
+			return model_slice, err
+		}
+		model_slice = append(model_slice, &ro)
+	}
+
+	if len(model_slice) == 0 {
+		// there was an error!
+		return nil, o._adapter.Oops(`no results`)
+	}
+	return model_slice, nil
+
+}
+
+// UserMetaFindByMetaValue(_findByMetaValue string) -> []*UserMeta,error
+// Generic and programatically generator finder for UserMeta
+func (o *UserMeta) FindByMetaValue(_findByMetaValue string) ([]*UserMeta, error) {
+
+	var model_slice []*UserMeta
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `%s` = '%s'", o._table, "meta_value", _findByMetaValue)
+	results, err := o._adapter.Query(q)
+	if err != nil {
+		return model_slice, err
+	}
+
+	for _, result := range results {
+		ro := UserMeta{}
+		err = ro.FromDBValueMap(result)
+		if err != nil {
+			return model_slice, err
+		}
+		model_slice = append(model_slice, &ro)
+	}
+
+	if len(model_slice) == 0 {
+		// there was an error!
+		return nil, o._adapter.Oops(`no results`)
+	}
+	return model_slice, nil
+
+}
+
+// Converts a DBValueMap returned from Adapter.Query to a UserMeta
 func (o *UserMeta) FromDBValueMap(m map[string]DBValue) error {
 	_UMetaId, err := m["umeta_id"].AsInt64()
 	if err != nil {
@@ -5593,6 +5981,8 @@ func (o *UserMeta) FromDBValueMap(m map[string]DBValue) error {
 
 	return nil
 }
+
+// A kind of Clone function for UserMeta
 func (o *UserMeta) FromUserMeta(m *UserMeta) {
 	o.UMetaId = m.UMetaId
 	o.UserId = m.UserId
@@ -5600,6 +5990,8 @@ func (o *UserMeta) FromUserMeta(m *UserMeta) {
 	o.MetaValue = m.MetaValue
 
 }
+
+// A function to forcibly reload UserMeta
 func (o *UserMeta) Reload() error {
 	_, err := o.Find(o.GetPrimaryKeyValue())
 	return err
