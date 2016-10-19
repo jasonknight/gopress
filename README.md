@@ -2,8 +2,12 @@
 [![Build Status](https://travis-ci.org/jasonknight/gopress.svg?branch=master)](https://travis-ci.org/jasonknight/gopress)
 [![codecov.io](https://codecov.io/gh/jasonknight/gopress/coverage.svg?branch=master)](https://codecov.io/gh/jasonknight/gopress)
 
-This is a Golang [ActiveRecord](https://en.wikipedia.org/wiki/Active_record_pattern) implementation of the Wordpress database Schema (also includes WooCommerce). This library is automatically generated. If you'd like to contribute, you can change the go files and I will merge them into the generator, or if you're brave you can try
+This is a Golang [ActiveRecord](https://en.wikipedia.org/wiki/Active_record_pattern) implementation of the Wordpress database Schema. This library is automatically generated. If you'd like to contribute, you can change the go files and I will merge them into the generator, or if you're brave you can try
 to futz with the generator. 
+
+I am still figuring out codecov.io which shows less coverage than
+when local testing, current testing against a database in 75%. Needs
+improvement - and I'll continue to work on that.
 
 [Please see the wiki for details and examples](https://github.com/jasonknight/gopress/wiki), or look in the testing file.
 
