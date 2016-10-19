@@ -46,6 +46,19 @@ foreach($t->fields as $f) {
     }
     $sig = "// {$fname} dynamic finder for {$f->Field} -> $rtype,error
     // Generic and programatically generator finder for {$t->model_name}
+    // Note that Fine returns a bool if found, not err, in the case of
+    // a return of true, the instance data will be filled out.
+    // a call to find ALWAYS overwrites the model you call Find on
+    // i.e. receiver is a pointer. 
+    // ```go
+    //     m := New{$t->model_name}(a)
+    //     found,err := m.Find(23)
+    //     .. handle err
+    //     if found == false {
+    //         // handle found
+    //     }
+    //     ... do what you want with m here
+    // ```
     ";
     $sig .= "func (o *{$t->model_name}) $fname($arg $argtype) ($rtype,error) {";
 $body = "
