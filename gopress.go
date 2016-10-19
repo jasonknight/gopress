@@ -539,6 +539,8 @@ type CommentMeta struct {
 	// Relationships
 }
 
+// NewCommentMeta binds an Adapter to a new instance
+// of CommentMeta and sets up the _table and primary keys
 func NewCommentMeta(a Adapter) *CommentMeta {
 	var o CommentMeta
 	o._table = fmt.Sprintf("%scommentmeta", a.DatabasePrefix())
@@ -907,6 +909,8 @@ type Comment struct {
 	// Relationships
 }
 
+// NewComment binds an Adapter to a new instance
+// of Comment and sets up the _table and primary keys
 func NewComment(a Adapter) *Comment {
 	var o Comment
 	o._table = fmt.Sprintf("%scomments", a.DatabasePrefix())
@@ -2008,6 +2012,8 @@ type Link struct {
 	// Relationships
 }
 
+// NewLink binds an Adapter to a new instance
+// of Link and sets up the _table and primary keys
 func NewLink(a Adapter) *Link {
 	var o Link
 	o._table = fmt.Sprintf("%slinks", a.DatabasePrefix())
@@ -2957,6 +2963,8 @@ type Option struct {
 	// Relationships
 }
 
+// NewOption binds an Adapter to a new instance
+// of Option and sets up the _table and primary keys
 func NewOption(a Adapter) *Option {
 	var o Option
 	o._table = fmt.Sprintf("%soptions", a.DatabasePrefix())
@@ -3303,6 +3311,8 @@ type PostMeta struct {
 	// Relationships
 }
 
+// NewPostMeta binds an Adapter to a new instance
+// of PostMeta and sets up the _table and primary keys
 func NewPostMeta(a Adapter) *PostMeta {
 	var o PostMeta
 	o._table = fmt.Sprintf("%spostmeta", a.DatabasePrefix())
@@ -3687,6 +3697,8 @@ type Post struct {
 	// Relationships
 }
 
+// NewPost binds an Adapter to a new instance
+// of Post and sets up the _table and primary keys
 func NewPost(a Adapter) *Post {
 	var o Post
 	o._table = fmt.Sprintf("%sposts", a.DatabasePrefix())
@@ -5304,6 +5316,8 @@ type TermRelationship struct {
 	// Relationships
 }
 
+// NewTermRelationship binds an Adapter to a new instance
+// of TermRelationship and sets up the _table and primary keys
 func NewTermRelationship(a Adapter) *TermRelationship {
 	var o TermRelationship
 	o._table = fmt.Sprintf("%sterm_relationships", a.DatabasePrefix())
@@ -5592,6 +5606,8 @@ type TermTaxonomy struct {
 	// Relationships
 }
 
+// NewTermTaxonomy binds an Adapter to a new instance
+// of TermTaxonomy and sets up the _table and primary keys
 func NewTermTaxonomy(a Adapter) *TermTaxonomy {
 	var o TermTaxonomy
 	o._table = fmt.Sprintf("%sterm_taxonomy", a.DatabasePrefix())
@@ -6072,6 +6088,8 @@ type Term struct {
 	// Relationships
 }
 
+// NewTerm binds an Adapter to a new instance
+// of Term and sets up the _table and primary keys
 func NewTerm(a Adapter) *Term {
 	var o Term
 	o._table = fmt.Sprintf("%sterms", a.DatabasePrefix())
@@ -6418,6 +6436,8 @@ type UserMeta struct {
 	// Relationships
 }
 
+// NewUserMeta binds an Adapter to a new instance
+// of UserMeta and sets up the _table and primary keys
 func NewUserMeta(a Adapter) *UserMeta {
 	var o UserMeta
 	o._table = fmt.Sprintf("%susermeta", a.DatabasePrefix())

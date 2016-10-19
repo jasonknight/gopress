@@ -254,6 +254,8 @@ type {$t->model_name} struct {
     }
     puts("}");
 $newfunc = "
+// New{$t->model_name} binds an Adapter to a new instance
+// of {$t->model_name} and sets up the _table and primary keys
 func New{$t->model_name}(a Adapter) *{$t->model_name} {
     var o {$t->model_name}
     o._table = fmt.Sprintf(\"%s{$t->dname}\",a.DatabasePrefix())
