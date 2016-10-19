@@ -1,6 +1,7 @@
 <?php
 puts("
 type LogFilter func (string,string)string
+type SafeStringFilter func(string)string
 type Adapter interface {
     Open(string,string,string,string) error
     Close()
@@ -33,6 +34,7 @@ type MysqlAdapter struct {
     _cnt int64
     _opened bool
     _log_filter LogFilter
+    _safe_filter SafeStringFilter
 }
 
 func NewMysqlAdapter(pre string) *MysqlAdapter {

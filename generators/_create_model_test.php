@@ -4,6 +4,7 @@ $txt .= "
 func Test{$t->model_name}Create(t *testing.T) {
     if fileExists(`$cnf`) {
     a,err := NewMysqlAdapterEx(`$cnf`)
+    defer a.Close()
     if err != nil {
         $fail(`could not load $cnf %s`,err)
         return

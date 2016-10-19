@@ -5,6 +5,7 @@ func Test{$t->model_name}Updaters(t *testing.T) {
         return
     }
     a,err := NewMysqlAdapterEx(`../gopress.db.yml`)
+    defer a.Close()
     if err != nil {
         $fail(`could not load $cnf %s`,err)
         return

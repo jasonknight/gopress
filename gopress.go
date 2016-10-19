@@ -17,6 +17,7 @@ import (
 )
 
 type LogFilter func(string, string) string
+type SafeStringFilter func(string) string
 type Adapter interface {
 	Open(string, string, string, string) error
 	Close()
@@ -36,19 +37,20 @@ type Adapter interface {
 }
 
 type MysqlAdapter struct {
-	Host        string `yaml:"host"`
-	User        string `yaml:"user"`
-	Pass        string `yaml:"pass"`
-	Database    string `yaml:"database"`
-	DBPrefix    string `yaml:"prefix"`
-	_info_log   *log.Logger
-	_error_log  *log.Logger
-	_debug_log  *log.Logger
-	_conn_      *sql.DB
-	_lid        int64
-	_cnt        int64
-	_opened     bool
-	_log_filter LogFilter
+	Host         string `yaml:"host"`
+	User         string `yaml:"user"`
+	Pass         string `yaml:"pass"`
+	Database     string `yaml:"database"`
+	DBPrefix     string `yaml:"prefix"`
+	_info_log    *log.Logger
+	_error_log   *log.Logger
+	_debug_log   *log.Logger
+	_conn_       *sql.DB
+	_lid         int64
+	_cnt         int64
+	_opened      bool
+	_log_filter  LogFilter
+	_safe_filter SafeStringFilter
 }
 
 func NewMysqlAdapter(pre string) *MysqlAdapter {
