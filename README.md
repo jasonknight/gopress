@@ -44,13 +44,10 @@ type Post struct {
     IsPostPasswordDirty        bool
     IsPostNameDirty            bool
     ...
-    // Relationships
-    PostMetas         []*PostMeta
-    ...
 }
 ```
 
-The library implements basic CRUD functions (Create/Find/Update/Delete) and provides sane structs as models. 
+The library implements basic CRUD functions (Create/Read(Find)/Update/Delete) and provides structs as "models". 
 
 Each model must be provided with an adapter:
 
