@@ -219,7 +219,7 @@ puts('import (
 ');
 
 include "generic_bits.php";
-
+//include "model_interface.php";
 $_ii = 0;
 $seen = array();
 foreach ($tables as $t) {
@@ -238,7 +238,7 @@ type {$t->model_name} struct {
     _pkey string // $_ii The name of the primary key in this table
     _conds []string
     _new bool");
-    
+    include "models/interface_fields.php";
     foreach($t->fields as $f) {
         $fname = $f->model_field_name;
         puts("    {$fname} {$f->go_type}");
@@ -270,6 +270,7 @@ func New{$t->model_name}(a Adapter) *{$t->model_name} {
 }
 ";
 puts($newfunc);
+//include "models/interface_funcs.php";
 include "getset.php";
 include "finders.php";
 include "crud.php";

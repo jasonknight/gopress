@@ -1,0 +1,1185 @@
+[INFO]:2016/10/24 10:17:27 gopress.go:145: INSERT INTO wp_commentmeta (`comment_id`, `meta_key`, `meta_value`) VALUES ('4982', 'fzeNzCSuXdKPWWwBwoG', 'FQzhyNpJXVXCGHyfEhZJpPazh')
+[INFO]:2016/10/24 10:17:27 gopress.go:145: LastInsertedId is 1667
+[INFO]:2016/10/24 10:17:27 gopress.go:145: SELECT * FROM wp_commentmeta WHERE `meta_id` = '1667'
+[INFO]:2016/10/24 10:17:27 gopress.go:145: UPDATE wp_commentmeta SET comment_id = '7118',meta_key = 'dSmxelkxIHMtjNXxeOh',meta_value = 'EDWoIVgEwfnIQlIYKERGYzzDu' WHERE meta_id = '1667'
+[INFO]:2016/10/24 10:17:27 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:27 gopress.go:145: SELECT * FROM wp_commentmeta WHERE `comment_id` = '7118'
+[INFO]:2016/10/24 10:17:27 gopress.go:145: SELECT * FROM wp_commentmeta WHERE `meta_key` = 'dSmxelkxIHMtjNXxeOh'
+[INFO]:2016/10/24 10:17:27 gopress.go:145: SELECT * FROM wp_commentmeta WHERE `meta_value` = 'EDWoIVgEwfnIQlIYKERGYzzDu'
+[INFO]:2016/10/24 10:17:27 gopress.go:145: UPDATE wp_commentmeta SET `comment_id` = '755' WHERE `meta_id` = '0'
+[INFO]:2016/10/24 10:17:27 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:27 gopress.go:145: SELECT * FROM wp_commentmeta WHERE `meta_id` = '0'
+[ERROR]:2016/10/24 10:17:27 gopress.go:157: not found
+[INFO]:2016/10/24 10:17:27 gopress.go:145: UPDATE wp_commentmeta SET `meta_key` = 'XGkqDJVzngxBKpFsQBa' WHERE `meta_id` = '0'
+[INFO]:2016/10/24 10:17:27 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:27 gopress.go:145: SELECT * FROM wp_commentmeta WHERE `meta_id` = '0'
+[ERROR]:2016/10/24 10:17:27 gopress.go:157: not found
+[INFO]:2016/10/24 10:17:27 gopress.go:145: UPDATE wp_commentmeta SET `meta_value` = 'NFIzmFQWYNKdQDrQqhfYfylgZ' WHERE `meta_id` = '0'
+[INFO]:2016/10/24 10:17:27 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:27 gopress.go:145: SELECT * FROM wp_commentmeta WHERE `meta_id` = '0'
+[ERROR]:2016/10/24 10:17:27 gopress.go:157: not found
+[INFO]:2016/10/24 10:17:27 gopress.go:145: INSERT INTO wp_comments (`comment_post_ID`, `comment_author`, `comment_author_email`, `comment_author_url`, `comment_author_IP`, `comment_date`, `comment_date_gmt`, `comment_content`, `comment_karma`, `comment_approved`, `comment_agent`, `comment_type`, `comment_parent`, `user_id`) VALUES ('1816', 'KvtzWHxGhYlMDDypfadWQDfTp', 'miYKMNMRTdgIAbsjAsJ', 'VETLumNcrwzoJNEIiFY', 'tuUqdLLPvYCfAWDfGdZ', '1635-07-14 04:08:49', '1101-06-10 21:23:07', 'noqbVYtAdDLJXCDeDPCFCThJc', '9605', 'szxNsyecwEMRllUcXkL', 'wxGMiOpPNBPOEQJDpxV', 'pUWSGLMRZPyEwzQNkJi', '4462', '1365')
+[INFO]:2016/10/24 10:17:27 gopress.go:145: LastInsertedId is 1661
+[INFO]:2016/10/24 10:17:27 gopress.go:145: SELECT * FROM wp_comments WHERE `comment_ID` = '1661'
+[INFO]:2016/10/24 10:17:27 gopress.go:145: UPDATE wp_comments SET comment_post_ID = '5536',comment_author = 'qMVXBDWfzYkNYoHNuIRpXjupx',comment_author_email = 'YqWrwEDngmdVXnLgxoq',comment_author_url = 'nshWLygJfBcdSxgCIGh',comment_author_IP = 'QafrIskLVcFtVTCdxlk',comment_date = '1829-05-23 03:51:35',comment_date_gmt = '1709-08-10 01:24:53',comment_content = 'TPXKcppXtslRLLNCeJybbHiJc',comment_karma = '387',comment_approved = 'WjHtdjMuilrExEzwUfn',comment_agent = 'NvtZUSuJwCpJsmvTYDi',comment_type = 'WthGRNdxOkCRoAohvxJ',comment_parent = '369',user_id = '4482' WHERE comment_ID = '1661'
+[INFO]:2016/10/24 10:17:27 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:27 gopress.go:145: SELECT * FROM wp_comments WHERE `comment_post_ID` = '5536'
+[INFO]:2016/10/24 10:17:27 gopress.go:145: SELECT * FROM wp_comments WHERE `comment_author` = 'qMVXBDWfzYkNYoHNuIRpXjupx'
+[INFO]:2016/10/24 10:17:27 gopress.go:145: SELECT * FROM wp_comments WHERE `comment_author_email` = 'YqWrwEDngmdVXnLgxoq'
+[INFO]:2016/10/24 10:17:27 gopress.go:145: SELECT * FROM wp_comments WHERE `comment_author_url` = 'nshWLygJfBcdSxgCIGh'
+[INFO]:2016/10/24 10:17:27 gopress.go:145: SELECT * FROM wp_comments WHERE `comment_author_IP` = 'QafrIskLVcFtVTCdxlk'
+[INFO]:2016/10/24 10:17:27 gopress.go:145: SELECT * FROM wp_comments WHERE `comment_date` = '1829-05-23 03:51:35'
+[INFO]:2016/10/24 10:17:27 gopress.go:145: SELECT * FROM wp_comments WHERE `comment_date_gmt` = '1709-08-10 01:24:53'
+[INFO]:2016/10/24 10:17:27 gopress.go:145: SELECT * FROM wp_comments WHERE `comment_content` = 'TPXKcppXtslRLLNCeJybbHiJc'
+[INFO]:2016/10/24 10:17:27 gopress.go:145: SELECT * FROM wp_comments WHERE `comment_karma` = '387'
+[INFO]:2016/10/24 10:17:27 gopress.go:145: SELECT * FROM wp_comments WHERE `comment_approved` = 'WjHtdjMuilrExEzwUfn'
+[INFO]:2016/10/24 10:17:27 gopress.go:145: SELECT * FROM wp_comments WHERE `comment_agent` = 'NvtZUSuJwCpJsmvTYDi'
+[INFO]:2016/10/24 10:17:27 gopress.go:145: SELECT * FROM wp_comments WHERE `comment_type` = 'WthGRNdxOkCRoAohvxJ'
+[INFO]:2016/10/24 10:17:27 gopress.go:145: SELECT * FROM wp_comments WHERE `comment_parent` = '369'
+[INFO]:2016/10/24 10:17:27 gopress.go:145: SELECT * FROM wp_comments WHERE `user_id` = '4482'
+[INFO]:2016/10/24 10:17:27 gopress.go:145: UPDATE wp_comments SET `comment_post_ID` = '7789' WHERE `comment_ID` = '0'
+[INFO]:2016/10/24 10:17:27 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:27 gopress.go:145: SELECT * FROM wp_comments WHERE `comment_ID` = '0'
+[ERROR]:2016/10/24 10:17:27 gopress.go:157: not found
+[INFO]:2016/10/24 10:17:27 gopress.go:145: UPDATE wp_comments SET `comment_author` = 'JWOJfJBOKWMdrSzxeFbEPvppJ' WHERE `comment_ID` = '0'
+[INFO]:2016/10/24 10:17:27 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:27 gopress.go:145: SELECT * FROM wp_comments WHERE `comment_ID` = '0'
+[ERROR]:2016/10/24 10:17:27 gopress.go:157: not found
+[INFO]:2016/10/24 10:17:27 gopress.go:145: UPDATE wp_comments SET `comment_author_email` = 'JtBmMkKXIYYwNXglVBv' WHERE `comment_ID` = '0'
+[INFO]:2016/10/24 10:17:27 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:27 gopress.go:145: SELECT * FROM wp_comments WHERE `comment_ID` = '0'
+[ERROR]:2016/10/24 10:17:27 gopress.go:157: not found
+[INFO]:2016/10/24 10:17:27 gopress.go:145: UPDATE wp_comments SET `comment_author_url` = 'CCxvcvABQItQKFccoHy' WHERE `comment_ID` = '0'
+[INFO]:2016/10/24 10:17:27 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:27 gopress.go:145: SELECT * FROM wp_comments WHERE `comment_ID` = '0'
+[ERROR]:2016/10/24 10:17:27 gopress.go:157: not found
+[INFO]:2016/10/24 10:17:27 gopress.go:145: UPDATE wp_comments SET `comment_author_IP` = 'yBKroMbVogdRMwmHqYn' WHERE `comment_ID` = '0'
+[INFO]:2016/10/24 10:17:27 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:27 gopress.go:145: SELECT * FROM wp_comments WHERE `comment_ID` = '0'
+[ERROR]:2016/10/24 10:17:27 gopress.go:157: not found
+[INFO]:2016/10/24 10:17:27 gopress.go:145: UPDATE wp_comments SET `comment_date` = '1190-01-18 17:30:08' WHERE `comment_ID` = '0'
+[INFO]:2016/10/24 10:17:27 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:27 gopress.go:145: SELECT * FROM wp_comments WHERE `comment_ID` = '0'
+[ERROR]:2016/10/24 10:17:27 gopress.go:157: not found
+[INFO]:2016/10/24 10:17:27 gopress.go:145: UPDATE wp_comments SET `comment_date_gmt` = '1488-09-05 01:47:26' WHERE `comment_ID` = '0'
+[INFO]:2016/10/24 10:17:27 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:27 gopress.go:145: SELECT * FROM wp_comments WHERE `comment_ID` = '0'
+[ERROR]:2016/10/24 10:17:27 gopress.go:157: not found
+[INFO]:2016/10/24 10:17:27 gopress.go:145: UPDATE wp_comments SET `comment_content` = 'fYdZavorOcOWEInIlPhTLNghV' WHERE `comment_ID` = '0'
+[INFO]:2016/10/24 10:17:27 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:27 gopress.go:145: SELECT * FROM wp_comments WHERE `comment_ID` = '0'
+[ERROR]:2016/10/24 10:17:27 gopress.go:157: not found
+[INFO]:2016/10/24 10:17:27 gopress.go:145: UPDATE wp_comments SET `comment_karma` = '6649' WHERE `comment_ID` = '0'
+[INFO]:2016/10/24 10:17:27 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:27 gopress.go:145: SELECT * FROM wp_comments WHERE `comment_ID` = '0'
+[ERROR]:2016/10/24 10:17:27 gopress.go:157: not found
+[INFO]:2016/10/24 10:17:27 gopress.go:145: UPDATE wp_comments SET `comment_approved` = 'yfpdoZeABmaBLcJvbvy' WHERE `comment_ID` = '0'
+[INFO]:2016/10/24 10:17:27 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:27 gopress.go:145: SELECT * FROM wp_comments WHERE `comment_ID` = '0'
+[ERROR]:2016/10/24 10:17:27 gopress.go:157: not found
+[INFO]:2016/10/24 10:17:27 gopress.go:145: UPDATE wp_comments SET `comment_agent` = 'GTTEpotxbktZrCPFaTr' WHERE `comment_ID` = '0'
+[INFO]:2016/10/24 10:17:27 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:27 gopress.go:145: SELECT * FROM wp_comments WHERE `comment_ID` = '0'
+[ERROR]:2016/10/24 10:17:27 gopress.go:157: not found
+[INFO]:2016/10/24 10:17:27 gopress.go:145: UPDATE wp_comments SET `comment_type` = 'QrZErqGoJajYsuthuRY' WHERE `comment_ID` = '0'
+[INFO]:2016/10/24 10:17:27 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:27 gopress.go:145: SELECT * FROM wp_comments WHERE `comment_ID` = '0'
+[ERROR]:2016/10/24 10:17:27 gopress.go:157: not found
+[INFO]:2016/10/24 10:17:27 gopress.go:145: UPDATE wp_comments SET `comment_parent` = '8847' WHERE `comment_ID` = '0'
+[INFO]:2016/10/24 10:17:27 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:27 gopress.go:145: SELECT * FROM wp_comments WHERE `comment_ID` = '0'
+[ERROR]:2016/10/24 10:17:27 gopress.go:157: not found
+[INFO]:2016/10/24 10:17:27 gopress.go:145: UPDATE wp_comments SET `user_id` = '2007' WHERE `comment_ID` = '0'
+[INFO]:2016/10/24 10:17:27 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:27 gopress.go:145: SELECT * FROM wp_comments WHERE `comment_ID` = '0'
+[ERROR]:2016/10/24 10:17:27 gopress.go:157: not found
+[INFO]:2016/10/24 10:17:27 gopress.go:145: INSERT INTO wp_links (`link_url`, `link_name`, `link_image`, `link_target`, `link_description`, `link_visible`, `link_owner`, `link_rating`, `link_updated`, `link_rel`, `link_notes`, `link_rss`) VALUES ('XKxuGGtZeKInDtfCjiO', 'GGtZHgmvEgPKySEljYT', 'IDlhQyYvefpByJFIYfu', 'ePDOqxYLDbIpMXLGOMa', 'FkGwEODUVHnYSoGTUAQ', 'FfOWsYmdDhRcGWLHtax', '5096', '7208', '1179-02-23 13:38:01', 'AXVDAGINqTGGWhwsOkT', 'hwFIFaavRmuJIHftygJpiOdsX', 'jhFCsBSfOPnAaFOwyXo')
+[INFO]:2016/10/24 10:17:27 gopress.go:145: LastInsertedId is 50
+[INFO]:2016/10/24 10:17:27 gopress.go:145: SELECT * FROM wp_links WHERE `link_id` = '50'
+[INFO]:2016/10/24 10:17:27 gopress.go:145: UPDATE wp_links SET link_url = 'OBtwoCFMfgyFvrweaao',link_name = 'hrabhJDrABoWGgOihnh',link_image = 'xCIFdqnEduXVqTKhHpF',link_target = 'abprHVlHXrMKsgJnmSb',link_description = 'FjjDjhMWpKKVVAmPuIE',link_visible = 'TPRrXrQkCcYDMvWlHaj',link_owner = '1586',link_rating = '4239',link_updated = '1789-09-20 01:41:28',link_rel = 'IpvfTckoSegwoHAvSBS',link_notes = 'VDlqyKBRNgclvTYCFCaAJJHIM',link_rss = 'zJkyVRLmwUWRJmmoHTa' WHERE link_id = '50'
+[INFO]:2016/10/24 10:17:27 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:27 gopress.go:145: SELECT * FROM wp_links WHERE `link_url` = 'OBtwoCFMfgyFvrweaao'
+[INFO]:2016/10/24 10:17:27 gopress.go:145: SELECT * FROM wp_links WHERE `link_name` = 'hrabhJDrABoWGgOihnh'
+[INFO]:2016/10/24 10:17:27 gopress.go:145: SELECT * FROM wp_links WHERE `link_image` = 'xCIFdqnEduXVqTKhHpF'
+[INFO]:2016/10/24 10:17:27 gopress.go:145: SELECT * FROM wp_links WHERE `link_target` = 'abprHVlHXrMKsgJnmSb'
+[INFO]:2016/10/24 10:17:27 gopress.go:145: SELECT * FROM wp_links WHERE `link_description` = 'FjjDjhMWpKKVVAmPuIE'
+[INFO]:2016/10/24 10:17:27 gopress.go:145: SELECT * FROM wp_links WHERE `link_visible` = 'TPRrXrQkCcYDMvWlHaj'
+[INFO]:2016/10/24 10:17:27 gopress.go:145: SELECT * FROM wp_links WHERE `link_owner` = '1586'
+[INFO]:2016/10/24 10:17:27 gopress.go:145: SELECT * FROM wp_links WHERE `link_rating` = '4239'
+[INFO]:2016/10/24 10:17:27 gopress.go:145: SELECT * FROM wp_links WHERE `link_updated` = '1789-09-20 01:41:28'
+[INFO]:2016/10/24 10:17:27 gopress.go:145: SELECT * FROM wp_links WHERE `link_rel` = 'IpvfTckoSegwoHAvSBS'
+[INFO]:2016/10/24 10:17:27 gopress.go:145: SELECT * FROM wp_links WHERE `link_notes` = 'VDlqyKBRNgclvTYCFCaAJJHIM'
+[INFO]:2016/10/24 10:17:27 gopress.go:145: SELECT * FROM wp_links WHERE `link_rss` = 'zJkyVRLmwUWRJmmoHTa'
+[INFO]:2016/10/24 10:17:27 gopress.go:145: UPDATE wp_links SET `link_url` = 'FCGEktfseMvvrcnAhjt' WHERE `link_id` = '0'
+[INFO]:2016/10/24 10:17:27 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:27 gopress.go:145: SELECT * FROM wp_links WHERE `link_id` = '0'
+[ERROR]:2016/10/24 10:17:27 gopress.go:157: not found
+[INFO]:2016/10/24 10:17:27 gopress.go:145: UPDATE wp_links SET `link_name` = 'fYLVjdZRyKjuDLCszUh' WHERE `link_id` = '0'
+[INFO]:2016/10/24 10:17:27 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:27 gopress.go:145: SELECT * FROM wp_links WHERE `link_id` = '0'
+[ERROR]:2016/10/24 10:17:27 gopress.go:157: not found
+[INFO]:2016/10/24 10:17:27 gopress.go:145: UPDATE wp_links SET `link_image` = 'IFySnOFGaCdKIsWjlmN' WHERE `link_id` = '0'
+[INFO]:2016/10/24 10:17:27 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:27 gopress.go:145: SELECT * FROM wp_links WHERE `link_id` = '0'
+[ERROR]:2016/10/24 10:17:27 gopress.go:157: not found
+[INFO]:2016/10/24 10:17:27 gopress.go:145: UPDATE wp_links SET `link_target` = 'JkDQDJYkaPjYFAWZYnq' WHERE `link_id` = '0'
+[INFO]:2016/10/24 10:17:27 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:27 gopress.go:145: SELECT * FROM wp_links WHERE `link_id` = '0'
+[ERROR]:2016/10/24 10:17:27 gopress.go:157: not found
+[INFO]:2016/10/24 10:17:27 gopress.go:145: UPDATE wp_links SET `link_description` = 'VgAJHuOldmnaOSeBxOk' WHERE `link_id` = '0'
+[INFO]:2016/10/24 10:17:27 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:27 gopress.go:145: SELECT * FROM wp_links WHERE `link_id` = '0'
+[ERROR]:2016/10/24 10:17:27 gopress.go:157: not found
+[INFO]:2016/10/24 10:17:27 gopress.go:145: UPDATE wp_links SET `link_visible` = 'VpSVmznbURNNRmHsXPA' WHERE `link_id` = '0'
+[INFO]:2016/10/24 10:17:27 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:27 gopress.go:145: SELECT * FROM wp_links WHERE `link_id` = '0'
+[ERROR]:2016/10/24 10:17:27 gopress.go:157: not found
+[INFO]:2016/10/24 10:17:27 gopress.go:145: UPDATE wp_links SET `link_owner` = '9691' WHERE `link_id` = '0'
+[INFO]:2016/10/24 10:17:27 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:27 gopress.go:145: SELECT * FROM wp_links WHERE `link_id` = '0'
+[ERROR]:2016/10/24 10:17:27 gopress.go:157: not found
+[INFO]:2016/10/24 10:17:27 gopress.go:145: UPDATE wp_links SET `link_rating` = '6154' WHERE `link_id` = '0'
+[INFO]:2016/10/24 10:17:27 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:27 gopress.go:145: SELECT * FROM wp_links WHERE `link_id` = '0'
+[ERROR]:2016/10/24 10:17:27 gopress.go:157: not found
+[INFO]:2016/10/24 10:17:27 gopress.go:145: UPDATE wp_links SET `link_updated` = '1116-03-05 10:34:17' WHERE `link_id` = '0'
+[INFO]:2016/10/24 10:17:27 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:27 gopress.go:145: SELECT * FROM wp_links WHERE `link_id` = '0'
+[ERROR]:2016/10/24 10:17:27 gopress.go:157: not found
+[INFO]:2016/10/24 10:17:27 gopress.go:145: UPDATE wp_links SET `link_rel` = 'ExnGZMHonEZGkyWmymm' WHERE `link_id` = '0'
+[INFO]:2016/10/24 10:17:27 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:27 gopress.go:145: SELECT * FROM wp_links WHERE `link_id` = '0'
+[ERROR]:2016/10/24 10:17:27 gopress.go:157: not found
+[INFO]:2016/10/24 10:17:27 gopress.go:145: UPDATE wp_links SET `link_notes` = 'ilOsXdVyivmEpVosKBJBjxijA' WHERE `link_id` = '0'
+[INFO]:2016/10/24 10:17:27 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:27 gopress.go:145: SELECT * FROM wp_links WHERE `link_id` = '0'
+[ERROR]:2016/10/24 10:17:27 gopress.go:157: not found
+[INFO]:2016/10/24 10:17:27 gopress.go:145: UPDATE wp_links SET `link_rss` = 'MosgamwBUMPrxAuMHOA' WHERE `link_id` = '0'
+[INFO]:2016/10/24 10:17:27 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:27 gopress.go:145: SELECT * FROM wp_links WHERE `link_id` = '0'
+[ERROR]:2016/10/24 10:17:27 gopress.go:157: not found
+[INFO]:2016/10/24 10:17:27 gopress.go:145: INSERT INTO wp_options (`option_name`, `option_value`, `autoload`) VALUES ('bOiUJKdqzZFmrxeBgwx', 'GYFSCADjnjBostRbSlChooaKX', 'PpGRPLvrTDtRSuYyeaC')
+[INFO]:2016/10/24 10:17:27 gopress.go:145: LastInsertedId is 15404577
+[INFO]:2016/10/24 10:17:27 gopress.go:145: SELECT * FROM wp_options WHERE `option_id` = '15404577'
+[INFO]:2016/10/24 10:17:27 gopress.go:145: UPDATE wp_options SET option_name = 'yfdikehwSdCXKRYTlNI',option_value = 'VSvePkMnpOjfCVKZuHxQEYONP',autoload = 'FyFvJBSDjlpuoVSBSVE' WHERE option_id = '15404577'
+[INFO]:2016/10/24 10:17:27 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:27 gopress.go:145: SELECT * FROM wp_options WHERE `option_name` = 'yfdikehwSdCXKRYTlNI'
+[INFO]:2016/10/24 10:17:27 gopress.go:145: SELECT * FROM wp_options WHERE `option_value` = 'VSvePkMnpOjfCVKZuHxQEYONP'
+[INFO]:2016/10/24 10:17:28 gopress.go:145: SELECT * FROM wp_options WHERE `autoload` = 'FyFvJBSDjlpuoVSBSVE'
+[INFO]:2016/10/24 10:17:28 gopress.go:145: UPDATE wp_options SET `option_name` = 'wXtEjVMKQwKwSvPjHxL' WHERE `option_id` = '0'
+[INFO]:2016/10/24 10:17:28 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:28 gopress.go:145: SELECT * FROM wp_options WHERE `option_id` = '0'
+[ERROR]:2016/10/24 10:17:28 gopress.go:157: not found
+[INFO]:2016/10/24 10:17:28 gopress.go:145: UPDATE wp_options SET `option_value` = 'xEnSbfHjYAMFiVGAitUnmyzTN' WHERE `option_id` = '0'
+[INFO]:2016/10/24 10:17:28 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:28 gopress.go:145: SELECT * FROM wp_options WHERE `option_id` = '0'
+[ERROR]:2016/10/24 10:17:28 gopress.go:157: not found
+[INFO]:2016/10/24 10:17:28 gopress.go:145: UPDATE wp_options SET `autoload` = 'iaYBtQwVAzjJzPMRKYg' WHERE `option_id` = '0'
+[INFO]:2016/10/24 10:17:28 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:28 gopress.go:145: SELECT * FROM wp_options WHERE `option_id` = '0'
+[ERROR]:2016/10/24 10:17:28 gopress.go:157: not found
+[INFO]:2016/10/24 10:17:28 gopress.go:145: INSERT INTO wp_postmeta (`post_id`, `meta_key`, `meta_value`) VALUES ('1750', 'NDYynUNkHhWehAShrVU', 'yJqFvAQRhCWnzDgKaxrnOVskc')
+[INFO]:2016/10/24 10:17:28 gopress.go:145: LastInsertedId is 3263207
+[INFO]:2016/10/24 10:17:28 gopress.go:145: SELECT * FROM wp_postmeta WHERE `meta_id` = '3263207'
+[INFO]:2016/10/24 10:17:28 gopress.go:145: UPDATE wp_postmeta SET post_id = '9561',meta_key = 'kttizfbyqooKzpMsRAz',meta_value = 'VYPRaplDGEacFjgAOpkYoGxDO' WHERE meta_id = '3263207'
+[INFO]:2016/10/24 10:17:28 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:28 gopress.go:145: SELECT * FROM wp_postmeta WHERE `post_id` = '9561'
+[INFO]:2016/10/24 10:17:28 gopress.go:145: SELECT * FROM wp_postmeta WHERE `meta_key` = 'kttizfbyqooKzpMsRAz'
+[INFO]:2016/10/24 10:17:28 gopress.go:145: SELECT * FROM wp_postmeta WHERE `meta_value` = 'VYPRaplDGEacFjgAOpkYoGxDO'
+[INFO]:2016/10/24 10:17:35 gopress.go:145: UPDATE wp_postmeta SET `post_id` = '7456' WHERE `meta_id` = '0'
+[INFO]:2016/10/24 10:17:35 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:35 gopress.go:145: SELECT * FROM wp_postmeta WHERE `meta_id` = '0'
+[ERROR]:2016/10/24 10:17:35 gopress.go:157: not found
+[INFO]:2016/10/24 10:17:35 gopress.go:145: UPDATE wp_postmeta SET `meta_key` = 'vcADIRhnqUUkaSomAJJ' WHERE `meta_id` = '0'
+[INFO]:2016/10/24 10:17:35 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:35 gopress.go:145: SELECT * FROM wp_postmeta WHERE `meta_id` = '0'
+[ERROR]:2016/10/24 10:17:35 gopress.go:157: not found
+[INFO]:2016/10/24 10:17:35 gopress.go:145: UPDATE wp_postmeta SET `meta_value` = 'VEVQyAKPHPFkapqjerBWqBrAA' WHERE `meta_id` = '0'
+[INFO]:2016/10/24 10:17:35 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:35 gopress.go:145: SELECT * FROM wp_postmeta WHERE `meta_id` = '0'
+[ERROR]:2016/10/24 10:17:35 gopress.go:157: not found
+[INFO]:2016/10/24 10:17:35 gopress.go:145: INSERT INTO wp_posts (`post_author`, `post_date`, `post_date_gmt`, `post_content`, `post_title`, `post_excerpt`, `post_status`, `comment_status`, `ping_status`, `post_password`, `post_name`, `to_ping`, `pinged`, `post_modified`, `post_modified_gmt`, `post_content_filtered`, `post_parent`, `guid`, `menu_order`, `post_type`, `post_mime_type`, `comment_count`) VALUES ('2303', '1968-01-05 07:42:05', '2008-02-04 19:13:55', 'ovVeTRjdKTOqdTgxSJQKkrsIn', 'UqJfeYSFrSkACPKjLyMPUAZPG', 'irGrGvhNyKoeXGsLHReBUneWy', 'ltqyqiswLtHmeUhmWNT', 'gGFUQWMreDbjEsMlFtz', 'xZXZfFKRcAWWajTSTKq', 'GclaiFOSIwEOyBLoDLp', 'hUdtwrKTKfKGKYLAVAq', 'SvdvXAUCzoocjsvWFGpALMlio', 'OngFYfXwZLGKPYOnKhdEAKTal', '1056-04-17 04:23:24', '1236-09-17 06:27:08', 'KGmBfzuazxLKehJyNRVqkMqFy', '5481', 'gLHtJbRLeaHlwPXDsZQ', '4450', 'MohSfyNiDIBIUZDBudr', 'qGLgrAaPRNgVYalJkPd', '4832')
+[INFO]:2016/10/24 10:17:35 gopress.go:145: LastInsertedId is 148610
+[INFO]:2016/10/24 10:17:35 gopress.go:145: SELECT * FROM wp_posts WHERE `ID` = '148610'
+[INFO]:2016/10/24 10:17:35 gopress.go:145: UPDATE wp_posts SET post_author = '7935',post_date = '1945-09-13 03:09:40',post_date_gmt = '1798-05-25 16:46:32',post_content = 'YIuKpheLeJQAAwPVeTLlAcwrd',post_title = 'nWLnUMJzFJwWDYHMtyITtyhiQ',post_excerpt = 'xFclDixMJsbznYPkSCbfichaT',post_status = 'tTXWBFprjhebATCeZTI',comment_status = 'KjhspppNLXWxzRQsEXh',ping_status = 'DtoRHMkaYhMYDgPDrJK',post_password = 'nGbobRGjpnoxukUpygj',post_name = 'ENjBmNGynnfFoLFMWHh',to_ping = 'yjKsNKnPcAXkJdzapmmbAukiO',pinged = 'OaGVCdVWRNkjOszkcHKzfbLeQ',post_modified = '1371-03-08 16:38:41',post_modified_gmt = '1733-02-09 05:07:37',post_content_filtered = 'OHebtYoeGfXLdNkRMKeHhAGFG',post_parent = '984',guid = 'ytfWnHTKhpUwCdYnnGj',menu_order = '943',post_type = 'EpMXDahksyNcFtUXVEx',post_mime_type = 'zTaSRXKWfqodrszCXqu',comment_count = '4738' WHERE ID = '148610'
+[INFO]:2016/10/24 10:17:35 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:35 gopress.go:145: SELECT * FROM wp_posts WHERE `post_author` = '7935'
+[INFO]:2016/10/24 10:17:35 gopress.go:145: SELECT * FROM wp_posts WHERE `post_date` = '1945-09-13 03:09:40'
+[INFO]:2016/10/24 10:17:36 gopress.go:145: SELECT * FROM wp_posts WHERE `post_date_gmt` = '1798-05-25 16:46:32'
+[INFO]:2016/10/24 10:17:36 gopress.go:145: SELECT * FROM wp_posts WHERE `post_content` = 'YIuKpheLeJQAAwPVeTLlAcwrd'
+[INFO]:2016/10/24 10:17:36 gopress.go:145: SELECT * FROM wp_posts WHERE `post_title` = 'nWLnUMJzFJwWDYHMtyITtyhiQ'
+[INFO]:2016/10/24 10:17:36 gopress.go:145: SELECT * FROM wp_posts WHERE `post_excerpt` = 'xFclDixMJsbznYPkSCbfichaT'
+[INFO]:2016/10/24 10:17:37 gopress.go:145: SELECT * FROM wp_posts WHERE `post_status` = 'tTXWBFprjhebATCeZTI'
+[INFO]:2016/10/24 10:17:37 gopress.go:145: SELECT * FROM wp_posts WHERE `comment_status` = 'KjhspppNLXWxzRQsEXh'
+[INFO]:2016/10/24 10:17:37 gopress.go:145: SELECT * FROM wp_posts WHERE `ping_status` = 'DtoRHMkaYhMYDgPDrJK'
+[INFO]:2016/10/24 10:17:37 gopress.go:145: SELECT * FROM wp_posts WHERE `post_password` = 'nGbobRGjpnoxukUpygj'
+[INFO]:2016/10/24 10:17:37 gopress.go:145: SELECT * FROM wp_posts WHERE `post_name` = 'ENjBmNGynnfFoLFMWHh'
+[INFO]:2016/10/24 10:17:37 gopress.go:145: SELECT * FROM wp_posts WHERE `to_ping` = 'yjKsNKnPcAXkJdzapmmbAukiO'
+[INFO]:2016/10/24 10:17:38 gopress.go:145: SELECT * FROM wp_posts WHERE `pinged` = 'OaGVCdVWRNkjOszkcHKzfbLeQ'
+[INFO]:2016/10/24 10:17:38 gopress.go:145: SELECT * FROM wp_posts WHERE `post_modified` = '1371-03-08 16:38:41'
+[INFO]:2016/10/24 10:17:38 gopress.go:145: SELECT * FROM wp_posts WHERE `post_modified_gmt` = '1733-02-09 05:07:37'
+[INFO]:2016/10/24 10:17:38 gopress.go:145: SELECT * FROM wp_posts WHERE `post_content_filtered` = 'OHebtYoeGfXLdNkRMKeHhAGFG'
+[INFO]:2016/10/24 10:17:38 gopress.go:145: SELECT * FROM wp_posts WHERE `post_parent` = '984'
+[INFO]:2016/10/24 10:17:38 gopress.go:145: SELECT * FROM wp_posts WHERE `guid` = 'ytfWnHTKhpUwCdYnnGj'
+[INFO]:2016/10/24 10:17:39 gopress.go:145: SELECT * FROM wp_posts WHERE `post_type` = 'EpMXDahksyNcFtUXVEx'
+[INFO]:2016/10/24 10:17:39 gopress.go:145: SELECT * FROM wp_posts WHERE `post_mime_type` = 'zTaSRXKWfqodrszCXqu'
+[INFO]:2016/10/24 10:17:39 gopress.go:145: SELECT * FROM wp_posts WHERE `comment_count` = '4738'
+[INFO]:2016/10/24 10:17:39 gopress.go:145: UPDATE wp_posts SET `post_author` = '10081' WHERE `ID` = '0'
+[INFO]:2016/10/24 10:17:39 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:39 gopress.go:145: SELECT * FROM wp_posts WHERE `ID` = '0'
+[ERROR]:2016/10/24 10:17:39 gopress.go:157: not found
+[INFO]:2016/10/24 10:17:39 gopress.go:145: UPDATE wp_posts SET `post_date` = '1927-05-02 10:02:09' WHERE `ID` = '0'
+[INFO]:2016/10/24 10:17:39 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:39 gopress.go:145: SELECT * FROM wp_posts WHERE `ID` = '0'
+[ERROR]:2016/10/24 10:17:39 gopress.go:157: not found
+[INFO]:2016/10/24 10:17:39 gopress.go:145: UPDATE wp_posts SET `post_date_gmt` = '1082-09-18 06:41:46' WHERE `ID` = '0'
+[INFO]:2016/10/24 10:17:39 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:39 gopress.go:145: SELECT * FROM wp_posts WHERE `ID` = '0'
+[ERROR]:2016/10/24 10:17:39 gopress.go:157: not found
+[INFO]:2016/10/24 10:17:39 gopress.go:145: UPDATE wp_posts SET `post_content` = 'EWOoGmTUTMaYLoJSBkXsNPeQp' WHERE `ID` = '0'
+[INFO]:2016/10/24 10:17:39 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:39 gopress.go:145: SELECT * FROM wp_posts WHERE `ID` = '0'
+[ERROR]:2016/10/24 10:17:39 gopress.go:157: not found
+[INFO]:2016/10/24 10:17:39 gopress.go:145: UPDATE wp_posts SET `post_title` = 'wBUALTkxZAThklwgZIYZChlUH' WHERE `ID` = '0'
+[INFO]:2016/10/24 10:17:39 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:39 gopress.go:145: SELECT * FROM wp_posts WHERE `ID` = '0'
+[ERROR]:2016/10/24 10:17:39 gopress.go:157: not found
+[INFO]:2016/10/24 10:17:39 gopress.go:145: UPDATE wp_posts SET `post_excerpt` = 'KGAyzuCEUkOoztWAXlwAmqyti' WHERE `ID` = '0'
+[INFO]:2016/10/24 10:17:39 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:39 gopress.go:145: SELECT * FROM wp_posts WHERE `ID` = '0'
+[ERROR]:2016/10/24 10:17:39 gopress.go:157: not found
+[INFO]:2016/10/24 10:17:39 gopress.go:145: UPDATE wp_posts SET `post_status` = 'nZenHcncbgvbLHMeDlo' WHERE `ID` = '0'
+[INFO]:2016/10/24 10:17:39 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:39 gopress.go:145: SELECT * FROM wp_posts WHERE `ID` = '0'
+[ERROR]:2016/10/24 10:17:39 gopress.go:157: not found
+[INFO]:2016/10/24 10:17:39 gopress.go:145: UPDATE wp_posts SET `comment_status` = 'IqwvZchpNxjKgnxHMRM' WHERE `ID` = '0'
+[INFO]:2016/10/24 10:17:39 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:39 gopress.go:145: SELECT * FROM wp_posts WHERE `ID` = '0'
+[ERROR]:2016/10/24 10:17:39 gopress.go:157: not found
+[INFO]:2016/10/24 10:17:39 gopress.go:145: UPDATE wp_posts SET `ping_status` = 'YlyEIwvklKGGVrAXSAN' WHERE `ID` = '0'
+[INFO]:2016/10/24 10:17:39 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:39 gopress.go:145: SELECT * FROM wp_posts WHERE `ID` = '0'
+[ERROR]:2016/10/24 10:17:39 gopress.go:157: not found
+[INFO]:2016/10/24 10:17:39 gopress.go:145: UPDATE wp_posts SET `post_password` = 'lUEocgzZBcqzbvzgzJv' WHERE `ID` = '0'
+[INFO]:2016/10/24 10:17:39 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:39 gopress.go:145: SELECT * FROM wp_posts WHERE `ID` = '0'
+[ERROR]:2016/10/24 10:17:39 gopress.go:157: not found
+[INFO]:2016/10/24 10:17:39 gopress.go:145: UPDATE wp_posts SET `post_name` = 'IYRavIzutDiZBELiocx' WHERE `ID` = '0'
+[INFO]:2016/10/24 10:17:39 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:39 gopress.go:145: SELECT * FROM wp_posts WHERE `ID` = '0'
+[ERROR]:2016/10/24 10:17:39 gopress.go:157: not found
+[INFO]:2016/10/24 10:17:39 gopress.go:145: UPDATE wp_posts SET `to_ping` = 'tHyUDsOvWQENDuXpeSFiOOyoL' WHERE `ID` = '0'
+[INFO]:2016/10/24 10:17:39 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:39 gopress.go:145: SELECT * FROM wp_posts WHERE `ID` = '0'
+[ERROR]:2016/10/24 10:17:39 gopress.go:157: not found
+[INFO]:2016/10/24 10:17:39 gopress.go:145: UPDATE wp_posts SET `pinged` = 'EEbAVcxJFnpjQZZZKbrtQuoMJ' WHERE `ID` = '0'
+[INFO]:2016/10/24 10:17:39 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:39 gopress.go:145: SELECT * FROM wp_posts WHERE `ID` = '0'
+[ERROR]:2016/10/24 10:17:39 gopress.go:157: not found
+[INFO]:2016/10/24 10:17:39 gopress.go:145: UPDATE wp_posts SET `post_modified` = '1990-08-00 06:57:21' WHERE `ID` = '0'
+[INFO]:2016/10/24 10:17:39 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:39 gopress.go:145: SELECT * FROM wp_posts WHERE `ID` = '0'
+[ERROR]:2016/10/24 10:17:39 gopress.go:157: not found
+[INFO]:2016/10/24 10:17:39 gopress.go:145: UPDATE wp_posts SET `post_modified_gmt` = '1089-10-20 02:10:34' WHERE `ID` = '0'
+[INFO]:2016/10/24 10:17:39 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:39 gopress.go:145: SELECT * FROM wp_posts WHERE `ID` = '0'
+[ERROR]:2016/10/24 10:17:39 gopress.go:157: not found
+[INFO]:2016/10/24 10:17:39 gopress.go:145: UPDATE wp_posts SET `post_content_filtered` = 'PJlftuswSMhSChSMirnyRpxWm' WHERE `ID` = '0'
+[INFO]:2016/10/24 10:17:39 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:39 gopress.go:145: SELECT * FROM wp_posts WHERE `ID` = '0'
+[ERROR]:2016/10/24 10:17:39 gopress.go:157: not found
+[INFO]:2016/10/24 10:17:39 gopress.go:145: UPDATE wp_posts SET `post_parent` = '6537' WHERE `ID` = '0'
+[INFO]:2016/10/24 10:17:39 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:39 gopress.go:145: SELECT * FROM wp_posts WHERE `ID` = '0'
+[ERROR]:2016/10/24 10:17:39 gopress.go:157: not found
+[INFO]:2016/10/24 10:17:39 gopress.go:145: UPDATE wp_posts SET `guid` = 'PnxuNxrroNFnGyKmNKa' WHERE `ID` = '0'
+[INFO]:2016/10/24 10:17:39 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:39 gopress.go:145: SELECT * FROM wp_posts WHERE `ID` = '0'
+[ERROR]:2016/10/24 10:17:39 gopress.go:157: not found
+[INFO]:2016/10/24 10:17:39 gopress.go:145: UPDATE wp_posts SET `menu_order` = '9618' WHERE `ID` = '0'
+[INFO]:2016/10/24 10:17:39 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:39 gopress.go:145: SELECT * FROM wp_posts WHERE `ID` = '0'
+[ERROR]:2016/10/24 10:17:39 gopress.go:157: not found
+[INFO]:2016/10/24 10:17:39 gopress.go:145: UPDATE wp_posts SET `post_type` = 'xcTFTiMBAOHBFBKOlSf' WHERE `ID` = '0'
+[INFO]:2016/10/24 10:17:39 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:39 gopress.go:145: SELECT * FROM wp_posts WHERE `ID` = '0'
+[ERROR]:2016/10/24 10:17:39 gopress.go:157: not found
+[INFO]:2016/10/24 10:17:39 gopress.go:145: UPDATE wp_posts SET `post_mime_type` = 'RThWQFTQUqCDfXWWGAC' WHERE `ID` = '0'
+[INFO]:2016/10/24 10:17:39 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:39 gopress.go:145: SELECT * FROM wp_posts WHERE `ID` = '0'
+[ERROR]:2016/10/24 10:17:39 gopress.go:157: not found
+[INFO]:2016/10/24 10:17:39 gopress.go:145: UPDATE wp_posts SET `comment_count` = '4515' WHERE `ID` = '0'
+[INFO]:2016/10/24 10:17:39 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:39 gopress.go:145: SELECT * FROM wp_posts WHERE `ID` = '0'
+[ERROR]:2016/10/24 10:17:39 gopress.go:157: not found
+[INFO]:2016/10/24 10:17:39 gopress.go:145: INSERT INTO wp_term_relationships (`object_id`, `term_taxonomy_id`, `term_order`) VALUES ('3689', '7104', '1872')
+[INFO]:2016/10/24 10:17:39 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:39 gopress.go:145: SELECT * FROM wp_term_relationships WHERE `term_taxonomy_id` = '7104' AND `object_id` = '3689'
+[INFO]:2016/10/24 10:17:39 gopress.go:145: UPDATE wp_term_relationships SET object_id = '8945',term_taxonomy_id = '8419',term_order = '7256' WHERE `term_taxonomy_id` = '8419' AND object_id = '8945'
+[INFO]:2016/10/24 10:17:39 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:39 gopress.go:145: UPDATE wp_term_relationships SET `object_id` = '2718' WHERE term_taxonomy_id = '0' AND object_id = '5968'
+[INFO]:2016/10/24 10:17:39 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:39 gopress.go:145: SELECT * FROM wp_term_relationships WHERE `term_taxonomy_id` = '0' AND `object_id` = '2718'
+[INFO]:2016/10/24 10:17:39 gopress.go:145: UPDATE wp_term_relationships SET `term_order` = '7539' WHERE term_taxonomy_id = '0' AND object_id = '2718'
+[INFO]:2016/10/24 10:17:39 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:39 gopress.go:145: SELECT * FROM wp_term_relationships WHERE `term_taxonomy_id` = '0' AND `object_id` = '2718'
+[INFO]:2016/10/24 10:17:39 gopress.go:145: INSERT INTO wp_term_taxonomy (`term_id`, `taxonomy`, `description`, `parent`, `count`) VALUES ('2089', 'nhddRcSXKgAENBLgnPg', 'ViTqzmaZCBDnFycBoDVYjwArG', '3439', '5174')
+[INFO]:2016/10/24 10:17:39 gopress.go:145: LastInsertedId is 534
+[INFO]:2016/10/24 10:17:39 gopress.go:145: SELECT * FROM wp_term_taxonomy WHERE `term_taxonomy_id` = '534'
+[INFO]:2016/10/24 10:17:39 gopress.go:145: UPDATE wp_term_taxonomy SET term_id = '9478',taxonomy = 'BrBbImeQeMizGjcVuds',description = 'iOJyinVUHFMKXCKPqyNbklVBg',parent = '7855',count = '7495' WHERE term_taxonomy_id = '534'
+[INFO]:2016/10/24 10:17:39 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:39 gopress.go:145: SELECT * FROM wp_term_taxonomy WHERE `term_id` = '9478'
+[INFO]:2016/10/24 10:17:39 gopress.go:145: SELECT * FROM wp_term_taxonomy WHERE `taxonomy` = 'BrBbImeQeMizGjcVuds'
+[INFO]:2016/10/24 10:17:39 gopress.go:145: SELECT * FROM wp_term_taxonomy WHERE `description` = 'iOJyinVUHFMKXCKPqyNbklVBg'
+[INFO]:2016/10/24 10:17:39 gopress.go:145: SELECT * FROM wp_term_taxonomy WHERE `parent` = '7855'
+[INFO]:2016/10/24 10:17:39 gopress.go:145: SELECT * FROM wp_term_taxonomy WHERE `count` = '7495'
+[INFO]:2016/10/24 10:17:39 gopress.go:145: UPDATE wp_term_taxonomy SET `term_id` = '9880' WHERE `term_taxonomy_id` = '0'
+[INFO]:2016/10/24 10:17:39 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:39 gopress.go:145: SELECT * FROM wp_term_taxonomy WHERE `term_taxonomy_id` = '0'
+[ERROR]:2016/10/24 10:17:39 gopress.go:157: not found
+[INFO]:2016/10/24 10:17:39 gopress.go:145: UPDATE wp_term_taxonomy SET `taxonomy` = 'LrugUKzPxmjfVCNQpHX' WHERE `term_taxonomy_id` = '0'
+[INFO]:2016/10/24 10:17:39 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:39 gopress.go:145: SELECT * FROM wp_term_taxonomy WHERE `term_taxonomy_id` = '0'
+[ERROR]:2016/10/24 10:17:39 gopress.go:157: not found
+[INFO]:2016/10/24 10:17:39 gopress.go:145: UPDATE wp_term_taxonomy SET `description` = 'KMjYXpsqAzVWjRcRsQSHCfFPR' WHERE `term_taxonomy_id` = '0'
+[INFO]:2016/10/24 10:17:39 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:39 gopress.go:145: SELECT * FROM wp_term_taxonomy WHERE `term_taxonomy_id` = '0'
+[ERROR]:2016/10/24 10:17:39 gopress.go:157: not found
+[INFO]:2016/10/24 10:17:39 gopress.go:145: UPDATE wp_term_taxonomy SET `parent` = '7607' WHERE `term_taxonomy_id` = '0'
+[INFO]:2016/10/24 10:17:39 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:39 gopress.go:145: SELECT * FROM wp_term_taxonomy WHERE `term_taxonomy_id` = '0'
+[ERROR]:2016/10/24 10:17:39 gopress.go:157: not found
+[INFO]:2016/10/24 10:17:39 gopress.go:145: UPDATE wp_term_taxonomy SET `count` = '3848' WHERE `term_taxonomy_id` = '0'
+[INFO]:2016/10/24 10:17:39 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:39 gopress.go:145: SELECT * FROM wp_term_taxonomy WHERE `term_taxonomy_id` = '0'
+[ERROR]:2016/10/24 10:17:39 gopress.go:157: not found
+[INFO]:2016/10/24 10:17:39 gopress.go:145: INSERT INTO wp_terms (`name`, `slug`, `term_group`) VALUES ('tBjkxjmHjkQXCYTGHWe', 'FwcPzmubOwEytrWBzRP', '789')
+[INFO]:2016/10/24 10:17:39 gopress.go:145: LastInsertedId is 534
+[INFO]:2016/10/24 10:17:39 gopress.go:145: SELECT * FROM wp_terms WHERE `term_id` = '534'
+[INFO]:2016/10/24 10:17:39 gopress.go:145: UPDATE wp_terms SET name = 'DexWVunQjAhzBrZXcIv',slug = 'GXghLLlaqmYgJWqqcXh',term_group = '1299' WHERE term_id = '534'
+[INFO]:2016/10/24 10:17:39 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:39 gopress.go:145: SELECT * FROM wp_terms WHERE `name` = 'DexWVunQjAhzBrZXcIv'
+[INFO]:2016/10/24 10:17:39 gopress.go:145: SELECT * FROM wp_terms WHERE `slug` = 'GXghLLlaqmYgJWqqcXh'
+[INFO]:2016/10/24 10:17:39 gopress.go:145: SELECT * FROM wp_terms WHERE `term_group` = '1299'
+[INFO]:2016/10/24 10:17:39 gopress.go:145: UPDATE wp_terms SET `name` = 'OmLuPYghzRlXtNGwehZ' WHERE `term_id` = '0'
+[INFO]:2016/10/24 10:17:39 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:39 gopress.go:145: SELECT * FROM wp_terms WHERE `term_id` = '0'
+[ERROR]:2016/10/24 10:17:39 gopress.go:157: not found
+[INFO]:2016/10/24 10:17:39 gopress.go:145: UPDATE wp_terms SET `slug` = 'XDtMcMsqscoXyRdarAr' WHERE `term_id` = '0'
+[INFO]:2016/10/24 10:17:39 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:39 gopress.go:145: SELECT * FROM wp_terms WHERE `term_id` = '0'
+[ERROR]:2016/10/24 10:17:39 gopress.go:157: not found
+[INFO]:2016/10/24 10:17:39 gopress.go:145: UPDATE wp_terms SET `term_group` = '6634' WHERE `term_id` = '0'
+[INFO]:2016/10/24 10:17:39 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:39 gopress.go:145: SELECT * FROM wp_terms WHERE `term_id` = '0'
+[ERROR]:2016/10/24 10:17:39 gopress.go:157: not found
+[INFO]:2016/10/24 10:17:39 gopress.go:145: INSERT INTO wp_usermeta (`user_id`, `meta_key`, `meta_value`) VALUES ('8810', 'DWIbWtxHrtnKUfsWKUL', 'vOoSpcXoVvnHAusLztsxADLOX')
+[INFO]:2016/10/24 10:17:39 gopress.go:145: LastInsertedId is 3881
+[INFO]:2016/10/24 10:17:40 gopress.go:145: SELECT * FROM wp_usermeta WHERE `umeta_id` = '3881'
+[INFO]:2016/10/24 10:17:40 gopress.go:145: UPDATE wp_usermeta SET user_id = '3823',meta_key = 'MouvKSGfPjeFfcleARM',meta_value = 'xGgcBqnbbwEcjPlUxasJsNkiJ' WHERE umeta_id = '3881'
+[INFO]:2016/10/24 10:17:40 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:40 gopress.go:145: SELECT * FROM wp_usermeta WHERE `user_id` = '3823'
+[INFO]:2016/10/24 10:17:40 gopress.go:145: SELECT * FROM wp_usermeta WHERE `meta_key` = 'MouvKSGfPjeFfcleARM'
+[INFO]:2016/10/24 10:17:40 gopress.go:145: SELECT * FROM wp_usermeta WHERE `meta_value` = 'xGgcBqnbbwEcjPlUxasJsNkiJ'
+[INFO]:2016/10/24 10:17:40 gopress.go:145: UPDATE wp_usermeta SET `user_id` = '8258' WHERE `umeta_id` = '0'
+[INFO]:2016/10/24 10:17:40 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:40 gopress.go:145: SELECT * FROM wp_usermeta WHERE `umeta_id` = '0'
+[ERROR]:2016/10/24 10:17:40 gopress.go:157: not found
+[INFO]:2016/10/24 10:17:40 gopress.go:145: UPDATE wp_usermeta SET `meta_key` = 'QnJtBVRKsCcorirdZhk' WHERE `umeta_id` = '0'
+[INFO]:2016/10/24 10:17:40 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:40 gopress.go:145: SELECT * FROM wp_usermeta WHERE `umeta_id` = '0'
+[ERROR]:2016/10/24 10:17:40 gopress.go:157: not found
+[INFO]:2016/10/24 10:17:40 gopress.go:145: UPDATE wp_usermeta SET `meta_value` = 'JwdbZOcJvUOXrFmlXAcxbiaEg' WHERE `umeta_id` = '0'
+[INFO]:2016/10/24 10:17:40 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:17:40 gopress.go:145: SELECT * FROM wp_usermeta WHERE `umeta_id` = '0'
+[ERROR]:2016/10/24 10:17:40 gopress.go:157: not found
+[INFO]:2016/10/24 10:20:06 gopress.go:145: INSERT INTO wp_commentmeta (`comment_id`, `meta_key`, `meta_value`) VALUES ('6256', 'fYtrNQKUsOBywSBLoZp', 'AwhCRJpbcioyZNElZHXSmzatV')
+[INFO]:2016/10/24 10:20:06 gopress.go:145: LastInsertedId is 1668
+[INFO]:2016/10/24 10:20:06 gopress.go:145: SELECT * FROM wp_commentmeta WHERE `meta_id` = '1668'
+[INFO]:2016/10/24 10:20:06 gopress.go:145: UPDATE wp_commentmeta SET comment_id = '2917',meta_key = 'GTxYibnzLJJbOvEhrxA',meta_value = 'GNNSJPPZthwvchKLjCLJCrOvr' WHERE meta_id = '1668'
+[INFO]:2016/10/24 10:20:06 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:06 gopress.go:145: SELECT * FROM wp_commentmeta WHERE `comment_id` = '2917'
+[INFO]:2016/10/24 10:20:06 gopress.go:145: SELECT * FROM wp_commentmeta WHERE `meta_key` = 'GTxYibnzLJJbOvEhrxA'
+[INFO]:2016/10/24 10:20:06 gopress.go:145: SELECT * FROM wp_commentmeta WHERE `meta_value` = 'GNNSJPPZthwvchKLjCLJCrOvr'
+[INFO]:2016/10/24 10:20:06 gopress.go:145: UPDATE wp_commentmeta SET `comment_id` = '6054' WHERE `meta_id` = '0'
+[INFO]:2016/10/24 10:20:06 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:06 gopress.go:145: SELECT * FROM wp_commentmeta WHERE `meta_id` = '0'
+[ERROR]:2016/10/24 10:20:06 gopress.go:157: not found
+[INFO]:2016/10/24 10:20:06 gopress.go:145: UPDATE wp_commentmeta SET `meta_key` = 'dItLaJemHlcXSEbSiIn' WHERE `meta_id` = '0'
+[INFO]:2016/10/24 10:20:06 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:06 gopress.go:145: SELECT * FROM wp_commentmeta WHERE `meta_id` = '0'
+[ERROR]:2016/10/24 10:20:06 gopress.go:157: not found
+[INFO]:2016/10/24 10:20:06 gopress.go:145: UPDATE wp_commentmeta SET `meta_value` = 'cJSYbeIEvKfKPRmFAdivRqHdG' WHERE `meta_id` = '0'
+[INFO]:2016/10/24 10:20:06 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:06 gopress.go:145: SELECT * FROM wp_commentmeta WHERE `meta_id` = '0'
+[ERROR]:2016/10/24 10:20:06 gopress.go:157: not found
+[INFO]:2016/10/24 10:20:06 gopress.go:145: INSERT INTO wp_comments (`comment_post_ID`, `comment_author`, `comment_author_email`, `comment_author_url`, `comment_author_IP`, `comment_date`, `comment_date_gmt`, `comment_content`, `comment_karma`, `comment_approved`, `comment_agent`, `comment_type`, `comment_parent`, `user_id`) VALUES ('6750', 'LCKfmTZZLlvABCoArSeHleGHn', 'oDBANWedcctQmVCgHzJ', 'TBeEJVUWrfzUchUaBxY', 'ncLrafVDernNkEFQdap', '1219-02-24 22:38:19', '1448-04-06 17:28:34', 'QmdgNYRMivzFLrNXbSnufsUqD', '2328', 'SIUZriyhTuIXrMmlttt', 'MFQGYfrNwxlDdTbvYzO', 'rmDcPKPCALxgYtxKWIJ', '8469', '7392')
+[INFO]:2016/10/24 10:20:06 gopress.go:145: LastInsertedId is 1662
+[INFO]:2016/10/24 10:20:06 gopress.go:145: SELECT * FROM wp_comments WHERE `comment_ID` = '1662'
+[INFO]:2016/10/24 10:20:06 gopress.go:145: UPDATE wp_comments SET comment_post_ID = '7799',comment_author = 'yMCdjSxMqgiuUDGyrgotKAgOL',comment_author_email = 'FOFofeFtJqoUIrTTlod',comment_author_url = 'KeRgtZjNLHKsCiplBdI',comment_author_IP = 'pJgxpnkwNAoAlbosUOl',comment_date = '1842-04-03 19:31:41',comment_date_gmt = '1755-01-26 00:50:50',comment_content = 'VhQRCYIVUcdpUjYFcuqiuFVmD',comment_karma = '7049',comment_approved = 'nIRQKTHiXepYkFKPdJq',comment_agent = 'ElvbocYuBdcZPRCpjrE',comment_type = 'FGMtPLSGBWqdykXUsZD',comment_parent = '6764',user_id = '9216' WHERE comment_ID = '1662'
+[INFO]:2016/10/24 10:20:06 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:06 gopress.go:145: SELECT * FROM wp_comments WHERE `comment_post_ID` = '7799'
+[INFO]:2016/10/24 10:20:06 gopress.go:145: SELECT * FROM wp_comments WHERE `comment_author` = 'yMCdjSxMqgiuUDGyrgotKAgOL'
+[INFO]:2016/10/24 10:20:07 gopress.go:145: SELECT * FROM wp_comments WHERE `comment_author_email` = 'FOFofeFtJqoUIrTTlod'
+[INFO]:2016/10/24 10:20:07 gopress.go:145: SELECT * FROM wp_comments WHERE `comment_author_url` = 'KeRgtZjNLHKsCiplBdI'
+[INFO]:2016/10/24 10:20:07 gopress.go:145: SELECT * FROM wp_comments WHERE `comment_author_IP` = 'pJgxpnkwNAoAlbosUOl'
+[INFO]:2016/10/24 10:20:07 gopress.go:145: SELECT * FROM wp_comments WHERE `comment_date` = '1842-04-03 19:31:41'
+[INFO]:2016/10/24 10:20:07 gopress.go:145: SELECT * FROM wp_comments WHERE `comment_date_gmt` = '1755-01-26 00:50:50'
+[INFO]:2016/10/24 10:20:07 gopress.go:145: SELECT * FROM wp_comments WHERE `comment_content` = 'VhQRCYIVUcdpUjYFcuqiuFVmD'
+[INFO]:2016/10/24 10:20:07 gopress.go:145: SELECT * FROM wp_comments WHERE `comment_karma` = '7049'
+[INFO]:2016/10/24 10:20:07 gopress.go:145: SELECT * FROM wp_comments WHERE `comment_approved` = 'nIRQKTHiXepYkFKPdJq'
+[INFO]:2016/10/24 10:20:07 gopress.go:145: SELECT * FROM wp_comments WHERE `comment_agent` = 'ElvbocYuBdcZPRCpjrE'
+[INFO]:2016/10/24 10:20:07 gopress.go:145: SELECT * FROM wp_comments WHERE `comment_type` = 'FGMtPLSGBWqdykXUsZD'
+[INFO]:2016/10/24 10:20:07 gopress.go:145: SELECT * FROM wp_comments WHERE `comment_parent` = '6764'
+[INFO]:2016/10/24 10:20:07 gopress.go:145: SELECT * FROM wp_comments WHERE `user_id` = '9216'
+[INFO]:2016/10/24 10:20:07 gopress.go:145: UPDATE wp_comments SET `comment_post_ID` = '3042' WHERE `comment_ID` = '0'
+[INFO]:2016/10/24 10:20:07 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:07 gopress.go:145: SELECT * FROM wp_comments WHERE `comment_ID` = '0'
+[ERROR]:2016/10/24 10:20:07 gopress.go:157: not found
+[INFO]:2016/10/24 10:20:07 gopress.go:145: UPDATE wp_comments SET `comment_author` = 'aHcOOHsBjMbbZrcpuNcQcqHts' WHERE `comment_ID` = '0'
+[INFO]:2016/10/24 10:20:07 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:07 gopress.go:145: SELECT * FROM wp_comments WHERE `comment_ID` = '0'
+[ERROR]:2016/10/24 10:20:07 gopress.go:157: not found
+[INFO]:2016/10/24 10:20:07 gopress.go:145: UPDATE wp_comments SET `comment_author_email` = 'EoGkgcVDYHdqGjqoasu' WHERE `comment_ID` = '0'
+[INFO]:2016/10/24 10:20:07 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:07 gopress.go:145: SELECT * FROM wp_comments WHERE `comment_ID` = '0'
+[ERROR]:2016/10/24 10:20:07 gopress.go:157: not found
+[INFO]:2016/10/24 10:20:07 gopress.go:145: UPDATE wp_comments SET `comment_author_url` = 'IbuouNqbVEFdyPkNODT' WHERE `comment_ID` = '0'
+[INFO]:2016/10/24 10:20:07 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:07 gopress.go:145: SELECT * FROM wp_comments WHERE `comment_ID` = '0'
+[ERROR]:2016/10/24 10:20:07 gopress.go:157: not found
+[INFO]:2016/10/24 10:20:07 gopress.go:145: UPDATE wp_comments SET `comment_author_IP` = 'xiXECbBbZoBlmfpHaFs' WHERE `comment_ID` = '0'
+[INFO]:2016/10/24 10:20:07 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:07 gopress.go:145: SELECT * FROM wp_comments WHERE `comment_ID` = '0'
+[ERROR]:2016/10/24 10:20:07 gopress.go:157: not found
+[INFO]:2016/10/24 10:20:07 gopress.go:145: UPDATE wp_comments SET `comment_date` = '1094-10-04 14:14:34' WHERE `comment_ID` = '0'
+[INFO]:2016/10/24 10:20:07 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:07 gopress.go:145: SELECT * FROM wp_comments WHERE `comment_ID` = '0'
+[ERROR]:2016/10/24 10:20:07 gopress.go:157: not found
+[INFO]:2016/10/24 10:20:07 gopress.go:145: UPDATE wp_comments SET `comment_date_gmt` = '1260-01-24 04:09:22' WHERE `comment_ID` = '0'
+[INFO]:2016/10/24 10:20:07 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:07 gopress.go:145: SELECT * FROM wp_comments WHERE `comment_ID` = '0'
+[ERROR]:2016/10/24 10:20:07 gopress.go:157: not found
+[INFO]:2016/10/24 10:20:07 gopress.go:145: UPDATE wp_comments SET `comment_content` = 'sZbagQnuggZwxkbAqRrTpBKQQ' WHERE `comment_ID` = '0'
+[INFO]:2016/10/24 10:20:07 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:07 gopress.go:145: SELECT * FROM wp_comments WHERE `comment_ID` = '0'
+[ERROR]:2016/10/24 10:20:07 gopress.go:157: not found
+[INFO]:2016/10/24 10:20:07 gopress.go:145: UPDATE wp_comments SET `comment_karma` = '6283' WHERE `comment_ID` = '0'
+[INFO]:2016/10/24 10:20:07 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:07 gopress.go:145: SELECT * FROM wp_comments WHERE `comment_ID` = '0'
+[ERROR]:2016/10/24 10:20:07 gopress.go:157: not found
+[INFO]:2016/10/24 10:20:07 gopress.go:145: UPDATE wp_comments SET `comment_approved` = 'oIpiiznFufrBHfDaCKP' WHERE `comment_ID` = '0'
+[INFO]:2016/10/24 10:20:07 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:07 gopress.go:145: SELECT * FROM wp_comments WHERE `comment_ID` = '0'
+[ERROR]:2016/10/24 10:20:07 gopress.go:157: not found
+[INFO]:2016/10/24 10:20:07 gopress.go:145: UPDATE wp_comments SET `comment_agent` = 'qPbgZnupwMxYqOYtsTm' WHERE `comment_ID` = '0'
+[INFO]:2016/10/24 10:20:07 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:07 gopress.go:145: SELECT * FROM wp_comments WHERE `comment_ID` = '0'
+[ERROR]:2016/10/24 10:20:07 gopress.go:157: not found
+[INFO]:2016/10/24 10:20:07 gopress.go:145: UPDATE wp_comments SET `comment_type` = 'BmwWbGQcMYZcTPFbqjA' WHERE `comment_ID` = '0'
+[INFO]:2016/10/24 10:20:07 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:07 gopress.go:145: SELECT * FROM wp_comments WHERE `comment_ID` = '0'
+[ERROR]:2016/10/24 10:20:07 gopress.go:157: not found
+[INFO]:2016/10/24 10:20:07 gopress.go:145: UPDATE wp_comments SET `comment_parent` = '7306' WHERE `comment_ID` = '0'
+[INFO]:2016/10/24 10:20:07 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:07 gopress.go:145: SELECT * FROM wp_comments WHERE `comment_ID` = '0'
+[ERROR]:2016/10/24 10:20:07 gopress.go:157: not found
+[INFO]:2016/10/24 10:20:07 gopress.go:145: UPDATE wp_comments SET `user_id` = '2326' WHERE `comment_ID` = '0'
+[INFO]:2016/10/24 10:20:07 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:07 gopress.go:145: SELECT * FROM wp_comments WHERE `comment_ID` = '0'
+[ERROR]:2016/10/24 10:20:07 gopress.go:157: not found
+[INFO]:2016/10/24 10:20:07 gopress.go:145: INSERT INTO wp_links (`link_url`, `link_name`, `link_image`, `link_target`, `link_description`, `link_visible`, `link_owner`, `link_rating`, `link_updated`, `link_rel`, `link_notes`, `link_rss`) VALUES ('MIltVhuXpIQpQRQBvLh', 'QwPArPFRGHDsnPnDqLm', 'fRcOrBURToIZhkJqHwc', 'WilmgrMjiYcbmjSVags', 'BWoAwlmtWZeaHTcuPYI', 'YnRHfWDrgoGgpmbXEcs', '7957', '1586', '1657-06-04 21:25:47', 'qprAOOehWNItqJcrhSp', 'fqjbxxGzNmsUCjantVLcbmfNJ', 'ujiFidYctjIYdgDDVbw')
+[INFO]:2016/10/24 10:20:07 gopress.go:145: LastInsertedId is 51
+[INFO]:2016/10/24 10:20:07 gopress.go:145: SELECT * FROM wp_links WHERE `link_id` = '51'
+[INFO]:2016/10/24 10:20:07 gopress.go:145: UPDATE wp_links SET link_url = 'xMUDxyZexNPiFfbMHGT',link_name = 'iRnmgBOldZvrNDucClT',link_image = 'NLmPsDafuaGkiVLrejg',link_target = 'mlDXhPXmPjXunhQquNq',link_description = 'xxawleelNGHhfWdNTdW',link_visible = 'etfjWmZrmlTKsvPTOFY',link_owner = '2450',link_rating = '4937',link_updated = '1552-05-15 19:30:40',link_rel = 'NvZCtnKJMaiBlQdPuNq',link_notes = 'mWnmzgJxsoCnsGkhrNsMEEBzV',link_rss = 'rOekahmmjhFiovvNqHz' WHERE link_id = '51'
+[INFO]:2016/10/24 10:20:07 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:07 gopress.go:145: SELECT * FROM wp_links WHERE `link_url` = 'xMUDxyZexNPiFfbMHGT'
+[INFO]:2016/10/24 10:20:07 gopress.go:145: SELECT * FROM wp_links WHERE `link_name` = 'iRnmgBOldZvrNDucClT'
+[INFO]:2016/10/24 10:20:07 gopress.go:145: SELECT * FROM wp_links WHERE `link_image` = 'NLmPsDafuaGkiVLrejg'
+[INFO]:2016/10/24 10:20:07 gopress.go:145: SELECT * FROM wp_links WHERE `link_target` = 'mlDXhPXmPjXunhQquNq'
+[INFO]:2016/10/24 10:20:07 gopress.go:145: SELECT * FROM wp_links WHERE `link_description` = 'xxawleelNGHhfWdNTdW'
+[INFO]:2016/10/24 10:20:07 gopress.go:145: SELECT * FROM wp_links WHERE `link_visible` = 'etfjWmZrmlTKsvPTOFY'
+[INFO]:2016/10/24 10:20:07 gopress.go:145: SELECT * FROM wp_links WHERE `link_owner` = '2450'
+[INFO]:2016/10/24 10:20:07 gopress.go:145: SELECT * FROM wp_links WHERE `link_rating` = '4937'
+[INFO]:2016/10/24 10:20:07 gopress.go:145: SELECT * FROM wp_links WHERE `link_updated` = '1552-05-15 19:30:40'
+[INFO]:2016/10/24 10:20:07 gopress.go:145: SELECT * FROM wp_links WHERE `link_rel` = 'NvZCtnKJMaiBlQdPuNq'
+[INFO]:2016/10/24 10:20:07 gopress.go:145: SELECT * FROM wp_links WHERE `link_notes` = 'mWnmzgJxsoCnsGkhrNsMEEBzV'
+[INFO]:2016/10/24 10:20:07 gopress.go:145: SELECT * FROM wp_links WHERE `link_rss` = 'rOekahmmjhFiovvNqHz'
+[INFO]:2016/10/24 10:20:07 gopress.go:145: UPDATE wp_links SET `link_url` = 'cJTzORvHMrKEDGunFyH' WHERE `link_id` = '0'
+[INFO]:2016/10/24 10:20:07 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:07 gopress.go:145: SELECT * FROM wp_links WHERE `link_id` = '0'
+[ERROR]:2016/10/24 10:20:07 gopress.go:157: not found
+[INFO]:2016/10/24 10:20:07 gopress.go:145: UPDATE wp_links SET `link_name` = 'GUNpnJYzTagGPoNzbcE' WHERE `link_id` = '0'
+[INFO]:2016/10/24 10:20:07 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:07 gopress.go:145: SELECT * FROM wp_links WHERE `link_id` = '0'
+[ERROR]:2016/10/24 10:20:07 gopress.go:157: not found
+[INFO]:2016/10/24 10:20:07 gopress.go:145: UPDATE wp_links SET `link_image` = 'sijxkueoYZRnJqewIwL' WHERE `link_id` = '0'
+[INFO]:2016/10/24 10:20:07 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:07 gopress.go:145: SELECT * FROM wp_links WHERE `link_id` = '0'
+[ERROR]:2016/10/24 10:20:07 gopress.go:157: not found
+[INFO]:2016/10/24 10:20:07 gopress.go:145: UPDATE wp_links SET `link_target` = 'SCDHobQlfjDBLeSvCuK' WHERE `link_id` = '0'
+[INFO]:2016/10/24 10:20:07 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:07 gopress.go:145: SELECT * FROM wp_links WHERE `link_id` = '0'
+[ERROR]:2016/10/24 10:20:07 gopress.go:157: not found
+[INFO]:2016/10/24 10:20:07 gopress.go:145: UPDATE wp_links SET `link_description` = 'BmVTCKPYjJPPnYaHXEo' WHERE `link_id` = '0'
+[INFO]:2016/10/24 10:20:07 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:07 gopress.go:145: SELECT * FROM wp_links WHERE `link_id` = '0'
+[ERROR]:2016/10/24 10:20:07 gopress.go:157: not found
+[INFO]:2016/10/24 10:20:07 gopress.go:145: UPDATE wp_links SET `link_visible` = 'NprqkuNZJeYguROqomD' WHERE `link_id` = '0'
+[INFO]:2016/10/24 10:20:07 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:07 gopress.go:145: SELECT * FROM wp_links WHERE `link_id` = '0'
+[ERROR]:2016/10/24 10:20:07 gopress.go:157: not found
+[INFO]:2016/10/24 10:20:07 gopress.go:145: UPDATE wp_links SET `link_owner` = '3193' WHERE `link_id` = '0'
+[INFO]:2016/10/24 10:20:07 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:07 gopress.go:145: SELECT * FROM wp_links WHERE `link_id` = '0'
+[ERROR]:2016/10/24 10:20:07 gopress.go:157: not found
+[INFO]:2016/10/24 10:20:07 gopress.go:145: UPDATE wp_links SET `link_rating` = '5867' WHERE `link_id` = '0'
+[INFO]:2016/10/24 10:20:07 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:07 gopress.go:145: SELECT * FROM wp_links WHERE `link_id` = '0'
+[ERROR]:2016/10/24 10:20:07 gopress.go:157: not found
+[INFO]:2016/10/24 10:20:07 gopress.go:145: UPDATE wp_links SET `link_updated` = '1743-09-00 05:24:21' WHERE `link_id` = '0'
+[INFO]:2016/10/24 10:20:07 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:07 gopress.go:145: SELECT * FROM wp_links WHERE `link_id` = '0'
+[ERROR]:2016/10/24 10:20:07 gopress.go:157: not found
+[INFO]:2016/10/24 10:20:07 gopress.go:145: UPDATE wp_links SET `link_rel` = 'pqKdkxALENvKuQOCBtm' WHERE `link_id` = '0'
+[INFO]:2016/10/24 10:20:07 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:07 gopress.go:145: SELECT * FROM wp_links WHERE `link_id` = '0'
+[ERROR]:2016/10/24 10:20:07 gopress.go:157: not found
+[INFO]:2016/10/24 10:20:07 gopress.go:145: UPDATE wp_links SET `link_notes` = 'LppqSyaUUPIDLbYAAmtfBJoNl' WHERE `link_id` = '0'
+[INFO]:2016/10/24 10:20:07 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:07 gopress.go:145: SELECT * FROM wp_links WHERE `link_id` = '0'
+[ERROR]:2016/10/24 10:20:07 gopress.go:157: not found
+[INFO]:2016/10/24 10:20:07 gopress.go:145: UPDATE wp_links SET `link_rss` = 'VwVLkajKsSUwonPKMbQ' WHERE `link_id` = '0'
+[INFO]:2016/10/24 10:20:07 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:07 gopress.go:145: SELECT * FROM wp_links WHERE `link_id` = '0'
+[ERROR]:2016/10/24 10:20:07 gopress.go:157: not found
+[INFO]:2016/10/24 10:20:07 gopress.go:145: INSERT INTO wp_options (`option_name`, `option_value`, `autoload`) VALUES ('kLiXHiCJNlzuWulZaTh', 'nUZlDnhXufUphvDfYxMhRiVuD', 'WtZzsaLgDlCLQKBSjlU')
+[INFO]:2016/10/24 10:20:07 gopress.go:145: LastInsertedId is 15404578
+[INFO]:2016/10/24 10:20:07 gopress.go:145: SELECT * FROM wp_options WHERE `option_id` = '15404578'
+[INFO]:2016/10/24 10:20:07 gopress.go:145: UPDATE wp_options SET option_name = 'tIlSLWHRttVIeZhbrfE',option_value = 'PaXpKanpBIemCuNQfkypRXPhI',autoload = 'kfAJhGcBMWrhVEJvicD' WHERE option_id = '15404578'
+[INFO]:2016/10/24 10:20:07 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:07 gopress.go:145: SELECT * FROM wp_options WHERE `option_name` = 'tIlSLWHRttVIeZhbrfE'
+[INFO]:2016/10/24 10:20:07 gopress.go:145: SELECT * FROM wp_options WHERE `option_value` = 'PaXpKanpBIemCuNQfkypRXPhI'
+[INFO]:2016/10/24 10:20:07 gopress.go:145: SELECT * FROM wp_options WHERE `autoload` = 'kfAJhGcBMWrhVEJvicD'
+[INFO]:2016/10/24 10:20:07 gopress.go:145: UPDATE wp_options SET `option_name` = 'EnUOmWWahGyYXDRXTwa' WHERE `option_id` = '0'
+[INFO]:2016/10/24 10:20:07 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:07 gopress.go:145: SELECT * FROM wp_options WHERE `option_id` = '0'
+[ERROR]:2016/10/24 10:20:07 gopress.go:157: not found
+[INFO]:2016/10/24 10:20:07 gopress.go:145: UPDATE wp_options SET `option_value` = 'XXYuSSzpSecOaOxJWhbRoeaQa' WHERE `option_id` = '0'
+[INFO]:2016/10/24 10:20:07 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:07 gopress.go:145: SELECT * FROM wp_options WHERE `option_id` = '0'
+[ERROR]:2016/10/24 10:20:07 gopress.go:157: not found
+[INFO]:2016/10/24 10:20:07 gopress.go:145: UPDATE wp_options SET `autoload` = 'TFraqRMUeFRZVBvwQro' WHERE `option_id` = '0'
+[INFO]:2016/10/24 10:20:07 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:07 gopress.go:145: SELECT * FROM wp_options WHERE `option_id` = '0'
+[ERROR]:2016/10/24 10:20:07 gopress.go:157: not found
+[INFO]:2016/10/24 10:20:07 gopress.go:145: INSERT INTO wp_postmeta (`post_id`, `meta_key`, `meta_value`) VALUES ('9163', 'SZwtUKAUOEkIFUjAxDI', 'FuDqsRGmgzhjfTjcJFzOkCaGL')
+[INFO]:2016/10/24 10:20:07 gopress.go:145: LastInsertedId is 3263208
+[INFO]:2016/10/24 10:20:07 gopress.go:145: SELECT * FROM wp_postmeta WHERE `meta_id` = '3263208'
+[INFO]:2016/10/24 10:20:07 gopress.go:145: UPDATE wp_postmeta SET post_id = '5358',meta_key = 'ifjeYimVSxvSKZdhIzD',meta_value = 'GjnQwZsBSMByulPtVafhxHgAR' WHERE meta_id = '3263208'
+[INFO]:2016/10/24 10:20:07 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:07 gopress.go:145: SELECT * FROM wp_postmeta WHERE `post_id` = '5358'
+[INFO]:2016/10/24 10:20:07 gopress.go:145: SELECT * FROM wp_postmeta WHERE `meta_key` = 'ifjeYimVSxvSKZdhIzD'
+[INFO]:2016/10/24 10:20:07 gopress.go:145: SELECT * FROM wp_postmeta WHERE `meta_value` = 'GjnQwZsBSMByulPtVafhxHgAR'
+[INFO]:2016/10/24 10:20:09 gopress.go:145: UPDATE wp_postmeta SET `post_id` = '5704' WHERE `meta_id` = '0'
+[INFO]:2016/10/24 10:20:09 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:09 gopress.go:145: SELECT * FROM wp_postmeta WHERE `meta_id` = '0'
+[ERROR]:2016/10/24 10:20:09 gopress.go:157: not found
+[INFO]:2016/10/24 10:20:09 gopress.go:145: UPDATE wp_postmeta SET `meta_key` = 'bCQypqHGCxvpNOmIyBK' WHERE `meta_id` = '0'
+[INFO]:2016/10/24 10:20:09 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:09 gopress.go:145: SELECT * FROM wp_postmeta WHERE `meta_id` = '0'
+[ERROR]:2016/10/24 10:20:09 gopress.go:157: not found
+[INFO]:2016/10/24 10:20:09 gopress.go:145: UPDATE wp_postmeta SET `meta_value` = 'biGljXLuzTgeLnFsRPDmJjtWy' WHERE `meta_id` = '0'
+[INFO]:2016/10/24 10:20:09 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:09 gopress.go:145: SELECT * FROM wp_postmeta WHERE `meta_id` = '0'
+[ERROR]:2016/10/24 10:20:09 gopress.go:157: not found
+[INFO]:2016/10/24 10:20:09 gopress.go:145: INSERT INTO wp_posts (`post_author`, `post_date`, `post_date_gmt`, `post_content`, `post_title`, `post_excerpt`, `post_status`, `comment_status`, `ping_status`, `post_password`, `post_name`, `to_ping`, `pinged`, `post_modified`, `post_modified_gmt`, `post_content_filtered`, `post_parent`, `guid`, `menu_order`, `post_type`, `post_mime_type`, `comment_count`) VALUES ('1477', '1461-07-16 03:09:06', '1782-06-14 18:42:38', 'msqrysgWtvMKAqcyQVksmeMos', 'zwGvGEKbIefOCYCHZHCsPIWkI', 'sknqUMUDRaLxfLvtRuqFKNSYy', 'apuhhquTIRBfuoehfQD', 'JAKlbpJUDleKinMdVbG', 'ihfPyGlZafZPJJaEGDP', 'legucltuJytflCVAGVs', 'smojShZFjjMKrWLbpoC', 'pVdkTSyODLFKMqSRNNTXkcivh', 'RnZzJdWIdkUKnwsGrxpHOfpQj', '1078-10-18 09:22:20', '1632-04-09 19:05:00', 'UPjdCTZabXFxdyiscugfuJVKM', '6251', 'kgytVjUzWkMNaAcBNGP', '6176', 'aZCKyxDmrFhxlQtDqKL', 'FzfcLUsPRqpnaHipBAS', '9680')
+[INFO]:2016/10/24 10:20:09 gopress.go:145: LastInsertedId is 148611
+[INFO]:2016/10/24 10:20:09 gopress.go:145: SELECT * FROM wp_posts WHERE `ID` = '148611'
+[INFO]:2016/10/24 10:20:09 gopress.go:145: UPDATE wp_posts SET post_author = '2663',post_date = '1818-03-17 05:01:23',post_date_gmt = '1412-03-22 18:29:48',post_content = 'bQrRkVMQkkkLBxFKaTZGOcaAg',post_title = 'bWiHgMKjdWgsWKRwzcUPZEfGO',post_excerpt = 'DGrhgrkboIklQJvYKMRgwzqbc',post_status = 'dDBYLdlpBiwslQiuHQH',comment_status = 'WvequyZqazfQqvSdjOZ',ping_status = 'MVzCStWMdXDMSDIyPKz',post_password = 'deysrijppgSbtAgridv',post_name = 'WawUYkuItguMrbjkafP',to_ping = 'xDUgEaBwIxRLXbifiBZuMpDnZ',pinged = 'JxvLmtCbgYbZtlFdGMOTIuayp',post_modified = '1621-07-11 09:23:19',post_modified_gmt = '1845-00-21 02:01:21',post_content_filtered = 'ygmrQCxEsYXAUkYNPVvdtRAAr',post_parent = '1062',guid = 'BSRRcEfltUKtwPEdPra',menu_order = '9152',post_type = 'HDrcMmXnKFEYKwPTTUl',post_mime_type = 'ZIMXZijVXUlEVboimMA',comment_count = '1070' WHERE ID = '148611'
+[INFO]:2016/10/24 10:20:09 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:10 gopress.go:145: SELECT * FROM wp_posts WHERE `post_author` = '2663'
+[INFO]:2016/10/24 10:20:10 gopress.go:145: SELECT * FROM wp_posts WHERE `post_date` = '1818-03-17 05:01:23'
+[INFO]:2016/10/24 10:20:10 gopress.go:145: SELECT * FROM wp_posts WHERE `post_date_gmt` = '1412-03-22 18:29:48'
+[INFO]:2016/10/24 10:20:10 gopress.go:145: SELECT * FROM wp_posts WHERE `post_content` = 'bQrRkVMQkkkLBxFKaTZGOcaAg'
+[INFO]:2016/10/24 10:20:10 gopress.go:145: SELECT * FROM wp_posts WHERE `post_title` = 'bWiHgMKjdWgsWKRwzcUPZEfGO'
+[INFO]:2016/10/24 10:20:10 gopress.go:145: SELECT * FROM wp_posts WHERE `post_excerpt` = 'DGrhgrkboIklQJvYKMRgwzqbc'
+[INFO]:2016/10/24 10:20:11 gopress.go:145: SELECT * FROM wp_posts WHERE `post_status` = 'dDBYLdlpBiwslQiuHQH'
+[INFO]:2016/10/24 10:20:11 gopress.go:145: SELECT * FROM wp_posts WHERE `comment_status` = 'WvequyZqazfQqvSdjOZ'
+[INFO]:2016/10/24 10:20:11 gopress.go:145: SELECT * FROM wp_posts WHERE `ping_status` = 'MVzCStWMdXDMSDIyPKz'
+[INFO]:2016/10/24 10:20:11 gopress.go:145: SELECT * FROM wp_posts WHERE `post_password` = 'deysrijppgSbtAgridv'
+[INFO]:2016/10/24 10:20:11 gopress.go:145: SELECT * FROM wp_posts WHERE `post_name` = 'WawUYkuItguMrbjkafP'
+[INFO]:2016/10/24 10:20:11 gopress.go:145: SELECT * FROM wp_posts WHERE `to_ping` = 'xDUgEaBwIxRLXbifiBZuMpDnZ'
+[INFO]:2016/10/24 10:20:11 gopress.go:145: SELECT * FROM wp_posts WHERE `pinged` = 'JxvLmtCbgYbZtlFdGMOTIuayp'
+[INFO]:2016/10/24 10:20:12 gopress.go:145: SELECT * FROM wp_posts WHERE `post_modified` = '1621-07-11 09:23:19'
+[INFO]:2016/10/24 10:20:12 gopress.go:145: SELECT * FROM wp_posts WHERE `post_modified_gmt` = '1845-00-21 02:01:21'
+[INFO]:2016/10/24 10:20:12 gopress.go:145: SELECT * FROM wp_posts WHERE `post_content_filtered` = 'ygmrQCxEsYXAUkYNPVvdtRAAr'
+[INFO]:2016/10/24 10:20:12 gopress.go:145: SELECT * FROM wp_posts WHERE `post_parent` = '1062'
+[INFO]:2016/10/24 10:20:12 gopress.go:145: SELECT * FROM wp_posts WHERE `guid` = 'BSRRcEfltUKtwPEdPra'
+[INFO]:2016/10/24 10:20:12 gopress.go:145: SELECT * FROM wp_posts WHERE `post_type` = 'HDrcMmXnKFEYKwPTTUl'
+[INFO]:2016/10/24 10:20:12 gopress.go:145: SELECT * FROM wp_posts WHERE `post_mime_type` = 'ZIMXZijVXUlEVboimMA'
+[INFO]:2016/10/24 10:20:13 gopress.go:145: SELECT * FROM wp_posts WHERE `comment_count` = '1070'
+[INFO]:2016/10/24 10:20:13 gopress.go:145: UPDATE wp_posts SET `post_author` = '5856' WHERE `ID` = '0'
+[INFO]:2016/10/24 10:20:13 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:13 gopress.go:145: SELECT * FROM wp_posts WHERE `ID` = '0'
+[ERROR]:2016/10/24 10:20:13 gopress.go:157: not found
+[INFO]:2016/10/24 10:20:13 gopress.go:145: UPDATE wp_posts SET `post_date` = '1134-08-07 11:34:16' WHERE `ID` = '0'
+[INFO]:2016/10/24 10:20:13 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:13 gopress.go:145: SELECT * FROM wp_posts WHERE `ID` = '0'
+[ERROR]:2016/10/24 10:20:13 gopress.go:157: not found
+[INFO]:2016/10/24 10:20:13 gopress.go:145: UPDATE wp_posts SET `post_date_gmt` = '1529-05-10 22:04:37' WHERE `ID` = '0'
+[INFO]:2016/10/24 10:20:13 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:13 gopress.go:145: SELECT * FROM wp_posts WHERE `ID` = '0'
+[ERROR]:2016/10/24 10:20:13 gopress.go:157: not found
+[INFO]:2016/10/24 10:20:13 gopress.go:145: UPDATE wp_posts SET `post_content` = 'bOCeKqmuNCGzXGnKHkXXxBklX' WHERE `ID` = '0'
+[INFO]:2016/10/24 10:20:13 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:13 gopress.go:145: SELECT * FROM wp_posts WHERE `ID` = '0'
+[ERROR]:2016/10/24 10:20:13 gopress.go:157: not found
+[INFO]:2016/10/24 10:20:13 gopress.go:145: UPDATE wp_posts SET `post_title` = 'cwYuOfHBsIFGPxuudNDXiousW' WHERE `ID` = '0'
+[INFO]:2016/10/24 10:20:13 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:13 gopress.go:145: SELECT * FROM wp_posts WHERE `ID` = '0'
+[ERROR]:2016/10/24 10:20:13 gopress.go:157: not found
+[INFO]:2016/10/24 10:20:13 gopress.go:145: UPDATE wp_posts SET `post_excerpt` = 'DeHuIXeJkfHtCSMVBmxjioQNC' WHERE `ID` = '0'
+[INFO]:2016/10/24 10:20:13 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:13 gopress.go:145: SELECT * FROM wp_posts WHERE `ID` = '0'
+[ERROR]:2016/10/24 10:20:13 gopress.go:157: not found
+[INFO]:2016/10/24 10:20:13 gopress.go:145: UPDATE wp_posts SET `post_status` = 'CsaYXupkcYtwwysHDNh' WHERE `ID` = '0'
+[INFO]:2016/10/24 10:20:13 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:13 gopress.go:145: SELECT * FROM wp_posts WHERE `ID` = '0'
+[ERROR]:2016/10/24 10:20:13 gopress.go:157: not found
+[INFO]:2016/10/24 10:20:13 gopress.go:145: UPDATE wp_posts SET `comment_status` = 'fMbQpMgaXSYdllPgeBc' WHERE `ID` = '0'
+[INFO]:2016/10/24 10:20:13 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:13 gopress.go:145: SELECT * FROM wp_posts WHERE `ID` = '0'
+[ERROR]:2016/10/24 10:20:13 gopress.go:157: not found
+[INFO]:2016/10/24 10:20:13 gopress.go:145: UPDATE wp_posts SET `ping_status` = 'yRvynyHfKzrzWXKDeXa' WHERE `ID` = '0'
+[INFO]:2016/10/24 10:20:13 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:13 gopress.go:145: SELECT * FROM wp_posts WHERE `ID` = '0'
+[ERROR]:2016/10/24 10:20:13 gopress.go:157: not found
+[INFO]:2016/10/24 10:20:13 gopress.go:145: UPDATE wp_posts SET `post_password` = 'RCyPsKyRghqbjOzWRCS' WHERE `ID` = '0'
+[INFO]:2016/10/24 10:20:13 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:13 gopress.go:145: SELECT * FROM wp_posts WHERE `ID` = '0'
+[ERROR]:2016/10/24 10:20:13 gopress.go:157: not found
+[INFO]:2016/10/24 10:20:13 gopress.go:145: UPDATE wp_posts SET `post_name` = 'ppvoBWnhxIZQVNpSqbr' WHERE `ID` = '0'
+[INFO]:2016/10/24 10:20:13 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:13 gopress.go:145: SELECT * FROM wp_posts WHERE `ID` = '0'
+[ERROR]:2016/10/24 10:20:13 gopress.go:157: not found
+[INFO]:2016/10/24 10:20:13 gopress.go:145: UPDATE wp_posts SET `to_ping` = 'VDhUTfkinSKraCWuAGVqLPrfE' WHERE `ID` = '0'
+[INFO]:2016/10/24 10:20:13 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:13 gopress.go:145: SELECT * FROM wp_posts WHERE `ID` = '0'
+[ERROR]:2016/10/24 10:20:13 gopress.go:157: not found
+[INFO]:2016/10/24 10:20:13 gopress.go:145: UPDATE wp_posts SET `pinged` = 'JEkoeZFXsjwJhQxpbgdrNEQtV' WHERE `ID` = '0'
+[INFO]:2016/10/24 10:20:13 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:13 gopress.go:145: SELECT * FROM wp_posts WHERE `ID` = '0'
+[ERROR]:2016/10/24 10:20:13 gopress.go:157: not found
+[INFO]:2016/10/24 10:20:13 gopress.go:145: UPDATE wp_posts SET `post_modified` = '1577-08-05 07:08:31' WHERE `ID` = '0'
+[INFO]:2016/10/24 10:20:13 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:13 gopress.go:145: SELECT * FROM wp_posts WHERE `ID` = '0'
+[ERROR]:2016/10/24 10:20:13 gopress.go:157: not found
+[INFO]:2016/10/24 10:20:13 gopress.go:145: UPDATE wp_posts SET `post_modified_gmt` = '1272-06-11 21:16:54' WHERE `ID` = '0'
+[INFO]:2016/10/24 10:20:13 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:13 gopress.go:145: SELECT * FROM wp_posts WHERE `ID` = '0'
+[ERROR]:2016/10/24 10:20:13 gopress.go:157: not found
+[INFO]:2016/10/24 10:20:13 gopress.go:145: UPDATE wp_posts SET `post_content_filtered` = 'voXXnpfcGdToRvYzSWTQcTozV' WHERE `ID` = '0'
+[INFO]:2016/10/24 10:20:13 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:13 gopress.go:145: SELECT * FROM wp_posts WHERE `ID` = '0'
+[ERROR]:2016/10/24 10:20:13 gopress.go:157: not found
+[INFO]:2016/10/24 10:20:13 gopress.go:145: UPDATE wp_posts SET `post_parent` = '6813' WHERE `ID` = '0'
+[INFO]:2016/10/24 10:20:13 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:13 gopress.go:145: SELECT * FROM wp_posts WHERE `ID` = '0'
+[ERROR]:2016/10/24 10:20:13 gopress.go:157: not found
+[INFO]:2016/10/24 10:20:13 gopress.go:145: UPDATE wp_posts SET `guid` = 'hPAzjbxVvVRtZvlcceE' WHERE `ID` = '0'
+[INFO]:2016/10/24 10:20:13 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:13 gopress.go:145: SELECT * FROM wp_posts WHERE `ID` = '0'
+[ERROR]:2016/10/24 10:20:13 gopress.go:157: not found
+[INFO]:2016/10/24 10:20:13 gopress.go:145: UPDATE wp_posts SET `menu_order` = '1435' WHERE `ID` = '0'
+[INFO]:2016/10/24 10:20:13 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:13 gopress.go:145: SELECT * FROM wp_posts WHERE `ID` = '0'
+[ERROR]:2016/10/24 10:20:13 gopress.go:157: not found
+[INFO]:2016/10/24 10:20:13 gopress.go:145: UPDATE wp_posts SET `post_type` = 'mCMbIYPoEtjtSQSxIJq' WHERE `ID` = '0'
+[INFO]:2016/10/24 10:20:13 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:13 gopress.go:145: SELECT * FROM wp_posts WHERE `ID` = '0'
+[ERROR]:2016/10/24 10:20:13 gopress.go:157: not found
+[INFO]:2016/10/24 10:20:13 gopress.go:145: UPDATE wp_posts SET `post_mime_type` = 'BdFBntKrbuKigcdRlKy' WHERE `ID` = '0'
+[INFO]:2016/10/24 10:20:13 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:13 gopress.go:145: SELECT * FROM wp_posts WHERE `ID` = '0'
+[ERROR]:2016/10/24 10:20:13 gopress.go:157: not found
+[INFO]:2016/10/24 10:20:13 gopress.go:145: UPDATE wp_posts SET `comment_count` = '4610' WHERE `ID` = '0'
+[INFO]:2016/10/24 10:20:13 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:13 gopress.go:145: SELECT * FROM wp_posts WHERE `ID` = '0'
+[ERROR]:2016/10/24 10:20:13 gopress.go:157: not found
+[INFO]:2016/10/24 10:20:13 gopress.go:145: INSERT INTO wp_term_relationships (`object_id`, `term_taxonomy_id`, `term_order`) VALUES ('8360', '1481', '10175')
+[INFO]:2016/10/24 10:20:13 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:13 gopress.go:145: SELECT * FROM wp_term_relationships WHERE `term_taxonomy_id` = '1481' AND `object_id` = '8360'
+[INFO]:2016/10/24 10:20:13 gopress.go:145: UPDATE wp_term_relationships SET object_id = '8506',term_taxonomy_id = '5985',term_order = '6249' WHERE `term_taxonomy_id` = '5985' AND object_id = '8506'
+[INFO]:2016/10/24 10:20:13 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:13 gopress.go:145: UPDATE wp_term_relationships SET `object_id` = '4886' WHERE term_taxonomy_id = '0' AND object_id = '6057'
+[INFO]:2016/10/24 10:20:13 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:13 gopress.go:145: SELECT * FROM wp_term_relationships WHERE `term_taxonomy_id` = '0' AND `object_id` = '4886'
+[INFO]:2016/10/24 10:20:13 gopress.go:145: UPDATE wp_term_relationships SET `term_order` = '1428' WHERE term_taxonomy_id = '0' AND object_id = '4886'
+[INFO]:2016/10/24 10:20:13 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:13 gopress.go:145: SELECT * FROM wp_term_relationships WHERE `term_taxonomy_id` = '0' AND `object_id` = '4886'
+[INFO]:2016/10/24 10:20:13 gopress.go:145: INSERT INTO wp_term_taxonomy (`term_id`, `taxonomy`, `description`, `parent`, `count`) VALUES ('4188', 'HyDkZXFGsWmcJBBorJI', 'sOWuPDYxGJeezyLzVkJYBphjv', '7611', '4957')
+[INFO]:2016/10/24 10:20:13 gopress.go:145: LastInsertedId is 535
+[INFO]:2016/10/24 10:20:13 gopress.go:145: SELECT * FROM wp_term_taxonomy WHERE `term_taxonomy_id` = '535'
+[INFO]:2016/10/24 10:20:13 gopress.go:145: UPDATE wp_term_taxonomy SET term_id = '4506',taxonomy = 'AtXDdZKqqvOwCgpbaKo',description = 'uAtIcrjrfluEBupnGPZhBBvDE',parent = '9211',count = '1524' WHERE term_taxonomy_id = '535'
+[INFO]:2016/10/24 10:20:13 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:13 gopress.go:145: SELECT * FROM wp_term_taxonomy WHERE `term_id` = '4506'
+[INFO]:2016/10/24 10:20:13 gopress.go:145: SELECT * FROM wp_term_taxonomy WHERE `taxonomy` = 'AtXDdZKqqvOwCgpbaKo'
+[INFO]:2016/10/24 10:20:13 gopress.go:145: SELECT * FROM wp_term_taxonomy WHERE `description` = 'uAtIcrjrfluEBupnGPZhBBvDE'
+[INFO]:2016/10/24 10:20:13 gopress.go:145: SELECT * FROM wp_term_taxonomy WHERE `parent` = '9211'
+[INFO]:2016/10/24 10:20:13 gopress.go:145: SELECT * FROM wp_term_taxonomy WHERE `count` = '1524'
+[INFO]:2016/10/24 10:20:13 gopress.go:145: UPDATE wp_term_taxonomy SET `term_id` = '6562' WHERE `term_taxonomy_id` = '0'
+[INFO]:2016/10/24 10:20:13 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:13 gopress.go:145: SELECT * FROM wp_term_taxonomy WHERE `term_taxonomy_id` = '0'
+[ERROR]:2016/10/24 10:20:13 gopress.go:157: not found
+[INFO]:2016/10/24 10:20:13 gopress.go:145: UPDATE wp_term_taxonomy SET `taxonomy` = 'nPwulfKIcdUOOKjCBfO' WHERE `term_taxonomy_id` = '0'
+[INFO]:2016/10/24 10:20:13 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:13 gopress.go:145: SELECT * FROM wp_term_taxonomy WHERE `term_taxonomy_id` = '0'
+[ERROR]:2016/10/24 10:20:13 gopress.go:157: not found
+[INFO]:2016/10/24 10:20:13 gopress.go:145: UPDATE wp_term_taxonomy SET `description` = 'VQCbjaRnzEHeedfwGiPdwzoou' WHERE `term_taxonomy_id` = '0'
+[INFO]:2016/10/24 10:20:13 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:13 gopress.go:145: SELECT * FROM wp_term_taxonomy WHERE `term_taxonomy_id` = '0'
+[ERROR]:2016/10/24 10:20:13 gopress.go:157: not found
+[INFO]:2016/10/24 10:20:13 gopress.go:145: UPDATE wp_term_taxonomy SET `parent` = '201' WHERE `term_taxonomy_id` = '0'
+[INFO]:2016/10/24 10:20:13 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:13 gopress.go:145: SELECT * FROM wp_term_taxonomy WHERE `term_taxonomy_id` = '0'
+[ERROR]:2016/10/24 10:20:13 gopress.go:157: not found
+[INFO]:2016/10/24 10:20:13 gopress.go:145: UPDATE wp_term_taxonomy SET `count` = '6442' WHERE `term_taxonomy_id` = '0'
+[INFO]:2016/10/24 10:20:13 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:13 gopress.go:145: SELECT * FROM wp_term_taxonomy WHERE `term_taxonomy_id` = '0'
+[ERROR]:2016/10/24 10:20:13 gopress.go:157: not found
+[INFO]:2016/10/24 10:20:13 gopress.go:145: INSERT INTO wp_terms (`name`, `slug`, `term_group`) VALUES ('vRyHRuyfOtRyRFUEMXG', 'qNrchxdPvQzkhzsRBND', '2937')
+[INFO]:2016/10/24 10:20:13 gopress.go:145: LastInsertedId is 535
+[INFO]:2016/10/24 10:20:13 gopress.go:145: SELECT * FROM wp_terms WHERE `term_id` = '535'
+[INFO]:2016/10/24 10:20:13 gopress.go:145: UPDATE wp_terms SET name = 'vUwpGgaCfbprkNSBIyC',slug = 'zkTckzaWMmGZSWoERZl',term_group = '6684' WHERE term_id = '535'
+[INFO]:2016/10/24 10:20:13 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:13 gopress.go:145: SELECT * FROM wp_terms WHERE `name` = 'vUwpGgaCfbprkNSBIyC'
+[INFO]:2016/10/24 10:20:13 gopress.go:145: SELECT * FROM wp_terms WHERE `slug` = 'zkTckzaWMmGZSWoERZl'
+[INFO]:2016/10/24 10:20:13 gopress.go:145: SELECT * FROM wp_terms WHERE `term_group` = '6684'
+[INFO]:2016/10/24 10:20:13 gopress.go:145: UPDATE wp_terms SET `name` = 'tmmBTGxOYEdnzKinBlg' WHERE `term_id` = '0'
+[INFO]:2016/10/24 10:20:13 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:13 gopress.go:145: SELECT * FROM wp_terms WHERE `term_id` = '0'
+[ERROR]:2016/10/24 10:20:13 gopress.go:157: not found
+[INFO]:2016/10/24 10:20:13 gopress.go:145: UPDATE wp_terms SET `slug` = 'jUsdNvoSyeNzQfAmPtD' WHERE `term_id` = '0'
+[INFO]:2016/10/24 10:20:13 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:13 gopress.go:145: SELECT * FROM wp_terms WHERE `term_id` = '0'
+[ERROR]:2016/10/24 10:20:13 gopress.go:157: not found
+[INFO]:2016/10/24 10:20:13 gopress.go:145: UPDATE wp_terms SET `term_group` = '3944' WHERE `term_id` = '0'
+[INFO]:2016/10/24 10:20:13 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:13 gopress.go:145: SELECT * FROM wp_terms WHERE `term_id` = '0'
+[ERROR]:2016/10/24 10:20:13 gopress.go:157: not found
+[INFO]:2016/10/24 10:20:13 gopress.go:145: INSERT INTO wp_usermeta (`user_id`, `meta_key`, `meta_value`) VALUES ('6338', 'gkOmbRrqpHNCIvIwTwH', 'PWJkmJRIyOmwKjwbtrEWYbdco')
+[INFO]:2016/10/24 10:20:13 gopress.go:145: LastInsertedId is 3882
+[INFO]:2016/10/24 10:20:13 gopress.go:145: SELECT * FROM wp_usermeta WHERE `umeta_id` = '3882'
+[INFO]:2016/10/24 10:20:13 gopress.go:145: UPDATE wp_usermeta SET user_id = '2013',meta_key = 'jlQpvjMGqYckMicQFfg',meta_value = 'QgcFgbNtQwfdbDKoBYVxmFVzu' WHERE umeta_id = '3882'
+[INFO]:2016/10/24 10:20:13 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:13 gopress.go:145: SELECT * FROM wp_usermeta WHERE `user_id` = '2013'
+[INFO]:2016/10/24 10:20:13 gopress.go:145: SELECT * FROM wp_usermeta WHERE `meta_key` = 'jlQpvjMGqYckMicQFfg'
+[INFO]:2016/10/24 10:20:13 gopress.go:145: SELECT * FROM wp_usermeta WHERE `meta_value` = 'QgcFgbNtQwfdbDKoBYVxmFVzu'
+[INFO]:2016/10/24 10:20:13 gopress.go:145: UPDATE wp_usermeta SET `user_id` = '853' WHERE `umeta_id` = '0'
+[INFO]:2016/10/24 10:20:13 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:13 gopress.go:145: SELECT * FROM wp_usermeta WHERE `umeta_id` = '0'
+[ERROR]:2016/10/24 10:20:13 gopress.go:157: not found
+[INFO]:2016/10/24 10:20:13 gopress.go:145: UPDATE wp_usermeta SET `meta_key` = 'YOVZnBPiUWelkhpFhhZ' WHERE `umeta_id` = '0'
+[INFO]:2016/10/24 10:20:13 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:13 gopress.go:145: SELECT * FROM wp_usermeta WHERE `umeta_id` = '0'
+[ERROR]:2016/10/24 10:20:13 gopress.go:157: not found
+[INFO]:2016/10/24 10:20:13 gopress.go:145: UPDATE wp_usermeta SET `meta_value` = 'HUvJFKobwFqKssvWWlkQvknWj' WHERE `umeta_id` = '0'
+[INFO]:2016/10/24 10:20:13 gopress.go:145: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:13 gopress.go:145: SELECT * FROM wp_usermeta WHERE `umeta_id` = '0'
+[ERROR]:2016/10/24 10:20:13 gopress.go:157: not found
+[INFO]:2016/10/24 10:20:26 gopress.go:174: INSERT INTO wp_commentmeta (`comment_id`, `meta_key`, `meta_value`) VALUES ('6319', 'DLgHhCXVkxvAaqCAGeD', 'lihvaEJWnnZpXDLyoUJQupsvk')
+[INFO]:2016/10/24 10:20:26 gopress.go:174: LastInsertedId is 1669
+[INFO]:2016/10/24 10:20:26 gopress.go:174: SELECT * FROM wp_commentmeta WHERE `meta_id` = '1669'
+[INFO]:2016/10/24 10:20:26 gopress.go:174: UPDATE wp_commentmeta SET comment_id = '4683',meta_key = 'ZCyUZOyisKyOdILFSOG',meta_value = 'HiBGgTLlTajfKbDitULvpCbBf' WHERE meta_id = '1669'
+[INFO]:2016/10/24 10:20:26 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:26 gopress.go:174: SELECT * FROM wp_commentmeta WHERE `comment_id` = '4683'
+[INFO]:2016/10/24 10:20:26 gopress.go:174: SELECT * FROM wp_commentmeta WHERE `meta_key` = 'ZCyUZOyisKyOdILFSOG'
+[INFO]:2016/10/24 10:20:26 gopress.go:174: SELECT * FROM wp_commentmeta WHERE `meta_value` = 'HiBGgTLlTajfKbDitULvpCbBf'
+[INFO]:2016/10/24 10:20:26 gopress.go:174: UPDATE wp_commentmeta SET `comment_id` = '6543' WHERE `meta_id` = '0'
+[INFO]:2016/10/24 10:20:26 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:26 gopress.go:174: SELECT * FROM wp_commentmeta WHERE `meta_id` = '0'
+[ERROR]:2016/10/24 10:20:26 gopress.go:192: not found
+[INFO]:2016/10/24 10:20:26 gopress.go:174: UPDATE wp_commentmeta SET `meta_key` = 'szpfwLjVnQmLZdUVlUP' WHERE `meta_id` = '0'
+[INFO]:2016/10/24 10:20:26 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:26 gopress.go:174: SELECT * FROM wp_commentmeta WHERE `meta_id` = '0'
+[ERROR]:2016/10/24 10:20:26 gopress.go:192: not found
+[INFO]:2016/10/24 10:20:26 gopress.go:174: UPDATE wp_commentmeta SET `meta_value` = 'NGiCltXUZeQWirWPtlHCdiSnB' WHERE `meta_id` = '0'
+[INFO]:2016/10/24 10:20:26 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:26 gopress.go:174: SELECT * FROM wp_commentmeta WHERE `meta_id` = '0'
+[ERROR]:2016/10/24 10:20:26 gopress.go:192: not found
+[INFO]:2016/10/24 10:20:26 gopress.go:174: INSERT INTO wp_comments (`comment_post_ID`, `comment_author`, `comment_author_email`, `comment_author_url`, `comment_author_IP`, `comment_date`, `comment_date_gmt`, `comment_content`, `comment_karma`, `comment_approved`, `comment_agent`, `comment_type`, `comment_parent`, `user_id`) VALUES ('2984', 'bxzRYIzJYhkLgxjPFkKjVJbNF', 'HxYaslThxdiudmVpSsg', 'vHtHprmphjRinvAKDdx', 'nEGXWWBOnkdrjEHrJkd', '1627-02-11 11:42:01', '1249-00-07 20:56:11', 'DErNRCCjPAzgKVmdmjbpnOgjz', '5863', 'YWsaVrtkcoPYgSsRrSU', 'lwlRfBHVQykyHSKNFZc', 'pHRaHTEQIZEwPVpfpQo', '442', '431')
+[INFO]:2016/10/24 10:20:26 gopress.go:174: LastInsertedId is 1663
+[INFO]:2016/10/24 10:20:26 gopress.go:174: SELECT * FROM wp_comments WHERE `comment_ID` = '1663'
+[INFO]:2016/10/24 10:20:26 gopress.go:174: UPDATE wp_comments SET comment_post_ID = '5359',comment_author = 'SkcNqzjAuFCMlrFrLBaHkguBD',comment_author_email = 'OyuEpvwoSjpLMcHVYYp',comment_author_url = 'fROhCLeqBLCcfVWhHlT',comment_author_IP = 'DNtCgmfJILJVueGvurS',comment_date = '1334-02-04 08:46:17',comment_date_gmt = '1677-00-07 22:47:52',comment_content = 'bxNAdTkQeLDLKdJTZEwucDbOr',comment_karma = '9170',comment_approved = 'hLaMcbPzDHIQhGmhWRU',comment_agent = 'JJwGjLkCAfdpCTzDQZc',comment_type = 'lpMgVtjAVHEzCTBNyor',comment_parent = '8773',user_id = '5948' WHERE comment_ID = '1663'
+[INFO]:2016/10/24 10:20:26 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:26 gopress.go:174: SELECT * FROM wp_comments WHERE `comment_post_ID` = '5359'
+[INFO]:2016/10/24 10:20:26 gopress.go:174: SELECT * FROM wp_comments WHERE `comment_author` = 'SkcNqzjAuFCMlrFrLBaHkguBD'
+[INFO]:2016/10/24 10:20:26 gopress.go:174: SELECT * FROM wp_comments WHERE `comment_author_email` = 'OyuEpvwoSjpLMcHVYYp'
+[INFO]:2016/10/24 10:20:26 gopress.go:174: SELECT * FROM wp_comments WHERE `comment_author_url` = 'fROhCLeqBLCcfVWhHlT'
+[INFO]:2016/10/24 10:20:26 gopress.go:174: SELECT * FROM wp_comments WHERE `comment_author_IP` = 'DNtCgmfJILJVueGvurS'
+[INFO]:2016/10/24 10:20:26 gopress.go:174: SELECT * FROM wp_comments WHERE `comment_date` = '1334-02-04 08:46:17'
+[INFO]:2016/10/24 10:20:26 gopress.go:174: SELECT * FROM wp_comments WHERE `comment_date_gmt` = '1677-00-07 22:47:52'
+[INFO]:2016/10/24 10:20:26 gopress.go:174: SELECT * FROM wp_comments WHERE `comment_content` = 'bxNAdTkQeLDLKdJTZEwucDbOr'
+[INFO]:2016/10/24 10:20:26 gopress.go:174: SELECT * FROM wp_comments WHERE `comment_karma` = '9170'
+[INFO]:2016/10/24 10:20:26 gopress.go:174: SELECT * FROM wp_comments WHERE `comment_approved` = 'hLaMcbPzDHIQhGmhWRU'
+[INFO]:2016/10/24 10:20:26 gopress.go:174: SELECT * FROM wp_comments WHERE `comment_agent` = 'JJwGjLkCAfdpCTzDQZc'
+[INFO]:2016/10/24 10:20:26 gopress.go:174: SELECT * FROM wp_comments WHERE `comment_type` = 'lpMgVtjAVHEzCTBNyor'
+[INFO]:2016/10/24 10:20:26 gopress.go:174: SELECT * FROM wp_comments WHERE `comment_parent` = '8773'
+[INFO]:2016/10/24 10:20:26 gopress.go:174: SELECT * FROM wp_comments WHERE `user_id` = '5948'
+[INFO]:2016/10/24 10:20:26 gopress.go:174: UPDATE wp_comments SET `comment_post_ID` = '5439' WHERE `comment_ID` = '0'
+[INFO]:2016/10/24 10:20:26 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:26 gopress.go:174: SELECT * FROM wp_comments WHERE `comment_ID` = '0'
+[ERROR]:2016/10/24 10:20:26 gopress.go:192: not found
+[INFO]:2016/10/24 10:20:26 gopress.go:174: UPDATE wp_comments SET `comment_author` = 'UbugiPZqfPSSrMDnkrsDTjyto' WHERE `comment_ID` = '0'
+[INFO]:2016/10/24 10:20:26 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:26 gopress.go:174: SELECT * FROM wp_comments WHERE `comment_ID` = '0'
+[ERROR]:2016/10/24 10:20:26 gopress.go:192: not found
+[INFO]:2016/10/24 10:20:26 gopress.go:174: UPDATE wp_comments SET `comment_author_email` = 'yBoaEVtOGTeuoLBqDzj' WHERE `comment_ID` = '0'
+[INFO]:2016/10/24 10:20:26 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:26 gopress.go:174: SELECT * FROM wp_comments WHERE `comment_ID` = '0'
+[ERROR]:2016/10/24 10:20:26 gopress.go:192: not found
+[INFO]:2016/10/24 10:20:26 gopress.go:174: UPDATE wp_comments SET `comment_author_url` = 'nmTmYqQDkwywiogCFNs' WHERE `comment_ID` = '0'
+[INFO]:2016/10/24 10:20:26 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:26 gopress.go:174: SELECT * FROM wp_comments WHERE `comment_ID` = '0'
+[ERROR]:2016/10/24 10:20:26 gopress.go:192: not found
+[INFO]:2016/10/24 10:20:26 gopress.go:174: UPDATE wp_comments SET `comment_author_IP` = 'XoNvmmgrokFWLikrhXg' WHERE `comment_ID` = '0'
+[INFO]:2016/10/24 10:20:26 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:26 gopress.go:174: SELECT * FROM wp_comments WHERE `comment_ID` = '0'
+[ERROR]:2016/10/24 10:20:26 gopress.go:192: not found
+[INFO]:2016/10/24 10:20:26 gopress.go:174: UPDATE wp_comments SET `comment_date` = '1155-00-26 10:34:37' WHERE `comment_ID` = '0'
+[INFO]:2016/10/24 10:20:26 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:26 gopress.go:174: SELECT * FROM wp_comments WHERE `comment_ID` = '0'
+[ERROR]:2016/10/24 10:20:26 gopress.go:192: not found
+[INFO]:2016/10/24 10:20:26 gopress.go:174: UPDATE wp_comments SET `comment_date_gmt` = '1360-09-09 08:17:26' WHERE `comment_ID` = '0'
+[INFO]:2016/10/24 10:20:26 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:26 gopress.go:174: SELECT * FROM wp_comments WHERE `comment_ID` = '0'
+[ERROR]:2016/10/24 10:20:26 gopress.go:192: not found
+[INFO]:2016/10/24 10:20:26 gopress.go:174: UPDATE wp_comments SET `comment_content` = 'BZcKrOHtAjkwccSShZjTbWykm' WHERE `comment_ID` = '0'
+[INFO]:2016/10/24 10:20:26 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:26 gopress.go:174: SELECT * FROM wp_comments WHERE `comment_ID` = '0'
+[ERROR]:2016/10/24 10:20:26 gopress.go:192: not found
+[INFO]:2016/10/24 10:20:26 gopress.go:174: UPDATE wp_comments SET `comment_karma` = '4866' WHERE `comment_ID` = '0'
+[INFO]:2016/10/24 10:20:26 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:26 gopress.go:174: SELECT * FROM wp_comments WHERE `comment_ID` = '0'
+[ERROR]:2016/10/24 10:20:26 gopress.go:192: not found
+[INFO]:2016/10/24 10:20:26 gopress.go:174: UPDATE wp_comments SET `comment_approved` = 'sHUfnxmMEWjWGnLYBQU' WHERE `comment_ID` = '0'
+[INFO]:2016/10/24 10:20:26 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:26 gopress.go:174: SELECT * FROM wp_comments WHERE `comment_ID` = '0'
+[ERROR]:2016/10/24 10:20:26 gopress.go:192: not found
+[INFO]:2016/10/24 10:20:26 gopress.go:174: UPDATE wp_comments SET `comment_agent` = 'FfQswrfCxKINCaFLnwj' WHERE `comment_ID` = '0'
+[INFO]:2016/10/24 10:20:26 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:26 gopress.go:174: SELECT * FROM wp_comments WHERE `comment_ID` = '0'
+[ERROR]:2016/10/24 10:20:26 gopress.go:192: not found
+[INFO]:2016/10/24 10:20:26 gopress.go:174: UPDATE wp_comments SET `comment_type` = 'ihoRgBLngRUKBeOczWi' WHERE `comment_ID` = '0'
+[INFO]:2016/10/24 10:20:26 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:26 gopress.go:174: SELECT * FROM wp_comments WHERE `comment_ID` = '0'
+[ERROR]:2016/10/24 10:20:26 gopress.go:192: not found
+[INFO]:2016/10/24 10:20:26 gopress.go:174: UPDATE wp_comments SET `comment_parent` = '493' WHERE `comment_ID` = '0'
+[INFO]:2016/10/24 10:20:26 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:26 gopress.go:174: SELECT * FROM wp_comments WHERE `comment_ID` = '0'
+[ERROR]:2016/10/24 10:20:26 gopress.go:192: not found
+[INFO]:2016/10/24 10:20:26 gopress.go:174: UPDATE wp_comments SET `user_id` = '3601' WHERE `comment_ID` = '0'
+[INFO]:2016/10/24 10:20:26 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:26 gopress.go:174: SELECT * FROM wp_comments WHERE `comment_ID` = '0'
+[ERROR]:2016/10/24 10:20:26 gopress.go:192: not found
+[INFO]:2016/10/24 10:20:26 gopress.go:174: INSERT INTO wp_links (`link_url`, `link_name`, `link_image`, `link_target`, `link_description`, `link_visible`, `link_owner`, `link_rating`, `link_updated`, `link_rel`, `link_notes`, `link_rss`) VALUES ('XlHhvpPghfHXHAGpsaO', 'pqmkpNmjRWTJlraGaEb', 'jjqvjncZcXIqxlYgIWZ', 'VslrYLVNfBZfdUfzqbJ', 'mKHtnAdEpAEpUAKttWe', 'gsyQQsuFIWXPVArvxNX', '1187', '8656', '1073-07-20 21:36:51', 'WaNDqQIjPJdFgWCIGpV', 'zgCjEhYvfdmemNkOkFyYsVOdm', 'TXxoPyKwKTyeahutRzI')
+[INFO]:2016/10/24 10:20:26 gopress.go:174: LastInsertedId is 52
+[INFO]:2016/10/24 10:20:26 gopress.go:174: SELECT * FROM wp_links WHERE `link_id` = '52'
+[INFO]:2016/10/24 10:20:26 gopress.go:174: UPDATE wp_links SET link_url = 'nLdtVvwVGuhQixCGUeq',link_name = 'dNLqUgfiUbEbLeblUlH',link_image = 'RzVWFBghtCvfebYNXRX',link_target = 'OFmjgsLcKDPZXYFvTPK',link_description = 'gQeuCEJTDFlexotApbY',link_visible = 'CCGFAiNAYvoDNibvPMO',link_owner = '5702',link_rating = '6458',link_updated = '1908-10-14 09:01:04',link_rel = 'fgXnqCdilzMDUouMmqR',link_notes = 'kvFRnhUXtugrKWDqfeeHRlaZD',link_rss = 'rbPayPXXBNbDcPKQnrD' WHERE link_id = '52'
+[INFO]:2016/10/24 10:20:26 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:26 gopress.go:174: SELECT * FROM wp_links WHERE `link_url` = 'nLdtVvwVGuhQixCGUeq'
+[INFO]:2016/10/24 10:20:26 gopress.go:174: SELECT * FROM wp_links WHERE `link_name` = 'dNLqUgfiUbEbLeblUlH'
+[INFO]:2016/10/24 10:20:26 gopress.go:174: SELECT * FROM wp_links WHERE `link_image` = 'RzVWFBghtCvfebYNXRX'
+[INFO]:2016/10/24 10:20:26 gopress.go:174: SELECT * FROM wp_links WHERE `link_target` = 'OFmjgsLcKDPZXYFvTPK'
+[INFO]:2016/10/24 10:20:26 gopress.go:174: SELECT * FROM wp_links WHERE `link_description` = 'gQeuCEJTDFlexotApbY'
+[INFO]:2016/10/24 10:20:26 gopress.go:174: SELECT * FROM wp_links WHERE `link_visible` = 'CCGFAiNAYvoDNibvPMO'
+[INFO]:2016/10/24 10:20:26 gopress.go:174: SELECT * FROM wp_links WHERE `link_owner` = '5702'
+[INFO]:2016/10/24 10:20:26 gopress.go:174: SELECT * FROM wp_links WHERE `link_rating` = '6458'
+[INFO]:2016/10/24 10:20:26 gopress.go:174: SELECT * FROM wp_links WHERE `link_updated` = '1908-10-14 09:01:04'
+[INFO]:2016/10/24 10:20:26 gopress.go:174: SELECT * FROM wp_links WHERE `link_rel` = 'fgXnqCdilzMDUouMmqR'
+[INFO]:2016/10/24 10:20:26 gopress.go:174: SELECT * FROM wp_links WHERE `link_notes` = 'kvFRnhUXtugrKWDqfeeHRlaZD'
+[INFO]:2016/10/24 10:20:26 gopress.go:174: SELECT * FROM wp_links WHERE `link_rss` = 'rbPayPXXBNbDcPKQnrD'
+[INFO]:2016/10/24 10:20:26 gopress.go:174: UPDATE wp_links SET `link_url` = 'ASfNglYjwOqWTGnnCKv' WHERE `link_id` = '0'
+[INFO]:2016/10/24 10:20:26 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:26 gopress.go:174: SELECT * FROM wp_links WHERE `link_id` = '0'
+[ERROR]:2016/10/24 10:20:26 gopress.go:192: not found
+[INFO]:2016/10/24 10:20:26 gopress.go:174: UPDATE wp_links SET `link_name` = 'FhfEyRiocyxnjimsrNV' WHERE `link_id` = '0'
+[INFO]:2016/10/24 10:20:26 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:26 gopress.go:174: SELECT * FROM wp_links WHERE `link_id` = '0'
+[ERROR]:2016/10/24 10:20:26 gopress.go:192: not found
+[INFO]:2016/10/24 10:20:26 gopress.go:174: UPDATE wp_links SET `link_image` = 'dZpaqNWiNTqOnHHGROZ' WHERE `link_id` = '0'
+[INFO]:2016/10/24 10:20:26 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:26 gopress.go:174: SELECT * FROM wp_links WHERE `link_id` = '0'
+[ERROR]:2016/10/24 10:20:26 gopress.go:192: not found
+[INFO]:2016/10/24 10:20:26 gopress.go:174: UPDATE wp_links SET `link_target` = 'GGLwpsqaIiajHuGWNzk' WHERE `link_id` = '0'
+[INFO]:2016/10/24 10:20:26 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:26 gopress.go:174: SELECT * FROM wp_links WHERE `link_id` = '0'
+[ERROR]:2016/10/24 10:20:26 gopress.go:192: not found
+[INFO]:2016/10/24 10:20:26 gopress.go:174: UPDATE wp_links SET `link_description` = 'wjkPbmLFDDbcExiTyWj' WHERE `link_id` = '0'
+[INFO]:2016/10/24 10:20:26 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:26 gopress.go:174: SELECT * FROM wp_links WHERE `link_id` = '0'
+[ERROR]:2016/10/24 10:20:26 gopress.go:192: not found
+[INFO]:2016/10/24 10:20:26 gopress.go:174: UPDATE wp_links SET `link_visible` = 'JGKQrJKMXNrBDZMXiNk' WHERE `link_id` = '0'
+[INFO]:2016/10/24 10:20:26 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:26 gopress.go:174: SELECT * FROM wp_links WHERE `link_id` = '0'
+[ERROR]:2016/10/24 10:20:26 gopress.go:192: not found
+[INFO]:2016/10/24 10:20:26 gopress.go:174: UPDATE wp_links SET `link_owner` = '1623' WHERE `link_id` = '0'
+[INFO]:2016/10/24 10:20:26 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:26 gopress.go:174: SELECT * FROM wp_links WHERE `link_id` = '0'
+[ERROR]:2016/10/24 10:20:26 gopress.go:192: not found
+[INFO]:2016/10/24 10:20:26 gopress.go:174: UPDATE wp_links SET `link_rating` = '9067' WHERE `link_id` = '0'
+[INFO]:2016/10/24 10:20:26 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:26 gopress.go:174: SELECT * FROM wp_links WHERE `link_id` = '0'
+[ERROR]:2016/10/24 10:20:26 gopress.go:192: not found
+[INFO]:2016/10/24 10:20:26 gopress.go:174: UPDATE wp_links SET `link_updated` = '1468-02-24 04:39:24' WHERE `link_id` = '0'
+[INFO]:2016/10/24 10:20:26 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:26 gopress.go:174: SELECT * FROM wp_links WHERE `link_id` = '0'
+[ERROR]:2016/10/24 10:20:26 gopress.go:192: not found
+[INFO]:2016/10/24 10:20:26 gopress.go:174: UPDATE wp_links SET `link_rel` = 'nvcgJxGeDeWTRuqFkYq' WHERE `link_id` = '0'
+[INFO]:2016/10/24 10:20:26 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:26 gopress.go:174: SELECT * FROM wp_links WHERE `link_id` = '0'
+[ERROR]:2016/10/24 10:20:26 gopress.go:192: not found
+[INFO]:2016/10/24 10:20:26 gopress.go:174: UPDATE wp_links SET `link_notes` = 'QoTkkGuTFeNozPZNQjPZXETjz' WHERE `link_id` = '0'
+[INFO]:2016/10/24 10:20:26 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:26 gopress.go:174: SELECT * FROM wp_links WHERE `link_id` = '0'
+[ERROR]:2016/10/24 10:20:26 gopress.go:192: not found
+[INFO]:2016/10/24 10:20:26 gopress.go:174: UPDATE wp_links SET `link_rss` = 'MztLBOioqUOvFCnURIl' WHERE `link_id` = '0'
+[INFO]:2016/10/24 10:20:26 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:26 gopress.go:174: SELECT * FROM wp_links WHERE `link_id` = '0'
+[ERROR]:2016/10/24 10:20:26 gopress.go:192: not found
+[INFO]:2016/10/24 10:20:26 gopress.go:174: INSERT INTO wp_options (`option_name`, `option_value`, `autoload`) VALUES ('XGRGBlmmjECiTvyDdZU', 'jgsUyuIbKuipftKdXBuDJvyiF', 'PCMNaGPCATOiTXCLpZJ')
+[INFO]:2016/10/24 10:20:26 gopress.go:174: LastInsertedId is 15404579
+[INFO]:2016/10/24 10:20:26 gopress.go:174: SELECT * FROM wp_options WHERE `option_id` = '15404579'
+[INFO]:2016/10/24 10:20:26 gopress.go:174: UPDATE wp_options SET option_name = 'FVfQQsNNDFtgdaWamfZ',option_value = 'mAflsSlsuRoKvgKKvGKdbsqVE',autoload = 'gFuFzsHwMVdVQrpuODI' WHERE option_id = '15404579'
+[INFO]:2016/10/24 10:20:26 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:26 gopress.go:174: SELECT * FROM wp_options WHERE `option_name` = 'FVfQQsNNDFtgdaWamfZ'
+[INFO]:2016/10/24 10:20:26 gopress.go:174: SELECT * FROM wp_options WHERE `option_value` = 'mAflsSlsuRoKvgKKvGKdbsqVE'
+[INFO]:2016/10/24 10:20:26 gopress.go:174: SELECT * FROM wp_options WHERE `autoload` = 'gFuFzsHwMVdVQrpuODI'
+[INFO]:2016/10/24 10:20:26 gopress.go:174: UPDATE wp_options SET `option_name` = 'QKmQSVLpWZnUSkIyrUW' WHERE `option_id` = '0'
+[INFO]:2016/10/24 10:20:26 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:26 gopress.go:174: SELECT * FROM wp_options WHERE `option_id` = '0'
+[ERROR]:2016/10/24 10:20:26 gopress.go:192: not found
+[INFO]:2016/10/24 10:20:26 gopress.go:174: UPDATE wp_options SET `option_value` = 'yGYxTzHoPQGpAbVehYQOwCnOc' WHERE `option_id` = '0'
+[INFO]:2016/10/24 10:20:26 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:26 gopress.go:174: SELECT * FROM wp_options WHERE `option_id` = '0'
+[ERROR]:2016/10/24 10:20:26 gopress.go:192: not found
+[INFO]:2016/10/24 10:20:26 gopress.go:174: UPDATE wp_options SET `autoload` = 'JbwPKwOfmnhqHtMWboX' WHERE `option_id` = '0'
+[INFO]:2016/10/24 10:20:26 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:26 gopress.go:174: SELECT * FROM wp_options WHERE `option_id` = '0'
+[ERROR]:2016/10/24 10:20:26 gopress.go:192: not found
+[INFO]:2016/10/24 10:20:26 gopress.go:174: INSERT INTO wp_postmeta (`post_id`, `meta_key`, `meta_value`) VALUES ('6151', 'tIFEcqOOIagGhAiycBa', 'owCXuNqsieAhvhILrXRwlgyOZ')
+[INFO]:2016/10/24 10:20:27 gopress.go:174: LastInsertedId is 3263209
+[INFO]:2016/10/24 10:20:27 gopress.go:174: SELECT * FROM wp_postmeta WHERE `meta_id` = '3263209'
+[INFO]:2016/10/24 10:20:27 gopress.go:174: UPDATE wp_postmeta SET post_id = '563',meta_key = 'doPZnLVfkyECKQtQkZH',meta_value = 'cCzfKsvAlemPhehnqjxrCXipl' WHERE meta_id = '3263209'
+[INFO]:2016/10/24 10:20:27 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:27 gopress.go:174: SELECT * FROM wp_postmeta WHERE `post_id` = '563'
+[INFO]:2016/10/24 10:20:27 gopress.go:174: SELECT * FROM wp_postmeta WHERE `meta_key` = 'doPZnLVfkyECKQtQkZH'
+[INFO]:2016/10/24 10:20:27 gopress.go:174: SELECT * FROM wp_postmeta WHERE `meta_value` = 'cCzfKsvAlemPhehnqjxrCXipl'
+[INFO]:2016/10/24 10:20:29 gopress.go:174: UPDATE wp_postmeta SET `post_id` = '691' WHERE `meta_id` = '0'
+[INFO]:2016/10/24 10:20:29 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:29 gopress.go:174: SELECT * FROM wp_postmeta WHERE `meta_id` = '0'
+[ERROR]:2016/10/24 10:20:29 gopress.go:192: not found
+[INFO]:2016/10/24 10:20:29 gopress.go:174: UPDATE wp_postmeta SET `meta_key` = 'PdSVAmDLhUZQkseMuWu' WHERE `meta_id` = '0'
+[INFO]:2016/10/24 10:20:29 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:29 gopress.go:174: SELECT * FROM wp_postmeta WHERE `meta_id` = '0'
+[ERROR]:2016/10/24 10:20:29 gopress.go:192: not found
+[INFO]:2016/10/24 10:20:29 gopress.go:174: UPDATE wp_postmeta SET `meta_value` = 'BEhIvPcdgwDQuUgamoOHqnncI' WHERE `meta_id` = '0'
+[INFO]:2016/10/24 10:20:29 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:29 gopress.go:174: SELECT * FROM wp_postmeta WHERE `meta_id` = '0'
+[ERROR]:2016/10/24 10:20:29 gopress.go:192: not found
+[INFO]:2016/10/24 10:20:29 gopress.go:174: INSERT INTO wp_posts (`post_author`, `post_date`, `post_date_gmt`, `post_content`, `post_title`, `post_excerpt`, `post_status`, `comment_status`, `ping_status`, `post_password`, `post_name`, `to_ping`, `pinged`, `post_modified`, `post_modified_gmt`, `post_content_filtered`, `post_parent`, `guid`, `menu_order`, `post_type`, `post_mime_type`, `comment_count`) VALUES ('3917', '1524-05-13 04:14:12', '1277-04-23 22:25:37', 'pgldqfFEpCHsBWafZUIuDxIae', 'rnwIoLrDlmSQkcpgHsBNrzMYd', 'oEyNcKfelIjyJCZoyIbOyzxjl', 'yceroxDWxNsMWeZbQRX', 'FFqvwhWZYWHSOXlHHAQ', 'LjWBtDPPAoRQMEOLYhU', 'gaEzWRMTTXSDyGWLlNP', 'VjEgChDsVeJPlMoWrHY', 'jXmKpRsubbngvepjGUCupeiKz', 'IYdzMVNCPLlgRraSqoNmmZMbw', '1968-03-11 20:53:33', '1838-06-13 11:44:17', 'vUwsnQMXQOoPUfjzSHyDbwoAS', '8500', 'NNiPoNxnQJUExvuqkMx', '4035', 'wmpboTNAltFenqkkGDO', 'IaAfDeHPcuRSDkJnHsl', '6430')
+[INFO]:2016/10/24 10:20:29 gopress.go:174: LastInsertedId is 148612
+[INFO]:2016/10/24 10:20:29 gopress.go:174: SELECT * FROM wp_posts WHERE `ID` = '148612'
+[INFO]:2016/10/24 10:20:29 gopress.go:174: UPDATE wp_posts SET post_author = '5928',post_date = '1952-09-10 22:04:36',post_date_gmt = '1901-02-16 22:11:46',post_content = 'LGMqfIfYzyJQZOuVOofbeQkfK',post_title = 'jfTessXMTTFRzmeGSrqYRgeYp',post_excerpt = 'AWCXKxgfcknxTqrElMSONIdpZ',post_status = 'UQFnXWkQLLEEErjDvEb',comment_status = 'KMDeZWiriBQgFIUINYX',ping_status = 'btuZlpfqOlkTxZEIdtE',post_password = 'cGBOtdHALTxlmvpidPB',post_name = 'XoDEQbEFgiVllXNtvNd',to_ping = 'XRWwpBIdZrMZVbtFrBAdTwXAT',pinged = 'klVtJOvygnJjSvTHypLJCyFZK',post_modified = '1565-08-18 02:09:53',post_modified_gmt = '1394-08-24 11:36:26',post_content_filtered = 'VHVLtmybUznIJRitRHTKTyHaJ',post_parent = '911',guid = 'pQlMrXQTQnKLHpDZGIF',menu_order = '2966',post_type = 'jvTvCtDddWQEojulawQ',post_mime_type = 'pfSZQUvJGVUcKIXDrER',comment_count = '4294' WHERE ID = '148612'
+[INFO]:2016/10/24 10:20:29 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:29 gopress.go:174: SELECT * FROM wp_posts WHERE `post_author` = '5928'
+[INFO]:2016/10/24 10:20:29 gopress.go:174: SELECT * FROM wp_posts WHERE `post_date` = '1952-09-10 22:04:36'
+[INFO]:2016/10/24 10:20:29 gopress.go:174: SELECT * FROM wp_posts WHERE `post_date_gmt` = '1901-02-16 22:11:46'
+[INFO]:2016/10/24 10:20:30 gopress.go:174: SELECT * FROM wp_posts WHERE `post_content` = 'LGMqfIfYzyJQZOuVOofbeQkfK'
+[INFO]:2016/10/24 10:20:30 gopress.go:174: SELECT * FROM wp_posts WHERE `post_title` = 'jfTessXMTTFRzmeGSrqYRgeYp'
+[INFO]:2016/10/24 10:20:30 gopress.go:174: SELECT * FROM wp_posts WHERE `post_excerpt` = 'AWCXKxgfcknxTqrElMSONIdpZ'
+[INFO]:2016/10/24 10:20:30 gopress.go:174: SELECT * FROM wp_posts WHERE `post_status` = 'UQFnXWkQLLEEErjDvEb'
+[INFO]:2016/10/24 10:20:30 gopress.go:174: SELECT * FROM wp_posts WHERE `comment_status` = 'KMDeZWiriBQgFIUINYX'
+[INFO]:2016/10/24 10:20:30 gopress.go:174: SELECT * FROM wp_posts WHERE `ping_status` = 'btuZlpfqOlkTxZEIdtE'
+[INFO]:2016/10/24 10:20:31 gopress.go:174: SELECT * FROM wp_posts WHERE `post_password` = 'cGBOtdHALTxlmvpidPB'
+[INFO]:2016/10/24 10:20:31 gopress.go:174: SELECT * FROM wp_posts WHERE `post_name` = 'XoDEQbEFgiVllXNtvNd'
+[INFO]:2016/10/24 10:20:31 gopress.go:174: SELECT * FROM wp_posts WHERE `to_ping` = 'XRWwpBIdZrMZVbtFrBAdTwXAT'
+[INFO]:2016/10/24 10:20:31 gopress.go:174: SELECT * FROM wp_posts WHERE `pinged` = 'klVtJOvygnJjSvTHypLJCyFZK'
+[INFO]:2016/10/24 10:20:31 gopress.go:174: SELECT * FROM wp_posts WHERE `post_modified` = '1565-08-18 02:09:53'
+[INFO]:2016/10/24 10:20:31 gopress.go:174: SELECT * FROM wp_posts WHERE `post_modified_gmt` = '1394-08-24 11:36:26'
+[INFO]:2016/10/24 10:20:32 gopress.go:174: SELECT * FROM wp_posts WHERE `post_content_filtered` = 'VHVLtmybUznIJRitRHTKTyHaJ'
+[INFO]:2016/10/24 10:20:32 gopress.go:174: SELECT * FROM wp_posts WHERE `post_parent` = '911'
+[INFO]:2016/10/24 10:20:32 gopress.go:174: SELECT * FROM wp_posts WHERE `guid` = 'pQlMrXQTQnKLHpDZGIF'
+[INFO]:2016/10/24 10:20:32 gopress.go:174: SELECT * FROM wp_posts WHERE `post_type` = 'jvTvCtDddWQEojulawQ'
+[INFO]:2016/10/24 10:20:32 gopress.go:174: SELECT * FROM wp_posts WHERE `post_mime_type` = 'pfSZQUvJGVUcKIXDrER'
+[INFO]:2016/10/24 10:20:32 gopress.go:174: SELECT * FROM wp_posts WHERE `comment_count` = '4294'
+[INFO]:2016/10/24 10:20:32 gopress.go:174: UPDATE wp_posts SET `post_author` = '3110' WHERE `ID` = '0'
+[INFO]:2016/10/24 10:20:32 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:32 gopress.go:174: SELECT * FROM wp_posts WHERE `ID` = '0'
+[ERROR]:2016/10/24 10:20:32 gopress.go:192: not found
+[INFO]:2016/10/24 10:20:32 gopress.go:174: UPDATE wp_posts SET `post_date` = '1381-09-00 16:13:16' WHERE `ID` = '0'
+[INFO]:2016/10/24 10:20:32 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:32 gopress.go:174: SELECT * FROM wp_posts WHERE `ID` = '0'
+[ERROR]:2016/10/24 10:20:32 gopress.go:192: not found
+[INFO]:2016/10/24 10:20:32 gopress.go:174: UPDATE wp_posts SET `post_date_gmt` = '1979-07-05 22:35:52' WHERE `ID` = '0'
+[INFO]:2016/10/24 10:20:32 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:32 gopress.go:174: SELECT * FROM wp_posts WHERE `ID` = '0'
+[ERROR]:2016/10/24 10:20:32 gopress.go:192: not found
+[INFO]:2016/10/24 10:20:32 gopress.go:174: UPDATE wp_posts SET `post_content` = 'DTEeTPAOCqTZNQXkmLNdARpTF' WHERE `ID` = '0'
+[INFO]:2016/10/24 10:20:32 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:32 gopress.go:174: SELECT * FROM wp_posts WHERE `ID` = '0'
+[ERROR]:2016/10/24 10:20:32 gopress.go:192: not found
+[INFO]:2016/10/24 10:20:32 gopress.go:174: UPDATE wp_posts SET `post_title` = 'TZCUkWDaUUhybQoWxPmkvxgzg' WHERE `ID` = '0'
+[INFO]:2016/10/24 10:20:32 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:32 gopress.go:174: SELECT * FROM wp_posts WHERE `ID` = '0'
+[ERROR]:2016/10/24 10:20:32 gopress.go:192: not found
+[INFO]:2016/10/24 10:20:32 gopress.go:174: UPDATE wp_posts SET `post_excerpt` = 'zeSzvlNLKoNyZzSLpRKbjNZev' WHERE `ID` = '0'
+[INFO]:2016/10/24 10:20:32 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:32 gopress.go:174: SELECT * FROM wp_posts WHERE `ID` = '0'
+[ERROR]:2016/10/24 10:20:32 gopress.go:192: not found
+[INFO]:2016/10/24 10:20:32 gopress.go:174: UPDATE wp_posts SET `post_status` = 'eamOKbQQmtGIWiJlIaX' WHERE `ID` = '0'
+[INFO]:2016/10/24 10:20:32 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:32 gopress.go:174: SELECT * FROM wp_posts WHERE `ID` = '0'
+[ERROR]:2016/10/24 10:20:32 gopress.go:192: not found
+[INFO]:2016/10/24 10:20:32 gopress.go:174: UPDATE wp_posts SET `comment_status` = 'rbCFuIlmrqJtFuqVcxi' WHERE `ID` = '0'
+[INFO]:2016/10/24 10:20:32 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:32 gopress.go:174: SELECT * FROM wp_posts WHERE `ID` = '0'
+[ERROR]:2016/10/24 10:20:32 gopress.go:192: not found
+[INFO]:2016/10/24 10:20:32 gopress.go:174: UPDATE wp_posts SET `ping_status` = 'tDqwBXzsMykbVWngUSa' WHERE `ID` = '0'
+[INFO]:2016/10/24 10:20:32 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:32 gopress.go:174: SELECT * FROM wp_posts WHERE `ID` = '0'
+[ERROR]:2016/10/24 10:20:32 gopress.go:192: not found
+[INFO]:2016/10/24 10:20:32 gopress.go:174: UPDATE wp_posts SET `post_password` = 'RDyJpvEsTUAzLtAPiLE' WHERE `ID` = '0'
+[INFO]:2016/10/24 10:20:32 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:32 gopress.go:174: SELECT * FROM wp_posts WHERE `ID` = '0'
+[ERROR]:2016/10/24 10:20:32 gopress.go:192: not found
+[INFO]:2016/10/24 10:20:32 gopress.go:174: UPDATE wp_posts SET `post_name` = 'OolLppzzAqpANYhlTjW' WHERE `ID` = '0'
+[INFO]:2016/10/24 10:20:32 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:32 gopress.go:174: SELECT * FROM wp_posts WHERE `ID` = '0'
+[ERROR]:2016/10/24 10:20:32 gopress.go:192: not found
+[INFO]:2016/10/24 10:20:32 gopress.go:174: UPDATE wp_posts SET `to_ping` = 'JXqsyaYkkmUQxyvPjnDowpcfP' WHERE `ID` = '0'
+[INFO]:2016/10/24 10:20:32 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:32 gopress.go:174: SELECT * FROM wp_posts WHERE `ID` = '0'
+[ERROR]:2016/10/24 10:20:32 gopress.go:192: not found
+[INFO]:2016/10/24 10:20:32 gopress.go:174: UPDATE wp_posts SET `pinged` = 'jwDnjBaeBuWaCQRrhDDsiTJsv' WHERE `ID` = '0'
+[INFO]:2016/10/24 10:20:32 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:32 gopress.go:174: SELECT * FROM wp_posts WHERE `ID` = '0'
+[ERROR]:2016/10/24 10:20:32 gopress.go:192: not found
+[INFO]:2016/10/24 10:20:32 gopress.go:174: UPDATE wp_posts SET `post_modified` = '1066-00-06 04:45:21' WHERE `ID` = '0'
+[INFO]:2016/10/24 10:20:32 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:32 gopress.go:174: SELECT * FROM wp_posts WHERE `ID` = '0'
+[ERROR]:2016/10/24 10:20:32 gopress.go:192: not found
+[INFO]:2016/10/24 10:20:32 gopress.go:174: UPDATE wp_posts SET `post_modified_gmt` = '1564-07-04 12:15:52' WHERE `ID` = '0'
+[INFO]:2016/10/24 10:20:32 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:32 gopress.go:174: SELECT * FROM wp_posts WHERE `ID` = '0'
+[ERROR]:2016/10/24 10:20:32 gopress.go:192: not found
+[INFO]:2016/10/24 10:20:32 gopress.go:174: UPDATE wp_posts SET `post_content_filtered` = 'UOSKnHyKzjxuBPIuQenqUUIJU' WHERE `ID` = '0'
+[INFO]:2016/10/24 10:20:32 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:32 gopress.go:174: SELECT * FROM wp_posts WHERE `ID` = '0'
+[ERROR]:2016/10/24 10:20:32 gopress.go:192: not found
+[INFO]:2016/10/24 10:20:32 gopress.go:174: UPDATE wp_posts SET `post_parent` = '3222' WHERE `ID` = '0'
+[INFO]:2016/10/24 10:20:32 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:32 gopress.go:174: SELECT * FROM wp_posts WHERE `ID` = '0'
+[ERROR]:2016/10/24 10:20:32 gopress.go:192: not found
+[INFO]:2016/10/24 10:20:32 gopress.go:174: UPDATE wp_posts SET `guid` = 'YuRHPBiZbfswIFjfKJk' WHERE `ID` = '0'
+[INFO]:2016/10/24 10:20:32 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:32 gopress.go:174: SELECT * FROM wp_posts WHERE `ID` = '0'
+[ERROR]:2016/10/24 10:20:32 gopress.go:192: not found
+[INFO]:2016/10/24 10:20:32 gopress.go:174: UPDATE wp_posts SET `menu_order` = '9811' WHERE `ID` = '0'
+[INFO]:2016/10/24 10:20:32 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:32 gopress.go:174: SELECT * FROM wp_posts WHERE `ID` = '0'
+[ERROR]:2016/10/24 10:20:32 gopress.go:192: not found
+[INFO]:2016/10/24 10:20:32 gopress.go:174: UPDATE wp_posts SET `post_type` = 'btpjqRbeOriAJPrujyp' WHERE `ID` = '0'
+[INFO]:2016/10/24 10:20:32 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:32 gopress.go:174: SELECT * FROM wp_posts WHERE `ID` = '0'
+[ERROR]:2016/10/24 10:20:32 gopress.go:192: not found
+[INFO]:2016/10/24 10:20:32 gopress.go:174: UPDATE wp_posts SET `post_mime_type` = 'xFJAZTCrkVtfATaTDFT' WHERE `ID` = '0'
+[INFO]:2016/10/24 10:20:32 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:32 gopress.go:174: SELECT * FROM wp_posts WHERE `ID` = '0'
+[ERROR]:2016/10/24 10:20:32 gopress.go:192: not found
+[INFO]:2016/10/24 10:20:32 gopress.go:174: UPDATE wp_posts SET `comment_count` = '7897' WHERE `ID` = '0'
+[INFO]:2016/10/24 10:20:32 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:32 gopress.go:174: SELECT * FROM wp_posts WHERE `ID` = '0'
+[ERROR]:2016/10/24 10:20:32 gopress.go:192: not found
+[INFO]:2016/10/24 10:20:32 gopress.go:174: INSERT INTO wp_term_relationships (`object_id`, `term_taxonomy_id`, `term_order`) VALUES ('6190', '7023', '4843')
+[INFO]:2016/10/24 10:20:32 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:32 gopress.go:174: SELECT * FROM wp_term_relationships WHERE `term_taxonomy_id` = '7023' AND `object_id` = '6190'
+[INFO]:2016/10/24 10:20:32 gopress.go:174: UPDATE wp_term_relationships SET object_id = '1897',term_taxonomy_id = '3476',term_order = '7302' WHERE `term_taxonomy_id` = '3476' AND object_id = '1897'
+[INFO]:2016/10/24 10:20:32 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:32 gopress.go:174: UPDATE wp_term_relationships SET `object_id` = '4634' WHERE term_taxonomy_id = '0' AND object_id = '7773'
+[INFO]:2016/10/24 10:20:32 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:32 gopress.go:174: SELECT * FROM wp_term_relationships WHERE `term_taxonomy_id` = '0' AND `object_id` = '4634'
+[INFO]:2016/10/24 10:20:32 gopress.go:174: UPDATE wp_term_relationships SET `term_order` = '6050' WHERE term_taxonomy_id = '0' AND object_id = '4634'
+[INFO]:2016/10/24 10:20:32 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:32 gopress.go:174: SELECT * FROM wp_term_relationships WHERE `term_taxonomy_id` = '0' AND `object_id` = '4634'
+[INFO]:2016/10/24 10:20:32 gopress.go:174: INSERT INTO wp_term_taxonomy (`term_id`, `taxonomy`, `description`, `parent`, `count`) VALUES ('3604', 'OoQxhoyEzaMviWhSuGh', 'EestKhjZMkuBTUEIjKoEtgjCh', '6009', '1077')
+[INFO]:2016/10/24 10:20:32 gopress.go:174: LastInsertedId is 536
+[INFO]:2016/10/24 10:20:33 gopress.go:174: SELECT * FROM wp_term_taxonomy WHERE `term_taxonomy_id` = '536'
+[INFO]:2016/10/24 10:20:33 gopress.go:174: UPDATE wp_term_taxonomy SET term_id = '8771',taxonomy = 'uvenTyawqXNBKTfucTz',description = 'AfnEfoBZfkSNPdtEEjEKTSRCY',parent = '10003',count = '7965' WHERE term_taxonomy_id = '536'
+[INFO]:2016/10/24 10:20:33 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:33 gopress.go:174: SELECT * FROM wp_term_taxonomy WHERE `term_id` = '8771'
+[INFO]:2016/10/24 10:20:33 gopress.go:174: SELECT * FROM wp_term_taxonomy WHERE `taxonomy` = 'uvenTyawqXNBKTfucTz'
+[INFO]:2016/10/24 10:20:33 gopress.go:174: SELECT * FROM wp_term_taxonomy WHERE `description` = 'AfnEfoBZfkSNPdtEEjEKTSRCY'
+[INFO]:2016/10/24 10:20:33 gopress.go:174: SELECT * FROM wp_term_taxonomy WHERE `parent` = '10003'
+[INFO]:2016/10/24 10:20:33 gopress.go:174: SELECT * FROM wp_term_taxonomy WHERE `count` = '7965'
+[INFO]:2016/10/24 10:20:33 gopress.go:174: UPDATE wp_term_taxonomy SET `term_id` = '9075' WHERE `term_taxonomy_id` = '0'
+[INFO]:2016/10/24 10:20:33 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:33 gopress.go:174: SELECT * FROM wp_term_taxonomy WHERE `term_taxonomy_id` = '0'
+[ERROR]:2016/10/24 10:20:33 gopress.go:192: not found
+[INFO]:2016/10/24 10:20:33 gopress.go:174: UPDATE wp_term_taxonomy SET `taxonomy` = 'usmfTpZJGyEMCUGlFet' WHERE `term_taxonomy_id` = '0'
+[INFO]:2016/10/24 10:20:33 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:33 gopress.go:174: SELECT * FROM wp_term_taxonomy WHERE `term_taxonomy_id` = '0'
+[ERROR]:2016/10/24 10:20:33 gopress.go:192: not found
+[INFO]:2016/10/24 10:20:33 gopress.go:174: UPDATE wp_term_taxonomy SET `description` = 'yvoKgFlpzcKRoZYXkEyZsgmup' WHERE `term_taxonomy_id` = '0'
+[INFO]:2016/10/24 10:20:33 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:33 gopress.go:174: SELECT * FROM wp_term_taxonomy WHERE `term_taxonomy_id` = '0'
+[ERROR]:2016/10/24 10:20:33 gopress.go:192: not found
+[INFO]:2016/10/24 10:20:33 gopress.go:174: UPDATE wp_term_taxonomy SET `parent` = '1788' WHERE `term_taxonomy_id` = '0'
+[INFO]:2016/10/24 10:20:33 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:33 gopress.go:174: SELECT * FROM wp_term_taxonomy WHERE `term_taxonomy_id` = '0'
+[ERROR]:2016/10/24 10:20:33 gopress.go:192: not found
+[INFO]:2016/10/24 10:20:33 gopress.go:174: UPDATE wp_term_taxonomy SET `count` = '1319' WHERE `term_taxonomy_id` = '0'
+[INFO]:2016/10/24 10:20:33 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:33 gopress.go:174: SELECT * FROM wp_term_taxonomy WHERE `term_taxonomy_id` = '0'
+[ERROR]:2016/10/24 10:20:33 gopress.go:192: not found
+[INFO]:2016/10/24 10:20:33 gopress.go:174: INSERT INTO wp_terms (`name`, `slug`, `term_group`) VALUES ('qWWHjcQAFKlyPlnsUem', 'qjLlXGFOfNAqLhKCjws', '2680')
+[INFO]:2016/10/24 10:20:33 gopress.go:174: LastInsertedId is 536
+[INFO]:2016/10/24 10:20:33 gopress.go:174: SELECT * FROM wp_terms WHERE `term_id` = '536'
+[INFO]:2016/10/24 10:20:33 gopress.go:174: UPDATE wp_terms SET name = 'RJPoIJrSNpQpEBvGLwM',slug = 'PKYPrFXgWdeeLDwRItW',term_group = '906' WHERE term_id = '536'
+[INFO]:2016/10/24 10:20:33 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:33 gopress.go:174: SELECT * FROM wp_terms WHERE `name` = 'RJPoIJrSNpQpEBvGLwM'
+[INFO]:2016/10/24 10:20:33 gopress.go:174: SELECT * FROM wp_terms WHERE `slug` = 'PKYPrFXgWdeeLDwRItW'
+[INFO]:2016/10/24 10:20:33 gopress.go:174: SELECT * FROM wp_terms WHERE `term_group` = '906'
+[INFO]:2016/10/24 10:20:33 gopress.go:174: UPDATE wp_terms SET `name` = 'xBUBAMAAHcSETcvstOn' WHERE `term_id` = '0'
+[INFO]:2016/10/24 10:20:33 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:33 gopress.go:174: SELECT * FROM wp_terms WHERE `term_id` = '0'
+[ERROR]:2016/10/24 10:20:33 gopress.go:192: not found
+[INFO]:2016/10/24 10:20:33 gopress.go:174: UPDATE wp_terms SET `slug` = 'LTjlDAxGvTbqsQIYIvB' WHERE `term_id` = '0'
+[INFO]:2016/10/24 10:20:33 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:33 gopress.go:174: SELECT * FROM wp_terms WHERE `term_id` = '0'
+[ERROR]:2016/10/24 10:20:33 gopress.go:192: not found
+[INFO]:2016/10/24 10:20:33 gopress.go:174: UPDATE wp_terms SET `term_group` = '9735' WHERE `term_id` = '0'
+[INFO]:2016/10/24 10:20:33 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:33 gopress.go:174: SELECT * FROM wp_terms WHERE `term_id` = '0'
+[ERROR]:2016/10/24 10:20:33 gopress.go:192: not found
+[INFO]:2016/10/24 10:20:33 gopress.go:174: INSERT INTO wp_usermeta (`user_id`, `meta_key`, `meta_value`) VALUES ('1676', 'OamiLuEnOfohmhNUOVG', 'myGoranuBxCXhFEziCPzEcsVW')
+[INFO]:2016/10/24 10:20:33 gopress.go:174: LastInsertedId is 3883
+[INFO]:2016/10/24 10:20:33 gopress.go:174: SELECT * FROM wp_usermeta WHERE `umeta_id` = '3883'
+[INFO]:2016/10/24 10:20:33 gopress.go:174: UPDATE wp_usermeta SET user_id = '3938',meta_key = 'VDEkBtGpGdiyhbaOChs',meta_value = 'bLyQqLnBqheZwSFYDcSAkjvwp' WHERE umeta_id = '3883'
+[INFO]:2016/10/24 10:20:33 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:33 gopress.go:174: SELECT * FROM wp_usermeta WHERE `user_id` = '3938'
+[INFO]:2016/10/24 10:20:33 gopress.go:174: SELECT * FROM wp_usermeta WHERE `meta_key` = 'VDEkBtGpGdiyhbaOChs'
+[INFO]:2016/10/24 10:20:33 gopress.go:174: SELECT * FROM wp_usermeta WHERE `meta_value` = 'bLyQqLnBqheZwSFYDcSAkjvwp'
+[INFO]:2016/10/24 10:20:33 gopress.go:174: UPDATE wp_usermeta SET `user_id` = '7605' WHERE `umeta_id` = '0'
+[INFO]:2016/10/24 10:20:33 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:33 gopress.go:174: SELECT * FROM wp_usermeta WHERE `umeta_id` = '0'
+[ERROR]:2016/10/24 10:20:33 gopress.go:192: not found
+[INFO]:2016/10/24 10:20:33 gopress.go:174: UPDATE wp_usermeta SET `meta_key` = 'okctTYqNYwFMNoRyJbp' WHERE `umeta_id` = '0'
+[INFO]:2016/10/24 10:20:33 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:33 gopress.go:174: SELECT * FROM wp_usermeta WHERE `umeta_id` = '0'
+[ERROR]:2016/10/24 10:20:33 gopress.go:192: not found
+[INFO]:2016/10/24 10:20:33 gopress.go:174: UPDATE wp_usermeta SET `meta_value` = 'HGrGuXVJhiWgowbfkqjfNBKkA' WHERE `umeta_id` = '0'
+[INFO]:2016/10/24 10:20:33 gopress.go:174: LastInsertedId is 0
+[INFO]:2016/10/24 10:20:33 gopress.go:174: SELECT * FROM wp_usermeta WHERE `umeta_id` = '0'
+[ERROR]:2016/10/24 10:20:33 gopress.go:192: not found

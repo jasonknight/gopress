@@ -89,12 +89,12 @@ $body = "
     }
     
     for _,result := range results {
-        ro := {$t->model_name}{}
+        ro := New{$t->model_name}(o._adapter)
         err = ro.FromDBValueMap(result)
         if err != nil {
             $failure_return
         }
-        _modelSlice = append(_modelSlice,&ro)
+        _modelSlice = append(_modelSlice,ro)
     }
 ";
 if ( $fname == "Find" ) {
