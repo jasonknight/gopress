@@ -119,11 +119,31 @@ $txt .= "
     if len(res{$i}) == 0 {
         $fail(`failed to find any {$t->model_name}`)
     }
+    q{$i} := fmt.Sprintf(`{$f['dbname']} = '{$f['fmt']}'`,model2.Get{$f['name']}())
+    res{$i},err = model.Where(q{$i})
+    if err != nil {
+        $fail(`failed model.where(q{$i})`)
+    }
+    if len(res{$i}) == 0 {
+        $fail(`failed to find any {$t->model_name} with model.where(q{$i})`)
+    }
 "; 
 $i++;
 }
 
-
+$txt .= "
+    // now we need to destroy the model
+    err = model.Destroy()
+    if err != nil {
+        $fail(`model was not destroyed`)
+    }
+    // let's double check
+    found,err = $find_line
+    if found == true {
+        $fail(fmt.Sprintf(`this model(%d) should have been destroyed!`,model2.GetPrimaryKeyValue()))
+        return
+    }
+";
 $txt .= "} // end of if fileExists
 };\n";
 puts($txt);

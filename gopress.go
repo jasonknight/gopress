@@ -539,10 +539,28 @@ func (o *PostMeta) FindByKeyValue(k string, v string) ([]*PostMeta, error) {
 	}
 	return _modelSlice, nil
 }
+func (o *PostMeta) FindByKeyValueWithPostId(k string, v string, pid int64) ([]*PostMeta, error) {
+	var _modelSlice []*PostMeta
+	q := fmt.Sprintf("SELECT * FROM %s WHERE `post_id` = '%d' AND `meta_key` = '%s' AND meta_value = '%s'", o._table, pid, o._adapter.SafeString(k), o._adapter.SafeString(v))
+	results, err := o._adapter.Query(q)
+	if err != nil {
+		return nil, o._adapter.Oops(fmt.Sprintf(`%s`, err))
+	}
+
+	for _, result := range results {
+		ro := NewPostMeta(o._adapter)
+		err = ro.FromDBValueMap(result)
+		if err != nil {
+			return nil, o._adapter.Oops(fmt.Sprintf(`%s`, err))
+		}
+		_modelSlice = append(_modelSlice, ro)
+	}
+	return _modelSlice, nil
+}
 func (o *Post) FindByPostMetaKeyValue(k string, v string) ([]*Post, error) {
 	var _modelSlice []*Post
 	m := NewPostMeta(o._adapter)
-	metas, err := m.FindByKeyValue(k, v)
+	metas, err := m.FindByKeyValueWithPostId(k, v, o.ID)
 	if err != nil {
 		return nil, o._adapter.Oops(fmt.Sprintf(`%s`, err))
 	}
@@ -867,6 +885,57 @@ func (o *CommentMeta) FromCommentMeta(m *CommentMeta) {
 func (o *CommentMeta) Reload() error {
 	_, err := o.Find(o.GetPrimaryKeyValue())
 	return err
+}
+
+// Destroy deletes the model
+func (o *CommentMeta) Destroy() error {
+	frmt := fmt.Sprintf("DELETE FROM %s WHERE %s = '%d' LIMIT 1", o._table, o.GetPrimaryKeyName(), o.GetPrimaryKeyValue())
+	err := o._adapter.Execute(frmt)
+	if err != nil {
+		return o._adapter.Oops(fmt.Sprintf(`%s led to %s`, frmt, err))
+	}
+	return nil
+}
+
+// FindBySQL allows you to search using a complete SQL string
+func (o *CommentMeta) FindBySQL(s string) ([]*CommentMeta, error) {
+	var _modelSlice []*CommentMeta
+
+	results, err := o._adapter.Query(s)
+	if err != nil {
+		return _modelSlice, err
+	}
+
+	for _, result := range results {
+		ro := NewCommentMeta(o._adapter)
+		err = ro.FromDBValueMap(result)
+		if err != nil {
+			return _modelSlice, o._adapter.Oops(fmt.Sprintf(`%s`, err))
+		}
+		_modelSlice = append(_modelSlice, ro)
+	}
+	return _modelSlice, nil
+}
+
+// Where is a shortcut to FindBySql, in this case you only
+// specify the WHERE clause, such as m.Where(`ID IN (23,25)`)
+func (o *CommentMeta) Where(s string) ([]*CommentMeta, error) {
+	var _modelSlice []*CommentMeta
+
+	results, err := o._adapter.Query(fmt.Sprintf(`SELECT * FROM %s WHERE %s`, o._table, s))
+	if err != nil {
+		return _modelSlice, err
+	}
+
+	for _, result := range results {
+		ro := NewCommentMeta(o._adapter)
+		err = ro.FromDBValueMap(result)
+		if err != nil {
+			return _modelSlice, o._adapter.Oops(fmt.Sprintf(`%s`, err))
+		}
+		_modelSlice = append(_modelSlice, ro)
+	}
+	return _modelSlice, nil
 }
 
 // Save is a dynamic saver 'inherited' by all models
@@ -1925,6 +1994,57 @@ func (o *Comment) FromComment(m *Comment) {
 func (o *Comment) Reload() error {
 	_, err := o.Find(o.GetPrimaryKeyValue())
 	return err
+}
+
+// Destroy deletes the model
+func (o *Comment) Destroy() error {
+	frmt := fmt.Sprintf("DELETE FROM %s WHERE %s = '%d' LIMIT 1", o._table, o.GetPrimaryKeyName(), o.GetPrimaryKeyValue())
+	err := o._adapter.Execute(frmt)
+	if err != nil {
+		return o._adapter.Oops(fmt.Sprintf(`%s led to %s`, frmt, err))
+	}
+	return nil
+}
+
+// FindBySQL allows you to search using a complete SQL string
+func (o *Comment) FindBySQL(s string) ([]*Comment, error) {
+	var _modelSlice []*Comment
+
+	results, err := o._adapter.Query(s)
+	if err != nil {
+		return _modelSlice, err
+	}
+
+	for _, result := range results {
+		ro := NewComment(o._adapter)
+		err = ro.FromDBValueMap(result)
+		if err != nil {
+			return _modelSlice, o._adapter.Oops(fmt.Sprintf(`%s`, err))
+		}
+		_modelSlice = append(_modelSlice, ro)
+	}
+	return _modelSlice, nil
+}
+
+// Where is a shortcut to FindBySql, in this case you only
+// specify the WHERE clause, such as m.Where(`ID IN (23,25)`)
+func (o *Comment) Where(s string) ([]*Comment, error) {
+	var _modelSlice []*Comment
+
+	results, err := o._adapter.Query(fmt.Sprintf(`SELECT * FROM %s WHERE %s`, o._table, s))
+	if err != nil {
+		return _modelSlice, err
+	}
+
+	for _, result := range results {
+		ro := NewComment(o._adapter)
+		err = ro.FromDBValueMap(result)
+		if err != nil {
+			return _modelSlice, o._adapter.Oops(fmt.Sprintf(`%s`, err))
+		}
+		_modelSlice = append(_modelSlice, ro)
+	}
+	return _modelSlice, nil
 }
 
 // Save is a dynamic saver 'inherited' by all models
@@ -3087,6 +3207,57 @@ func (o *Link) Reload() error {
 	return err
 }
 
+// Destroy deletes the model
+func (o *Link) Destroy() error {
+	frmt := fmt.Sprintf("DELETE FROM %s WHERE %s = '%d' LIMIT 1", o._table, o.GetPrimaryKeyName(), o.GetPrimaryKeyValue())
+	err := o._adapter.Execute(frmt)
+	if err != nil {
+		return o._adapter.Oops(fmt.Sprintf(`%s led to %s`, frmt, err))
+	}
+	return nil
+}
+
+// FindBySQL allows you to search using a complete SQL string
+func (o *Link) FindBySQL(s string) ([]*Link, error) {
+	var _modelSlice []*Link
+
+	results, err := o._adapter.Query(s)
+	if err != nil {
+		return _modelSlice, err
+	}
+
+	for _, result := range results {
+		ro := NewLink(o._adapter)
+		err = ro.FromDBValueMap(result)
+		if err != nil {
+			return _modelSlice, o._adapter.Oops(fmt.Sprintf(`%s`, err))
+		}
+		_modelSlice = append(_modelSlice, ro)
+	}
+	return _modelSlice, nil
+}
+
+// Where is a shortcut to FindBySql, in this case you only
+// specify the WHERE clause, such as m.Where(`ID IN (23,25)`)
+func (o *Link) Where(s string) ([]*Link, error) {
+	var _modelSlice []*Link
+
+	results, err := o._adapter.Query(fmt.Sprintf(`SELECT * FROM %s WHERE %s`, o._table, s))
+	if err != nil {
+		return _modelSlice, err
+	}
+
+	for _, result := range results {
+		ro := NewLink(o._adapter)
+		err = ro.FromDBValueMap(result)
+		if err != nil {
+			return _modelSlice, o._adapter.Oops(fmt.Sprintf(`%s`, err))
+		}
+		_modelSlice = append(_modelSlice, ro)
+	}
+	return _modelSlice, nil
+}
+
 // Save is a dynamic saver 'inherited' by all models
 func (o *Link) Save() error {
 	if o._new == true {
@@ -3676,6 +3847,57 @@ func (o *Option) Reload() error {
 	return err
 }
 
+// Destroy deletes the model
+func (o *Option) Destroy() error {
+	frmt := fmt.Sprintf("DELETE FROM %s WHERE %s = '%d' LIMIT 1", o._table, o.GetPrimaryKeyName(), o.GetPrimaryKeyValue())
+	err := o._adapter.Execute(frmt)
+	if err != nil {
+		return o._adapter.Oops(fmt.Sprintf(`%s led to %s`, frmt, err))
+	}
+	return nil
+}
+
+// FindBySQL allows you to search using a complete SQL string
+func (o *Option) FindBySQL(s string) ([]*Option, error) {
+	var _modelSlice []*Option
+
+	results, err := o._adapter.Query(s)
+	if err != nil {
+		return _modelSlice, err
+	}
+
+	for _, result := range results {
+		ro := NewOption(o._adapter)
+		err = ro.FromDBValueMap(result)
+		if err != nil {
+			return _modelSlice, o._adapter.Oops(fmt.Sprintf(`%s`, err))
+		}
+		_modelSlice = append(_modelSlice, ro)
+	}
+	return _modelSlice, nil
+}
+
+// Where is a shortcut to FindBySql, in this case you only
+// specify the WHERE clause, such as m.Where(`ID IN (23,25)`)
+func (o *Option) Where(s string) ([]*Option, error) {
+	var _modelSlice []*Option
+
+	results, err := o._adapter.Query(fmt.Sprintf(`SELECT * FROM %s WHERE %s`, o._table, s))
+	if err != nil {
+		return _modelSlice, err
+	}
+
+	for _, result := range results {
+		ro := NewOption(o._adapter)
+		err = ro.FromDBValueMap(result)
+		if err != nil {
+			return _modelSlice, o._adapter.Oops(fmt.Sprintf(`%s`, err))
+		}
+		_modelSlice = append(_modelSlice, ro)
+	}
+	return _modelSlice, nil
+}
+
 // Save is a dynamic saver 'inherited' by all models
 func (o *Option) Save() error {
 	if o._new == true {
@@ -4083,6 +4305,57 @@ func (o *PostMeta) FromPostMeta(m *PostMeta) {
 func (o *PostMeta) Reload() error {
 	_, err := o.Find(o.GetPrimaryKeyValue())
 	return err
+}
+
+// Destroy deletes the model
+func (o *PostMeta) Destroy() error {
+	frmt := fmt.Sprintf("DELETE FROM %s WHERE %s = '%d' LIMIT 1", o._table, o.GetPrimaryKeyName(), o.GetPrimaryKeyValue())
+	err := o._adapter.Execute(frmt)
+	if err != nil {
+		return o._adapter.Oops(fmt.Sprintf(`%s led to %s`, frmt, err))
+	}
+	return nil
+}
+
+// FindBySQL allows you to search using a complete SQL string
+func (o *PostMeta) FindBySQL(s string) ([]*PostMeta, error) {
+	var _modelSlice []*PostMeta
+
+	results, err := o._adapter.Query(s)
+	if err != nil {
+		return _modelSlice, err
+	}
+
+	for _, result := range results {
+		ro := NewPostMeta(o._adapter)
+		err = ro.FromDBValueMap(result)
+		if err != nil {
+			return _modelSlice, o._adapter.Oops(fmt.Sprintf(`%s`, err))
+		}
+		_modelSlice = append(_modelSlice, ro)
+	}
+	return _modelSlice, nil
+}
+
+// Where is a shortcut to FindBySql, in this case you only
+// specify the WHERE clause, such as m.Where(`ID IN (23,25)`)
+func (o *PostMeta) Where(s string) ([]*PostMeta, error) {
+	var _modelSlice []*PostMeta
+
+	results, err := o._adapter.Query(fmt.Sprintf(`SELECT * FROM %s WHERE %s`, o._table, s))
+	if err != nil {
+		return _modelSlice, err
+	}
+
+	for _, result := range results {
+		ro := NewPostMeta(o._adapter)
+		err = ro.FromDBValueMap(result)
+		if err != nil {
+			return _modelSlice, o._adapter.Oops(fmt.Sprintf(`%s`, err))
+		}
+		_modelSlice = append(_modelSlice, ro)
+	}
+	return _modelSlice, nil
 }
 
 // Save is a dynamic saver 'inherited' by all models
@@ -5615,6 +5888,57 @@ func (o *Post) Reload() error {
 	return err
 }
 
+// Destroy deletes the model
+func (o *Post) Destroy() error {
+	frmt := fmt.Sprintf("DELETE FROM %s WHERE %s = '%d' LIMIT 1", o._table, o.GetPrimaryKeyName(), o.GetPrimaryKeyValue())
+	err := o._adapter.Execute(frmt)
+	if err != nil {
+		return o._adapter.Oops(fmt.Sprintf(`%s led to %s`, frmt, err))
+	}
+	return nil
+}
+
+// FindBySQL allows you to search using a complete SQL string
+func (o *Post) FindBySQL(s string) ([]*Post, error) {
+	var _modelSlice []*Post
+
+	results, err := o._adapter.Query(s)
+	if err != nil {
+		return _modelSlice, err
+	}
+
+	for _, result := range results {
+		ro := NewPost(o._adapter)
+		err = ro.FromDBValueMap(result)
+		if err != nil {
+			return _modelSlice, o._adapter.Oops(fmt.Sprintf(`%s`, err))
+		}
+		_modelSlice = append(_modelSlice, ro)
+	}
+	return _modelSlice, nil
+}
+
+// Where is a shortcut to FindBySql, in this case you only
+// specify the WHERE clause, such as m.Where(`ID IN (23,25)`)
+func (o *Post) Where(s string) ([]*Post, error) {
+	var _modelSlice []*Post
+
+	results, err := o._adapter.Query(fmt.Sprintf(`SELECT * FROM %s WHERE %s`, o._table, s))
+	if err != nil {
+		return _modelSlice, err
+	}
+
+	for _, result := range results {
+		ro := NewPost(o._adapter)
+		err = ro.FromDBValueMap(result)
+		if err != nil {
+			return _modelSlice, o._adapter.Oops(fmt.Sprintf(`%s`, err))
+		}
+		_modelSlice = append(_modelSlice, ro)
+	}
+	return _modelSlice, nil
+}
+
 // Save is a dynamic saver 'inherited' by all models
 func (o *Post) Save() error {
 	if o._new == true {
@@ -6328,6 +6652,57 @@ func (o *TermRelationship) Reload() error {
 	return err
 }
 
+// Destroy deletes the model
+func (o *TermRelationship) Destroy() error {
+	frmt := fmt.Sprintf("DELETE FROM %s WHERE object_id = '%d' AND term_taxonomy_id = %d LIMIT 1", o._table, o.ObjectId, o.TermTaxonomyId)
+	err := o._adapter.Execute(frmt)
+	if err != nil {
+		return o._adapter.Oops(fmt.Sprintf(`%s led to %s`, frmt, err))
+	}
+	return nil
+}
+
+// FindBySQL allows you to search using a complete SQL string
+func (o *TermRelationship) FindBySQL(s string) ([]*TermRelationship, error) {
+	var _modelSlice []*TermRelationship
+
+	results, err := o._adapter.Query(s)
+	if err != nil {
+		return _modelSlice, err
+	}
+
+	for _, result := range results {
+		ro := NewTermRelationship(o._adapter)
+		err = ro.FromDBValueMap(result)
+		if err != nil {
+			return _modelSlice, o._adapter.Oops(fmt.Sprintf(`%s`, err))
+		}
+		_modelSlice = append(_modelSlice, ro)
+	}
+	return _modelSlice, nil
+}
+
+// Where is a shortcut to FindBySql, in this case you only
+// specify the WHERE clause, such as m.Where(`ID IN (23,25)`)
+func (o *TermRelationship) Where(s string) ([]*TermRelationship, error) {
+	var _modelSlice []*TermRelationship
+
+	results, err := o._adapter.Query(fmt.Sprintf(`SELECT * FROM %s WHERE %s`, o._table, s))
+	if err != nil {
+		return _modelSlice, err
+	}
+
+	for _, result := range results {
+		ro := NewTermRelationship(o._adapter)
+		err = ro.FromDBValueMap(result)
+		if err != nil {
+			return _modelSlice, o._adapter.Oops(fmt.Sprintf(`%s`, err))
+		}
+		_modelSlice = append(_modelSlice, ro)
+	}
+	return _modelSlice, nil
+}
+
 // Save is a dynamic saver 'inherited' by all models
 func (o *TermRelationship) Save() error {
 	if o._new == true {
@@ -6843,6 +7218,57 @@ func (o *TermTaxonomy) Reload() error {
 	return err
 }
 
+// Destroy deletes the model
+func (o *TermTaxonomy) Destroy() error {
+	frmt := fmt.Sprintf("DELETE FROM %s WHERE %s = '%d' LIMIT 1", o._table, o.GetPrimaryKeyName(), o.GetPrimaryKeyValue())
+	err := o._adapter.Execute(frmt)
+	if err != nil {
+		return o._adapter.Oops(fmt.Sprintf(`%s led to %s`, frmt, err))
+	}
+	return nil
+}
+
+// FindBySQL allows you to search using a complete SQL string
+func (o *TermTaxonomy) FindBySQL(s string) ([]*TermTaxonomy, error) {
+	var _modelSlice []*TermTaxonomy
+
+	results, err := o._adapter.Query(s)
+	if err != nil {
+		return _modelSlice, err
+	}
+
+	for _, result := range results {
+		ro := NewTermTaxonomy(o._adapter)
+		err = ro.FromDBValueMap(result)
+		if err != nil {
+			return _modelSlice, o._adapter.Oops(fmt.Sprintf(`%s`, err))
+		}
+		_modelSlice = append(_modelSlice, ro)
+	}
+	return _modelSlice, nil
+}
+
+// Where is a shortcut to FindBySql, in this case you only
+// specify the WHERE clause, such as m.Where(`ID IN (23,25)`)
+func (o *TermTaxonomy) Where(s string) ([]*TermTaxonomy, error) {
+	var _modelSlice []*TermTaxonomy
+
+	results, err := o._adapter.Query(fmt.Sprintf(`SELECT * FROM %s WHERE %s`, o._table, s))
+	if err != nil {
+		return _modelSlice, err
+	}
+
+	for _, result := range results {
+		ro := NewTermTaxonomy(o._adapter)
+		err = ro.FromDBValueMap(result)
+		if err != nil {
+			return _modelSlice, o._adapter.Oops(fmt.Sprintf(`%s`, err))
+		}
+		_modelSlice = append(_modelSlice, ro)
+	}
+	return _modelSlice, nil
+}
+
 // Save is a dynamic saver 'inherited' by all models
 func (o *TermTaxonomy) Save() error {
 	if o._new == true {
@@ -7292,6 +7718,57 @@ func (o *Term) Reload() error {
 	return err
 }
 
+// Destroy deletes the model
+func (o *Term) Destroy() error {
+	frmt := fmt.Sprintf("DELETE FROM %s WHERE %s = '%d' LIMIT 1", o._table, o.GetPrimaryKeyName(), o.GetPrimaryKeyValue())
+	err := o._adapter.Execute(frmt)
+	if err != nil {
+		return o._adapter.Oops(fmt.Sprintf(`%s led to %s`, frmt, err))
+	}
+	return nil
+}
+
+// FindBySQL allows you to search using a complete SQL string
+func (o *Term) FindBySQL(s string) ([]*Term, error) {
+	var _modelSlice []*Term
+
+	results, err := o._adapter.Query(s)
+	if err != nil {
+		return _modelSlice, err
+	}
+
+	for _, result := range results {
+		ro := NewTerm(o._adapter)
+		err = ro.FromDBValueMap(result)
+		if err != nil {
+			return _modelSlice, o._adapter.Oops(fmt.Sprintf(`%s`, err))
+		}
+		_modelSlice = append(_modelSlice, ro)
+	}
+	return _modelSlice, nil
+}
+
+// Where is a shortcut to FindBySql, in this case you only
+// specify the WHERE clause, such as m.Where(`ID IN (23,25)`)
+func (o *Term) Where(s string) ([]*Term, error) {
+	var _modelSlice []*Term
+
+	results, err := o._adapter.Query(fmt.Sprintf(`SELECT * FROM %s WHERE %s`, o._table, s))
+	if err != nil {
+		return _modelSlice, err
+	}
+
+	for _, result := range results {
+		ro := NewTerm(o._adapter)
+		err = ro.FromDBValueMap(result)
+		if err != nil {
+			return _modelSlice, o._adapter.Oops(fmt.Sprintf(`%s`, err))
+		}
+		_modelSlice = append(_modelSlice, ro)
+	}
+	return _modelSlice, nil
+}
+
 // Save is a dynamic saver 'inherited' by all models
 func (o *Term) Save() error {
 	if o._new == true {
@@ -7699,6 +8176,57 @@ func (o *UserMeta) FromUserMeta(m *UserMeta) {
 func (o *UserMeta) Reload() error {
 	_, err := o.Find(o.GetPrimaryKeyValue())
 	return err
+}
+
+// Destroy deletes the model
+func (o *UserMeta) Destroy() error {
+	frmt := fmt.Sprintf("DELETE FROM %s WHERE %s = '%d' LIMIT 1", o._table, o.GetPrimaryKeyName(), o.GetPrimaryKeyValue())
+	err := o._adapter.Execute(frmt)
+	if err != nil {
+		return o._adapter.Oops(fmt.Sprintf(`%s led to %s`, frmt, err))
+	}
+	return nil
+}
+
+// FindBySQL allows you to search using a complete SQL string
+func (o *UserMeta) FindBySQL(s string) ([]*UserMeta, error) {
+	var _modelSlice []*UserMeta
+
+	results, err := o._adapter.Query(s)
+	if err != nil {
+		return _modelSlice, err
+	}
+
+	for _, result := range results {
+		ro := NewUserMeta(o._adapter)
+		err = ro.FromDBValueMap(result)
+		if err != nil {
+			return _modelSlice, o._adapter.Oops(fmt.Sprintf(`%s`, err))
+		}
+		_modelSlice = append(_modelSlice, ro)
+	}
+	return _modelSlice, nil
+}
+
+// Where is a shortcut to FindBySql, in this case you only
+// specify the WHERE clause, such as m.Where(`ID IN (23,25)`)
+func (o *UserMeta) Where(s string) ([]*UserMeta, error) {
+	var _modelSlice []*UserMeta
+
+	results, err := o._adapter.Query(fmt.Sprintf(`SELECT * FROM %s WHERE %s`, o._table, s))
+	if err != nil {
+		return _modelSlice, err
+	}
+
+	for _, result := range results {
+		ro := NewUserMeta(o._adapter)
+		err = ro.FromDBValueMap(result)
+		if err != nil {
+			return _modelSlice, o._adapter.Oops(fmt.Sprintf(`%s`, err))
+		}
+		_modelSlice = append(_modelSlice, ro)
+	}
+	return _modelSlice, nil
 }
 
 // Save is a dynamic saver 'inherited' by all models

@@ -1,6 +1,7 @@
 <?php
 $from_map_body = "";
 $from_model_body = "";
+$pkfmt_type = mysqlToFmtType($t->pfield->Type);
 foreach($t->fields as $f) {
 
     $fname = convertFieldName($f->Field);
@@ -121,8 +122,10 @@ if ( $fname == "Find" ) {
     puts("}");
 }
 $find_line = "o.Find(o.GetPrimaryKeyValue())";
+$destroy_sql = "fmt.Sprintf(\"DELETE FROM %s WHERE %s = '$pkfmt_type' LIMIT 1\",o._table,o.GetPrimaryKeyName(),o.GetPrimaryKeyValue())";
 if ($t->model_name == "TermRelationship") {
     $find_line = "o.Find(o.TermTaxonomyId ,o.ObjectId)";
+    $destroy_sql = "fmt.Sprintf(\"DELETE FROM %s WHERE object_id = '%d' AND term_taxonomy_id = %d LIMIT 1\",o._table,o.ObjectId,o.TermTaxonomyId)";
 }
 puts("
 // FromDBValueMap Converts a DBValueMap returned from Adapter.Query to a {$t->model_name}
@@ -138,5 +141,53 @@ $from_model_body
 func (o *{$t->model_name}) Reload() error {
     _,err := $find_line
     return err
+}
+// Destroy deletes the model
+func (o *{$t->model_name}) Destroy() error {
+    frmt := $destroy_sql
+    err := o._adapter.Execute(frmt)
+    if err != nil {
+        return o._adapter.Oops(fmt.Sprintf(`%s led to %s`,frmt,err))
+    }
+    return nil
+}
+// FindBySQL allows you to search using a complete SQL string
+func (o *{$t->model_name}) FindBySQL(s string) ([]*{$t->model_name},error) {
+    var _modelSlice []*{$t->model_name}
+    
+    results, err := o._adapter.Query(s)
+    if err != nil {
+        $failure_return
+    }
+    
+    for _,result := range results {
+        ro := New{$t->model_name}(o._adapter)
+        err = ro.FromDBValueMap(result)
+        if err != nil {
+            return _modelSlice,o._adapter.Oops(fmt.Sprintf(`%s`,err))
+        }
+        _modelSlice = append(_modelSlice,ro)
+    }
+    return _modelSlice,nil
+}
+// Where is a shortcut to FindBySql, in this case you only 
+// specify the WHERE clause, such as m.Where(`ID IN (23,25)`)
+func (o *{$t->model_name}) Where(s string) ([]*{$t->model_name},error) {
+    var _modelSlice []*{$t->model_name}
+    
+    results, err := o._adapter.Query(fmt.Sprintf(`SELECT * FROM %s WHERE %s`,o._table,s))
+    if err != nil {
+        $failure_return
+    }
+    
+    for _,result := range results {
+        ro := New{$t->model_name}(o._adapter)
+        err = ro.FromDBValueMap(result)
+        if err != nil {
+            return _modelSlice,o._adapter.Oops(fmt.Sprintf(`%s`,err))
+        }
+        _modelSlice = append(_modelSlice,ro)
+    }
+    return _modelSlice,nil
 }
 ");

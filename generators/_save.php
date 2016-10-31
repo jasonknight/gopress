@@ -106,6 +106,7 @@ func (o *{$t->model_name}) Create() error {
     o._new = false
     return nil
 }
+
 ";   
     return $txt; 
 }

@@ -89,6 +89,13 @@ func (o *Comment) Create() error
 Create inserts the model. Calling Save will call this function automatically for
 new models
 
+#### func (*Comment) Destroy
+
+```go
+func (o *Comment) Destroy() error
+```
+Destroy deletes the model
+
 #### func (*Comment) Find
 
 ```go
@@ -374,6 +381,13 @@ Comment
     }
 
 ```
+
+#### func (*Comment) FindBySQL
+
+```go
+func (o *Comment) FindBySQL(s string) ([]*Comment, error)
+```
+FindBySQL allows you to search using a complete SQL string
 
 #### func (*Comment) FindByUserId
 
@@ -768,6 +782,14 @@ func (o *Comment) UpdateUserId(_updUserId int64) (int64, error)
 UpdateUserId an immediate DB Query to update a single column, in this case
 user_id
 
+#### func (*Comment) Where
+
+```go
+func (o *Comment) Where(s string) ([]*Comment, error)
+```
+Where is a shortcut to FindBySql, in this case you only specify the WHERE
+clause, such as m.Where(`ID IN (23,25)`)
+
 #### type CommentMeta
 
 ```go
@@ -803,6 +825,13 @@ func (o *CommentMeta) Create() error
 ```
 Create inserts the model. Calling Save will call this function automatically for
 new models
+
+#### func (*CommentMeta) Destroy
+
+```go
+func (o *CommentMeta) Destroy() error
+```
+Destroy deletes the model
 
 #### func (*CommentMeta) Find
 
@@ -889,6 +918,13 @@ for CommentMeta
     }
 
 ```
+
+#### func (*CommentMeta) FindBySQL
+
+```go
+func (o *CommentMeta) FindBySQL(s string) ([]*CommentMeta, error)
+```
+FindBySQL allows you to search using a complete SQL string
 
 #### func (*CommentMeta) FromCommentMeta
 
@@ -1021,6 +1057,14 @@ func (o *CommentMeta) UpdateMetaValue(_updMetaValue string) (int64, error)
 UpdateMetaValue an immediate DB Query to update a single column, in this case
 meta_value
 
+#### func (*CommentMeta) Where
+
+```go
+func (o *CommentMeta) Where(s string) ([]*CommentMeta, error)
+```
+Where is a shortcut to FindBySql, in this case you only specify the WHERE
+clause, such as m.Where(`ID IN (23,25)`)
+
 #### type DBValue
 
 ```go
@@ -1140,6 +1184,13 @@ func (o *Link) Create() error
 ```
 Create inserts the model. Calling Save will call this function automatically for
 new models
+
+#### func (*Link) Destroy
+
+```go
+func (o *Link) Destroy() error
+```
+Destroy deletes the model
 
 #### func (*Link) Find
 
@@ -1395,6 +1446,13 @@ return []*Link,error This method is a programatically generated finder for Link
     }
 
 ```
+
+#### func (*Link) FindBySQL
+
+```go
+func (o *Link) FindBySQL(s string) ([]*Link, error)
+```
+FindBySQL allows you to search using a complete SQL string
 
 #### func (*Link) FromDBValueMap
 
@@ -1724,6 +1782,14 @@ func (o *Link) UpdateLinkVisible(_updLinkVisible string) (int64, error)
 UpdateLinkVisible an immediate DB Query to update a single column, in this case
 link_visible
 
+#### func (*Link) Where
+
+```go
+func (o *Link) Where(s string) ([]*Link, error)
+```
+Where is a shortcut to FindBySql, in this case you only specify the WHERE
+clause, such as m.Where(`ID IN (23,25)`)
+
 #### type LogFilter
 
 ```go
@@ -2031,6 +2097,13 @@ func (o *Option) Create() error
 Create inserts the model. Calling Save will call this function automatically for
 new models
 
+#### func (*Option) Destroy
+
+```go
+func (o *Option) Destroy() error
+```
+Destroy deletes the model
+
 #### func (*Option) Find
 
 ```go
@@ -2115,6 +2188,13 @@ Option
     }
 
 ```
+
+#### func (*Option) FindBySQL
+
+```go
+func (o *Option) FindBySQL(s string) ([]*Option, error)
+```
+FindBySQL allows you to search using a complete SQL string
 
 #### func (*Option) FromDBValueMap
 
@@ -2246,6 +2326,14 @@ func (o *Option) UpdateOptionValue(_updOptionValue string) (int64, error)
 UpdateOptionValue an immediate DB Query to update a single column, in this case
 option_value
 
+#### func (*Option) Where
+
+```go
+func (o *Option) Where(s string) ([]*Option, error)
+```
+Where is a shortcut to FindBySql, in this case you only specify the WHERE
+clause, such as m.Where(`ID IN (23,25)`)
+
 #### type Post
 
 ```go
@@ -2319,6 +2407,13 @@ func (o *Post) Create() error
 ```
 Create inserts the model. Calling Save will call this function automatically for
 new models
+
+#### func (*Post) Destroy
+
+```go
+func (o *Post) Destroy() error
+```
+Destroy deletes the model
 
 #### func (*Post) Find
 
@@ -2578,6 +2673,12 @@ return []*Post,error This method is a programatically generated finder for Post
 
 ```
 
+#### func (*Post) FindByPostMetaKeyValue
+
+```go
+func (o *Post) FindByPostMetaKeyValue(k string, v string) ([]*Post, error)
+```
+
 #### func (*Post) FindByPostMimeType
 
 ```go
@@ -2752,6 +2853,13 @@ return []*Post,error This method is a programatically generated finder for Post
     }
 
 ```
+
+#### func (*Post) FindBySQL
+
+```go
+func (o *Post) FindBySQL(s string) ([]*Post, error)
+```
+FindBySQL allows you to search using a complete SQL string
 
 #### func (*Post) FindByToPing
 
@@ -3320,6 +3428,14 @@ func (o *Post) UpdateToPing(_updToPing string) (int64, error)
 UpdateToPing an immediate DB Query to update a single column, in this case
 to_ping
 
+#### func (*Post) Where
+
+```go
+func (o *Post) Where(s string) ([]*Post, error)
+```
+Where is a shortcut to FindBySql, in this case you only specify the WHERE
+clause, such as m.Where(`ID IN (23,25)`)
+
 #### type PostMeta
 
 ```go
@@ -3356,6 +3472,13 @@ func (o *PostMeta) Create() error
 Create inserts the model. Calling Save will call this function automatically for
 new models
 
+#### func (*PostMeta) Destroy
+
+```go
+func (o *PostMeta) Destroy() error
+```
+Destroy deletes the model
+
 #### func (*PostMeta) Find
 
 ```go
@@ -3380,6 +3503,18 @@ pointer!
     }
     ... do what you want with m here
 
+```
+
+#### func (*PostMeta) FindByKeyValue
+
+```go
+func (o *PostMeta) FindByKeyValue(k string, v string) ([]*PostMeta, error)
+```
+
+#### func (*PostMeta) FindByKeyValueWithPostId
+
+```go
+func (o *PostMeta) FindByKeyValueWithPostId(k string, v string, pid int64) ([]*PostMeta, error)
 ```
 
 #### func (*PostMeta) FindByMetaKey
@@ -3439,6 +3574,13 @@ FindByPostId searchs against the database table field post_id and will return
     }
 
 ```
+
+#### func (*PostMeta) FindBySQL
+
+```go
+func (o *PostMeta) FindBySQL(s string) ([]*PostMeta, error)
+```
+FindBySQL allows you to search using a complete SQL string
 
 #### func (*PostMeta) FromDBValueMap
 
@@ -3570,6 +3712,14 @@ func (o *PostMeta) UpdatePostId(_updPostId int64) (int64, error)
 UpdatePostId an immediate DB Query to update a single column, in this case
 post_id
 
+#### func (*PostMeta) Where
+
+```go
+func (o *PostMeta) Where(s string) ([]*PostMeta, error)
+```
+Where is a shortcut to FindBySql, in this case you only specify the WHERE
+clause, such as m.Where(`ID IN (23,25)`)
+
 #### type SafeStringFilter
 
 ```go
@@ -3613,6 +3763,13 @@ func (o *Term) Create() error
 ```
 Create inserts the model. Calling Save will call this function automatically for
 new models
+
+#### func (*Term) Destroy
+
+```go
+func (o *Term) Destroy() error
+```
+Destroy deletes the model
 
 #### func (*Term) Find
 
@@ -3658,6 +3815,13 @@ FindByName searchs against the database table field name and will return
     }
 
 ```
+
+#### func (*Term) FindBySQL
+
+```go
+func (o *Term) FindBySQL(s string) ([]*Term, error)
+```
+FindBySQL allows you to search using a complete SQL string
 
 #### func (*Term) FindBySlug
 
@@ -3825,6 +3989,14 @@ func (o *Term) UpdateTermGroup(_updTermGroup int64) (int64, error)
 UpdateTermGroup an immediate DB Query to update a single column, in this case
 term_group
 
+#### func (*Term) Where
+
+```go
+func (o *Term) Where(s string) ([]*Term, error)
+```
+Where is a shortcut to FindBySql, in this case you only specify the WHERE
+clause, such as m.Where(`ID IN (23,25)`)
+
 #### type TermRelationship
 
 ```go
@@ -3860,6 +4032,13 @@ func (o *TermRelationship) Create() error
 Create inserts the model. Calling Save will call this function automatically for
 new models
 
+#### func (*TermRelationship) Destroy
+
+```go
+func (o *TermRelationship) Destroy() error
+```
+Destroy deletes the model
+
 #### func (*TermRelationship) Find
 
 ```go
@@ -3887,6 +4066,13 @@ finder for TermRelationship
     }
 
 ```
+
+#### func (*TermRelationship) FindBySQL
+
+```go
+func (o *TermRelationship) FindBySQL(s string) ([]*TermRelationship, error)
+```
+FindBySQL allows you to search using a complete SQL string
 
 #### func (*TermRelationship) FindByTermOrder
 
@@ -4018,6 +4204,14 @@ func (o *TermRelationship) UpdateTermOrder(_updTermOrder int) (int64, error)
 UpdateTermOrder an immediate DB Query to update a single column, in this case
 term_order
 
+#### func (*TermRelationship) Where
+
+```go
+func (o *TermRelationship) Where(s string) ([]*TermRelationship, error)
+```
+Where is a shortcut to FindBySql, in this case you only specify the WHERE
+clause, such as m.Where(`ID IN (23,25)`)
+
 #### type TermTaxonomy
 
 ```go
@@ -4058,6 +4252,13 @@ func (o *TermTaxonomy) Create() error
 ```
 Create inserts the model. Calling Save will call this function automatically for
 new models
+
+#### func (*TermTaxonomy) Destroy
+
+```go
+func (o *TermTaxonomy) Destroy() error
+```
+Destroy deletes the model
 
 #### func (*TermTaxonomy) Find
 
@@ -4144,6 +4345,13 @@ TermTaxonomy
     }
 
 ```
+
+#### func (*TermTaxonomy) FindBySQL
+
+```go
+func (o *TermTaxonomy) FindBySQL(s string) ([]*TermTaxonomy, error)
+```
+FindBySQL allows you to search using a complete SQL string
 
 #### func (*TermTaxonomy) FindByTaxonomy
 
@@ -4360,6 +4568,14 @@ func (o *TermTaxonomy) UpdateTermId(_updTermId int64) (int64, error)
 UpdateTermId an immediate DB Query to update a single column, in this case
 term_id
 
+#### func (*TermTaxonomy) Where
+
+```go
+func (o *TermTaxonomy) Where(s string) ([]*TermTaxonomy, error)
+```
+Where is a shortcut to FindBySql, in this case you only specify the WHERE
+clause, such as m.Where(`ID IN (23,25)`)
+
 #### type UserMeta
 
 ```go
@@ -4395,6 +4611,13 @@ func (o *UserMeta) Create() error
 ```
 Create inserts the model. Calling Save will call this function automatically for
 new models
+
+#### func (*UserMeta) Destroy
+
+```go
+func (o *UserMeta) Destroy() error
+```
+Destroy deletes the model
 
 #### func (*UserMeta) Find
 
@@ -4460,6 +4683,13 @@ UserMeta
     }
 
 ```
+
+#### func (*UserMeta) FindBySQL
+
+```go
+func (o *UserMeta) FindBySQL(s string) ([]*UserMeta, error)
+```
+FindBySQL allows you to search using a complete SQL string
 
 #### func (*UserMeta) FindByUserId
 
@@ -4609,3 +4839,11 @@ func (o *UserMeta) UpdateUserId(_updUserId int64) (int64, error)
 ```
 UpdateUserId an immediate DB Query to update a single column, in this case
 user_id
+
+#### func (*UserMeta) Where
+
+```go
+func (o *UserMeta) Where(s string) ([]*UserMeta, error)
+```
+Where is a shortcut to FindBySql, in this case you only specify the WHERE
+clause, such as m.Where(`ID IN (23,25)`)

@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"bytes"
 	"errors"
+	"fmt"
 	"math/rand"
 	"os"
 	"regexp"
@@ -176,6 +177,14 @@ func TestCommentMetaCreate(t *testing.T) {
 		if len(res9) == 0 {
 			t.Errorf(`failed to find any CommentMeta`)
 		}
+		q9 := fmt.Sprintf(`comment_id = '%d'`, model2.GetCommentId())
+		res9, err = model.Where(q9)
+		if err != nil {
+			t.Errorf(`failed model.where(q9)`)
+		}
+		if len(res9) == 0 {
+			t.Errorf(`failed to find any CommentMeta with model.where(q9)`)
+		}
 
 		res10, err := model.FindByMetaKey(model2.GetMetaKey())
 		if err != nil {
@@ -184,6 +193,14 @@ func TestCommentMetaCreate(t *testing.T) {
 		if len(res10) == 0 {
 			t.Errorf(`failed to find any CommentMeta`)
 		}
+		q10 := fmt.Sprintf(`meta_key = '%s'`, model2.GetMetaKey())
+		res10, err = model.Where(q10)
+		if err != nil {
+			t.Errorf(`failed model.where(q10)`)
+		}
+		if len(res10) == 0 {
+			t.Errorf(`failed to find any CommentMeta with model.where(q10)`)
+		}
 
 		res11, err := model.FindByMetaValue(model2.GetMetaValue())
 		if err != nil {
@@ -191,6 +208,26 @@ func TestCommentMetaCreate(t *testing.T) {
 		}
 		if len(res11) == 0 {
 			t.Errorf(`failed to find any CommentMeta`)
+		}
+		q11 := fmt.Sprintf(`meta_value = '%s'`, model2.GetMetaValue())
+		res11, err = model.Where(q11)
+		if err != nil {
+			t.Errorf(`failed model.where(q11)`)
+		}
+		if len(res11) == 0 {
+			t.Errorf(`failed to find any CommentMeta with model.where(q11)`)
+		}
+
+		// now we need to destroy the model
+		err = model.Destroy()
+		if err != nil {
+			t.Errorf(`model was not destroyed`)
+		}
+		// let's double check
+		found, err = model2.Find(model.GetPrimaryKeyValue())
+		if found == true {
+			t.Errorf(fmt.Sprintf(`this model(%d) should have been destroyed!`, model2.GetPrimaryKeyValue()))
+			return
 		}
 	} // end of if fileExists
 }
@@ -663,6 +700,14 @@ func TestCommentCreate(t *testing.T) {
 		if len(res38) == 0 {
 			t.Errorf(`failed to find any Comment`)
 		}
+		q38 := fmt.Sprintf(`comment_post_ID = '%d'`, model2.GetCommentPostID())
+		res38, err = model.Where(q38)
+		if err != nil {
+			t.Errorf(`failed model.where(q38)`)
+		}
+		if len(res38) == 0 {
+			t.Errorf(`failed to find any Comment with model.where(q38)`)
+		}
 
 		res39, err := model.FindByCommentAuthor(model2.GetCommentAuthor())
 		if err != nil {
@@ -670,6 +715,14 @@ func TestCommentCreate(t *testing.T) {
 		}
 		if len(res39) == 0 {
 			t.Errorf(`failed to find any Comment`)
+		}
+		q39 := fmt.Sprintf(`comment_author = '%s'`, model2.GetCommentAuthor())
+		res39, err = model.Where(q39)
+		if err != nil {
+			t.Errorf(`failed model.where(q39)`)
+		}
+		if len(res39) == 0 {
+			t.Errorf(`failed to find any Comment with model.where(q39)`)
 		}
 
 		res40, err := model.FindByCommentAuthorEmail(model2.GetCommentAuthorEmail())
@@ -679,6 +732,14 @@ func TestCommentCreate(t *testing.T) {
 		if len(res40) == 0 {
 			t.Errorf(`failed to find any Comment`)
 		}
+		q40 := fmt.Sprintf(`comment_author_email = '%s'`, model2.GetCommentAuthorEmail())
+		res40, err = model.Where(q40)
+		if err != nil {
+			t.Errorf(`failed model.where(q40)`)
+		}
+		if len(res40) == 0 {
+			t.Errorf(`failed to find any Comment with model.where(q40)`)
+		}
 
 		res41, err := model.FindByCommentAuthorUrl(model2.GetCommentAuthorUrl())
 		if err != nil {
@@ -686,6 +747,14 @@ func TestCommentCreate(t *testing.T) {
 		}
 		if len(res41) == 0 {
 			t.Errorf(`failed to find any Comment`)
+		}
+		q41 := fmt.Sprintf(`comment_author_url = '%s'`, model2.GetCommentAuthorUrl())
+		res41, err = model.Where(q41)
+		if err != nil {
+			t.Errorf(`failed model.where(q41)`)
+		}
+		if len(res41) == 0 {
+			t.Errorf(`failed to find any Comment with model.where(q41)`)
 		}
 
 		res42, err := model.FindByCommentAuthorIP(model2.GetCommentAuthorIP())
@@ -695,6 +764,14 @@ func TestCommentCreate(t *testing.T) {
 		if len(res42) == 0 {
 			t.Errorf(`failed to find any Comment`)
 		}
+		q42 := fmt.Sprintf(`comment_author_IP = '%s'`, model2.GetCommentAuthorIP())
+		res42, err = model.Where(q42)
+		if err != nil {
+			t.Errorf(`failed model.where(q42)`)
+		}
+		if len(res42) == 0 {
+			t.Errorf(`failed to find any Comment with model.where(q42)`)
+		}
 
 		res43, err := model.FindByCommentDate(model2.GetCommentDate())
 		if err != nil {
@@ -702,6 +779,14 @@ func TestCommentCreate(t *testing.T) {
 		}
 		if len(res43) == 0 {
 			t.Errorf(`failed to find any Comment`)
+		}
+		q43 := fmt.Sprintf(`comment_date = '%s'`, model2.GetCommentDate())
+		res43, err = model.Where(q43)
+		if err != nil {
+			t.Errorf(`failed model.where(q43)`)
+		}
+		if len(res43) == 0 {
+			t.Errorf(`failed to find any Comment with model.where(q43)`)
 		}
 
 		res44, err := model.FindByCommentDateGmt(model2.GetCommentDateGmt())
@@ -711,6 +796,14 @@ func TestCommentCreate(t *testing.T) {
 		if len(res44) == 0 {
 			t.Errorf(`failed to find any Comment`)
 		}
+		q44 := fmt.Sprintf(`comment_date_gmt = '%s'`, model2.GetCommentDateGmt())
+		res44, err = model.Where(q44)
+		if err != nil {
+			t.Errorf(`failed model.where(q44)`)
+		}
+		if len(res44) == 0 {
+			t.Errorf(`failed to find any Comment with model.where(q44)`)
+		}
 
 		res45, err := model.FindByCommentContent(model2.GetCommentContent())
 		if err != nil {
@@ -718,6 +811,14 @@ func TestCommentCreate(t *testing.T) {
 		}
 		if len(res45) == 0 {
 			t.Errorf(`failed to find any Comment`)
+		}
+		q45 := fmt.Sprintf(`comment_content = '%s'`, model2.GetCommentContent())
+		res45, err = model.Where(q45)
+		if err != nil {
+			t.Errorf(`failed model.where(q45)`)
+		}
+		if len(res45) == 0 {
+			t.Errorf(`failed to find any Comment with model.where(q45)`)
 		}
 
 		res46, err := model.FindByCommentKarma(model2.GetCommentKarma())
@@ -727,6 +828,14 @@ func TestCommentCreate(t *testing.T) {
 		if len(res46) == 0 {
 			t.Errorf(`failed to find any Comment`)
 		}
+		q46 := fmt.Sprintf(`comment_karma = '%d'`, model2.GetCommentKarma())
+		res46, err = model.Where(q46)
+		if err != nil {
+			t.Errorf(`failed model.where(q46)`)
+		}
+		if len(res46) == 0 {
+			t.Errorf(`failed to find any Comment with model.where(q46)`)
+		}
 
 		res47, err := model.FindByCommentApproved(model2.GetCommentApproved())
 		if err != nil {
@@ -734,6 +843,14 @@ func TestCommentCreate(t *testing.T) {
 		}
 		if len(res47) == 0 {
 			t.Errorf(`failed to find any Comment`)
+		}
+		q47 := fmt.Sprintf(`comment_approved = '%s'`, model2.GetCommentApproved())
+		res47, err = model.Where(q47)
+		if err != nil {
+			t.Errorf(`failed model.where(q47)`)
+		}
+		if len(res47) == 0 {
+			t.Errorf(`failed to find any Comment with model.where(q47)`)
 		}
 
 		res48, err := model.FindByCommentAgent(model2.GetCommentAgent())
@@ -743,6 +860,14 @@ func TestCommentCreate(t *testing.T) {
 		if len(res48) == 0 {
 			t.Errorf(`failed to find any Comment`)
 		}
+		q48 := fmt.Sprintf(`comment_agent = '%s'`, model2.GetCommentAgent())
+		res48, err = model.Where(q48)
+		if err != nil {
+			t.Errorf(`failed model.where(q48)`)
+		}
+		if len(res48) == 0 {
+			t.Errorf(`failed to find any Comment with model.where(q48)`)
+		}
 
 		res49, err := model.FindByCommentType(model2.GetCommentType())
 		if err != nil {
@@ -750,6 +875,14 @@ func TestCommentCreate(t *testing.T) {
 		}
 		if len(res49) == 0 {
 			t.Errorf(`failed to find any Comment`)
+		}
+		q49 := fmt.Sprintf(`comment_type = '%s'`, model2.GetCommentType())
+		res49, err = model.Where(q49)
+		if err != nil {
+			t.Errorf(`failed model.where(q49)`)
+		}
+		if len(res49) == 0 {
+			t.Errorf(`failed to find any Comment with model.where(q49)`)
 		}
 
 		res50, err := model.FindByCommentParent(model2.GetCommentParent())
@@ -759,6 +892,14 @@ func TestCommentCreate(t *testing.T) {
 		if len(res50) == 0 {
 			t.Errorf(`failed to find any Comment`)
 		}
+		q50 := fmt.Sprintf(`comment_parent = '%d'`, model2.GetCommentParent())
+		res50, err = model.Where(q50)
+		if err != nil {
+			t.Errorf(`failed model.where(q50)`)
+		}
+		if len(res50) == 0 {
+			t.Errorf(`failed to find any Comment with model.where(q50)`)
+		}
 
 		res51, err := model.FindByUserId(model2.GetUserId())
 		if err != nil {
@@ -766,6 +907,26 @@ func TestCommentCreate(t *testing.T) {
 		}
 		if len(res51) == 0 {
 			t.Errorf(`failed to find any Comment`)
+		}
+		q51 := fmt.Sprintf(`user_id = '%d'`, model2.GetUserId())
+		res51, err = model.Where(q51)
+		if err != nil {
+			t.Errorf(`failed model.where(q51)`)
+		}
+		if len(res51) == 0 {
+			t.Errorf(`failed to find any Comment with model.where(q51)`)
+		}
+
+		// now we need to destroy the model
+		err = model.Destroy()
+		if err != nil {
+			t.Errorf(`model was not destroyed`)
+		}
+		// let's double check
+		found, err = model2.Find(model.GetPrimaryKeyValue())
+		if found == true {
+			t.Errorf(fmt.Sprintf(`this model(%d) should have been destroyed!`, model2.GetPrimaryKeyValue()))
+			return
 		}
 	} // end of if fileExists
 }
@@ -1469,6 +1630,14 @@ func TestLinkCreate(t *testing.T) {
 		if len(res34) == 0 {
 			t.Errorf(`failed to find any Link`)
 		}
+		q34 := fmt.Sprintf(`link_url = '%s'`, model2.GetLinkUrl())
+		res34, err = model.Where(q34)
+		if err != nil {
+			t.Errorf(`failed model.where(q34)`)
+		}
+		if len(res34) == 0 {
+			t.Errorf(`failed to find any Link with model.where(q34)`)
+		}
 
 		res35, err := model.FindByLinkName(model2.GetLinkName())
 		if err != nil {
@@ -1476,6 +1645,14 @@ func TestLinkCreate(t *testing.T) {
 		}
 		if len(res35) == 0 {
 			t.Errorf(`failed to find any Link`)
+		}
+		q35 := fmt.Sprintf(`link_name = '%s'`, model2.GetLinkName())
+		res35, err = model.Where(q35)
+		if err != nil {
+			t.Errorf(`failed model.where(q35)`)
+		}
+		if len(res35) == 0 {
+			t.Errorf(`failed to find any Link with model.where(q35)`)
 		}
 
 		res36, err := model.FindByLinkImage(model2.GetLinkImage())
@@ -1485,6 +1662,14 @@ func TestLinkCreate(t *testing.T) {
 		if len(res36) == 0 {
 			t.Errorf(`failed to find any Link`)
 		}
+		q36 := fmt.Sprintf(`link_image = '%s'`, model2.GetLinkImage())
+		res36, err = model.Where(q36)
+		if err != nil {
+			t.Errorf(`failed model.where(q36)`)
+		}
+		if len(res36) == 0 {
+			t.Errorf(`failed to find any Link with model.where(q36)`)
+		}
 
 		res37, err := model.FindByLinkTarget(model2.GetLinkTarget())
 		if err != nil {
@@ -1492,6 +1677,14 @@ func TestLinkCreate(t *testing.T) {
 		}
 		if len(res37) == 0 {
 			t.Errorf(`failed to find any Link`)
+		}
+		q37 := fmt.Sprintf(`link_target = '%s'`, model2.GetLinkTarget())
+		res37, err = model.Where(q37)
+		if err != nil {
+			t.Errorf(`failed model.where(q37)`)
+		}
+		if len(res37) == 0 {
+			t.Errorf(`failed to find any Link with model.where(q37)`)
 		}
 
 		res38, err := model.FindByLinkDescription(model2.GetLinkDescription())
@@ -1501,6 +1694,14 @@ func TestLinkCreate(t *testing.T) {
 		if len(res38) == 0 {
 			t.Errorf(`failed to find any Link`)
 		}
+		q38 := fmt.Sprintf(`link_description = '%s'`, model2.GetLinkDescription())
+		res38, err = model.Where(q38)
+		if err != nil {
+			t.Errorf(`failed model.where(q38)`)
+		}
+		if len(res38) == 0 {
+			t.Errorf(`failed to find any Link with model.where(q38)`)
+		}
 
 		res39, err := model.FindByLinkVisible(model2.GetLinkVisible())
 		if err != nil {
@@ -1508,6 +1709,14 @@ func TestLinkCreate(t *testing.T) {
 		}
 		if len(res39) == 0 {
 			t.Errorf(`failed to find any Link`)
+		}
+		q39 := fmt.Sprintf(`link_visible = '%s'`, model2.GetLinkVisible())
+		res39, err = model.Where(q39)
+		if err != nil {
+			t.Errorf(`failed model.where(q39)`)
+		}
+		if len(res39) == 0 {
+			t.Errorf(`failed to find any Link with model.where(q39)`)
 		}
 
 		res40, err := model.FindByLinkOwner(model2.GetLinkOwner())
@@ -1517,6 +1726,14 @@ func TestLinkCreate(t *testing.T) {
 		if len(res40) == 0 {
 			t.Errorf(`failed to find any Link`)
 		}
+		q40 := fmt.Sprintf(`link_owner = '%d'`, model2.GetLinkOwner())
+		res40, err = model.Where(q40)
+		if err != nil {
+			t.Errorf(`failed model.where(q40)`)
+		}
+		if len(res40) == 0 {
+			t.Errorf(`failed to find any Link with model.where(q40)`)
+		}
 
 		res41, err := model.FindByLinkRating(model2.GetLinkRating())
 		if err != nil {
@@ -1524,6 +1741,14 @@ func TestLinkCreate(t *testing.T) {
 		}
 		if len(res41) == 0 {
 			t.Errorf(`failed to find any Link`)
+		}
+		q41 := fmt.Sprintf(`link_rating = '%d'`, model2.GetLinkRating())
+		res41, err = model.Where(q41)
+		if err != nil {
+			t.Errorf(`failed model.where(q41)`)
+		}
+		if len(res41) == 0 {
+			t.Errorf(`failed to find any Link with model.where(q41)`)
 		}
 
 		res42, err := model.FindByLinkUpdated(model2.GetLinkUpdated())
@@ -1533,6 +1758,14 @@ func TestLinkCreate(t *testing.T) {
 		if len(res42) == 0 {
 			t.Errorf(`failed to find any Link`)
 		}
+		q42 := fmt.Sprintf(`link_updated = '%s'`, model2.GetLinkUpdated())
+		res42, err = model.Where(q42)
+		if err != nil {
+			t.Errorf(`failed model.where(q42)`)
+		}
+		if len(res42) == 0 {
+			t.Errorf(`failed to find any Link with model.where(q42)`)
+		}
 
 		res43, err := model.FindByLinkRel(model2.GetLinkRel())
 		if err != nil {
@@ -1540,6 +1773,14 @@ func TestLinkCreate(t *testing.T) {
 		}
 		if len(res43) == 0 {
 			t.Errorf(`failed to find any Link`)
+		}
+		q43 := fmt.Sprintf(`link_rel = '%s'`, model2.GetLinkRel())
+		res43, err = model.Where(q43)
+		if err != nil {
+			t.Errorf(`failed model.where(q43)`)
+		}
+		if len(res43) == 0 {
+			t.Errorf(`failed to find any Link with model.where(q43)`)
 		}
 
 		res44, err := model.FindByLinkNotes(model2.GetLinkNotes())
@@ -1549,6 +1790,14 @@ func TestLinkCreate(t *testing.T) {
 		if len(res44) == 0 {
 			t.Errorf(`failed to find any Link`)
 		}
+		q44 := fmt.Sprintf(`link_notes = '%s'`, model2.GetLinkNotes())
+		res44, err = model.Where(q44)
+		if err != nil {
+			t.Errorf(`failed model.where(q44)`)
+		}
+		if len(res44) == 0 {
+			t.Errorf(`failed to find any Link with model.where(q44)`)
+		}
 
 		res45, err := model.FindByLinkRss(model2.GetLinkRss())
 		if err != nil {
@@ -1556,6 +1805,26 @@ func TestLinkCreate(t *testing.T) {
 		}
 		if len(res45) == 0 {
 			t.Errorf(`failed to find any Link`)
+		}
+		q45 := fmt.Sprintf(`link_rss = '%s'`, model2.GetLinkRss())
+		res45, err = model.Where(q45)
+		if err != nil {
+			t.Errorf(`failed model.where(q45)`)
+		}
+		if len(res45) == 0 {
+			t.Errorf(`failed to find any Link with model.where(q45)`)
+		}
+
+		// now we need to destroy the model
+		err = model.Destroy()
+		if err != nil {
+			t.Errorf(`model was not destroyed`)
+		}
+		// let's double check
+		found, err = model2.Find(model.GetPrimaryKeyValue())
+		if found == true {
+			t.Errorf(fmt.Sprintf(`this model(%d) should have been destroyed!`, model2.GetPrimaryKeyValue()))
+			return
 		}
 	} // end of if fileExists
 }
@@ -2019,6 +2288,14 @@ func TestOptionCreate(t *testing.T) {
 		if len(res9) == 0 {
 			t.Errorf(`failed to find any Option`)
 		}
+		q9 := fmt.Sprintf(`option_name = '%s'`, model2.GetOptionName())
+		res9, err = model.Where(q9)
+		if err != nil {
+			t.Errorf(`failed model.where(q9)`)
+		}
+		if len(res9) == 0 {
+			t.Errorf(`failed to find any Option with model.where(q9)`)
+		}
 
 		res10, err := model.FindByOptionValue(model2.GetOptionValue())
 		if err != nil {
@@ -2027,6 +2304,14 @@ func TestOptionCreate(t *testing.T) {
 		if len(res10) == 0 {
 			t.Errorf(`failed to find any Option`)
 		}
+		q10 := fmt.Sprintf(`option_value = '%s'`, model2.GetOptionValue())
+		res10, err = model.Where(q10)
+		if err != nil {
+			t.Errorf(`failed model.where(q10)`)
+		}
+		if len(res10) == 0 {
+			t.Errorf(`failed to find any Option with model.where(q10)`)
+		}
 
 		res11, err := model.FindByAutoload(model2.GetAutoload())
 		if err != nil {
@@ -2034,6 +2319,26 @@ func TestOptionCreate(t *testing.T) {
 		}
 		if len(res11) == 0 {
 			t.Errorf(`failed to find any Option`)
+		}
+		q11 := fmt.Sprintf(`autoload = '%s'`, model2.GetAutoload())
+		res11, err = model.Where(q11)
+		if err != nil {
+			t.Errorf(`failed model.where(q11)`)
+		}
+		if len(res11) == 0 {
+			t.Errorf(`failed to find any Option with model.where(q11)`)
+		}
+
+		// now we need to destroy the model
+		err = model.Destroy()
+		if err != nil {
+			t.Errorf(`model was not destroyed`)
+		}
+		// let's double check
+		found, err = model2.Find(model.GetPrimaryKeyValue())
+		if found == true {
+			t.Errorf(fmt.Sprintf(`this model(%d) should have been destroyed!`, model2.GetPrimaryKeyValue()))
+			return
 		}
 	} // end of if fileExists
 }
@@ -2263,6 +2568,14 @@ func TestPostMetaCreate(t *testing.T) {
 		if len(res9) == 0 {
 			t.Errorf(`failed to find any PostMeta`)
 		}
+		q9 := fmt.Sprintf(`post_id = '%d'`, model2.GetPostId())
+		res9, err = model.Where(q9)
+		if err != nil {
+			t.Errorf(`failed model.where(q9)`)
+		}
+		if len(res9) == 0 {
+			t.Errorf(`failed to find any PostMeta with model.where(q9)`)
+		}
 
 		res10, err := model.FindByMetaKey(model2.GetMetaKey())
 		if err != nil {
@@ -2271,6 +2584,14 @@ func TestPostMetaCreate(t *testing.T) {
 		if len(res10) == 0 {
 			t.Errorf(`failed to find any PostMeta`)
 		}
+		q10 := fmt.Sprintf(`meta_key = '%s'`, model2.GetMetaKey())
+		res10, err = model.Where(q10)
+		if err != nil {
+			t.Errorf(`failed model.where(q10)`)
+		}
+		if len(res10) == 0 {
+			t.Errorf(`failed to find any PostMeta with model.where(q10)`)
+		}
 
 		res11, err := model.FindByMetaValue(model2.GetMetaValue())
 		if err != nil {
@@ -2278,6 +2599,26 @@ func TestPostMetaCreate(t *testing.T) {
 		}
 		if len(res11) == 0 {
 			t.Errorf(`failed to find any PostMeta`)
+		}
+		q11 := fmt.Sprintf(`meta_value = '%s'`, model2.GetMetaValue())
+		res11, err = model.Where(q11)
+		if err != nil {
+			t.Errorf(`failed model.where(q11)`)
+		}
+		if len(res11) == 0 {
+			t.Errorf(`failed to find any PostMeta with model.where(q11)`)
+		}
+
+		// now we need to destroy the model
+		err = model.Destroy()
+		if err != nil {
+			t.Errorf(`model was not destroyed`)
+		}
+		// let's double check
+		found, err = model2.Find(model.GetPrimaryKeyValue())
+		if found == true {
+			t.Errorf(fmt.Sprintf(`this model(%d) should have been destroyed!`, model2.GetPrimaryKeyValue()))
+			return
 		}
 	} // end of if fileExists
 }
@@ -2936,6 +3277,14 @@ func TestPostCreate(t *testing.T) {
 		if len(res58) == 0 {
 			t.Errorf(`failed to find any Post`)
 		}
+		q58 := fmt.Sprintf(`post_author = '%d'`, model2.GetPostAuthor())
+		res58, err = model.Where(q58)
+		if err != nil {
+			t.Errorf(`failed model.where(q58)`)
+		}
+		if len(res58) == 0 {
+			t.Errorf(`failed to find any Post with model.where(q58)`)
+		}
 
 		res59, err := model.FindByPostDate(model2.GetPostDate())
 		if err != nil {
@@ -2943,6 +3292,14 @@ func TestPostCreate(t *testing.T) {
 		}
 		if len(res59) == 0 {
 			t.Errorf(`failed to find any Post`)
+		}
+		q59 := fmt.Sprintf(`post_date = '%s'`, model2.GetPostDate())
+		res59, err = model.Where(q59)
+		if err != nil {
+			t.Errorf(`failed model.where(q59)`)
+		}
+		if len(res59) == 0 {
+			t.Errorf(`failed to find any Post with model.where(q59)`)
 		}
 
 		res60, err := model.FindByPostDateGmt(model2.GetPostDateGmt())
@@ -2952,6 +3309,14 @@ func TestPostCreate(t *testing.T) {
 		if len(res60) == 0 {
 			t.Errorf(`failed to find any Post`)
 		}
+		q60 := fmt.Sprintf(`post_date_gmt = '%s'`, model2.GetPostDateGmt())
+		res60, err = model.Where(q60)
+		if err != nil {
+			t.Errorf(`failed model.where(q60)`)
+		}
+		if len(res60) == 0 {
+			t.Errorf(`failed to find any Post with model.where(q60)`)
+		}
 
 		res61, err := model.FindByPostContent(model2.GetPostContent())
 		if err != nil {
@@ -2959,6 +3324,14 @@ func TestPostCreate(t *testing.T) {
 		}
 		if len(res61) == 0 {
 			t.Errorf(`failed to find any Post`)
+		}
+		q61 := fmt.Sprintf(`post_content = '%s'`, model2.GetPostContent())
+		res61, err = model.Where(q61)
+		if err != nil {
+			t.Errorf(`failed model.where(q61)`)
+		}
+		if len(res61) == 0 {
+			t.Errorf(`failed to find any Post with model.where(q61)`)
 		}
 
 		res62, err := model.FindByPostTitle(model2.GetPostTitle())
@@ -2968,6 +3341,14 @@ func TestPostCreate(t *testing.T) {
 		if len(res62) == 0 {
 			t.Errorf(`failed to find any Post`)
 		}
+		q62 := fmt.Sprintf(`post_title = '%s'`, model2.GetPostTitle())
+		res62, err = model.Where(q62)
+		if err != nil {
+			t.Errorf(`failed model.where(q62)`)
+		}
+		if len(res62) == 0 {
+			t.Errorf(`failed to find any Post with model.where(q62)`)
+		}
 
 		res63, err := model.FindByPostExcerpt(model2.GetPostExcerpt())
 		if err != nil {
@@ -2975,6 +3356,14 @@ func TestPostCreate(t *testing.T) {
 		}
 		if len(res63) == 0 {
 			t.Errorf(`failed to find any Post`)
+		}
+		q63 := fmt.Sprintf(`post_excerpt = '%s'`, model2.GetPostExcerpt())
+		res63, err = model.Where(q63)
+		if err != nil {
+			t.Errorf(`failed model.where(q63)`)
+		}
+		if len(res63) == 0 {
+			t.Errorf(`failed to find any Post with model.where(q63)`)
 		}
 
 		res64, err := model.FindByPostStatus(model2.GetPostStatus())
@@ -2984,6 +3373,14 @@ func TestPostCreate(t *testing.T) {
 		if len(res64) == 0 {
 			t.Errorf(`failed to find any Post`)
 		}
+		q64 := fmt.Sprintf(`post_status = '%s'`, model2.GetPostStatus())
+		res64, err = model.Where(q64)
+		if err != nil {
+			t.Errorf(`failed model.where(q64)`)
+		}
+		if len(res64) == 0 {
+			t.Errorf(`failed to find any Post with model.where(q64)`)
+		}
 
 		res65, err := model.FindByCommentStatus(model2.GetCommentStatus())
 		if err != nil {
@@ -2991,6 +3388,14 @@ func TestPostCreate(t *testing.T) {
 		}
 		if len(res65) == 0 {
 			t.Errorf(`failed to find any Post`)
+		}
+		q65 := fmt.Sprintf(`comment_status = '%s'`, model2.GetCommentStatus())
+		res65, err = model.Where(q65)
+		if err != nil {
+			t.Errorf(`failed model.where(q65)`)
+		}
+		if len(res65) == 0 {
+			t.Errorf(`failed to find any Post with model.where(q65)`)
 		}
 
 		res66, err := model.FindByPingStatus(model2.GetPingStatus())
@@ -3000,6 +3405,14 @@ func TestPostCreate(t *testing.T) {
 		if len(res66) == 0 {
 			t.Errorf(`failed to find any Post`)
 		}
+		q66 := fmt.Sprintf(`ping_status = '%s'`, model2.GetPingStatus())
+		res66, err = model.Where(q66)
+		if err != nil {
+			t.Errorf(`failed model.where(q66)`)
+		}
+		if len(res66) == 0 {
+			t.Errorf(`failed to find any Post with model.where(q66)`)
+		}
 
 		res67, err := model.FindByPostPassword(model2.GetPostPassword())
 		if err != nil {
@@ -3007,6 +3420,14 @@ func TestPostCreate(t *testing.T) {
 		}
 		if len(res67) == 0 {
 			t.Errorf(`failed to find any Post`)
+		}
+		q67 := fmt.Sprintf(`post_password = '%s'`, model2.GetPostPassword())
+		res67, err = model.Where(q67)
+		if err != nil {
+			t.Errorf(`failed model.where(q67)`)
+		}
+		if len(res67) == 0 {
+			t.Errorf(`failed to find any Post with model.where(q67)`)
 		}
 
 		res68, err := model.FindByPostName(model2.GetPostName())
@@ -3016,6 +3437,14 @@ func TestPostCreate(t *testing.T) {
 		if len(res68) == 0 {
 			t.Errorf(`failed to find any Post`)
 		}
+		q68 := fmt.Sprintf(`post_name = '%s'`, model2.GetPostName())
+		res68, err = model.Where(q68)
+		if err != nil {
+			t.Errorf(`failed model.where(q68)`)
+		}
+		if len(res68) == 0 {
+			t.Errorf(`failed to find any Post with model.where(q68)`)
+		}
 
 		res69, err := model.FindByToPing(model2.GetToPing())
 		if err != nil {
@@ -3023,6 +3452,14 @@ func TestPostCreate(t *testing.T) {
 		}
 		if len(res69) == 0 {
 			t.Errorf(`failed to find any Post`)
+		}
+		q69 := fmt.Sprintf(`to_ping = '%s'`, model2.GetToPing())
+		res69, err = model.Where(q69)
+		if err != nil {
+			t.Errorf(`failed model.where(q69)`)
+		}
+		if len(res69) == 0 {
+			t.Errorf(`failed to find any Post with model.where(q69)`)
 		}
 
 		res70, err := model.FindByPinged(model2.GetPinged())
@@ -3032,6 +3469,14 @@ func TestPostCreate(t *testing.T) {
 		if len(res70) == 0 {
 			t.Errorf(`failed to find any Post`)
 		}
+		q70 := fmt.Sprintf(`pinged = '%s'`, model2.GetPinged())
+		res70, err = model.Where(q70)
+		if err != nil {
+			t.Errorf(`failed model.where(q70)`)
+		}
+		if len(res70) == 0 {
+			t.Errorf(`failed to find any Post with model.where(q70)`)
+		}
 
 		res71, err := model.FindByPostModified(model2.GetPostModified())
 		if err != nil {
@@ -3039,6 +3484,14 @@ func TestPostCreate(t *testing.T) {
 		}
 		if len(res71) == 0 {
 			t.Errorf(`failed to find any Post`)
+		}
+		q71 := fmt.Sprintf(`post_modified = '%s'`, model2.GetPostModified())
+		res71, err = model.Where(q71)
+		if err != nil {
+			t.Errorf(`failed model.where(q71)`)
+		}
+		if len(res71) == 0 {
+			t.Errorf(`failed to find any Post with model.where(q71)`)
 		}
 
 		res72, err := model.FindByPostModifiedGmt(model2.GetPostModifiedGmt())
@@ -3048,6 +3501,14 @@ func TestPostCreate(t *testing.T) {
 		if len(res72) == 0 {
 			t.Errorf(`failed to find any Post`)
 		}
+		q72 := fmt.Sprintf(`post_modified_gmt = '%s'`, model2.GetPostModifiedGmt())
+		res72, err = model.Where(q72)
+		if err != nil {
+			t.Errorf(`failed model.where(q72)`)
+		}
+		if len(res72) == 0 {
+			t.Errorf(`failed to find any Post with model.where(q72)`)
+		}
 
 		res73, err := model.FindByPostContentFiltered(model2.GetPostContentFiltered())
 		if err != nil {
@@ -3055,6 +3516,14 @@ func TestPostCreate(t *testing.T) {
 		}
 		if len(res73) == 0 {
 			t.Errorf(`failed to find any Post`)
+		}
+		q73 := fmt.Sprintf(`post_content_filtered = '%s'`, model2.GetPostContentFiltered())
+		res73, err = model.Where(q73)
+		if err != nil {
+			t.Errorf(`failed model.where(q73)`)
+		}
+		if len(res73) == 0 {
+			t.Errorf(`failed to find any Post with model.where(q73)`)
 		}
 
 		res74, err := model.FindByPostParent(model2.GetPostParent())
@@ -3064,6 +3533,14 @@ func TestPostCreate(t *testing.T) {
 		if len(res74) == 0 {
 			t.Errorf(`failed to find any Post`)
 		}
+		q74 := fmt.Sprintf(`post_parent = '%d'`, model2.GetPostParent())
+		res74, err = model.Where(q74)
+		if err != nil {
+			t.Errorf(`failed model.where(q74)`)
+		}
+		if len(res74) == 0 {
+			t.Errorf(`failed to find any Post with model.where(q74)`)
+		}
 
 		res75, err := model.FindByGuid(model2.GetGuid())
 		if err != nil {
@@ -3071,6 +3548,14 @@ func TestPostCreate(t *testing.T) {
 		}
 		if len(res75) == 0 {
 			t.Errorf(`failed to find any Post`)
+		}
+		q75 := fmt.Sprintf(`guid = '%s'`, model2.GetGuid())
+		res75, err = model.Where(q75)
+		if err != nil {
+			t.Errorf(`failed model.where(q75)`)
+		}
+		if len(res75) == 0 {
+			t.Errorf(`failed to find any Post with model.where(q75)`)
 		}
 
 		res76, err := model.FindByPostType(model2.GetPostType())
@@ -3080,6 +3565,14 @@ func TestPostCreate(t *testing.T) {
 		if len(res76) == 0 {
 			t.Errorf(`failed to find any Post`)
 		}
+		q76 := fmt.Sprintf(`post_type = '%s'`, model2.GetPostType())
+		res76, err = model.Where(q76)
+		if err != nil {
+			t.Errorf(`failed model.where(q76)`)
+		}
+		if len(res76) == 0 {
+			t.Errorf(`failed to find any Post with model.where(q76)`)
+		}
 
 		res77, err := model.FindByPostMimeType(model2.GetPostMimeType())
 		if err != nil {
@@ -3088,6 +3581,14 @@ func TestPostCreate(t *testing.T) {
 		if len(res77) == 0 {
 			t.Errorf(`failed to find any Post`)
 		}
+		q77 := fmt.Sprintf(`post_mime_type = '%s'`, model2.GetPostMimeType())
+		res77, err = model.Where(q77)
+		if err != nil {
+			t.Errorf(`failed model.where(q77)`)
+		}
+		if len(res77) == 0 {
+			t.Errorf(`failed to find any Post with model.where(q77)`)
+		}
 
 		res78, err := model.FindByCommentCount(model2.GetCommentCount())
 		if err != nil {
@@ -3095,6 +3596,26 @@ func TestPostCreate(t *testing.T) {
 		}
 		if len(res78) == 0 {
 			t.Errorf(`failed to find any Post`)
+		}
+		q78 := fmt.Sprintf(`comment_count = '%d'`, model2.GetCommentCount())
+		res78, err = model.Where(q78)
+		if err != nil {
+			t.Errorf(`failed model.where(q78)`)
+		}
+		if len(res78) == 0 {
+			t.Errorf(`failed to find any Post with model.where(q78)`)
+		}
+
+		// now we need to destroy the model
+		err = model.Destroy()
+		if err != nil {
+			t.Errorf(`model was not destroyed`)
+		}
+		// let's double check
+		found, err = model2.Find(model.GetPrimaryKeyValue())
+		if found == true {
+			t.Errorf(fmt.Sprintf(`this model(%d) should have been destroyed!`, model2.GetPrimaryKeyValue()))
+			return
 		}
 	} // end of if fileExists
 }
@@ -3807,6 +4328,22 @@ func TestTermRelationshipCreate(t *testing.T) {
 			t.Errorf(`1: model.TermOrder[%d] != model2.TermOrder[%d]`, model.TermOrder, model2.TermOrder)
 			return
 		}
+
+		// now we need to destroy the model
+		err = model.Destroy()
+		if err != nil {
+			t.Errorf(`model was not destroyed`)
+		}
+		// let's double check
+		found, err = model2.Find(model.TermTaxonomyId, model.ObjectId)
+		if model.TermTaxonomyId == 0 {
+			t.Errorf(`it's 0`)
+		}
+
+		if found == true {
+			t.Errorf(fmt.Sprintf(`this model(%d) should have been destroyed!`, model2.GetPrimaryKeyValue()))
+			return
+		}
 	} // end of if fileExists
 }
 
@@ -4047,6 +4584,14 @@ func TestTermTaxonomyCreate(t *testing.T) {
 		if len(res15) == 0 {
 			t.Errorf(`failed to find any TermTaxonomy`)
 		}
+		q15 := fmt.Sprintf(`term_id = '%d'`, model2.GetTermId())
+		res15, err = model.Where(q15)
+		if err != nil {
+			t.Errorf(`failed model.where(q15)`)
+		}
+		if len(res15) == 0 {
+			t.Errorf(`failed to find any TermTaxonomy with model.where(q15)`)
+		}
 
 		res16, err := model.FindByTaxonomy(model2.GetTaxonomy())
 		if err != nil {
@@ -4054,6 +4599,14 @@ func TestTermTaxonomyCreate(t *testing.T) {
 		}
 		if len(res16) == 0 {
 			t.Errorf(`failed to find any TermTaxonomy`)
+		}
+		q16 := fmt.Sprintf(`taxonomy = '%s'`, model2.GetTaxonomy())
+		res16, err = model.Where(q16)
+		if err != nil {
+			t.Errorf(`failed model.where(q16)`)
+		}
+		if len(res16) == 0 {
+			t.Errorf(`failed to find any TermTaxonomy with model.where(q16)`)
 		}
 
 		res17, err := model.FindByDescription(model2.GetDescription())
@@ -4063,6 +4616,14 @@ func TestTermTaxonomyCreate(t *testing.T) {
 		if len(res17) == 0 {
 			t.Errorf(`failed to find any TermTaxonomy`)
 		}
+		q17 := fmt.Sprintf(`description = '%s'`, model2.GetDescription())
+		res17, err = model.Where(q17)
+		if err != nil {
+			t.Errorf(`failed model.where(q17)`)
+		}
+		if len(res17) == 0 {
+			t.Errorf(`failed to find any TermTaxonomy with model.where(q17)`)
+		}
 
 		res18, err := model.FindByParent(model2.GetParent())
 		if err != nil {
@@ -4071,6 +4632,14 @@ func TestTermTaxonomyCreate(t *testing.T) {
 		if len(res18) == 0 {
 			t.Errorf(`failed to find any TermTaxonomy`)
 		}
+		q18 := fmt.Sprintf(`parent = '%d'`, model2.GetParent())
+		res18, err = model.Where(q18)
+		if err != nil {
+			t.Errorf(`failed model.where(q18)`)
+		}
+		if len(res18) == 0 {
+			t.Errorf(`failed to find any TermTaxonomy with model.where(q18)`)
+		}
 
 		res19, err := model.FindByCount(model2.GetCount())
 		if err != nil {
@@ -4078,6 +4647,26 @@ func TestTermTaxonomyCreate(t *testing.T) {
 		}
 		if len(res19) == 0 {
 			t.Errorf(`failed to find any TermTaxonomy`)
+		}
+		q19 := fmt.Sprintf(`count = '%d'`, model2.GetCount())
+		res19, err = model.Where(q19)
+		if err != nil {
+			t.Errorf(`failed model.where(q19)`)
+		}
+		if len(res19) == 0 {
+			t.Errorf(`failed to find any TermTaxonomy with model.where(q19)`)
+		}
+
+		// now we need to destroy the model
+		err = model.Destroy()
+		if err != nil {
+			t.Errorf(`model was not destroyed`)
+		}
+		// let's double check
+		found, err = model2.Find(model.GetPrimaryKeyValue())
+		if found == true {
+			t.Errorf(fmt.Sprintf(`this model(%d) should have been destroyed!`, model2.GetPrimaryKeyValue()))
+			return
 		}
 	} // end of if fileExists
 }
@@ -4359,6 +4948,14 @@ func TestTermCreate(t *testing.T) {
 		if len(res9) == 0 {
 			t.Errorf(`failed to find any Term`)
 		}
+		q9 := fmt.Sprintf(`name = '%s'`, model2.GetName())
+		res9, err = model.Where(q9)
+		if err != nil {
+			t.Errorf(`failed model.where(q9)`)
+		}
+		if len(res9) == 0 {
+			t.Errorf(`failed to find any Term with model.where(q9)`)
+		}
 
 		res10, err := model.FindBySlug(model2.GetSlug())
 		if err != nil {
@@ -4367,6 +4964,14 @@ func TestTermCreate(t *testing.T) {
 		if len(res10) == 0 {
 			t.Errorf(`failed to find any Term`)
 		}
+		q10 := fmt.Sprintf(`slug = '%s'`, model2.GetSlug())
+		res10, err = model.Where(q10)
+		if err != nil {
+			t.Errorf(`failed model.where(q10)`)
+		}
+		if len(res10) == 0 {
+			t.Errorf(`failed to find any Term with model.where(q10)`)
+		}
 
 		res11, err := model.FindByTermGroup(model2.GetTermGroup())
 		if err != nil {
@@ -4374,6 +4979,26 @@ func TestTermCreate(t *testing.T) {
 		}
 		if len(res11) == 0 {
 			t.Errorf(`failed to find any Term`)
+		}
+		q11 := fmt.Sprintf(`term_group = '%d'`, model2.GetTermGroup())
+		res11, err = model.Where(q11)
+		if err != nil {
+			t.Errorf(`failed model.where(q11)`)
+		}
+		if len(res11) == 0 {
+			t.Errorf(`failed to find any Term with model.where(q11)`)
+		}
+
+		// now we need to destroy the model
+		err = model.Destroy()
+		if err != nil {
+			t.Errorf(`model was not destroyed`)
+		}
+		// let's double check
+		found, err = model2.Find(model.GetPrimaryKeyValue())
+		if found == true {
+			t.Errorf(fmt.Sprintf(`this model(%d) should have been destroyed!`, model2.GetPrimaryKeyValue()))
+			return
 		}
 	} // end of if fileExists
 }
@@ -4603,6 +5228,14 @@ func TestUserMetaCreate(t *testing.T) {
 		if len(res9) == 0 {
 			t.Errorf(`failed to find any UserMeta`)
 		}
+		q9 := fmt.Sprintf(`user_id = '%d'`, model2.GetUserId())
+		res9, err = model.Where(q9)
+		if err != nil {
+			t.Errorf(`failed model.where(q9)`)
+		}
+		if len(res9) == 0 {
+			t.Errorf(`failed to find any UserMeta with model.where(q9)`)
+		}
 
 		res10, err := model.FindByMetaKey(model2.GetMetaKey())
 		if err != nil {
@@ -4611,6 +5244,14 @@ func TestUserMetaCreate(t *testing.T) {
 		if len(res10) == 0 {
 			t.Errorf(`failed to find any UserMeta`)
 		}
+		q10 := fmt.Sprintf(`meta_key = '%s'`, model2.GetMetaKey())
+		res10, err = model.Where(q10)
+		if err != nil {
+			t.Errorf(`failed model.where(q10)`)
+		}
+		if len(res10) == 0 {
+			t.Errorf(`failed to find any UserMeta with model.where(q10)`)
+		}
 
 		res11, err := model.FindByMetaValue(model2.GetMetaValue())
 		if err != nil {
@@ -4618,6 +5259,26 @@ func TestUserMetaCreate(t *testing.T) {
 		}
 		if len(res11) == 0 {
 			t.Errorf(`failed to find any UserMeta`)
+		}
+		q11 := fmt.Sprintf(`meta_value = '%s'`, model2.GetMetaValue())
+		res11, err = model.Where(q11)
+		if err != nil {
+			t.Errorf(`failed model.where(q11)`)
+		}
+		if len(res11) == 0 {
+			t.Errorf(`failed to find any UserMeta with model.where(q11)`)
+		}
+
+		// now we need to destroy the model
+		err = model.Destroy()
+		if err != nil {
+			t.Errorf(`model was not destroyed`)
+		}
+		// let's double check
+		found, err = model2.Find(model.GetPrimaryKeyValue())
+		if found == true {
+			t.Errorf(fmt.Sprintf(`this model(%d) should have been destroyed!`, model2.GetPrimaryKeyValue()))
+			return
 		}
 	} // end of if fileExists
 }

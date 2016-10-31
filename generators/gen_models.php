@@ -294,6 +294,7 @@ import (
     \"regexp\"
     \"bufio\"
     \"errors\"
+    \"fmt\"
 )
 var letters = []rune(\"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\")
 
