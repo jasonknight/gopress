@@ -62,5 +62,5 @@ supply your own if you have special needs. The interface
 is generic enough that you can use it any weird way
 you want.
 
-[![Become A Patron](https://github.com/jasonknight/gobay/raw/master/assets/patreon.png)](https://www.patreon.com/user?u=4141497)
+
 
